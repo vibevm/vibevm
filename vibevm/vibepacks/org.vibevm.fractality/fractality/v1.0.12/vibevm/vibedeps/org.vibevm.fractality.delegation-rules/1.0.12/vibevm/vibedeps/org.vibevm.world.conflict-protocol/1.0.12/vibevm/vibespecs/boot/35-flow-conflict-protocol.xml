@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">Flow: Conflict Protocol</title>
+  <status stage="impl" state="done"/>
+  <p><PROJECT-RUNS-TWO-WRITERS-OVER-ONE-FILE-SET fact="true" status="impl/done">This project runs **two writers over one file set** — a human and a
+coding agent both edit the spec tree, the tests, and the code.</PROJECT-RUNS-TWO-WRITERS-OVER-ONE-FILE-SET></p>
+  <p><CONTRADICTIONS-ARE-NORMAL-COOPERATION-NOT-AN-ERROR fact="true" status="spec/done">They
+*will* write contradictory things; that is normal cooperation, not an
+error.</CONTRADICTIONS-ARE-NORMAL-COOPERATION-NOT-AN-ERROR></p>
+  <p><WHAT-IS-FORBIDDEN-IS-RESOLVING-A-CONTRADICTION-SILENTLY fact="true" status="impl/done">What is forbidden is resolving a contradiction silently.</WHAT-IS-FORBIDDEN-IS-RESOLVING-A-CONTRADICTION-SILENTLY></p>
+  <hierarchy title="The hierarchy">
+    <p><EVERY-DISAGREEMENT-IS-SETTLED-BY-FIXED-PRIORITY fact="true" status="impl/done">Every disagreement between layers is settled by fixed priority:</EVERY-DISAGREEMENT-IS-SETTLED-BY-FIXED-PRIORITY></p>
+    <fence>Human  &gt;  Spec  &gt;  Tests  &gt;  Code  &gt;  volatile state</fence>
+    <facts ordered="false">
+      <HUMAN-MAY-CHANGE-THE-SPEC-AND-NOBODY-ELSE-MAY-SILENTLY fact="true" status="impl/done">The human may change the spec; nobody else may — silently.</HUMAN-MAY-CHANGE-THE-SPEC-AND-NOBODY-ELSE-MAY-SILENTLY>
+      <CODE-MUST-CONFORM-TO-THE-SPEC fact="true" status="impl/done">Code must conform to the spec, never the other way around.</CODE-MUST-CONFORM-TO-THE-SPEC>
+      <TESTS-ARE-THE-SPEC-IN-EXECUTABLE-FORM fact="true" status="impl/done">Tests are the spec in executable form: a test that contradicts the
+  spec is a bug in exactly one of the two, never both.</TESTS-ARE-THE-SPEC-IN-EXECUTABLE-FORM>
+      <THE-VOLATILE-STATE-FILE-IS-A-RECORD-DEAD-LAST fact="true" status="impl/done">The volatile state file is a record, dead last:
+  when it disagrees with anything above it, it is stale.</THE-VOLATILE-STATE-FILE-IS-A-RECORD-DEAD-LAST>
+    </facts>
+    <p><full-protocol-pointer fact="true" status="impl/done">Full protocol:
+@spec://org.vibevm.world/conflict-protocol/flows/conflict-protocol/CONFLICT-PROTOCOL#root.</full-protocol-pointer></p>
+  </hierarchy>
+  <review title="The REVIEW contract">
+    <p><IF-YOU-BELIEVE-THE-SPEC-IS-WRONG-IMPLEMENT-IT-ANYWAY fact="true" status="impl/done">If you believe the spec is wrong: **implement the spec anyway**, add
+a marker at the point of disagreement —</IF-YOU-BELIEVE-THE-SPEC-IS-WRONG-IMPLEMENT-IT-ANYWAY></p>
+    <fence>&lt;!-- REVIEW: &lt;what you would change&gt; because &lt;reason&gt; --&gt;</fence>
+    <p><SURFACE-THE-MARKER-IN-THE-END-OF-SESSION-REPORT fact="true" status="impl/done">— and surface it in the end-of-session report.</SURFACE-THE-MARKER-IN-THE-END-OF-SESSION-REPORT></p>
+    <p><THE-HUMAN-DECIDES-IN-THE-NEXT-CYCLE fact="true" status="impl/done">The human decides in
+the next cycle.</THE-HUMAN-DECIDES-IN-THE-NEXT-CYCLE></p>
+    <p><NEVER-SILENTLY-OVERRIDE fact="true" status="impl/done">Never silently override.</NEVER-SILENTLY-OVERRIDE></p>
+    <p><three-lines-seconds-to-write-a-minute-to-read fact="true" status="spec/done">Three lines of text; seconds
+to write; a minute to read.</three-lines-seconds-to-write-a-minute-to-read></p>
+  </review>
+  <uncertainty title="When the spec is silent">
+    <p><CLIMB-THE-LADDER-BEFORE-CHOOSING-A-CONSERVATIVE-DEFAULT fact="true" status="impl/done">Re-read the relevant spec section → re-read the relevant reference
+chapter → check the closest analog in the project → if still unclear,
+pick the conservative interpretation (the one cheapest to reverse),
+mark it with a REVIEW, proceed, and flag it in the report.</CLIMB-THE-LADDER-BEFORE-CHOOSING-A-CONSERVATIVE-DEFAULT></p>
+    <p><NEVER-SILENTLY-INVENT-SEMANTIC-BEHAVIOR fact="true" status="impl/done">Never
+silently invent semantic behavior.</NEVER-SILENTLY-INVENT-SEMANTIC-BEHAVIOR></p>
+    <p><full-ladder-pointer fact="true" status="impl/done">Full ladder:
+@spec://org.vibevm.world/conflict-protocol/flows/conflict-protocol/uncertainty-protocol#root.</full-ladder-pointer></p>
+  </uncertainty>
+  <never title="Never">
+    <facts ordered="false">
+      <NEVER-SILENTLY-MODIFY-A-NORMATIVE-SPEC-VALUE fact="true" status="impl/done">Never silently modify a normative spec value.</NEVER-SILENTLY-MODIFY-A-NORMATIVE-SPEC-VALUE>
+      <NEVER-RESOLVE-A-DISAGREEMENT-BY-ASSUMING-THE-CODE-IS-NEWER fact="true" status="impl/done">Never resolve a spec-vs-code disagreement by assuming the code is
+  newer. Recency is not authority; the hierarchy is.</NEVER-RESOLVE-A-DISAGREEMENT-BY-ASSUMING-THE-CODE-IS-NEWER>
+      <NEVER-REMOVE-SOMEONE-ELSES-REVIEW-MARKER fact="true" status="impl/done">Never remove someone else's REVIEW marker without resolving it.</NEVER-REMOVE-SOMEONE-ELSES-REVIEW-MARKER>
+      <NEVER-INVENT-SEMANTICS-WHEN-THE-SPEC-IS-SILENT fact="true" status="impl/done">Never invent semantics when the spec is silent — mark the choice
+  and proceed conservatively.</NEVER-INVENT-SEMANTICS-WHEN-THE-SPEC-IS-SILENT>
+    </facts>
+    <p><recovery-drills-pointer fact="true" status="impl/done">Recovery drills for when the protocol has already been broken:
+@spec://org.vibevm.world/conflict-protocol/flows/conflict-protocol/failure-modes#root.</recovery-drills-pointer></p>
+  </never>
+</spec>

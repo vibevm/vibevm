@@ -1,0 +1,31 @@
+schema = 1
+source_hash = "sha256:cc7c41d0610383931d9e239b2e34133a4878b5eab6984390a54f9da381c55ed6"
+spec_format = "mixed"
+
+[[file]]
+path = "LICENSE.md"
+sha256 = "c0e2a0382616f6ad368f3d15845916310a4a3113802df74a759d41b9d914e1be"
+
+[[file]]
+path = "README.md"
+sha256 = "21b058801484975663ccad0c72aeec794dcc065d9f27b4aca1736adabf9c6a66"
+
+[[file]]
+path = "vibe.toml"
+sha256 = "14a509fe7bf388d154ad6270b7c5da74c593e7f41cb99044a4f7330d684f5719"
+
+[[file]]
+path = "vibevm/vibespecs/boot/67-flow-qualified-naming.xml"
+sha256 = "792c4a695ce492bad127b5fe30222efc1bbfc35fa6144543b9074b49d57816a8"
+
+[[file]]
+path = "vibevm/vibespecs/flows/qualified-naming/QUALIFIED-NAMING-PROTOCOL.xml"
+sha256 = "5b203b4fe24b83862df101c3820eede5720cc59d9b083ca6517aa219b76089f1"
+
+[[file]]
+path = "vibevm/vibespecs/flows/qualified-naming/naming-forks.xml"
+sha256 = "a85a84c02243645e1bb17b3a6affedd3d1e05f93fd713f46118f9ad62c213a11"
+
+[[file]]
+path = "vibevm/vibespecs/flows/qualified-naming/ref-grammar.xml"
+sha256 = "de61e215f1705573235b073ae8919a199444b81390536a3e4f9d71d417440b3d"

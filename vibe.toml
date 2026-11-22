@@ -8,14 +8,14 @@ spec_format = "xml"
 authors = ["Oleg Chirukhin"]
 
 [requires.packages]
-"flow:org.vibevm.world/omnichannel" = "^1.0.0"
+"flow:org.vibevm.world/omnichannel" = "^1.0.12"
 "flow:org.vibevm.world/working-rules" = "^1.0.12"
-"org.vibevm.doc/web" = "^1.0.0"
-"stack:org.vibevm.ai-native/rust-ai-native" = "^1.0.0"
-"stack:org.vibevm.ai-native/typescript-ai-native" = "^1.0.0"
+"org.vibevm.doc/web" = "^1.0.12"
+"stack:org.vibevm.ai-native/rust-ai-native" = "^1.0.12"
+"stack:org.vibevm.ai-native/typescript-ai-native" = "^1.0.12"
 
 [requires.packages."flow:org.vibevm.fractality/delegation-first"]
-version = "^1.0.0"
+version = "^1.0.12"
 link = "dynamic"
 
 [requires.packages."flow:org.vibevm.world/multi-user-planning"]
@@ -23,7 +23,7 @@ version = "^1.0.12"
 link = "static-transitive"
 
 [requires.packages."org.vibevm.world/redbook"]
-version = "^1.0.0"
+version = "^1.0.12"
 link = "static-transitive"
 exclude = [
   "org.vibevm.world/wal",
@@ -36,11 +36,15 @@ exclude = [
 # configure remote registry resolution for this project.
 #
 # Two registries by default: `vibespecs` on GitHub is the canonical
-# publish target (the only host where `vibe registry publish` drives
-# the create-repo + push-tag flow end to end today); `vibespecs-gitverse`
+# publish target (the only hosted organization where `vibe registry publish`
+# drives the create-repo + push-tag flow end to end today; git, monorepo and
+# localdir registries publish by plain push or copy); `vibespecs-gitverse`
 # is queried on resolve fall-through so packages that only live on
 # GitVerse install without manual setup. Publishing to GitVerse is
-# currently a stub — see `crates/vibe-cli/src/commands/registry.rs`.
+# currently a stub — see `crates/vibe-cli/src/commands/registry/publish.rs`.
+#
+# Every vibevm-owned package follows the vibevm version from 1.0.12 on, so
+# the requirements above ask for at least 1.0.12.
 [[registry]]
 name = "vibespecs"
 url = "https://github.com/vibespecs"

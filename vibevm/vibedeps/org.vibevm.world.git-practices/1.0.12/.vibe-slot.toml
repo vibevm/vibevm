@@ -1,0 +1,23 @@
+schema = 1
+source_hash = "sha256:cef0093db8885fb1c6e2153c424577d9fc4045a5e3c139ceae64e69138a292f9"
+spec_format = "xml"
+converter_recipe = "specdoc/4"
+derived_hash = "sha256:d62533c6b37d0407fc55bda91d082909e2ea41714ab35383da7eec152ae07871"
+
+[[file]]
+path = "LICENSE"
+sha256 = "7b05e254512285b6a4c33fa97a9b8a4751ff8bf674da7189420f066ef7b9672b"
+disposition = "copied"
+source = "LICENSE"
+
+[[file]]
+path = "README.xml"
+sha256 = "dceed406317b8ff740180f5735016586c5deec7e5e56012dcdf595ace4d9f780"
+disposition = "converted"
+source = "README.md"
+
+[[file]]
+path = "vibe.toml"
+sha256 = "d645fb67790a6d29af58d43cfb72f656a7c9672bd9c0de9313594b88458350db"
+disposition = "copied"
+source = "vibe.toml"

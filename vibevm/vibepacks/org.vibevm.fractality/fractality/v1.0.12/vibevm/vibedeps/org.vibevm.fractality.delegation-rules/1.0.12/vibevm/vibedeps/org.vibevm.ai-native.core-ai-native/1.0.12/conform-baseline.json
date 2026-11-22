@@ -1,0 +1,6 @@
+{
+  "schema": 1,
+  "findings": [
+    "file-length|crates/core-ai-native-conform/src/rules/go.rs"
+  ]
+}

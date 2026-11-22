@@ -1,0 +1,4 @@
+# Build output produced inside materialised dependency slots.
+# Managed by vibe; additional entries are preserved until `vibe clean`.
+**/target/
+**/node_modules/
