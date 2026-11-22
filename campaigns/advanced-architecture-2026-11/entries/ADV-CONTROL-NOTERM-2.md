@@ -1,0 +1,49 @@
+# ADV-CONTROL-NOTERM-2
+
+Planned at commit `9d8428d07`. Line numbers below are hints from that commit; find each place by the quoted text or the item name.
+
+**Outcome.** vibe-app's AppError::missing_answers() names each answer a refusal lacks (kind, id, flag, file key) for installer selection, license, parameter, secret, agent consent and unresolved common configuration.
+
+**Write.** `crates/vibe-app/src/missing.rs`, `crates/vibe-app/src/lib.rs`, `crates/vibe-app/src/error.rs`, `crates/vibe-app/src/steps/params.rs`, `crates/vibe-app/src/operations/import/bindings.rs`, `vibevm/vibespecs/common/PROP-065-structured-installation.xml`
+
+**Check.** `cargo test -p vibe-app --lib -- --exact missing::tests::missing_answers_name_kind_id_and_flag 2>&1 | grep -F 'test result: ok. 1 passed'`
+
+**Test.** crates/vibe-app/src/missing.rs, #[cfg(test)] mod tests, fn missing_answers_name_kind_id_and_flag. Uses a helper `fn row(kind: AnswerKind, id: &str, flag: &str, file_key: Option<&str>) -> MissingAnswer` and assert_eq! on whole Vec<MissingAnswer> values: (1) AppError::from(ResolveError::SelectionRequired { what: "w".into(), flag: "--installer", choices: "main, alt".into() }).missing_answers() == vec![row(AnswerKind::Option, "installer", "--installer", None)]; (2) AppError::from(StepError::LicenseRequired { key: "k".into(), license: "L 1.0".into(), file: "f".into() }) gives [row(License, "L 1.0", "--accept-license", None)]; (3) AppError::from(StepError::ParameterInvalid { option: "main".into(), parameter: "port".into(), reason: "r".into(), absent: true, secret: false }) gives [row(Parameter, "port", "--set port=VALUE", None)]; (4) the same with secret: true gives [row(Secret, "port", "--set port=VALUE", None)]; (5) the same with absent: false gives an empty Vec; (6) AppError::from(AgentError::ConsentRequired { key: "k".into(), step: "review".into(), agent: "a".into(), reason: "r".into() }) gives [row(Consent, "review", "--assume-yes", None)]; (7) AppError::from(ConfigurationError::Unresolved { option: "k/main".into(), evaluation: Box::new(serde_json::from_value(serde_json::json!(EVAL)).unwrap()) }) gives, in order, row(Feature, "database", "--configuration-input", Some("input.intent.selections.database")), row(Parameter, "root", "--set root=VALUE", Some("input.intent.parameters.root")), row(Secret, "pw", "--set pw=VALUE", None), row(Secret, "token", "--set token=VALUE", None); (8) AppError::UnknownSlot { slot: "s".into() } gives an empty Vec. Also asserts AnswerKind::Option.as_str() == "option" and AnswerKind::Feature.as_str() == "feature". The check passes only when this one test runs and passes, so a missing `mod missing;` (0 tests run) fails the grep.
+
+**Read first.**
+- crates/vibe-app/src/error/resolve.rs:38-48
+- crates/vibe-app/src/error.rs:118-142
+- crates/vibe-app/src/error.rs:388-410
+- crates/vibe-app/src/steps/params.rs:86-200
+- crates/vibe-app/src/operations/import/bindings.rs:290-310
+- crates/vibe-app/src/configuration/error.rs:1-33
+
+**Steps.**
+1. In crates/vibe-app/src/error.rs add two fields at the end of StepError::ParameterInvalid: `/// No value was given and nobody could be asked (PROP-065 #needs-input).\n absent: bool,` and `/// The parameter is declared secret.\n secret: bool,`. Do not change the #[error] text.
+2. In crates/vibe-app/src/steps/params.rs: the `invalid` closure adds `absent: false, secret: false`; the `if needs_resupply && !provided` return becomes a direct `StepError::ParameterInvalid { option: option.id.clone(), parameter: parameter.id.clone(), reason: "a previously supplied secret must be provided again for this operation".into(), absent: true, secret: true }`; the `if parameter.required` return inside `let Some(raw) = raw else` becomes a direct construction with reason `"it is required and has no value".into()`, `absent: true, secret: parameter.secret`. Then fix any other ParameterInvalid construction the compiler reports in this crate with `absent: false, secret: false`.
+3. In crates/vibe-app/src/operations/import/bindings.rs at the ParameterInvalid construction near line 300 add `absent: false, secret: true` (that refusal's remedy is the import secret-input file, outside this entry).
+4. Create crates/vibe-app/src/missing.rs with `specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-065#needs-input");`, `pub enum AnswerKind { Option, Feature, Parameter, Secret, License, Consent }` (derive Debug, Clone, Copy, PartialEq, Eq) with `pub fn as_str(self) -> &'static str` returning "option","feature","parameter","secret","license","consent"; `pub struct MissingAnswer { pub kind: AnswerKind, pub id: String, pub flag: String, pub file_key: Option<String> }` (derive Debug, Clone, PartialEq, Eq); and `impl crate::error::AppError { #[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-065#needs-input")] pub fn missing_answers(&self) -> Vec<MissingAnswer> }` implementing exactly the mapping in decisions.
+5. In crates/vibe-app/src/lib.rs add `mod missing;` in the alphabetical mod list (after `mod migrate;`) and `pub use missing::{AnswerKind, MissingAnswer};`. Insert the spec_edit line into PROP-065.
+6. Add the test module to missing.rs as described in the test field, then run the check command; it must print `test result: ok. 1 passed`.
+
+**Decisions already made.**
+- Mapping (all other errors return an empty Vec): AppError::Resolve(ResolveError::SelectionRequired{flag,..}) -> one answer kind Option, id = flag.trim_start_matches("--").to_string(), flag = flag.to_string(), file_key None.
+- AppError::Step(StepError::LicenseRequired{license,..}) -> kind License, id = license.clone(), flag "--accept-license", file_key None.
+- AppError::Step(StepError::ParameterInvalid{parameter, absent: true, secret, ..}) -> kind Secret if secret else Parameter, id = parameter.clone(), flag format!("--set {parameter}=VALUE"), file_key None. absent:false -> empty.
+- AppError::Agent(AgentError::ConsentRequired{step,..}) -> kind Consent, id = step.clone(), flag "--assume-yes", file_key None.
+- AppError::Configuration(ConfigurationError::Unresolved{evaluation,..}) -> one answer per entry of evaluation.questions in order: ConfigurationQuestion::Choice(c) -> Feature, c.group, "--configuration-input", Some(format!("input.intent.selections.{}", c.group)); Parameter(p) with p.secret -> Secret, p.id, format!("--set {}=VALUE", p.id), None; Parameter(p) not secret -> Parameter, p.id, same flag, Some(format!("input.intent.parameters.{}", p.id)); SecretResupply(s) -> Secret, s.id, format!("--set {}=VALUE", s.id), None; Review(_) -> nothing. Secrets never get a file_key because configuration input refuses secret values.
+- Import paths: ResolveError and StepError from crate::error (ResolveError is re-exported there from error/resolve.rs), AgentError from crate::agents, ConfigurationError from crate::configuration, questions from vibe_wire::generated::shared::ConfigurationQuestion.
+- Field types (verified): every field named in the test is `String` except ResolveError::SelectionRequired.flag, which is `&'static str`. String fields take `"...".into()` in the test; this is a fix of the literal, not a change of the test's meaning. MissingAnswer rows are built in the test through the `row(kind, id, flag, file_key)` helper.
+- Error codes stay unchanged (license_required, parameter_invalid, selection_required, consent_required, configuration_unresolved): existing tests assert them and codes must be snake_case.
+- EVAL used in test (7), passed through serde_json::json!: {"definition":"d","input":{"intent":{"policy":"require-selection","features":[],"defaultFeatures":false,"selections":{},"parameters":{}},"disabledFeatures":[]},"normalizedConsumers":[],"controls":[],"defaults":[],"questions":[{"kind":"choice","cardinality":"exactly-one","consumers":["installer"],"eligibleMembers":["sqlite","mysql"],"group":"database"},{"kind":"parameter","id":"root","secret":false},{"kind":"parameter","id":"pw","secret":true},{"kind":"secret-resupply","id":"token"}],"problems":[],"parameters":[],"reliance":[]}. If serde rejects it, stop and report the exact serde error; do not edit the wire schema.
+- The spec anchor added here states only what the library returns; the JSON envelope fields are NOTERM-3's anchor `needs-input-envelope`.
+- Commit: `feat(app): name the missing answers of a refusal` with a body saying the application library can now tell which flag or answers-file key would let the same command run without a terminal.
+
+**Not in this entry.** Changing any error code to a new `needs_input` code, putting anything into the JSON envelope (NOTERM-3), or covering ImportInputRequired and the per-row import report (those need a wire-schema change).
+
+**Spec edit (apply as a step of this entry).**
+
+File vibevm/vibespecs/common/PROP-065-structured-installation.xml: insert one new line directly after the line that ends with `</error-codes></p>` (after the `attended` line if NOTERM-1 already added it):
+  <p><needs-input fact="true" status="spec/done">A refusal caused by an answer that was not given keeps its `code` and exit status `2`, and the application library names each missing answer with a `kind`, an `id`, the `flag` that supplies it and, when an answers file can hold it, a `file_key`. Kinds: `option` (id `platform`, `arch` or `installer`; flag `--platform`, `--arch` or `--installer`), `license` (id the license name; flag `--accept-license`), `parameter` (id the parameter id; flag `--set ID=VALUE`; for a common configuration also `file_key` `input.intent.parameters.ID` of the `--configuration-input` file), `secret` (id the parameter id; flag `--set ID=VALUE`; never a file key), `feature` (a common configuration choice group; flag `--configuration-input`; `file_key` `input.intent.selections.GROUP`) and `consent` (id the agent step; flag `--assume-yes`).</needs-input></p>
+
+Entries that write the same file run one after another, never in parallel.

@@ -1,0 +1,49 @@
+# ADV-SDD-CHANGE-WRITE-5
+
+Planned at commit `9d8428d07`. Line numbers below are hints from that commit; find each place by the quoted text or the item name.
+
+**Outcome.** `vibe change ask <id> --about <origin address> "<text>"` appends question q-1 to change.toml without changing any existing byte, and `vibe change questions <id>` lists it as `open`, then as `stale` once the cited origin document changed in an upgrade.
+
+**Write.** `crates/vibe-cli/src/cli/change.rs`, `crates/vibe-cli/src/cli/change/write.rs`, `crates/vibe-cli/src/commands/change/mod.rs`, `crates/vibe-cli/src/commands/change/questions.rs`, `crates/vibe-cli/src/commands/change/ask.rs`, `crates/vibe-cli/tests/cli_change_questions.rs`, `vibevm/vibespecs/common/PROP-071-change-bindings-and-closure.xml`
+
+**Check.** `cargo test -p vibe-cli --test cli_change_questions ask_ 2>&1 | grep -F "test result: ok. 2 passed"`
+
+**Test.** crates/vibe-cli/tests/cli_change_questions.rs: `ask_appends_question_and_keeps_prior_bytes`, `ask_about_upgraded_origin_lists_stale`
+
+**Read first.**
+- crates/vibe-cli/src/commands/change/rebase.rs and crates/vibe-cli/src/commands/change/home.rs (read, validate, write_atomic pattern)
+- crates/vibe-core/src/manifest/change/mod.rs (ChangeManifest::metadata returns &BTreeMap<String, toml::Value>; ChangeManifest::documents; ChangeDocument; ChangeDocumentRole::Refinement; ChangeManifest::origins)
+- crates/vibe-requirements/src/change/read.rs (read_saved_change, SavedChange.manifest_bytes)
+- crates/vibe-requirements/src/change/capture.rs (capture_origin)
+- crates/vibe-cli/tests/change_support/mod.rs (ChangeWorld)
+
+**Steps.**
+1. cli/change/write.rs: add `#[derive(Debug, clap::Args)] pub struct ChangeAskArgs { pub id: String, pub text: String, #[arg(long)] pub about: Option<String>, #[arg(long, default_value = ".")] pub path: PathBuf }` (field docs: `The change id.`, `The question text.`, `One of this change's origin document addresses.`, `Project root; defaults to the current directory.`) and `#[derive(Debug, clap::Args)] pub struct ChangeQuestionsArgs { pub id: String, #[arg(long, default_value = ".")] pub path: PathBuf }` (same docs). In cli/change.rs add to ChangeSubcommand `Ask(ChangeAskArgs)` with doc `/// Record a question in a change.` and `Questions(ChangeQuestionsArgs)` with doc `/// List a change's questions and their state.` In commands/change/mod.rs add `mod ask;`, `mod questions;` and the arms `ChangeSubcommand::Ask(args) => ask::run(ctx, args),` and `ChangeSubcommand::Questions(args) => questions::run(ctx, args),`.
+2. Create questions.rs (line 1 `//! \`vibe change questions\`: questions kept in a change's metadata.`, line 2 `specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-071#CHANGE-QUESTIONS");`). Add `#[derive(Debug, Clone, serde::Serialize, serde::Deserialize)] pub(super) struct QuestionRow { pub id: String, pub text: String, pub asked_at: String, #[serde(default, skip_serializing_if = "Option::is_none")] pub about: Option<String>, #[serde(default, skip_serializing_if = "Option::is_none")] pub about_sha256: Option<String> }`. `pub(super) fn question_rows(manifest: &vibe_core::manifest::change::ChangeManifest) -> anyhow::Result<Vec<QuestionRow>>`: `match manifest.metadata().get("questions") { None => Ok(Vec::new()), Some(value) => value.clone().try_into::<Vec<QuestionRow>>().map_err(|_| anyhow::anyhow!("violates REQ spec://org.vibevm.core/vibevm/common/PROP-071#CHANGE-QUESTIONS: metadata.questions is not a question list; fix surface: change.toml")) }`. `pub(super) fn answer_path(qid: &str) -> String` returns `format!("refinements/{qid}.md")`.
+3. questions.rs report types: `#[derive(serde::Serialize)] struct QuestionsReport { change_id: String, questions: Vec<QuestionReport> }` and `#[derive(serde::Serialize)] struct QuestionReport { id: String, text: String, about: Option<String>, state: &'static str, answer: Option<String> }`. `#[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-071#CHANGE-QUESTIONS")] pub(super) fn run(ctx: &crate::output::Context, args: crate::cli::ChangeQuestionsArgs) -> anyhow::Result<()>`: change_home(&args.path), `read_saved_change(&home.selected_root, ".", None, &args.id)?`, question_rows(&saved.manifest)?. State per row: `answered` if `saved.manifest.documents()` has a row with `role == ChangeDocumentRole::Refinement` and `path == answer_path(&row.id)`; else `stale` if row.about is Some and (row.about_sha256 is None, or capture_origin(&home.world_root, &home.consumer, about) is Err, or its document_sha256 != about_sha256); else `open`. answer is Some(answer_path) only for `answered`. JSON via ctx.emit_json; text prints one line per question: `<id>  <state>  <text>`.
+4. Create ask.rs (line 1 `//! \`vibe change ask\`: append one question to change.toml.`, line 2 the CHANGE-QUESTIONS scope! line). `#[derive(serde::Serialize)] struct AskReport { change_id: String, question_id: String }`. `#[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-071#CHANGE-QUESTIONS")] pub(super) fn run(ctx: &crate::output::Context, args: crate::cli::ChangeAskArgs) -> anyhow::Result<()>`: read home and saved change; `let rows = super::questions::question_rows(&saved.manifest)?;` next id = `format!("q-{}", 1 + max N)` over rows whose id is `q-` followed by a u32 N, or `q-1` when none. If --about is Some and equals no `doc.address` of any `saved.manifest.origins()[..].documents`, bail with `violates REQ spec://org.vibevm.core/vibevm/common/PROP-071#CHANGE-QUESTIONS: --about must be one of this change's origin document addresses; fix surface: the --about value`. Otherwise about_sha256 = `Some(capture_origin(&home.world_root, &home.consumer, about)?.document_sha256)` when --about is Some, else None. asked_at = `chrono::Utc::now().to_rfc3339_opts(chrono::SecondsFormat::Secs, true)`.
+5. Continue ask.rs: `let mut old = String::from_utf8(saved.manifest_bytes.clone())?;` if it does not end with '\n' push '\n'. `let new = format!("{old}\n[[metadata.questions]]\n{}", toml::to_string(&row)?);` Validate with `vibe_core::manifest::change::ChangeManifest::parse_str(&new, &home.context, saved.manifest.directory())?;` then `vibe_safefs::Project::open(&home.selected_root)?.write_atomic(&vibe_core::machine_json_path(&saved.manifest.directory().join("change.toml")), new.as_bytes()).map_err(vibe_safefs::PublishError::into_report)?;` Output: JSON `AskReport`; text `asked <qid>`.
+6. Create tests/cli_change_questions.rs with `mod common;`, `mod change_support;`, `use change_support::{ADDRESS, ChangeWorld, ID};`. `ask_appends_question_and_keeps_prior_bytes`: installed(), new_change(); `let before = std::fs::read(w.change_dir(ID).join("change.toml")).unwrap();` run `w.vibe(&["change", "ask", ID, "--about", ADDRESS, "Should retries apply to POST?"])` and assert success; assert the new change.toml bytes start with `before`; `w.vibe(&["--json", "change", "questions", ID])` gives `questions[0].id == "q-1"` and `questions[0].state == "open"`. `ask_about_upgraded_origin_lists_stale`: installed(), new_change(), the same ask, then `w.upgrade()`; `--json change questions` gives `questions[0].state == "stale"`.
+7. Apply the spec_edit to PROP-071 (insert the CHANGE-QUESTIONS line immediately before the final `</spec>` line), then run the check.
+
+**Decisions already made.**
+- This entry runs after ADV-SDD-CHANGE-WRITE-4, one after the other: it shares cli/change.rs, cli/change/write.rs, commands/change/mod.rs and PROP-071 with it.
+- Questions live in change.toml as `[[metadata.questions]]` tables. metadata is the grammar's opaque table (Wire.metadata: BTreeMap<String, toml::Value>) and intent_identity does not hash it, so there is no new format, no registry row, no code generation and no epoch change.
+- Asking only appends text at the end of change.toml. `[[metadata.questions]]` tables after `[[documents]]` tables, and later `[[documents]]` tables after them, are valid TOML (checked with a TOML parser).
+- --about is optional and limited to the change's own origin document addresses.
+- State words are exactly `open`, `answered` and `stale`. There is no withdraw verb.
+- New files are small; commands/change/mod.rs grows by 4 lines and cli/change.rs by 4. Run `wc -l` on each; none may exceed 600.
+- Clippy -D warnings applies. Do not add #[allow]. All QuestionRow fields are read by its Serialize derive.
+
+**Not in this entry.** Not in this entry: answering (ADV-SDD-CHANGE-WRITE-6), a questions.toml file or registered format, adding questions to `vibe change show`, --about for facts outside the change's origins, a withdraw verb, and an MCP tool.
+
+**Depends on.** ADV-SDD-CHANGE-WRITE-1, ADV-SDD-CHANGE-WRITE-3, ADV-SDD-CHANGE-WRITE-4
+
+**Spec edit (apply as a step of this entry).**
+
+In vibevm/vibespecs/common/PROP-071-change-bindings-and-closure.xml insert this line immediately before the final line `</spec>`:
+```
+  <p><CHANGE-QUESTIONS fact="true" status="impl/work">Questions about a change live in its change.toml as [[metadata.questions]] tables with id q-N numbered from 1, text, asked_at, and optionally about, which is one of the change's origin document addresses, with about_sha256 captured from the installed world at ask time. Asking appends one table at the end of change.toml and changes no other byte; the metadata table stays outside intent identity. A question is answered when a refinement document row with path refinements/q-N.md exists; answering writes that file first and then appends a normative input refinement row, so the intent identity changes on purpose. An unanswered question is stale when its captured digest differs from the installed one and open otherwise. vibe change questions id lists each question with its state.</CHANGE-QUESTIONS></p>
+```
+
+Entries that write the same file run one after another, never in parallel.
