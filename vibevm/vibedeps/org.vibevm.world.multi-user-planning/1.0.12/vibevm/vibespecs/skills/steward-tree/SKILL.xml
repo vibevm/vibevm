@@ -33,6 +33,16 @@ python -B scripts/render_tree.py --plan &lt;plan.toml&gt; --out &lt;directory&gt
 projection: delete it at any time, regenerate it from the plan, never read it
 back. It embeds no absolute path, so a copied steward home carries no stale
 machine path. Nothing outside the steward home is a planning source of truth.</TREE-SKILL-VIEW-DISPOSABLE></p>
+  <p><TREE-SKILL-LAUNCHER fact="true" status="impl/done">`bin/plan-tree` is a convenience command for people:
+run in any checkout of a project that installs this package, it re-renders the
+view through `--resolve` and prints the path of `index.html`; `--open` also
+shows it in the default browser, `--repo` names another checkout and `--lang`
+picks the language. It finds the newest installed copy of this package inside
+the checkout, needs Git on PATH, runs itself on Python 3.8 or newer and starts
+the renderer with Python 3.11 or newer, saying so when none is installed. To use
+it, copy the files of `bin/` into a directory on PATH; on macOS and Linux make
+`plan-tree` executable, on Windows `plan-tree.ps1` and `plan-tree.cmd` run the
+same launcher from PowerShell and cmd. It writes nothing but the view.</TREE-SKILL-LAUNCHER></p>
   <p><TREE-SKILL-OUTPUT fact="true" status="impl/done">The output directory receives `index.html`, a self-contained offline
 page with no network, font or script dependency, and `plan-tree.json`, the same
 model for other readers. Both are replaced atomically and only when their bytes

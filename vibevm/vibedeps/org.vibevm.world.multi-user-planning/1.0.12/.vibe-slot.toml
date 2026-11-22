@@ -1,8 +1,8 @@
 schema = 1
-source_hash = "sha256:163b4051b320e562908563996f8849765609d722f8643bbc154d49237b7511a1"
+source_hash = "sha256:3b57f8a449a3139b95f63a8f71a0b9c5ef1183c1ed6035f8835c4b12ee53dd8f"
 spec_format = "xml"
 converter_recipe = "specdoc/4"
-derived_hash = "sha256:7bbe495e4fa0a527eb1ef69ee2fe6f00266ff4f19a6d5f5f9a9b704935eddcef"
+derived_hash = "sha256:aaad65b653181a31bc821de96673a2a48cff1bd5a537c55829ee16f0784b5ef3"
 
 [[file]]
 path = "LICENSE.md"
@@ -270,9 +270,27 @@ source = "vibevm/vibespecs/skills/steward-status/SKILL.md"
 
 [[file]]
 path = "vibevm/vibespecs/skills/steward-tree/SKILL.xml"
-sha256 = "ba2ac0d16f6a2d9ba0314f80de68015245fab6f72ff737ede6f636f690eb1f86"
+sha256 = "8e1779ec7653f8c56290ba28403a64c5a0c8b7bde6ac062cb7b4a908db6bcd2c"
 disposition = "converted"
 source = "vibevm/vibespecs/skills/steward-tree/SKILL.md"
+
+[[file]]
+path = "vibevm/vibespecs/skills/steward-tree/bin/plan-tree"
+sha256 = "988f79c9e7e65c520594ae5deafcf56c0ac3f7c8dfbf83090be94e34ff85b4fb"
+disposition = "copied"
+source = "vibevm/vibespecs/skills/steward-tree/bin/plan-tree"
+
+[[file]]
+path = "vibevm/vibespecs/skills/steward-tree/bin/plan-tree.cmd"
+sha256 = "7c3172f521fcfcbc063c9c35cadee3ec7a2d30d356bd1c5d0f9b8e77f82dafb1"
+disposition = "copied"
+source = "vibevm/vibespecs/skills/steward-tree/bin/plan-tree.cmd"
+
+[[file]]
+path = "vibevm/vibespecs/skills/steward-tree/bin/plan-tree.ps1"
+sha256 = "737eb318545484d3d95532dcc64ba049bc69f8f0c9d5767c70e8e02c84815849"
+disposition = "copied"
+source = "vibevm/vibespecs/skills/steward-tree/bin/plan-tree.ps1"
 
 [[file]]
 path = "vibevm/vibespecs/skills/steward-tree/scripts/.gitignore"
@@ -297,6 +315,12 @@ path = "vibevm/vibespecs/skills/steward-tree/scripts/render_tree.py"
 sha256 = "f138a7b83439ca4b98c6b5d66a1adb6764dcfe21ade59f03ff70566cb2164923"
 disposition = "copied"
 source = "vibevm/vibespecs/skills/steward-tree/scripts/render_tree.py"
+
+[[file]]
+path = "vibevm/vibespecs/skills/steward-tree/scripts/test_plan_tree_launcher.py"
+sha256 = "3bfe25bae992df7a14144cfb3e712f523172e17eb444244650f646b39f24647d"
+disposition = "copied"
+source = "vibevm/vibespecs/skills/steward-tree/scripts/test_plan_tree_launcher.py"
 
 [[file]]
 path = "vibevm/vibespecs/skills/steward-tree/scripts/test_render_tree.py"
