@@ -1,8 +1,8 @@
 schema = 1
-source_hash = "sha256:9f740d083d9ead26b52c96dc356d774eaf2040917126d69216140dd0784298ba"
+source_hash = "sha256:403c8e02aba52b2719f1c34a7543fa19e801a37d0ddefc2c897c40e736d79142"
 spec_format = "xml"
 converter_recipe = "specdoc/4"
-derived_hash = "sha256:ddb4d934de955a605f4a3e8ff7dd36db12d8ad5cd9b6ad949aeed8b4073bca38"
+derived_hash = "sha256:346d12e9fe86bedb299655cd0def254e58cf99ee46a07b2357d299bb3a451436"
 
 [[file]]
 path = "LICENSE.md"
@@ -18,7 +18,7 @@ source = "README.md"
 
 [[file]]
 path = "rules/decomposing.md"
-sha256 = "81f6f977a46a1730ec279714a405532a59b282ddfbde03bdb87216bed2c4bc85"
+sha256 = "33580056fd69a78a32e194bc848dff79da92cd8b1b21ac747f3a6368d3c25615"
 disposition = "copied"
 source = "rules/decomposing.md"
 
@@ -48,7 +48,7 @@ source = "rules/project.template.md"
 
 [[file]]
 path = "rules/protocol.md"
-sha256 = "37301f44021a34ef077f14f75bd541146c969e56f1143e4d627fd7b1b7826399"
+sha256 = "b1f707275634c0951182588590503409222ce023ef3ef0087977944571718bc9"
 disposition = "copied"
 source = "rules/protocol.md"
 
