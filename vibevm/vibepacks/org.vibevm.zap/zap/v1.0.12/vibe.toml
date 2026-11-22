@@ -1,0 +1,24 @@
+[package]
+name = "zap"
+group = "org.vibevm.zap"
+kind = "flow"
+version = "1.0.12"
+epoch = 1
+format = "normal"
+authors = ["Oleg Chirukhin"]
+license = "UPL-1.0"
+description = "Published bridge to the Zap user application source and verified releases"
+keywords = ["zap", "agents", "application"]
+bridge = true
+describes = "pkg:github/vibevm/zap@1.0.0"
+
+[compatibility]
+min_vibe_version = "1.0.0"
+requires_kinds = []
+
+# The retired bridge model (`[application_source]`, `installer_package`,
+# `runtime`, `entry`, `commands`, `[application.distribution]`) is no longer
+# parsed (spec://org.vibevm.core/vibevm/common/PROP-059#declaration); the
+# slot identity stays until the package gains `[[installer_options]]`.
+[application]
+id = "zap"
