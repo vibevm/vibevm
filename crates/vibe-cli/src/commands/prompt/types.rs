@@ -98,7 +98,24 @@ pub(crate) fn run(ctx: &output::Context, selected: &Selected, check: bool) -> Re
             println!("{line}");
         }
     }
-    if !check {
+    if check {
+        let noncurrent = outcomes
+            .iter()
+            .filter(|outcome| {
+                matches!(
+                    outcome.status,
+                    AgentTypeStatus::Stale | AgentTypeStatus::Missing | AgentTypeStatus::Foreign
+                )
+            })
+            .map(|outcome| format!("{} ({})", outcome.file, outcome.status.as_str()))
+            .collect::<Vec<_>>();
+        if !noncurrent.is_empty() {
+            bail!(
+                "subagent types are not current: {}; run `vibe prompt types`",
+                noncurrent.join(", ")
+            );
+        }
+    } else {
         if let Some(foreign) = outcomes
             .iter()
             .find(|outcome| outcome.status == AgentTypeStatus::Foreign)

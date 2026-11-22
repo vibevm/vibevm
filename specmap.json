@@ -25991,8 +25991,8 @@
       "item_kind": "fn",
       "line": 55,
       "symbol": "vibe_cli::commands::prompt::types::run",
-      "end_line": 113,
-      "fingerprint": "tok1:767b4570edc17e380d76a1af951dd797e787b4ad5f8aea8107ddfb51637d1f0d"
+      "end_line": 130,
+      "fingerprint": "tok1:dda8369684dbc676f07ad2f90422d52b239f0c7850b98651cb55ecf6e9a8b1d8"
     },
     {
       "crate_name": "vibe-cli",
