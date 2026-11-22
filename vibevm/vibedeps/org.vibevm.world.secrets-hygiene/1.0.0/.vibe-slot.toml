@@ -1,8 +1,8 @@
 schema = 1
-source_hash = "sha256:384301d5e2bdee4357694666dd8c10a92fd003bb5075e8568a0c306c27363e54"
+source_hash = "sha256:339b2d5a58b6e49fe3ae8357bb62320f4b444171bbe59fecba68683498cc9b4b"
 spec_format = "xml"
 converter_recipe = "specdoc/4"
-derived_hash = "sha256:be5108ab4f619daf3b134a99d9bd192f5a81c1c903ef734380aed250acf8b9bf"
+derived_hash = "sha256:83a02ef4f54c3e9d301417797cea420cdab3c5587413778593fb25291fbea0e0"
 
 [[file]]
 path = "LICENSE.md"
@@ -42,6 +42,6 @@ source = "vibevm/vibespecs/flows/secrets-hygiene/scope-discipline.xml"
 
 [[file]]
 path = "vibevm/vibespecs/flows/secrets-hygiene/third-party-code-consent.xml"
-sha256 = "69abe7119d0b7d5a63aab30fe71de2d121cfe59d7652a947880430f2df8fdb19"
+sha256 = "f5949f903dbe3612fcd478838a258940c84236d757d74f3cf165cdb22d91d911"
 disposition = "copied"
 source = "vibevm/vibespecs/flows/secrets-hygiene/third-party-code-consent.xml"

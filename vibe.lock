@@ -1,15 +1,15 @@
 [meta]
 generated_by = "vibe 1.0.0"
-generated_at = "2026-11-21T22:45:14Z"
+generated_at = "2026-11-22T04:17:31Z"
 schema_version = 7
 root_dependencies = [
+    "stack:org.vibevm.ai-native/rust-ai-native@^1.0.0",
+    "stack:org.vibevm.ai-native/typescript-ai-native@^1.0.0",
+    "org.vibevm.doc/web@^1.0.0",
     "flow:org.vibevm.fractality/delegation-first@^1.0.0",
     "flow:org.vibevm.world/multi-user-planning@^1.0.0",
     "flow:org.vibevm.world/omnichannel@^1.0.0",
-    "org.vibevm.doc/web@^1.0.0",
     "org.vibevm.world/redbook@^1.0.0",
-    "stack:org.vibevm.ai-native/rust-ai-native@^1.0.0",
-    "stack:org.vibevm.ai-native/typescript-ai-native@^1.0.0",
 ]
 
 [[package]]
@@ -433,7 +433,7 @@ group = "org.vibevm.world"
 version = "1.0.0"
 authors = ["Oleg Chirukhin"]
 source_url = "file:///data/git/vibevm-nst/vibevm/vibepacks/org.vibevm.world/secrets-hygiene/v1.0.0"
-content_hash = "sha256:384301d5e2bdee4357694666dd8c10a92fd003bb5075e8568a0c306c27363e54"
+content_hash = "sha256:339b2d5a58b6e49fe3ae8357bb62320f4b444171bbe59fecba68683498cc9b4b"
 files_written = []
 admitted_by = "public-chain"
 source_kind = "local"
