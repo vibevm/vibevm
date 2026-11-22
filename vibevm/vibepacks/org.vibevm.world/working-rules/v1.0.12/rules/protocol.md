@@ -244,6 +244,8 @@ exclusions, checks, reporting requirements and the selected context mode:
   the declared boot order, plus task-relevant contracts. Verify delivery from the
   exact accepted snapshot and completion of required reads, not just file presence.
   Do not attach a quiet clause that forbids the boot this mode requires.
+  A worker that needs full project context is started through the project's
+  launcher; nobody assembles a system prompt by hand.
 
 The project sets mode-selection criteria. Without such authorization use bounded
 context. Full boot expands context, not permissions: every worker remains explicitly
