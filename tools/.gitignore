@@ -20,6 +20,10 @@
 !*.sh
 !*.ps1
 !*.py
+# plan-tree has no extension on purpose (it is run as a command); its cmd
+# companion is the Windows entry point beside plan-tree.ps1.
+!plan-tree
+!plan-tree.cmd
 # The progress dashboard (campaign plan §7) is committed source, not a
 # vendored binary: zero-dependency node:http server + one static page.
 !progress-dashboard/serve.mjs

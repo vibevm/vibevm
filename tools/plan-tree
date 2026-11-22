@@ -1,0 +1,32 @@
+#!/usr/bin/env python3
+"""Print the path of this project's plan tree page; --open shows it in the browser.
+
+The work is done by the launcher that the installed planning package ships
+(flow:org.vibevm.world/multi-user-planning, skill steward-tree, bin/plan-tree);
+this file only finds it in this checkout and runs it for this checkout.
+On Windows run tools/plan-tree.ps1 or tools/plan-tree.cmd instead.
+"""
+
+import glob
+import os
+import runpy
+import sys
+
+ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+PATTERN = "vibevm/vibedeps/org.vibevm.world.multi-user-planning/*/vibevm/vibespecs/skills/steward-tree/bin/plan-tree"
+
+
+def version(path):
+    name = path.split(os.sep + "vibevm" + os.sep + "vibespecs")[0].rsplit(os.sep, 1)[-1]
+    return tuple(int(part) if part.isdigit() else 0 for part in name.split("."))
+
+
+found = sorted(glob.glob(os.path.join(ROOT, *PATTERN.split("/"))), key=version)
+if not found:
+    sys.exit("plan-tree: the planning package is not installed in this checkout; run `vibe install`")
+launcher = found[-1]
+arguments = sys.argv[1:]
+if not any(item == "--repo" or item.startswith("--repo=") for item in arguments):
+    arguments = ["--repo", ROOT] + arguments
+sys.argv = [launcher] + arguments
+runpy.run_path(launcher, run_name="__main__")
