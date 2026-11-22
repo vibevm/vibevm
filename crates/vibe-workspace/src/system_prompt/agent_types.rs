@@ -179,6 +179,15 @@ pub fn is_generated_agent_type(bytes: &[u8]) -> bool {
     false
 }
 
+#[path = "agent_types/sources.rs"]
+mod sources;
+
+pub use sources::{AgentTypeSources, LockedSlot};
+
+#[cfg(test)]
+#[path = "agent_types/sources_tests.rs"]
+mod sources_tests;
+
 #[path = "agent_types/sync.rs"]
 mod sync;
 
