@@ -1,7 +1,8 @@
 # NST final report
 
-Genre: campaign report. Date: 2026-11-22. Branch `nst/finish`, 28 commits on top of
-`87da4f235` (`task/user-project-delivery`). Nothing is pushed or merged.
+Genre: campaign report. Date: 2026-11-22. Branch `nst/finish`, built on top of
+`87da4f235` (`task/user-project-delivery`). Integrated into `main` by merge
+`4765e5d1d` and published to both source mirrors on 2026-11-22 on the owner's order.
 
 ## Result
 
@@ -78,8 +79,10 @@ original wording:
   backend of a separate client, owner clarification of 2026-11-19) was not
   performed.
 - **Synchronization stages** were not performed: one session did the work.
-- **Integration**: the branch is not merged and not pushed, and its checkout is
-  kept for the owner's testing.
+- **Integration**: done after this report was first written. The published
+  main had been moved on 2026-11-19 along a separate line of history whose tree
+  equals an ancestor of this branch, so it was merged in (no file changed) and
+  `main` was fast-forwarded on both mirrors. The checkout is kept for testing.
 
 ## Not run
 
