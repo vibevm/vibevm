@@ -139,6 +139,13 @@ impl Check for BootDirectoryCheck {
             if name == vibe_core::layout::BOOT_ARTIFACTS_LOCK {
                 continue;
             }
+            // The opted-in system prompt's generated artifacts and vibe's own
+            // ignore file for them (`#SYS-ARTIFACTS-NOT-TRACKED`) are written
+            // by the same transaction as the lane. A `.gitignore` counts only
+            // when its bytes are exactly vibe's; anything else there warns.
+            if is_generated_system_prompt_file(&name, &path) {
+                continue;
+            }
             // Generated INDEX is structural metadata, never authored dialect input.
             if name == "INDEX.md" || !authored_admitted {
                 continue;
@@ -190,6 +197,30 @@ impl Check for BootDirectoryCheck {
             report.err(CheckId::BootDirectory, Some(rel), None, collision.message());
         }
     }
+}
+
+/// Whether `name` in the boot directory is a generated system-prompt artifact
+/// or vibe's own ignore file for those artifacts.
+#[specmark::spec(
+    implements = "spec://org.vibevm.core/vibevm/common/PROP-076#SYS-ARTIFACTS-NOT-TRACKED"
+)]
+fn is_generated_system_prompt_file(name: &str, path: &Path) -> bool {
+    use vibe_core::layout;
+    if name == layout::SYSTEM_MD
+        || name == layout::SYSTEM_META_JSON
+        || name == layout::AGENT_LANE_MD
+    {
+        return true;
+    }
+    name == ".gitignore"
+        && fs_err_free_read(path).is_some_and(|bytes| {
+            bytes == vibe_workspace::system_prompt::BOOT_IGNORE_BODY.as_bytes()
+        })
+}
+
+/// Read a small file, treating any error as absence.
+fn fs_err_free_read(path: &Path) -> Option<Vec<u8>> {
+    std::fs::read(path).ok()
 }
 
 #[cfg(test)]
@@ -348,6 +379,8 @@ mod tests {
             report.findings
         );
     }
+
+    mod system_prompt_files;
 
     /// The transaction engine's persistent lock is the ONE engine-owned
     /// file the boot directory silently accepts: it is crash-released and

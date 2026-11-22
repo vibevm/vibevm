@@ -21037,6 +21037,15 @@
     },
     {
       "crate_name": "vibe-check",
+      "file": "crates/vibe-check/src/checks/boot_directory.rs",
+      "item_kind": "fn",
+      "line": 202,
+      "symbol": "vibe_check::checks::boot_directory::is_generated_system_prompt_file",
+      "end_line": 219,
+      "fingerprint": "tok1:349d9ab6d7d02e111a96152bb8ce826aa2bb02ae9acb7629641b0ea8530028b3"
+    },
+    {
+      "crate_name": "vibe-check",
       "file": "crates/vibe-check/src/checks/boot_directory/tracked_prompt.rs",
       "item_kind": "mod",
       "line": 9,
@@ -47232,7 +47241,7 @@
       "line": 106,
       "symbol": "vibe_doc::manifest::build",
       "end_line": 149,
-      "fingerprint": "tok1:01c1a04c0a691de3f5828e58213639b821686e3f9ee9c2709e6defbe5fc25396"
+      "fingerprint": "tok1:98cb51ecd71bd3fbb02fb3d353b60771ce9f9bd845462582d3ad0884ab813b01"
     },
     {
       "crate_name": "vibe-doc",
@@ -81980,8 +81989,8 @@
       "item_kind": "enum",
       "line": 67,
       "symbol": "vibe_workspace::system_prompt::agent_types::sync::AgentTypesError",
-      "end_line": 75,
-      "fingerprint": "tok1:f077bd5b67bb5903e91faf99c41eea46c5c720310aa28414cbfbf66bf0fee9bb"
+      "end_line": 85,
+      "fingerprint": "tok1:d11bb0e25aa6c94f34970940cbfb3b0aab07c66f3cc880a403ccad16d8ac8db2"
     },
     {
       "crate_name": "vibe-workspace",
@@ -81996,18 +82005,18 @@
       "crate_name": "vibe-workspace",
       "file": "crates/vibe-workspace/src/system_prompt/agent_types/sync.rs",
       "item_kind": "fn",
-      "line": 116,
+      "line": 126,
       "symbol": "vibe_workspace::system_prompt::agent_types::sync::sync_agent_types",
-      "end_line": 227,
+      "end_line": 237,
       "fingerprint": "tok1:76265ea92aa91a420dacefe05ff9e03b6c9301b08ed1d6daf7a2dbee27f50ea6"
     },
     {
       "crate_name": "vibe-workspace",
       "file": "crates/vibe-workspace/src/system_prompt/agent_types/sync.rs",
       "item_kind": "fn",
-      "line": 77,
+      "line": 87,
       "symbol": "vibe_workspace::system_prompt::agent_types::sync::withdraw_lane_types",
-      "end_line": 114,
+      "end_line": 124,
       "fingerprint": "tok1:2b200ee73f065e3c3dff74748f6cf735d3eb8877ec6cd02a1e84d1fcd41414cb"
     },
     {
@@ -93680,6 +93689,14 @@
       "line": 11,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#linter",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-check/src/checks/boot_directory.rs",
+      "from_symbol": "vibe_check::checks::boot_directory::is_generated_system_prompt_file",
+      "line": 204,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#SYS-ARTIFACTS-NOT-TRACKED",
       "verb": "implements"
     },
     {
@@ -149091,7 +149108,7 @@
     {
       "file": "crates/vibe-workspace/src/system_prompt/agent_types/sync.rs",
       "from_symbol": "vibe_workspace::system_prompt::agent_types::sync::sync_agent_types",
-      "line": 118,
+      "line": 128,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#SYS-WORKER-TYPES",
       "verb": "implements"
@@ -149099,7 +149116,7 @@
     {
       "file": "crates/vibe-workspace/src/system_prompt/agent_types/sync.rs",
       "from_symbol": "vibe_workspace::system_prompt::agent_types::sync::withdraw_lane_types",
-      "line": 80,
+      "line": 90,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#SYS-WORKER-TYPES",
       "verb": "implements"
@@ -182056,7 +182073,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:11192156a5181b6d315442584634e86e67212752958ac8df3462edd78ff6ca7f",
+      "content_hash": "sha256:75b6dc2d93c9581e1b4f32fc5adf550bb412a16ebd5f0409a3f09b5e238de87b",
       "doc_path": "design/command-nodes",
       "file": "vibevm/vibespecs/design/command-nodes.xml",
       "heading": "Command nodes in the map — B-019(б)",
@@ -182083,7 +182100,7 @@
     },
     {
       "anchor": "measured",
-      "content_hash": "sha256:0cf5ff13839e7bd4206f55e8985beb9c7fe6a1047773187f5ff71e6077798d4a",
+      "content_hash": "sha256:0586351329eb1a41cbbf92f923590c8a3d40fb3b34b936c0b641174e0df37122",
       "doc_path": "design/command-nodes",
       "file": "vibevm/vibespecs/design/command-nodes.xml",
       "heading": "1. What was measured at design time",
@@ -182173,10 +182190,10 @@
     },
     {
       "anchor": "m-twentyone-copies",
-      "content_hash": "sha256:6e1d36e8b1c97f4e4a2d5ce89a1ac6d371ad0e4e7db879532d4e1c64a0ea948a",
+      "content_hash": "sha256:adf9f3a88ee770505765b18b205a3cb30e491681977cb489ff2eb8ace82a72d9",
       "doc_path": "design/command-nodes",
       "file": "vibevm/vibespecs/design/command-nodes.xml",
-      "heading": "**The engine crate exists in 21 directories: one authored\nand 20 copies** — every surviving package and materialized slot is at 1.0.0.\nThe authored one is\n`vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v1.0.0/crates/core-ai-native-specmap/`.\nEvery engine edit is followed by `cargo xtask sync-engines` as its own step. @status:impl/done",
+      "heading": "**The engine crate exists in 21 directories: one authored\nand 20 copies** — every surviving package and materialized slot is at 1.0.0.\nThe authored one is\n`vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v1.0.12/crates/core-ai-native-specmap/`.\nEvery engine edit is followed by `cargo xtask sync-engines` as its own step. @status:impl/done",
       "line": 77,
       "uri": "spec://org.vibevm.core/vibevm/design/command-nodes#m-twentyone-copies"
     },
@@ -191380,7 +191397,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:9e587c09b13e3d7351dcb2b82ab9817ad4919365c34901e97c8b8a33e89ad443",
+      "content_hash": "sha256:0edecca691c3bb8ac75e72b73304034d4a2f52e34f34fd289d59ae5c769545ee",
       "doc_path": "design/seam-error-and-assertion-parity",
       "file": "vibevm/vibespecs/design/seam-error-and-assertion-parity.xml",
       "heading": "The gate gains seam-error and conformance-assertion parity across languages",
@@ -191614,7 +191631,7 @@
     },
     {
       "anchor": "parity-lift",
-      "content_hash": "sha256:77cbf00351b6a3298c66a048a8790d673982b7d854552e4def3aabbe31b9aaf0",
+      "content_hash": "sha256:38508c5354b903da5429c6ca4c591a634ac6f026e00ac2273459d63912a517c4",
       "doc_path": "design/seam-error-and-assertion-parity",
       "file": "vibevm/vibespecs/design/seam-error-and-assertion-parity.xml",
       "heading": "4. The parity-principle lift (boss contract diff, fork №9)",
@@ -191623,10 +191640,10 @@
     },
     {
       "anchor": "lift-home",
-      "content_hash": "sha256:7f03caec041e454ee85e5a5b933e03e0f492f932f1cbe1b9bc94e40b9895c1f1",
+      "content_hash": "sha256:85547eb59c1e2b27b23dd4862ad4af56f57ee974f2782a7d7b5c30271be6cbc4",
       "doc_path": "design/seam-error-and-assertion-parity",
       "file": "vibevm/vibespecs/design/seam-error-and-assertion-parity.xml",
-      "heading": "**The home, ruled.** Map fork №9 (2026-08-04): «Ядро дисциплины» — the\nlanguage-neutral guiding layer of `core-ai-native`, manifesto level, one home, the\nstacks cite. The carrier is [`00-MANIFESTO.xml`](../../vibepacks/org.vibevm.ai-native/core-ai-native/v1.0.0/vibevm/vibespecs/00-MANIFESTO.xml)\n§4 (where the strictness lives), a boss-authored clause set the language guides\ncite. @status:spec/work",
+      "heading": "**The home, ruled.** Map fork №9 (2026-08-04): «Ядро дисциплины» — the\nlanguage-neutral guiding layer of `core-ai-native`, manifesto level, one home, the\nstacks cite. The carrier is [`00-MANIFESTO.xml`](../../vibepacks/org.vibevm.ai-native/core-ai-native/v1.0.12/vibevm/vibespecs/00-MANIFESTO.xml)\n§4 (where the strictness lives), a boss-authored clause set the language guides\ncite. @status:spec/work",
       "line": 182,
       "uri": "spec://org.vibevm.core/vibevm/design/seam-error-and-assertion-parity#lift-home"
     },
