@@ -561,3 +561,7 @@ use payload::*;
 #[cfg(test)]
 #[path = "git_publish/tests.rs"]
 mod tests;
+
+#[cfg(test)]
+#[path = "git_publish/tests_ignored.rs"]
+mod tests_ignored;

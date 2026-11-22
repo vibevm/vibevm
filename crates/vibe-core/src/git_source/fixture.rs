@@ -18,11 +18,18 @@ use std::fs;
 use std::path::{Path, PathBuf};
 use std::process::{Command, Stdio};
 
+use specmark::spec;
+
 /// Variables `git` reads configuration from besides its files.
 const CONFIG_OVERRIDES: &[&str] = &["GIT_CONFIG", "GIT_CONFIG_PARAMETERS", "GIT_CONFIG_COUNT"];
 
 /// One isolated `git` setup: an empty global config, an empty excludes file
 /// and an empty hooks directory, removed when the value drops.
+///
+/// A test builds its repository through [`FixtureGit::init`] or
+/// [`FixtureGit::clone`], so what the fixture versions is the developer's
+/// setup nowhere and the shippable-tree decision everywhere.
+#[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-024#SHIPPABLE-TREE-DEF")]
 #[derive(Debug)]
 pub struct FixtureGit {
     isolation: tempfile::TempDir,

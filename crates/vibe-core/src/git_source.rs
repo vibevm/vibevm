@@ -52,6 +52,21 @@ const REPOSITORY_OVERRIDES: &[&str] = &[
 /// `git` ran inside a worktree and could not say what it versions. The walk
 /// is never substituted silently: a hash taken without the view would count
 /// ignored files and differ from every other checkout of the same commit.
+///
+/// Every variant names the directory the view was asked for, and its
+/// message cites the shippable-tree decision it protects:
+///
+/// ```
+/// use std::path::PathBuf;
+/// use vibe_core::git_source::GitSourceError;
+///
+/// let err = GitSourceError::UnexpectedEntry {
+///     path: PathBuf::from("pkg"),
+///     entry: "../outside".to_string(),
+/// };
+/// assert!(err.to_string().contains("`../outside`"));
+/// ```
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-024#SHIPPABLE-TREE-DEF")]
 #[derive(Debug, Error)]
 pub enum GitSourceError {
     #[error(

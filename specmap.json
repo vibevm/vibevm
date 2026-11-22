@@ -36268,10 +36268,19 @@
     {
       "crate_name": "vibe-core",
       "file": "crates/vibe-core/src/git_source.rs",
+      "item_kind": "enum",
+      "line": 52,
+      "symbol": "vibe_core::git_source::GitSourceError",
+      "end_line": 101,
+      "fingerprint": "tok1:6683872bf78cde25e9a484d24c001054907286e25d7372e87b3aa7cecdf708b3"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/git_source.rs",
       "item_kind": "fn",
-      "line": 154,
+      "line": 169,
       "symbol": "vibe_core::git_source::GitSourceView::of",
-      "end_line": 224,
+      "end_line": 239,
       "fingerprint": "tok1:577d83396c7368c4797e6b8af9a121190d26d7fcab629784694d7fcb6bb5b61f"
     },
     {
@@ -36282,6 +36291,15 @@
       "symbol": "vibe_core::git_source::fixture",
       "end_line": 15,
       "fingerprint": "tok1:8197f033a6053a09d4fbb65918e5fd74c31072454155cf9e129d2a3fdfd3d4c7"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/git_source/fixture.rs",
+      "item_kind": "struct",
+      "line": 26,
+      "symbol": "vibe_core::git_source::fixture::FixtureGit",
+      "end_line": 36,
+      "fingerprint": "tok1:88e6062d6a9c3fe52a2c69fbb17af7dd8e14a306663ebed2e744765aab975199"
     },
     {
       "crate_name": "vibe-core",
@@ -107180,8 +107198,16 @@
     },
     {
       "file": "crates/vibe-core/src/git_source.rs",
+      "from_symbol": "vibe_core::git_source::GitSourceError",
+      "line": 69,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-024#SHIPPABLE-TREE-DEF",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-core/src/git_source.rs",
       "from_symbol": "vibe_core::git_source::GitSourceView::of",
-      "line": 165,
+      "line": 180,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-024#SHIPPABLE-TREE-DEF",
       "verb": "implements"
@@ -107193,6 +107219,14 @@
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-024#shippable-tree",
       "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-core/src/git_source/fixture.rs",
+      "from_symbol": "vibe_core::git_source::fixture::FixtureGit",
+      "line": 32,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-024#SHIPPABLE-TREE-DEF",
+      "verb": "documents"
     },
     {
       "file": "crates/vibe-core/src/global_registry.rs",
