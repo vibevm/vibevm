@@ -29,10 +29,51 @@ any position. A delivered file sits between two lines:
 The boot order — this file, `vibevm/vibespecs/boot/STATIC.xml`, the INDEX files — is an order of
 precedence, not of position. A lane delivered before this file has been read.
 
+Edit sources, not materializations. Never hand-edit `vibedeps`; change its canonical inputs and let Vibe regenerate it.
+
+# Optional personal boot — read last
+
+After complete project INDEX/live, use exposed nonempty VIBE_SETTINGS else HOME/.vibe
+(Windows USERPROFILE/.vibe only without HOME). Unknown/relative/../symlink/alias
+root/ancestor: diagnose+skip; no guessing, commands or env dumps.
+
+Personal: settings/user-project, not mcp/user-project. Validate vibe.toml;
+read vibevm/vibespecs/boot/STATIC.xml or STATIC.md then INDEX.md with conditions.
+Two STATICs, unsafe/absent/broken/stale inputs: skip whole layer, keep project.
+No nested instruction entrypoints, prose-private expansion or boot mutations.
+
+Read settings/override-bindings.toml schema1/2 before personal. Match known
+Git common-dir+node or non-Git root, never names/remotes. schema2 user_controls
+user_enabled=false skips personal only; absent=true. Invalid mapping: skip optional.
+Enabled binding's 32-alphanumeric id selects project-overrides/id after personal;
+same STATIC/INDEX rules. Disabled skips override; no bind/repair.
+
+Same-project complete vibe:lane-begin/end personal:/override: pairs count as read;
+partial/project pairs do not.
+[layers] schema1: validate targets/relations by declaring owner/version and
+own/locked spec anchors. replace requires lower owner's own overridable preference;
+supplement is additive. Unsafe/missing/protected/competing: skip optional layer.
+Highest permitted layer wins: name target/source and read its exact unit;
+keep prefix bytes. Disabled grants nothing. Safety/attribution/commit discipline
+and unmarked rules bind; no prose inference.
+
+Personal memory: when authorized to remember a user preference, working style, machine fact or cross-project convention, write an ordinary authored record under the personal project's vibevm/vibespecs, not harness auto-memory. A fact collaborators need belongs in the project's repository. Never store credentials. An explicit durable opt-out in the loaded user snippet selects the user's other memory mechanism; respect it. A record must be boot-indexed or explicitly linked from the authored user boot snippet to reach a later session; arbitrary records are not auto-loaded. Boot never writes records or edits INDEX. An absent/unavailable personal root requires explicit user init/action before a memory write, not silent harness fallback.
 Boot is pure file-reading — there is nothing to execute.
 </vibevm>
 
 # vibevm — read this first
+
+## Working arrangement — ordinary by default, split by choice
+
+Read `WORKING-RULES.md` at this repository root. If `WORKING-RULES.local.md`
+exists, read it as local collaboration configuration as well. Without that file,
+use ordinary development: no second checkout, agent or role binding is required.
+`WORKING-RULES.local.example.md` is an inactive opt-in template; the common guide
+contains setup and exclusion checks. Local configuration may narrow ownership
+and permissions, never relax project contracts or safety requirements. The
+existing boot still applies. For a split-mode delegated task, its packet must
+name the common rules and applicable local configuration, and bind the role,
+checkout and allowed writes without making a quiet worker load the full lane.
 
 Every session in this repository begins by reading this file, then the boot lane in the order the generated block at the top of this file prescribes (the generated static lane `vibevm/vibespecs/boot/STATIC.xml` — or `STATIC.md` in a Markdown-lane project — first and in full, then every file `vibevm/vibespecs/boot/INDEX.md` names), then any relevant PROP/FEAT documents under `vibevm/vibespecs/common/` and `vibevm/vibespecs/modules/` for the task at hand. An owner-facing central session additionally resolves its exact user-local context under `~/.vibe/steward/` as the installed multi-user-planning flow prescribes; a worker packet never claims that context. Only after that, start work.
 

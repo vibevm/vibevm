@@ -7,6 +7,18 @@ mod compatibility;
 mod native_settings;
 pub use native_settings::{ClaudeNativePreview, CodexNativePreview, HermesNativePreview, OpenCodeNativePreview, PiNativePreview, QwenNativePreview};
 
+/// Canonical harness IDs admitted by the existing AI reference binding grammar.
+/// No alias resolution, launcher selection or native execution authority.
+pub fn known_reference_harness(harness: &str) -> bool {
+    matches!(harness, "claude" | "codex" | "opencode" | "qwen" | "hermes" | "pi")
+}
+
+/// Whether this canonical harness may retain an AI reference binding.
+/// This is storage admission only, not provider/API compatibility or permission
+/// to read credentials. Connection protocol/evidence remain with their owner.
+pub fn reference_binding_supported(harness: &str) -> bool {
+    matches!(harness, "pi" | "qwen")
+}
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
 #[serde(deny_unknown_fields)]
 pub struct ReferenceRow {
@@ -109,7 +121,7 @@ pub(super) fn read(root: &Pinned) -> Result<ReferenceSnapshot, Error> {
                 return Err(Error::RefusedUnknown);
             }
             for (harness, binding) in bindings {
-                if !matches!(harness.as_str(), "pi" | "qwen") {
+                if !reference_binding_supported(harness) {
                     return Err(Error::RefusedUnknown);
                 }
                 if let ReferenceBinding::Connection { connection } = binding
@@ -430,10 +442,10 @@ impl Store {
         expected: u64,
     ) -> Result<ReferenceIndex, Error> {
         owner(participant)?;
-        if !matches!(harness, "claude" | "codex" | "opencode" | "qwen" | "hermes" | "pi") {
+        if !known_reference_harness(harness) {
             return Err(Error::Invalid);
         }
-        if binding.is_some() && !matches!(harness, "pi" | "qwen") {
+        if binding.is_some() && !reference_binding_supported(harness) {
             return Err(Error::Invalid);
         }
         let Some((project, root)) = self.open(false)? else {
@@ -526,7 +538,7 @@ impl Store {
         if edits.is_empty()
             || edits
                 .keys()
-                .any(|name| !matches!(name.as_str(), "pi" | "qwen"))
+                .any(|name| !reference_binding_supported(name))
         {
             return Err(Error::Invalid);
         }

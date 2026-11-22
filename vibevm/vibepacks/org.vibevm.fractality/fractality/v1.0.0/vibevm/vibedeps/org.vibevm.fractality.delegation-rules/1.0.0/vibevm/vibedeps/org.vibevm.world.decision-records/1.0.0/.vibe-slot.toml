@@ -1,0 +1,31 @@
+schema = 1
+source_hash = "sha256:73a4013beb9920113723cb2fb7eed2737c91c39ba9d3015f6816283416c6a6fc"
+spec_format = "mixed"
+
+[[file]]
+path = "LICENSE.md"
+sha256 = "c0e2a0382616f6ad368f3d15845916310a4a3113802df74a759d41b9d914e1be"
+
+[[file]]
+path = "README.md"
+sha256 = "77658bdfbb6fb9416a0420662353cfd65fffde7d4975f68ea14f1445ff48c5b2"
+
+[[file]]
+path = "vibe.toml"
+sha256 = "0dfe72163b6feee2735b94ca4bda62e273ad52ed3f89faf1d64284f964c06bdb"
+
+[[file]]
+path = "vibevm/vibespecs/boot/25-flow-decision-records.xml"
+sha256 = "85c4c16decf617d00c46048a9b2183a65eca1cb3d82c286dc5f52bf254d23648"
+
+[[file]]
+path = "vibevm/vibespecs/flows/decision-records/DECISION-RECORDS-PROTOCOL.xml"
+sha256 = "11e4d9bf2c7e9d457820531b2fc975514aa2da795baffa365197ae54fff16192"
+
+[[file]]
+path = "vibevm/vibespecs/flows/decision-records/record-template.xml"
+sha256 = "3ad73d9b400d5a723d1990603b57781475bc4636344a700abe50fb7c57f2da97"
+
+[[file]]
+path = "vibevm/vibespecs/flows/decision-records/revisit-triggers.xml"
+sha256 = "4d942bbbf05c7372026fc20e9277e725fc915b175bd971716179ff728b9192f5"

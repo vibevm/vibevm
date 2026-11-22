@@ -1,5 +1,5 @@
 schema = 1
-source_hash = "sha256:dc5547b64d48e3c83ecd5e661fa43a9110eff078797136c244befa2c15d3484e"
+source_hash = "sha256:6451c9a822ea2b6de3c38b479807591792ce4927406d6a8fd2d9c5a1c26e1923"
 spec_format = "mixed"
 
 [[file]]
@@ -371,8 +371,12 @@ path = "crates/vendor/core-ai-native-specmap/Cargo.toml"
 sha256 = "df2d31ef92d9e3388261d9a89afb09ef8a32bbe53d1e21ededdc4bc50b20dee9"
 
 [[file]]
+path = "crates/vendor/core-ai-native-specmap/src/authority.rs"
+sha256 = "644cd5938156d560858f19c8a11a49605068a6870bb68b25936d1fcbd9e2e13c"
+
+[[file]]
 path = "crates/vendor/core-ai-native-specmap/src/config.rs"
-sha256 = "0f43c87919b1805babb09b85a3048c6627b2b0bb06fa91bc2ccbe1769afadcfc"
+sha256 = "9cebd366a5dfb8cd46c4abccdbadcabfb6b94b5301f7d92879557e397198c717"
 
 [[file]]
 path = "crates/vendor/core-ai-native-specmap/src/cscan.rs"
@@ -388,15 +392,19 @@ sha256 = "5fdfca31db37429a79e44b41c23817e2d0b9bd6ea9d6adce31f4d531abce7385"
 
 [[file]]
 path = "crates/vendor/core-ai-native-specmap/src/generated/mod.rs"
-sha256 = "1aecc6379f57bbe787c119bef8a6c2f7b72e3655ea3f995239d5d9b74687bf91"
+sha256 = "54448c1c403e984bc6fed95a70a04cad4976f6b116d4048a6dabf7d9bbaa0707"
 
 [[file]]
 path = "crates/vendor/core-ai-native-specmap/src/generated/specmap/mod.rs"
 sha256 = "f32d3ece661f5acd708d486828dbaca6a2a1679e2d9aa95d94c13dbfa575ccad"
 
 [[file]]
+path = "crates/vendor/core-ai-native-specmap/src/generated/specmap_authority/mod.rs"
+sha256 = "e2092995ea3f2159f2f7386ccaa0d7d2d9dc8ed5c9dcfd6a64432127d827beca"
+
+[[file]]
 path = "crates/vendor/core-ai-native-specmap/src/index.rs"
-sha256 = "7329984b45b10242f714f8a079dd74787f55e71ddd91b81e90b9336f08534ab1"
+sha256 = "766b6758404fc224bd0febeab170abaa9d801336779eff6e80d3e956fe9a1ae7"
 
 [[file]]
 path = "crates/vendor/core-ai-native-specmap/src/index/tests.rs"
@@ -420,7 +428,7 @@ sha256 = "739dc73724a60c332b21c17f4b35880e3d74f9d8069318177f5abe47a32fec91"
 
 [[file]]
 path = "crates/vendor/core-ai-native-specmap/src/jtd/tests.rs"
-sha256 = "583a743cd269def6d98b67340ed26b6b6d6be8bc2d6a4222a7a53c38df16977b"
+sha256 = "03cf06abafbc33ba1b20cc2546f669efa1162689818a471c895c135b85859347"
 
 [[file]]
 path = "crates/vendor/core-ai-native-specmap/src/ledger.rs"
@@ -428,7 +436,11 @@ sha256 = "2d4aa45832414b53a832c567e2a15e4eb3093173bf8adb47ca3d257d7ce49883"
 
 [[file]]
 path = "crates/vendor/core-ai-native-specmap/src/lib.rs"
-sha256 = "73846811f1a54bf8e8aa3073aa44551cde1ee5108a896160143a993faca5e9b2"
+sha256 = "7a5e752518e0bbff22fc885a9bd9b7c1b86618869799f94693c0558b7dcc9efc"
+
+[[file]]
+path = "crates/vendor/core-ai-native-specmap/src/local_layers.rs"
+sha256 = "4fa5fc80914146dd3d63616feb372c3fe9aab0b040e23f2ab2e8713574e4fef1"
 
 [[file]]
 path = "crates/vendor/core-ai-native-specmap/src/mdspec.rs"
@@ -448,7 +460,7 @@ sha256 = "8dc1a7b01f694d0f18de29f5843a340739690b3e8e747f9e1e2b063c89fab313"
 
 [[file]]
 path = "crates/vendor/core-ai-native-specmap/src/mdspec/walk.rs"
-sha256 = "b783c1d639c610586525201bf66d1b60dce9dea5b028a0d206dcc0b006a3b17f"
+sha256 = "ed05a41df845d574fe7847f30bb0fa6e9c3c6c464cd9d4776d05a9c9ae30795e"
 
 [[file]]
 path = "crates/vendor/core-ai-native-specmap/src/ratchet.rs"
@@ -539,8 +551,16 @@ path = "specmap.toml"
 sha256 = "09ea99d169d6bc37984594dd32f6ff8ce53e10f73cacc4456585d91869dee6ff"
 
 [[file]]
+path = "tooling/post-install/register-mcp.ps1"
+sha256 = "e41f3056197be41d8d7f709bda9323dc2c985c9bd71a34a14de5b13e5d53a8f4"
+
+[[file]]
+path = "tooling/post-install/register-mcp.sh"
+sha256 = "8cda4f27f81364a9c7492e7e3605a0c3957a1155d4c58353b843cbea6f996fbb"
+
+[[file]]
 path = "vibe.toml"
-sha256 = "79c94195dd89c832aa9fffcc251a2e89d4d01fda0f817d9fd19d4f912da9efac"
+sha256 = "612818fc01409268d34010acdafd735d591a4efbca46d42f6087ff7ee6149a6a"
 
 [[file]]
 path = "vibevm/vibespecs/tools/discipline-mcp-rust.xml"

@@ -170,6 +170,17 @@ An **id**, the **`spec://…#ANCHOR`** it came from where one exists, a one-line
 
 ## P2 — the next wave drains from here {#p2}
 
+### OPEN — Hermes: required per-submission instructions {#hermes-required-prompt}
+
+**HERMES-REQUIRED-PROMPT.** The current optional Hermes plugin can lose instructions before inference while still returning an ordinary response. Preserving history through `--resume` is correct; binding personal/temporary instructions to the whole conversation and guaranteeing their delivery on a particular submission are separate properties. Explicitly disclosed **best effort** is currently permitted; strict delivery is not promised. Canonical requirements and migration steps: [PROP-076, HERMES-REQUIRED-PROMPT and CLOSEOUT](vibevm/vibespecs/common/PROP-076-system-prompt-prefix.xml). Upstream: `NousResearch/hermes-agent`; the PR is prepared locally. Add its public number only after submission.
+
+**If the PR is accepted:** record the merge SHA and released version → verify the actual API → update the supported version and Vibe client → negotiate the gateway capability and attach the requirement to each submission → test failures after composition and `--resume` on the same history → update documentation and retire the fallback only for verified versions. Merge alone does not close this debt. If the PR is rejected or its API changes, keep the entry open.
+
+**Separate open debt: `HERMES-READY-PLACEMENT` (prefix placement).** On an already-serving gateway, the plugin sees the assembled message but not a witnessed stable-prefix boundary. Observed delivery, shared `--resume`, and permission to use best effort do not resolve this issue. Once an appropriate API is available, verify the exact block order and byte-identical leading content when only the tail changes on a released version; until then, do not promise caching on the new route. Canon: `PROP-076#HERMES-READY-PLACEMENT`.
+
+**Planned — `HERMES-PR-PREFIX-STABILITY-E2E`.** Owner: the architect of the local Hermes PR. Before manual submission, add an end-to-end test to the **existing branch** `feat/required-prompt-contribution`, beside `tests/hermes_cli/test_required_prompt_oneshot.py`; do not open a second PR. Capture two actual main `-z` requests at a local test provider with the same digest and required contribution. Change only the native mutable system-message tail through the ordinary native path, not by rewriting captured bytes. Assert the expected distinct tail values on the wire, the complete contribution exactly once before the tail in both requests, and **byte-identical UTF-8 from the start of the system text through the end of the contribution**. The test must fail if the tail did not actually change or precedes the contribution. Then run the focused suite and update the English `How to Test` in `PR-BODY.md`, the local `.patch`, and submission instructions. No real models or push. A passing test qualifies the draft route, not cache hits or discounts, and does not close the debt before verification of a released version. This task does not block CORP.
+
+
 ### B-242 — `vibe validate` на голом дереве пакета пишет `.vibe/lifecycle.*` в само дерево пакета {#b-242}
 
 | | |

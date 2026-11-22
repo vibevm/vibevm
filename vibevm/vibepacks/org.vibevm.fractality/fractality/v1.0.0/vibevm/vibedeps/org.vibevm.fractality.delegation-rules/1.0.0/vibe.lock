@@ -1,0 +1,416 @@
+[meta]
+generated_by = "vibe 1.0.12"
+generated_at = "2026-11-18T23:34:38Z"
+schema_version = 7
+root_dependencies = [
+    "stack:org.vibevm.ai-native/rust-ai-native@^1.0.0",
+    "flow:org.vibevm.world/redbook@^1.0.0",
+]
+
+[[package]]
+kind = "flow"
+name = "redbook"
+group = "org.vibevm.world"
+version = "1.0.0"
+authors = ["Oleg Chirukhin"]
+source_url = "file:///data/git/vibevm/vibevm/vibepacks/org.vibevm.world/redbook/v1.0.0"
+content_hash = "sha256:6f3f35cc5fa58404f397a65dc65c690dd3c2ccfe516b476beddc74616d24e7b1"
+files_written = []
+dependencies = [
+    "flow:org.vibevm.world/addressable-specs@=1.0.0",
+    "flow:org.vibevm.world/campaign-plans@=1.0.0",
+    "flow:org.vibevm.world/comparative-research@=1.0.0",
+    "flow:org.vibevm.world/conflict-protocol@=1.0.0",
+    "flow:org.vibevm.world/decision-records@=1.0.0",
+    "flow:org.vibevm.world/dev-runtime-docs@=1.0.0",
+    "flow:org.vibevm.world/discovery-prompt@=1.0.0",
+    "flow:org.vibevm.world/git-practices@=1.0.0",
+    "flow:org.vibevm.world/health-audit@=1.0.0",
+    "flow:org.vibevm.world/licensing@=1.0.0",
+    "flow:org.vibevm.world/managed-blocks@=1.0.0",
+    "flow:org.vibevm.world/manual-tests@=1.0.0",
+    "flow:org.vibevm.world/operating-modes@=1.0.0",
+    "flow:org.vibevm.world/qualified-naming@=1.0.0",
+    "flow:org.vibevm.world/secrets-hygiene@=1.0.0",
+    "flow:org.vibevm.world/source-mirrors@=1.0.0",
+    "flow:org.vibevm.world/spec-genres@=1.0.0",
+    "flow:org.vibevm.world/sync-from-code@=1.0.0",
+    "flow:org.vibevm.world/tool-design-lessons@=1.0.0",
+    "flow:org.vibevm.world/two-process-model@=1.0.0",
+    "flow:org.vibevm.world/wal-specspaces@=1.0.0",
+]
+admitted_by = "root-edge"
+source_kind = "registry"
+
+[[package]]
+kind = "stack"
+name = "rust-ai-native"
+group = "org.vibevm.ai-native"
+version = "1.0.0"
+authors = ["Oleg Chirukhin"]
+source_url = "file:///data/git/vibevm/vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native/v1.0.0"
+content_hash = "sha256:e3a7b08775a375909f14ab1ecf02f5fc7e2f98f21b36b15dcd1d79a42d239b0b"
+files_written = []
+dependencies = [
+    "lang:org.vibevm.ai-native/rust-ai-native-lang@=1.0.0",
+    "mcp:org.vibevm.ai-native/rust-ai-native-mcp@=1.0.0",
+]
+admitted_by = "root-edge"
+source_kind = "registry"
+
+[[package]]
+kind = "flow"
+name = "core-ai-native"
+group = "org.vibevm.ai-native"
+version = "1.0.0"
+authors = ["Oleg Chirukhin"]
+source_url = "file:///data/git/vibevm/vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v1.0.0"
+content_hash = "sha256:e614101b83382462b7a8676c767aaa5abaf83203080d10412ce5849fdd077283"
+files_written = []
+admitted_by = "public-chain"
+source_kind = "registry"
+
+[[package]]
+kind = "lang"
+name = "rust-ai-native-lang"
+group = "org.vibevm.ai-native"
+version = "1.0.0"
+authors = ["Oleg Chirukhin"]
+source_url = "file:///data/git/vibevm/vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v1.0.0"
+content_hash = "sha256:f94933e6812c294d36920a7700723ad79d38d6ca37f07148a28d3aaf162c4b28"
+files_written = []
+dependencies = ["flow:org.vibevm.ai-native/core-ai-native@=1.0.0"]
+admitted_by = "public-chain"
+source_kind = "registry"
+
+[[package]]
+kind = "mcp"
+name = "rust-ai-native-mcp"
+group = "org.vibevm.ai-native"
+version = "1.0.0"
+authors = ["Oleg Chirukhin"]
+source_url = "file:///data/git/vibevm/vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-mcp/v1.0.0"
+content_hash = "sha256:6451c9a822ea2b6de3c38b479807591792ce4927406d6a8fd2d9c5a1c26e1923"
+files_written = []
+dependencies = ["lang:org.vibevm.ai-native/rust-ai-native-lang@=1.0.0"]
+admitted_by = "public-chain"
+source_kind = "registry"
+
+[[package]]
+kind = "flow"
+name = "addressable-specs"
+group = "org.vibevm.world"
+version = "1.0.0"
+authors = ["Oleg Chirukhin"]
+source_url = "file:///data/git/vibevm/vibevm/vibepacks/org.vibevm.world/addressable-specs/v1.0.0"
+content_hash = "sha256:1b30f067bd49a71f8f6d42005deba94f87c610e158cb84c8126ed3c54cf709b8"
+files_written = []
+admitted_by = "public-chain"
+source_kind = "registry"
+
+[[package]]
+kind = "flow"
+name = "campaign-plans"
+group = "org.vibevm.world"
+version = "1.0.0"
+authors = ["Oleg Chirukhin"]
+source_url = "file:///data/git/vibevm/vibevm/vibepacks/org.vibevm.world/campaign-plans/v1.0.0"
+content_hash = "sha256:0958aff702a907784bf18262c9f1c1a0e0bb339f9406e1fa14b633cd71985615"
+files_written = []
+admitted_by = "public-chain"
+source_kind = "registry"
+
+[[package]]
+kind = "flow"
+name = "comparative-research"
+group = "org.vibevm.world"
+version = "1.0.0"
+authors = ["Oleg Chirukhin"]
+source_url = "file:///data/git/vibevm/vibevm/vibepacks/org.vibevm.world/comparative-research/v1.0.0"
+content_hash = "sha256:88d66adcd51d8f749c2e96431ddf6b3ea80adb3f1271625bc3a3f09bb658a7a1"
+files_written = []
+admitted_by = "public-chain"
+source_kind = "registry"
+
+[[package]]
+kind = "flow"
+name = "conflict-protocol"
+group = "org.vibevm.world"
+version = "1.0.0"
+authors = ["Oleg Chirukhin"]
+source_url = "file:///data/git/vibevm/vibevm/vibepacks/org.vibevm.world/conflict-protocol/v1.0.0"
+content_hash = "sha256:669fb4a23f0a822cff870f18e5e8f330f82e3c6315515b47c4a691700c7c21e3"
+files_written = []
+admitted_by = "public-chain"
+source_kind = "registry"
+
+[[package]]
+kind = "flow"
+name = "decision-records"
+group = "org.vibevm.world"
+version = "1.0.0"
+authors = ["Oleg Chirukhin"]
+source_url = "file:///data/git/vibevm/vibevm/vibepacks/org.vibevm.world/decision-records/v1.0.0"
+content_hash = "sha256:73a4013beb9920113723cb2fb7eed2737c91c39ba9d3015f6816283416c6a6fc"
+files_written = []
+admitted_by = "public-chain"
+source_kind = "registry"
+
+[[package]]
+kind = "flow"
+name = "dev-runtime-docs"
+group = "org.vibevm.world"
+version = "1.0.0"
+authors = ["Oleg Chirukhin"]
+source_url = "file:///data/git/vibevm/vibevm/vibepacks/org.vibevm.world/dev-runtime-docs/v1.0.0"
+content_hash = "sha256:c006b2a93b717fb71459dde404b08ce33d092e9514f4e27a2f350f21d78dad9d"
+files_written = []
+admitted_by = "public-chain"
+source_kind = "registry"
+
+[[package]]
+kind = "flow"
+name = "discovery-prompt"
+group = "org.vibevm.world"
+version = "1.0.0"
+authors = ["Oleg Chirukhin"]
+source_url = "file:///data/git/vibevm/vibevm/vibepacks/org.vibevm.world/discovery-prompt/v1.0.0"
+content_hash = "sha256:b3e5b36ead7c6192e4e63d6bf1169fee722562852ea4b0a8ab66053db45c9157"
+files_written = []
+admitted_by = "public-chain"
+source_kind = "registry"
+
+[[package]]
+kind = "flow"
+name = "git-atomic-commits"
+group = "org.vibevm.world"
+version = "1.0.0"
+authors = ["Oleg Chirukhin"]
+source_url = "file:///data/git/vibevm/vibevm/vibepacks/org.vibevm.world/git-atomic-commits/v1.0.0"
+content_hash = "sha256:6f454486ce7f3edcc208231b2b88fea61be6b65938ada1914a98ddfcb957960d"
+files_written = []
+admitted_by = "public-chain"
+source_kind = "registry"
+
+[[package]]
+kind = "flow"
+name = "git-attribution-policy"
+group = "org.vibevm.world"
+version = "1.0.0"
+authors = ["Oleg Chirukhin"]
+source_url = "file:///data/git/vibevm/vibevm/vibepacks/org.vibevm.world/git-attribution-policy/v1.0.0"
+content_hash = "sha256:6716cf448a935bcc00bbaf662b98d52517c89a4ca74e9e78b833f01c100596cb"
+files_written = []
+admitted_by = "public-chain"
+source_kind = "registry"
+
+[[package]]
+kind = "flow"
+name = "git-autonomy"
+group = "org.vibevm.world"
+version = "1.0.0"
+authors = ["Oleg Chirukhin"]
+source_url = "file:///data/git/vibevm/vibevm/vibepacks/org.vibevm.world/git-autonomy/v1.0.0"
+content_hash = "sha256:a4257fd33b740d36f02805ab9cc997c3c447bfbc29abf0915f38fd34bbb9f3b3"
+files_written = []
+admitted_by = "public-chain"
+source_kind = "registry"
+
+[[package]]
+kind = "flow"
+name = "git-conventional-commits"
+group = "org.vibevm.world"
+version = "1.0.0"
+authors = ["Oleg Chirukhin"]
+source_url = "file:///data/git/vibevm/vibevm/vibepacks/org.vibevm.world/git-conventional-commits/v1.0.0"
+content_hash = "sha256:04a03d3bd572cd3c865868c0a096f5f61606197924b886aa369bdaf56af243f8"
+files_written = []
+admitted_by = "public-chain"
+source_kind = "registry"
+
+[[package]]
+kind = "flow"
+name = "git-practices"
+group = "org.vibevm.world"
+version = "1.0.0"
+authors = ["Oleg Chirukhin"]
+source_url = "file:///data/git/vibevm/vibevm/vibepacks/org.vibevm.world/git-practices/v1.0.0"
+content_hash = "sha256:fb2c5b33312b1e5f5ae0fbd2b470b3a9270f81d1ee89ec358c3b6c8a8e993830"
+files_written = []
+dependencies = [
+    "flow:org.vibevm.world/git-atomic-commits@=1.0.0",
+    "flow:org.vibevm.world/git-attribution-policy@=1.0.0",
+    "flow:org.vibevm.world/git-autonomy@=1.0.0",
+    "flow:org.vibevm.world/git-conventional-commits@=1.0.0",
+]
+admitted_by = "public-chain"
+source_kind = "registry"
+
+[[package]]
+kind = "flow"
+name = "health-audit"
+group = "org.vibevm.world"
+version = "1.0.0"
+authors = ["Oleg Chirukhin"]
+source_url = "file:///data/git/vibevm/vibevm/vibepacks/org.vibevm.world/health-audit/v1.0.0"
+content_hash = "sha256:db3a36d635ec1dcb08878bb1c0dccb3287b6146882e92a543c4c3397318433e6"
+files_written = []
+admitted_by = "public-chain"
+source_kind = "registry"
+
+[[package]]
+kind = "flow"
+name = "licensing"
+group = "org.vibevm.world"
+version = "1.0.0"
+authors = ["Oleg Chirukhin"]
+source_url = "file:///data/git/vibevm/vibevm/vibepacks/org.vibevm.world/licensing/v1.0.0"
+content_hash = "sha256:2c7db23ae8b7a9a3ef1f7d2a7b54425113f43c4ab14f1e83f3458ffb00a33288"
+files_written = []
+admitted_by = "public-chain"
+source_kind = "registry"
+
+[[package]]
+kind = "flow"
+name = "managed-blocks"
+group = "org.vibevm.world"
+version = "1.0.0"
+authors = ["Oleg Chirukhin"]
+source_url = "file:///data/git/vibevm/vibevm/vibepacks/org.vibevm.world/managed-blocks/v1.0.0"
+content_hash = "sha256:ce765d63e674cc98a03ab09c8b21f4f6c867007c03be1d8ef320578c6911c60e"
+files_written = []
+admitted_by = "public-chain"
+source_kind = "registry"
+
+[[package]]
+kind = "flow"
+name = "manual-tests"
+group = "org.vibevm.world"
+version = "1.0.0"
+authors = ["Oleg Chirukhin"]
+source_url = "file:///data/git/vibevm/vibevm/vibepacks/org.vibevm.world/manual-tests/v1.0.0"
+content_hash = "sha256:b2bb48eb16931767dc13b925e92449d0ab6c1fe7c4d525c8379d1e11834a70b9"
+files_written = []
+admitted_by = "public-chain"
+source_kind = "registry"
+
+[[package]]
+kind = "flow"
+name = "operating-modes"
+group = "org.vibevm.world"
+version = "1.0.0"
+authors = ["Oleg Chirukhin"]
+source_url = "file:///data/git/vibevm/vibevm/vibepacks/org.vibevm.world/operating-modes/v1.0.0"
+content_hash = "sha256:f8141eefd8e3eb76bff982065b66467cff5b7f306c8d600ba47275937153e901"
+files_written = []
+admitted_by = "public-chain"
+source_kind = "registry"
+
+[[package]]
+kind = "flow"
+name = "qualified-naming"
+group = "org.vibevm.world"
+version = "1.0.0"
+authors = ["Oleg Chirukhin"]
+source_url = "file:///data/git/vibevm/vibevm/vibepacks/org.vibevm.world/qualified-naming/v1.0.0"
+content_hash = "sha256:0553a9f7253b3c8f2d0ef8eefeb5cfd0fd09a96db5d36b15f13701a0a878ec55"
+files_written = []
+admitted_by = "public-chain"
+source_kind = "registry"
+
+[[package]]
+kind = "flow"
+name = "secrets-hygiene"
+group = "org.vibevm.world"
+version = "1.0.0"
+authors = ["Oleg Chirukhin"]
+source_url = "file:///data/git/vibevm/vibevm/vibepacks/org.vibevm.world/secrets-hygiene/v1.0.0"
+content_hash = "sha256:384301d5e2bdee4357694666dd8c10a92fd003bb5075e8568a0c306c27363e54"
+files_written = []
+admitted_by = "public-chain"
+source_kind = "registry"
+
+[[package]]
+kind = "flow"
+name = "source-mirrors"
+group = "org.vibevm.world"
+version = "1.0.0"
+authors = ["Oleg Chirukhin"]
+source_url = "file:///data/git/vibevm/vibevm/vibepacks/org.vibevm.world/source-mirrors/v1.0.0"
+content_hash = "sha256:5aa2bc90bb97123f16e9676db132f6865473b04085f7a24e9bc19651a691dc7e"
+files_written = []
+admitted_by = "public-chain"
+source_kind = "registry"
+
+[[package]]
+kind = "flow"
+name = "spec-genres"
+group = "org.vibevm.world"
+version = "1.0.0"
+authors = ["Oleg Chirukhin"]
+source_url = "file:///data/git/vibevm/vibevm/vibepacks/org.vibevm.world/spec-genres/v1.0.0"
+content_hash = "sha256:a4f109741371ec0f02296bf8515fc360a036e804333f0a9dda71629ae0da1db7"
+files_written = []
+admitted_by = "public-chain"
+source_kind = "registry"
+
+[[package]]
+kind = "flow"
+name = "sync-from-code"
+group = "org.vibevm.world"
+version = "1.0.0"
+authors = ["Oleg Chirukhin"]
+source_url = "file:///data/git/vibevm/vibevm/vibepacks/org.vibevm.world/sync-from-code/v1.0.0"
+content_hash = "sha256:c068ab0517275cc6c7d11ce0e77e20c8dc9f038c6e6e4ae0832902b063ce0fc5"
+files_written = []
+admitted_by = "public-chain"
+source_kind = "registry"
+
+[[package]]
+kind = "flow"
+name = "tool-design-lessons"
+group = "org.vibevm.world"
+version = "1.0.0"
+authors = ["Oleg Chirukhin"]
+source_url = "file:///data/git/vibevm/vibevm/vibepacks/org.vibevm.world/tool-design-lessons/v1.0.0"
+content_hash = "sha256:e77db029e4ab66a5de85b74d13acc477ed6c268ab7ac94cdc7cc030f06622410"
+files_written = []
+admitted_by = "public-chain"
+source_kind = "registry"
+
+[[package]]
+kind = "flow"
+name = "two-process-model"
+group = "org.vibevm.world"
+version = "1.0.0"
+authors = ["Oleg Chirukhin"]
+source_url = "file:///data/git/vibevm/vibevm/vibepacks/org.vibevm.world/two-process-model/v1.0.0"
+content_hash = "sha256:2d12ef2e83579b2b6b8ee7bdb6d01f6d70d187641e8a5e8fb4c5d08369ac4d3d"
+files_written = []
+admitted_by = "public-chain"
+source_kind = "registry"
+
+[[package]]
+kind = "flow"
+name = "wal"
+group = "org.vibevm.world"
+version = "1.0.0"
+authors = ["Oleg Chirukhin"]
+source_url = "file:///data/git/vibevm/vibevm/vibepacks/org.vibevm.world/wal/v1.0.0"
+content_hash = "sha256:58eccc204df7e63e78e8d15f9416b6fd528e786b74d9e0e5e2fcb859716ea0d0"
+files_written = []
+admitted_by = "public-chain"
+source_kind = "registry"
+
+[[package]]
+kind = "flow"
+name = "wal-specspaces"
+group = "org.vibevm.world"
+version = "1.0.0"
+authors = ["Oleg Chirukhin"]
+source_url = "file:///data/git/vibevm/vibevm/vibepacks/org.vibevm.world/wal-specspaces/v1.0.0"
+content_hash = "sha256:fd3ddc05880b6af0374e42d18cb9df7f2f35ab2410d61447e0330c51be052d9f"
+files_written = []
+dependencies = ["flow:org.vibevm.world/wal@=1.0.0"]
+admitted_by = "public-chain"
+source_kind = "registry"

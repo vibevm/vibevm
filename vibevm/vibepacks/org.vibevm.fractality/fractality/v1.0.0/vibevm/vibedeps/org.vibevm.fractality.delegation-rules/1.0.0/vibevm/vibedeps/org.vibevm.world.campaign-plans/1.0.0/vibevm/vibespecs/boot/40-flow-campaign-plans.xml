@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">Flow: Campaign Plans</title>
+  <status stage="impl" state="done"/>
+  <p><LARGE-CHANGES-ARE-EXECUTED-AS-CAMPAIGNS fact="true" status="impl/done">This project executes large changes as **campaigns**: multi-commit
+work planned in a written campaign plan, executed as gated phases,
+resumable cold by any session.</LARGE-CHANGES-ARE-EXECUTED-AS-CAMPAIGNS></p>
+  <when title="When to propose a campaign">
+    <p><PROPOSE-A-CAMPAIGN-BEFORE-TOUCHING-THE-TREE fact="true" status="impl/done">When the owner commissions work that spans **more than one session or
+more than a handful of commits**, propose a campaign plan before
+touching the tree.</PROPOSE-A-CAMPAIGN-BEFORE-TOUCHING-THE-TREE></p>
+    <p><the-plan-carries-five-roles fact="true" status="impl/done">The plan is one document carrying five roles:</the-plan-carries-five-roles></p>
+    <facts ordered="false">
+      <ROLE-PLAN fact="true" status="impl/done">the
+  recipe (PLAN),</ROLE-PLAN>
+      <ROLE-BASELINE fact="true" status="impl/done">the frozen starting numbers (BASELINE),</ROLE-BASELINE>
+      <ROLE-PREDICTIONS fact="true" status="impl/done">falsifiable
+  expectations (PREDICTIONS),</ROLE-PREDICTIONS>
+      <ROLE-LOG fact="true" status="impl/done">the running record (LOG),</ROLE-LOG>
+      <ROLE-REPORT fact="true" status="impl/done">and the closing
+  verdict (REPORT).</ROLE-REPORT>
+    </facts>
+    <p><format-pointer fact="true" status="impl/done">Format:
+@spec://org.vibevm.world/campaign-plans/flows/campaign-plans/CAMPAIGN-PLAN-FORMAT#root.</format-pointer></p>
+  </when>
+  <cold title="The plan runs cold">
+    <p><write-the-plan-to-run-cold-lead fact="true" status="impl/done">Write the plan so a fresh session — or a different person — executes
+it with no memory of the planning conversation:</write-the-plan-to-run-cold-lead></p>
+    <facts ordered="false">
+      <COLD-MANDATE-QUOTED-VERBATIM-AND-DATED fact="true" status="impl/done">the owner's mandate
+  quoted verbatim and dated,</COLD-MANDATE-QUOTED-VERBATIM-AND-DATED>
+      <COLD-BASELINE-AND-EXIT-AS-EXACT-COUNTS fact="true" status="impl/done">baseline and exit state as exact counts,</COLD-BASELINE-AND-EXIT-AS-EXACT-COUNTS>
+      <COLD-FACTS-VERIFIED-AT-WRITING-TIME fact="true" status="impl/done">current-state facts verified at writing time,</COLD-FACTS-VERIFIED-AT-WRITING-TIME>
+      <COLD-DECISIONS-WITH-REJECTED-OPTIONS-AND-REASONS fact="true" status="impl/done">decisions with their
+  rejected options and reasons,</COLD-DECISIONS-WITH-REJECTED-OPTIONS-AND-REASONS>
+      <COLD-A-LITERAL-QUICK-START-BLOCK fact="true" status="impl/done">a literal quick-start block,</COLD-A-LITERAL-QUICK-START-BLOCK>
+      <COLD-A-RUNNABLE-ACCEPTANCE-SCRIPT fact="true" status="impl/done">and a
+  runnable whole-campaign acceptance script.</COLD-A-RUNNABLE-ACCEPTANCE-SCRIPT>
+    </facts>
+    <p><WRONG-CURRENT-STATE-FACTS-ARE-THE-MOST-EXPENSIVE-PLAN-BUG fact="true" status="spec/done">Wrong current-state facts
+are the most expensive class of plan bug — verify while writing.</WRONG-CURRENT-STATE-FACTS-ARE-THE-MOST-EXPENSIVE-PLAN-BUG></p>
+  </cold>
+  <gates title="Phases gate on green">
+    <p><PHASE-ZERO-COMMITS-NOTHING-AND-GATES-EVERYTHING-AFTER fact="true" status="impl/done">Phase 0 is spikes and probes — no commits — and it gates everything
+after.</PHASE-ZERO-COMMITS-NOTHING-AND-GATES-EVERYTHING-AFTER></p>
+    <p><EVERY-LATER-PHASE-ENDS-GREEN-AND-EVERY-BOUNDARY-IS-A-SAFE-STOP fact="true" status="impl/done">Every later phase ends with the project's full gate panel
+green, and any phase boundary is a safe stop; the plan plus its
+execution ledger are the resume pointer.</EVERY-LATER-PHASE-ENDS-GREEN-AND-EVERY-BOUNDARY-IS-A-SAFE-STOP></p>
+    <p><sibling-document-pointers fact="true" status="impl/done">Mechanics:
+@spec://org.vibevm.world/campaign-plans/flows/campaign-plans/phase-gates#root;
+the record half:
+@spec://org.vibevm.world/campaign-plans/flows/campaign-plans/execution-ledger#root.</sibling-document-pointers></p>
+  </gates>
+  <boundary title="At every phase boundary">
+    <facts ordered="true">
+      <BOUNDARY-RUN-THE-FULL-GATE-PANEL fact="true" status="impl/done">Run the full gate panel; the floor must be green.</BOUNDARY-RUN-THE-FULL-GATE-PANEL>
+      <BOUNDARY-WRITE-THE-COMMIT-MAP-ENTRY fact="true" status="impl/done">Write the phase's commit-map entry in the execution ledger —
+   hashes, subjects, what each commit confirmed or falsified.</BOUNDARY-WRITE-THE-COMMIT-MAP-ENTRY>
+      <BOUNDARY-REFRESH-THE-STATUS-LINE fact="true" status="impl/done">Refresh the plan's status line ("Phase N landed, floor green,
+   next: Phase N+1").</BOUNDARY-REFRESH-THE-STATUS-LINE>
+      <BOUNDARY-ESCALATE-OWNER-ONLY-DECISIONS fact="true" status="impl/done">Escalate anything only the owner can decide as a review point:
+   OPEN, then RESOLVED with the ruling verbatim.</BOUNDARY-ESCALATE-OWNER-ONLY-DECISIONS>
+    </facts>
+  </boundary>
+  <never title="Never">
+    <facts ordered="false">
+      <NEVER-START-PHASE-ONE-ON-A-RED-SPIKE fact="true" status="impl/done">Never start Phase 1 while a Phase 0 spike is red — a red spike
+  rewrites the affected Decision first, in the plan, in place.</NEVER-START-PHASE-ONE-ON-A-RED-SPIKE>
+      <NEVER-COMMIT-DURING-PHASE-ZERO fact="true" status="impl/done">Never commit during Phase 0. Spikes leave findings, not tree
+  changes.</NEVER-COMMIT-DURING-PHASE-ZERO>
+      <NEVER-DO-DISCOVERED-WORK-SILENTLY fact="true" status="impl/done">Never do discovered work silently "while I was here" — it enters
+  the phase and the ledger explicitly, or it is deferred by name.</NEVER-DO-DISCOVERED-WORK-SILENTLY>
+      <NEVER-CLOSE-A-CAMPAIGN-WITHOUT-THE-REPORT fact="true" status="impl/done">Never close a campaign without the report checking every
+  prediction — a campaign that skips the report learns nothing
+  durable.</NEVER-CLOSE-A-CAMPAIGN-WITHOUT-THE-REPORT>
+      <NEVER-CARRY-A-DEFERRAL-OUTSIDE-THE-PLAN-FILE fact="true" status="impl/done">Never carry a deferral outside the plan file — the deferrals
+  ledger is where deferrals live, and the next campaign's mandate
+  drains from it.</NEVER-CARRY-A-DEFERRAL-OUTSIDE-THE-PLAN-FILE>
+    </facts>
+  </never>
+</spec>

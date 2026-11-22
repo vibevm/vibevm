@@ -69,7 +69,7 @@ impl Store {
         let mut identities = std::collections::BTreeSet::new();
         for harness in aliases.values() {
             if !identities.insert(harness)
-                || !matches!(metadata_capability(harness), MetadataCapability::Compatible { .. })
+                || !vibe_secrets::reference_binding_supported(harness)
             {
                 return Err(Error::Invalid);
             }
