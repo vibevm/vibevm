@@ -77,7 +77,7 @@ sidecars for the other two) — not the command declaration.</m-all-three-stacks
     <p><m-twentyone-copies fact="true" status="impl/done">**The engine crate exists in 21 directories: one authored
 and 20 copies** — every surviving package and materialized slot is at 1.0.0.
 The authored one is
-`vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v1.0.0/crates/core-ai-native-specmap/`.
+`vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v1.0.12/crates/core-ai-native-specmap/`.
 Every engine edit is followed by `cargo xtask sync-engines` as its own step.</m-twentyone-copies></p>
   </measured>
   <recognition title="2. How a command is recognised">
