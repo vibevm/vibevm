@@ -86,6 +86,11 @@ pub enum AgentCommand {
     /// or silently substitutes for delivery. Session-changing commands are
     /// outside this bounded route; READY conversation delivery and strict
     /// delivery remain unavailable.
+    ///
+    /// `--worker-prefix` (kind `claude`, with `-p`/`--print` before any
+    /// `--`) also passes `--append-subagent-system-prompt-file` naming the
+    /// same lane file, so every subagent of the session starts with the
+    /// same prefix bytes.
     #[command(external_subcommand)]
     Launch(Vec<String>),
 }

@@ -42,6 +42,7 @@ use vibe_core::manifest::TargetOs;
 use vibe_workspace::boot_artifacts::build_node_prompt;
 use vibe_workspace::system_prompt::{
     CodexProfile, EnvAssignment, HarnessKind, build_remedy, host_mismatch_warning,
+    worker_prefix_flags,
 };
 
 use crate::commands::app::global;
@@ -52,6 +53,8 @@ use super::launchers;
 
 #[path = "launch/route.rs"]
 mod route;
+#[path = "launch/worker_prefix.rs"]
+mod worker_prefix;
 use route::{admit_route_kind, route_child};
 
 #[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-076#SYS-SOFT-LAUNCH")]
@@ -60,7 +63,8 @@ pub(crate) fn run(ctx: &output::Context, argv: Vec<String>) -> Result<()> {
     let Some(name) = argv.next() else {
         bail!("`vibe agent` needs a launcher name; `vibe agent list` names the ones you have");
     };
-    let rest: Vec<String> = argv.collect();
+    let mut rest: Vec<String> = argv.collect();
+    let worker_prefix = worker_prefix::take(&mut rest)?;
 
     // A repository must never choose which program runs here, and this is
     // asked **before** the workspace is opened: the manifest parser would
@@ -90,6 +94,9 @@ pub(crate) fn run(ctx: &output::Context, argv: Vec<String>) -> Result<()> {
 
     let mut native_arguments = launcher.command.iter().skip(1).cloned().collect::<Vec<_>>();
     native_arguments.extend(rest.iter().cloned());
+    if worker_prefix {
+        worker_prefix::admit(launcher.kind, &native_arguments)?;
+    }
     if launcher.kind == HarnessKind::Hermes
         && let Some(request) = super::native::hermes_ready_session::parse(&native_arguments)?
     {
@@ -306,6 +313,7 @@ pub(crate) fn run(ctx: &output::Context, argv: Vec<String>) -> Result<()> {
     if let Some(undeliverable) = &composed.undeliverable {
         return soft(&launcher, &rest, undeliverable);
     }
+    let lane = composed.lane.clone();
     let composed = composed.flags;
     // **C2 — `vibe agent` injects only for a harness in `launch` delivery**,
     // so the conflict question is asked only when vibe is about to pass the
@@ -328,6 +336,9 @@ pub(crate) fn run(ctx: &output::Context, argv: Vec<String>) -> Result<()> {
     }
     let mut command: Vec<String> = launcher.command.clone();
     command.extend(composed.flags.iter().cloned());
+    if worker_prefix && let Some(lane) = &lane {
+        command.extend(worker_prefix_flags(launcher.kind, lane));
+    }
     command.extend(rest);
     let scrub = if composed.env.is_empty() {
         scrub(launcher.kind)

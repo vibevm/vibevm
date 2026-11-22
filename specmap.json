@@ -21977,18 +21977,27 @@
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/commands/agent/launch.rs",
       "item_kind": "fn",
-      "line": 57,
+      "line": 60,
       "symbol": "vibe_cli::commands::agent::launch::run",
-      "end_line": 338,
-      "fingerprint": "tok1:186f92cc216382994c93aadee4e43d30195ac9bda305c25d2dcc8c17c9b66bbb"
+      "end_line": 349,
+      "fingerprint": "tok1:180238cdb19e5782dc9c22d19357e01dfc5df085e3d1721c9b8fd01defb729c2"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/agent/launch/worker_prefix.rs",
+      "item_kind": "mod",
+      "line": 6,
+      "symbol": "vibe_cli::commands::agent::launch::worker_prefix",
+      "end_line": 6,
+      "fingerprint": "tok1:dfd8ecdc204d7e2fffeb951efdf428d40db723a97be70cdc6313967ca9104fd9"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/commands/agent/launch.rs",
       "item_kind": "fn",
-      "line": 433,
+      "line": 444,
       "symbol": "vibe_cli::commands::agent::launch::write_profile",
-      "end_line": 460,
+      "end_line": 471,
       "fingerprint": "tok1:5749ab5f3499199b6f9d25aa78df112206b51f63a9a7df2d79de886dca8bb49e"
     },
     {
@@ -94181,15 +94190,23 @@
     {
       "file": "crates/vibe-cli/src/commands/agent/launch.rs",
       "from_symbol": "vibe_cli::commands::agent::launch::run",
-      "line": 57,
+      "line": 60,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#SYS-SOFT-LAUNCH",
       "verb": "implements"
     },
     {
+      "file": "crates/vibe-cli/src/commands/agent/launch/worker_prefix.rs",
+      "from_symbol": "vibe_cli::commands::agent::launch::worker_prefix",
+      "line": 6,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#SYS-WORKER-PREFIX-DELIVERY",
+      "verb": "implements"
+    },
+    {
       "file": "crates/vibe-cli/src/commands/agent/launch.rs",
       "from_symbol": "vibe_cli::commands::agent::launch::write_profile",
-      "line": 439,
+      "line": 450,
       "provenance": "authored",
       "uri": "spec://core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#rules",
       "verb": "deviates",
@@ -179558,7 +179575,7 @@
     },
     {
       "anchor": "api",
-      "content_hash": "sha256:4dcd3f0a600efacbbef98eb58e5e56e0545ba348c71431fdc8f5541f07ee40da",
+      "content_hash": "sha256:6c96e203be759404b0f33f10246c00d7ef4858b009c309f562e389163df00540",
       "doc_path": "common/PROP-076",
       "file": "vibevm/vibespecs/common/PROP-076-system-prompt-prefix.xml",
       "heading": "8. The API boundary, authority and agent modes",
@@ -179594,10 +179611,10 @@
     },
     {
       "anchor": "SYS-WORKER-PREFIX-DELIVERY",
-      "content_hash": "sha256:68c92cc3c329cac263db7e4f57f66e058373a2aabc43bc1a03ba599f1c87e2a8",
+      "content_hash": "sha256:213056c3287164104350457aaaf483d708a28fe7558f0bd4c8bdbe7dfcb9e6fa",
       "doc_path": "common/PROP-076",
       "file": "vibevm/vibespecs/common/PROP-076-system-prompt-prefix.xml",
-      "heading": "**Owner decision 2026-11-22 — a worker that needs full project context receives the composed agent lane from the launcher, and every same-type worker of one wave receives the same bytes.** Four decisions, each stated so it is not re-argued. **(1) Only the launcher produces a worker prefix.** `vibe agent claude --worker-prefix` passes Claude Code's `--append-subagent-system-prompt-file` naming the same composed lane file the parent launch passes to `--append-system-prompt-file`, and `vibe prompt flags --harness claude --workers` prints that flag; there is no second composition, and nobody assembles a worker system prompt by hand, because a hand-assembled prompt differs per worker and any difference before the prefix makes every worker write it to the cache again. **(2) One generation per wave.** The lane is composed once, at the parent's launch (`#SYS-AGENT-LANE`), and every worker that session starts receives those bytes; an edit reaches workers only through a new launch. **(3) A quiet worker or an executor on a packet never gets it, and `#SYS-WORKER-EXCLUSION` stays true for them.** The flag reaches every subagent of the session it is passed to, so a session launched with `--worker-prefix` starts only full-context workers, and a lead that dispatches quiet workers or packet executors does so from a session launched without it. **(4) Parent and worker do not share a cache; same-type workers of one wave do.** A subagent's system prompt is its own, so the only claim is that workers of one type in one wave share one prefix. Measured 2026-11-22 (`campaigns/sys-prompt-2026-11/WORKER-PREFIX-MEASUREMENT.md`): five same-type workers whose prefixes were byte-identical wrote the prefix to the cache once and read it four times, about 3.6 times cheaper than five workers whose prompts differed before it. **Claude Code only, print mode only.** The flag is hidden and marked internal in Claude Code 2.1.330; it sets CLAUDE_CODE_ENABLE_APPEND_SUBAGENT_PROMPT itself, propagates to nested subagents, and does not reach a subagent started with an isolated context. Claude Code 2.1.330 describes `--append-subagent-system-prompt-file` as working only with `--print`, so `vibe agent` refuses `--worker-prefix` when neither `-p` nor `--print` appears before the first `--` (after it, `-p` is a prompt, not print mode) rather than pass a flag the session ignores, and refuses it for every other harness kind, none of which has such a flag; both are refusals of an argument, not delivery failures, so `#SYS-SOFT-LAUNCH` does not turn them into a bare start. A launch that delivers no lane — a soft launch, or a project that has not opted in — passes no worker flag either. @status:spec/done",
+      "heading": "**Owner decision 2026-11-22 — a worker that needs full project context receives the composed agent lane from the launcher, and every same-type worker of one wave receives the same bytes.** Four decisions, each stated so it is not re-argued. **(1) Only the launcher produces a worker prefix.** `vibe agent claude --worker-prefix` passes Claude Code's `--append-subagent-system-prompt-file` naming the same composed lane file the parent launch passes to `--append-system-prompt-file`, and `vibe prompt flags --harness claude --workers` prints that flag; there is no second composition, and nobody assembles a worker system prompt by hand, because a hand-assembled prompt differs per worker and any difference before the prefix makes every worker write it to the cache again. **(2) One generation per wave.** The lane is composed once, at the parent's launch (`#SYS-AGENT-LANE`), and every worker that session starts receives those bytes; an edit reaches workers only through a new launch. **(3) A quiet worker or an executor on a packet never gets it, and `#SYS-WORKER-EXCLUSION` stays true for them.** The flag reaches every subagent of the session it is passed to, so a session launched with `--worker-prefix` starts only full-context workers, and a lead that dispatches quiet workers or packet executors does so from a session launched without it. **(4) Parent and worker do not share a cache; same-type workers of one wave do.** A subagent's system prompt is its own, so the only claim is that workers of one type in one wave share one prefix. Measured 2026-11-22 (`campaigns/sys-prompt-2026-11/WORKER-PREFIX-MEASUREMENT.md`): five same-type workers whose prefixes were byte-identical wrote the prefix to the cache once and read it four times, about 3.6 times cheaper than five workers whose prompts differed before it. **Claude Code only, print mode only.** The flag is hidden and marked internal in Claude Code 2.1.330; it sets CLAUDE_CODE_ENABLE_APPEND_SUBAGENT_PROMPT itself, propagates to nested subagents, and does not reach a subagent started with an isolated context. Claude Code 2.1.330 describes `--append-subagent-system-prompt-file` as working only with `--print`, so `vibe agent` refuses `--worker-prefix` when neither `-p` nor `--print` appears before the first `--` (after it, `-p` is a prompt, not print mode) rather than pass a flag the session ignores, and refuses it for every other harness kind, none of which has such a flag; both are refusals of an argument, not delivery failures, so `#SYS-SOFT-LAUNCH` does not turn them into a bare start. A launch that delivers no lane — a soft launch, or a project that has not opted in — passes no worker flag either. **Implemented (SWP-3, SWP-4).** `system_prompt::worker_prefix_flags` composes the flag, `vibe prompt flags --workers` prints it, and `vibe agent` takes `--worker-prefix`; the argument vector is proved against a recording shim in `crates/vibe-cli/tests/cli_agent_worker_prefix.rs`. Whether Claude Code delivers the file to its subagents was not measured live here. @status:impl/done",
       "line": 83,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#SYS-WORKER-PREFIX-DELIVERY"
     },
