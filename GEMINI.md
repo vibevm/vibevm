@@ -17,7 +17,7 @@ any position. A delivered file sits between two lines:
 1. A file with both lines in your context is read. Do not read it again. If
    the same pair appears twice the copies are identical; follow one.
 2. A file with a begin line and no end line was cut short. Read it from disk.
-3. The expected id of `vibevm/vibespecs/boot/STATIC.xml` is `334ad5bba3ef`. If its lane lines
+3. The expected id of `vibevm/vibespecs/boot/STATIC.xml` is `8639d34b97dc`. If its lane lines
    carry another id the delivered copy is out of date: read the whole
    lane from disk.
 4. A lane file with no lane lines in your context, and which you have

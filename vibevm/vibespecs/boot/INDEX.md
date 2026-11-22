@@ -43,3 +43,11 @@ kind = "static"
 [[entry]]
 path = "vibevm/vibedeps/org.vibevm.world.omnichannel/1.0.0/vibevm/vibespecs/boot/68-flow-omnichannel.xml"
 kind = "static"
+
+[[entry]]
+path = "vibevm/vibedeps/org.vibevm.world.working-rules/1.0.12/vibevm/vibespecs/boot/13-flow-working-rules.xml"
+kind = "static"
+
+[[entry]]
+path = "vibevm/vibedeps/org.vibevm.world.working-rules/1.0.12/vibevm/vibespecs/boot/13a-planning-extension.xml"
+kind = "static"

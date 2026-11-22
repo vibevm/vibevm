@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">Steward common</title>
+  <status stage="impl" state="done"/>
+  <p><COMMON-SKILL-SCOPE fact="true" status="impl/done">`scripts/steward_home.py` is the one shared helper
+for the steward home, repository identity, binding files and context resolution
+defined by
+`spec://org.vibevm.world/multi-user-planning/flows/multi-user-planning/user-local-state#CONTEXT-RESOLUTION`.
+The goal renderer and the tree renderer load it by path; it needs Python 3.11+
+and Git, and no third-party module.</COMMON-SKILL-SCOPE></p>
+  <p><COMMON-SKILL-HOME fact="true" status="impl/done">The steward home is `$VIBE_SETTINGS/steward` when that
+variable is set and non-empty, otherwise `~/.vibe/steward`. `resolve_context.py`
+accepts `--home` to override it, as do `render_goal.py` and `render_tree.py`
+with `--resolve`. `bind_context.py` takes the home from its `--context`
+directory, which must lie in that home's `contexts/` directory.</COMMON-SKILL-HOME></p>
+  <resolve title="Resolve">
+    <p><COMMON-SKILL-RESOLVE fact="true" status="impl/done">Run the resolver inside the checkout. It never
+creates, repairs or rebinds anything:</COMMON-SKILL-RESOLVE></p>
+    <fence lang="text">python -B scripts/resolve_context.py [--home &lt;steward home&gt;] [--repo &lt;checkout&gt;] [--context-id &lt;id&gt;]</fence>
+    <p><COMMON-SKILL-RESOLVE-OUTPUT fact="true" status="impl/done">It prints one JSON object with `status`
+(`found`, `ambiguous`, `none` or `error`), `context_id`, `context_dir`, the
+matching `rule`, `candidates` and any `invalid` bindings it skipped. Exit 0
+found, 1 none, 2 ambiguous, 3 error (for example a directory outside Git, or a shallow clone, which has
+no stable repository identity).
+Report the candidates of an ambiguous result to the owner; never pick one.</COMMON-SKILL-RESOLVE-OUTPUT></p>
+  </resolve>
+  <bind title="Bind">
+    <p><COMMON-SKILL-BIND fact="true" status="impl/done">Only on the owner's explicit request, write a schema-2
+binding for an existing context directory:</COMMON-SKILL-BIND></p>
+    <fence lang="text">python -B scripts/bind_context.py --context &lt;steward home&gt;/contexts/&lt;context-id&gt; --repo &lt;checkout&gt; [--default | --take-default] [--revision &lt;selector&gt;]... [--project-name &lt;name&gt;]</fence>
+    <p><COMMON-SKILL-BIND-RULES fact="true" status="impl/done">A schema-1 binding is converted by keeping
+`context_id` and `project_name`, computing `repository_id` from `--repo`, and
+moving the old path tuple into one `[[seen]]` entry. `--revision` replaces the
+stored selectors; without it they are kept. A request for `default = true` is
+refused while another context of the same repository holds it, unless
+`--take-default` moves the default here. A schema-2 binding of another
+repository is refused rather than silently rebound.</COMMON-SKILL-BIND-RULES></p>
+  </bind>
+</spec>

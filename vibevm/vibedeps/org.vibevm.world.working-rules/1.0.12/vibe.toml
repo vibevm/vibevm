@@ -1,0 +1,26 @@
+[package]
+name = "working-rules"
+group = "org.vibevm.world"
+kind = "flow"
+version = "1.0.12"
+epoch = 1
+format = "normal"
+authors = ["Oleg Chirukhin"]
+license = "UPL-1.0"
+description = "Working rules for sessions that share a project: which page each role reads, a frozen completion list that lets work end, bounded leads, executors with one packet each, and safe synchronization"
+keywords = ["collaboration", "roles", "delegation", "completion-list", "executors", "sessions"]
+
+[compatibility]
+min_vibe_version = "0.1.0"
+requires_kinds = []
+
+# The pages under `rules/` sit outside the spec root on purpose: they are read
+# raw by executors and named by installed path, so a consumer's `spec_format`
+# must not convert them or change their file names.
+[boot_snippet]
+source = "vibevm/vibespecs/boot/13-flow-working-rules.xml"
+category = "flow"
+
+[[boot_snippet.fragment]]
+source = "vibevm/vibespecs/boot/13a-planning-extension.xml"
+when = "installed:org.vibevm.world/multi-user-planning"

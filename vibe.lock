@@ -1,15 +1,16 @@
 [meta]
 generated_by = "vibe 1.0.0"
-generated_at = "2026-11-22T04:17:31Z"
+generated_at = "2026-11-22T08:39:30Z"
 schema_version = 7
 root_dependencies = [
     "stack:org.vibevm.ai-native/rust-ai-native@^1.0.0",
     "stack:org.vibevm.ai-native/typescript-ai-native@^1.0.0",
     "org.vibevm.doc/web@^1.0.0",
     "flow:org.vibevm.fractality/delegation-first@^1.0.0",
-    "flow:org.vibevm.world/multi-user-planning@^1.0.0",
+    "flow:org.vibevm.world/multi-user-planning@^1.0.12",
     "flow:org.vibevm.world/omnichannel@^1.0.0",
     "org.vibevm.world/redbook@^1.0.0",
+    "flow:org.vibevm.world/working-rules@^1.0.12",
 ]
 
 [[package]]
@@ -29,10 +30,10 @@ source_kind = "local"
 kind = "flow"
 name = "multi-user-planning"
 group = "org.vibevm.world"
-version = "1.0.0"
+version = "1.0.12"
 authors = ["Oleg Chirukhin"]
-source_url = "file:///data/git/vibevm-nst/vibevm/vibepacks/org.vibevm.world/multi-user-planning/v1.0.0"
-content_hash = "sha256:fdc5a28d797f3818308ea3118408761b51887b5167f6448d0d5105ed537f7bd6"
+source_url = "file:///data/git/vibevm-nst/vibevm/vibepacks/org.vibevm.world/multi-user-planning/v1.0.12"
+content_hash = "sha256:163b4051b320e562908563996f8849765609d722f8643bbc154d49237b7511a1"
 files_written = []
 admitted_by = "root-edge"
 source_kind = "local"
@@ -48,6 +49,18 @@ content_hash = "sha256:a6554fa5f09619a13c04be29e81f4d610a123f454dc4f01479f49c8b0
 files_written = []
 admitted_by = "root-edge"
 source_kind = "local"
+
+[[package]]
+kind = "flow"
+name = "working-rules"
+group = "org.vibevm.world"
+version = "1.0.12"
+authors = ["Oleg Chirukhin"]
+source_url = "file:///data/git/vibevm-nst/vibevm/vibepacks/org.vibevm.world/working-rules/v1.0.12"
+content_hash = "sha256:7ed8f57a57fc9a064669a7b212ca6b8fd49efd86689aaf0cd3ac8998313bd481"
+files_written = []
+admitted_by = "root-edge"
+source_kind = "registry"
 
 [[package]]
 kind = "app"

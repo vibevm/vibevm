@@ -100,6 +100,7 @@
   HEADER-SUBJECT-LENGTH-MOOD-AND-CASE → org-vibevm-world-%2Dgit-conventional-commits-%2DHEADER-SUBJECT-LENGTH-MOOD-AND-CASE (org.vibevm.world/git-conventional-commits)
   HEADER-THE-ALLOWED-TYPE-SET → org-vibevm-world-%2Dgit-conventional-commits-%2DHEADER-THE-ALLOWED-TYPE-SET (org.vibevm.world/git-conventional-commits)
   HISTORY-REACHES-A-HOST-ONLY-THROUGH-THE-FAN-OUT → org-vibevm-world-%2Dsource-mirrors-%2DHISTORY-REACHES-A-HOST-ONLY-THROUGH-THE-FAN-OUT (org.vibevm.world/source-mirrors)
+  HOME-IS-PLANNING-TRUTH → org-vibevm-world-%2Dmulti-user-planning-%2DHOME-IS-PLANNING-TRUTH (org.vibevm.world/multi-user-planning)
   HUMAN-MAY-CHANGE-THE-SPEC-AND-NOBODY-ELSE-MAY-SILENTLY → org-vibevm-world-%2Dconflict-protocol-%2DHUMAN-MAY-CHANGE-THE-SPEC-AND-NOBODY-ELSE-MAY-SILENTLY (org.vibevm.world/conflict-protocol)
   HUMAN-PROCESS-IS-OPTIMIZED-FOR → org-vibevm-world-%2Dtwo-process-model-%2DHUMAN-PROCESS-IS-OPTIMIZED-FOR (org.vibevm.world/two-process-model)
   IF-YOU-BELIEVE-THE-SPEC-IS-WRONG-IMPLEMENT-IT-ANYWAY → org-vibevm-world-%2Dconflict-protocol-%2DIF-YOU-BELIEVE-THE-SPEC-IS-WRONG-IMPLEMENT-IT-ANYWAY (org.vibevm.world/conflict-protocol)
@@ -1370,7 +1371,7 @@ pre-run; never record the pass.</org-vibevm-world--manual-tests--REPORT-THE-PRE-
   </org-vibevm-world--manual-tests--never>
 </spec>
 
-<!-- vibe:c1 vibe:static org.vibevm.world/multi-user-planning — vibevm/vibedeps/org.vibevm.world.multi-user-planning/1.0.0/vibevm/vibespecs/boot/12-flow-multi-user-planning.xml -->
+<!-- vibe:c1 vibe:static org.vibevm.world/multi-user-planning — vibevm/vibedeps/org.vibevm.world.multi-user-planning/1.0.12/vibevm/vibespecs/boot/12-flow-multi-user-planning.xml -->
 
 <?xml version="1.0" encoding="UTF-8"?>
 <spec xmlns="https://vibevm.org/spec/1">
@@ -1382,12 +1383,21 @@ subagent, review-only agent, or other session explicitly marked non-central
 does not claim custody, create central state, or apply the central clauses
 below; its explicit packet remains its whole task.</org-vibevm-world--multi-user-planning--CENTRAL-ONLY></p>
   <p><org-vibevm-world--multi-user-planning--RESOLVE-LOCAL-CONTEXT-FIRST fact="true" status="impl/done">Before campaign
-work, resolve this repository/worktree/branch to one context under
-`~/.vibe/steward/contexts/`. Read its `settings.toml`, complete `plan.toml`,
+work, resolve this repository to one context under the steward home
+(`$VIBE_SETTINGS/steward/` when set, else `~/.vibe/steward/`) with
+the `steward-common` skill's `scripts/resolve_context.py --repo &lt;checkout&gt;`:
+it matches by repository identity, then branch selector, then the default
+context, and refuses ambiguity by listing candidates. "No context" is reported,
+not repaired; creating a context or binding one (`bind_context.py`) happens only
+on explicit request. Read the context's `settings.toml`, complete `plan.toml`,
 advisory `custody.toml`, and verify the repository tree. Read handoff material
 only when the owner explicitly requests formal handoff inspection or receipt.
 If global or context settings are absent, create the documented safe defaults.
 Never infer current state from a repository-level personal checkpoint.</org-vibevm-world--multi-user-planning--RESOLVE-LOCAL-CONTEXT-FIRST></p>
+  <p><org-vibevm-world--multi-user-planning--HOME-IS-PLANNING-TRUTH fact="true" status="impl/done">Nothing outside the
+steward home is a planning source of truth. The tree view is regenerated into
+`&lt;context&gt;/view/` with the `steward-tree` skill's `scripts/render_tree.py --resolve`, run
+with the checkout as the working directory (or `--context &lt;dir&gt;`); it is disposable and never read back.</org-vibevm-world--multi-user-planning--HOME-IS-PLANNING-TRUTH></p>
   <org-vibevm-world--multi-user-planning--authority title="Authority and custody">
     <facts ordered="false">
       <org-vibevm-world--multi-user-planning--LOCAL-DOES-NOT-GRANT fact="true" status="impl/done">User-local state
@@ -1426,7 +1436,7 @@ handoff merely from restart, compaction, model change or custody metadata.</org-
     <p><org-vibevm-world--multi-user-planning--RECEIVE-COMMAND fact="true" status="impl/done">Recognise
 `ACCEPT HANDOFF FROM &lt;context-id&gt;` / `RECEIVE HANDOFF FROM
 &lt;context-id&gt;` and Russian `ПРИМИ ХЭНДОФФ ИЗ &lt;context-id&gt;` by intent.
-Resolve the opaque id under `~/.vibe/steward/contexts/`, require exactly one
+Resolve the opaque id under `&lt;steward home&gt;/contexts/`, require exactly one
 open offered handoff (otherwise require its exact handoff id), then execute the
 receipt protocol. The human never pastes `HANDOFF.md`. After a successful claim,
 refresh the selected goal, print `GOAL.md` in full and print the exact
@@ -1535,7 +1545,7 @@ setting. Canon:
 central agent checks the current context's `GOAL.md` before campaign work and
 after every plan, selected-goal or planning-profile change. Missing or stale
 goal bytes are regenerated deterministically from `plan.toml` through
-`steward-goal`; no LLM paraphrase enters the canonical file. No holder/session
+`steward-goal` (`render_goal.py --resolve` or `--context &lt;dir&gt;`); no LLM paraphrase enters the canonical file. No holder/session
 claim is required. A worker or a central agent fenced by a valid explicit
 `offering` reports staleness but MUST NOT write. Canon:
 @spec://org.vibevm.world/multi-user-planning/flows/multi-user-planning/goal-projection#root.</org-vibevm-world--multi-user-planning--GOAL-MUST-BE-CURRENT></p>

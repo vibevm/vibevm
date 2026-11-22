@@ -1,0 +1,83 @@
+schema = 1
+source_hash = "sha256:7ed8f57a57fc9a064669a7b212ca6b8fd49efd86689aaf0cd3ac8998313bd481"
+spec_format = "xml"
+converter_recipe = "specdoc/4"
+derived_hash = "sha256:ef7e50968da5e2c39d06bc56dbadfe13ccf90bbf2fbca32d13c7adfc2af0e38f"
+
+[[file]]
+path = "LICENSE.md"
+sha256 = "c0e2a0382616f6ad368f3d15845916310a4a3113802df74a759d41b9d914e1be"
+disposition = "copied"
+source = "LICENSE.md"
+
+[[file]]
+path = "README.xml"
+sha256 = "85f66a51940e2ebb0a343e659d07c6c519b1343896c9f481f4c74fff120c3f27"
+disposition = "converted"
+source = "README.md"
+
+[[file]]
+path = "rules/lead-bounded.md"
+sha256 = "61d61cd20e763a9c9cb695e04a24f4567dd0403fa73ffcbf4fae8e17aae1dc7a"
+disposition = "copied"
+source = "rules/lead-bounded.md"
+
+[[file]]
+path = "rules/local.template.md"
+sha256 = "8b4dcb645d8f0ece64f0d3ffc6029f1875efd84cd4b6bf9b76e36382e7e2e9d3"
+disposition = "copied"
+source = "rules/local.template.md"
+
+[[file]]
+path = "rules/packet.template.md"
+sha256 = "82b4ceaf44d479312dbbbb3770303a29a936ac25d59d6b16ec9fe0f6c2656d68"
+disposition = "copied"
+source = "rules/packet.template.md"
+
+[[file]]
+path = "rules/project.template.md"
+sha256 = "5aa2b9f6c72988d6a353278f8ec791ec30a6a97fd0d3382e6b25b81802534c44"
+disposition = "copied"
+source = "rules/project.template.md"
+
+[[file]]
+path = "rules/protocol.md"
+sha256 = "37301f44021a34ef077f14f75bd541146c969e56f1143e4d627fd7b1b7826399"
+disposition = "copied"
+source = "rules/protocol.md"
+
+[[file]]
+path = "rules/runs.md"
+sha256 = "6302d961912b249760df9bca6ea6aaf6e659a21e55a2c6173bd74b337cf95aa5"
+disposition = "copied"
+source = "rules/runs.md"
+
+[[file]]
+path = "rules/with-multi-user-planning.md"
+sha256 = "5e8815ef163c1cc4e711b150cf024b63b358d8da0da0f0bb9559b78c5e29aa72"
+disposition = "copied"
+source = "rules/with-multi-user-planning.md"
+
+[[file]]
+path = "rules/worker.md"
+sha256 = "9cd0aad00d8d455230a7844c3dfacf25dd141a9dce175015a2b7c071a407a92e"
+disposition = "copied"
+source = "rules/worker.md"
+
+[[file]]
+path = "vibe.toml"
+sha256 = "09453561829bd0e5eac54485040ed6f153e7ba0df2632adac0a90b5da92e0ee7"
+disposition = "copied"
+source = "vibe.toml"
+
+[[file]]
+path = "vibevm/vibespecs/boot/13-flow-working-rules.xml"
+sha256 = "b850c3d8799ca7380dab2250f227793753b84ae1b401942d2384e4f07d6aa19c"
+disposition = "copied"
+source = "vibevm/vibespecs/boot/13-flow-working-rules.xml"
+
+[[file]]
+path = "vibevm/vibespecs/boot/13a-planning-extension.xml"
+sha256 = "8c779d6f62668937130bfefe5eafb4257145a5bbc33a591f9daf8c8825b3a214"
+disposition = "copied"
+source = "vibevm/vibespecs/boot/13a-planning-extension.xml"

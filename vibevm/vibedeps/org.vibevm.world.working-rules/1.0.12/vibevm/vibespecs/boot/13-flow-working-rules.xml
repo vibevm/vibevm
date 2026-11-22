@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">Flow: Working rules</title>
+  <status stage="impl" state="done"/>
+  <p><WHICH-PAGE-IS-YOURS fact="true" status="impl/done">This project works under the working rules. If
+`WORKING-RULES.local.md` does not exist, the project is in ordinary mode and the
+table below does not apply. If it exists, find your line in its "Tiers" block and
+read only your row; if it has no line for you, a central session is a bounded
+lead and a worker is an executor. The pages
+are in `vibevm/vibedeps/org.vibevm.world.working-rules/1.0.12/rules/`.</WHICH-PAGE-IS-YOURS></p>
+  <table>
+    <tr><td>you are</td><td>read</td></tr>
+    <tr><td><ROW-OPEN-LEAD fact="true" status="impl/done">lead, profile `open`</ROW-OPEN-LEAD></td><td><ROW-OPEN-LEAD-READS fact="true" status="impl/done">`protocol.md`, `WORKING-RULES.project.md`, `WORKING-RULES.local.md`</ROW-OPEN-LEAD-READS></td></tr>
+    <tr><td><ROW-BOUNDED-LEAD fact="true" status="impl/done">lead, profile `bounded`</ROW-BOUNDED-LEAD></td><td><ROW-BOUNDED-LEAD-READS fact="true" status="impl/done">`lead-bounded.md`, the "Current mode" block of `WORKING-RULES.local.md`, the completion list it names</ROW-BOUNDED-LEAD-READS></td></tr>
+    <tr><td><ROW-EXECUTOR fact="true" status="impl/done">executor</ROW-EXECUTOR></td><td><ROW-EXECUTOR-READS fact="true" status="impl/done">`worker.md` and its packet, nothing else</ROW-EXECUTOR-READS></td></tr>
+  </table>
+  <p><PROJECT-OWNED-FILES fact="true" status="impl/done">`WORKING-RULES.project.md` (project policy) and `WORKING-RULES.local.md`
+(local binding, untracked) are project-owned files at the project root. The
+package never writes them; without them the session works in ordinary mode.</PROJECT-OWNED-FILES></p>
+</spec>
