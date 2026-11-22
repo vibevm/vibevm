@@ -179,6 +179,15 @@ pub fn is_generated_agent_type(bytes: &[u8]) -> bool {
     false
 }
 
+#[path = "agent_types/sync.rs"]
+mod sync;
+
+pub use sync::{AgentTypeOutcome, AgentTypeStatus, AgentTypesError, SyncMode, sync_agent_types};
+
+#[cfg(test)]
+#[path = "agent_types/sync_tests.rs"]
+mod sync_tests;
+
 #[cfg(test)]
 #[path = "agent_types/tests.rs"]
 mod tests;

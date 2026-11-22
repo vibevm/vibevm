@@ -81841,6 +81841,96 @@
     },
     {
       "crate_name": "vibe-workspace",
+      "file": "crates/vibe-workspace/src/system_prompt/agent_types/sync.rs",
+      "item_kind": "mod",
+      "line": 10,
+      "symbol": "vibe_workspace::system_prompt::agent_types::sync",
+      "end_line": 10,
+      "fingerprint": "tok1:4543db4ecf71743183719aae7234db96f1580b947f256c2aa3409e9b850fdefa"
+    },
+    {
+      "crate_name": "vibe-workspace",
+      "file": "crates/vibe-workspace/src/system_prompt/agent_types/sync.rs",
+      "item_kind": "struct",
+      "line": 57,
+      "symbol": "vibe_workspace::system_prompt::agent_types::sync::AgentTypeOutcome",
+      "end_line": 65,
+      "fingerprint": "tok1:5cc472bf86387811721872ee061f5edbac992c055cbba1b88106ecd9090f27f5"
+    },
+    {
+      "crate_name": "vibe-workspace",
+      "file": "crates/vibe-workspace/src/system_prompt/agent_types/sync.rs",
+      "item_kind": "enum",
+      "line": 24,
+      "symbol": "vibe_workspace::system_prompt::agent_types::sync::AgentTypeStatus",
+      "end_line": 37,
+      "fingerprint": "tok1:f2614f6d38efd6731a5611311b27e4ea777441162201d5990e27fb338cd25d4b"
+    },
+    {
+      "crate_name": "vibe-workspace",
+      "file": "crates/vibe-workspace/src/system_prompt/agent_types/sync.rs",
+      "item_kind": "fn",
+      "line": 40,
+      "symbol": "vibe_workspace::system_prompt::agent_types::sync::AgentTypeStatus::as_str",
+      "end_line": 54,
+      "fingerprint": "tok1:5e9eb23efd9f477a45694c181ecdf32dd714387a8274fd6fc1d094d381956d0a"
+    },
+    {
+      "crate_name": "vibe-workspace",
+      "file": "crates/vibe-workspace/src/system_prompt/agent_types/sync.rs",
+      "item_kind": "enum",
+      "line": 67,
+      "symbol": "vibe_workspace::system_prompt::agent_types::sync::AgentTypesError",
+      "end_line": 75,
+      "fingerprint": "tok1:f077bd5b67bb5903e91faf99c41eea46c5c720310aa28414cbfbf66bf0fee9bb"
+    },
+    {
+      "crate_name": "vibe-workspace",
+      "file": "crates/vibe-workspace/src/system_prompt/agent_types/sync.rs",
+      "item_kind": "enum",
+      "line": 16,
+      "symbol": "vibe_workspace::system_prompt::agent_types::sync::SyncMode",
+      "end_line": 22,
+      "fingerprint": "tok1:342da05d300b375fac9b7e634293662ab1aa92c9bda92649762cf7d8c7ce2f55"
+    },
+    {
+      "crate_name": "vibe-workspace",
+      "file": "crates/vibe-workspace/src/system_prompt/agent_types/sync.rs",
+      "item_kind": "fn",
+      "line": 77,
+      "symbol": "vibe_workspace::system_prompt::agent_types::sync::sync_agent_types",
+      "end_line": 188,
+      "fingerprint": "tok1:76265ea92aa91a420dacefe05ff9e03b6c9301b08ed1d6daf7a2dbee27f50ea6"
+    },
+    {
+      "crate_name": "vibe-workspace",
+      "file": "crates/vibe-workspace/src/system_prompt/agent_types/sync_tests.rs",
+      "item_kind": "mod",
+      "line": 9,
+      "symbol": "vibe_workspace::system_prompt::agent_types::sync_tests",
+      "end_line": 9,
+      "fingerprint": "tok1:4543db4ecf71743183719aae7234db96f1580b947f256c2aa3409e9b850fdefa"
+    },
+    {
+      "crate_name": "vibe-workspace",
+      "file": "crates/vibe-workspace/src/system_prompt/agent_types/sync_tests.rs",
+      "item_kind": "fn",
+      "line": 111,
+      "symbol": "vibe_workspace::system_prompt::agent_types::sync_tests::check_reports_missing_current_stale_and_foreign",
+      "end_line": 183,
+      "fingerprint": "tok1:83e861aee309a46aeeffc45ca7a10479e7a5264ab69010a0535e20ee3bfb865e"
+    },
+    {
+      "crate_name": "vibe-workspace",
+      "file": "crates/vibe-workspace/src/system_prompt/agent_types/sync_tests.rs",
+      "item_kind": "fn",
+      "line": 39,
+      "symbol": "vibe_workspace::system_prompt::agent_types::sync_tests::write_creates_types_after_the_ignore_file_and_keeps_foreign_files",
+      "end_line": 109,
+      "fingerprint": "tok1:963140438127fc6afc5866af888a881282f0183e9e4671922c3b6e93f50a01f2"
+    },
+    {
+      "crate_name": "vibe-workspace",
       "file": "crates/vibe-workspace/src/system_prompt/capture.rs",
       "item_kind": "mod",
       "line": 4,
@@ -148753,6 +148843,86 @@
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#SYS-WORKER-TYPES",
       "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-workspace/src/system_prompt/agent_types/sync.rs",
+      "from_symbol": "vibe_workspace::system_prompt::agent_types::sync",
+      "line": 10,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#SYS-WORKER-TYPES",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-workspace/src/system_prompt/agent_types/sync.rs",
+      "from_symbol": "vibe_workspace::system_prompt::agent_types::sync::AgentTypeOutcome",
+      "line": 59,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#SYS-WORKER-TYPES",
+      "verb": "documents"
+    },
+    {
+      "file": "crates/vibe-workspace/src/system_prompt/agent_types/sync.rs",
+      "from_symbol": "vibe_workspace::system_prompt::agent_types::sync::AgentTypeStatus",
+      "line": 26,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#SYS-WORKER-TYPES",
+      "verb": "documents"
+    },
+    {
+      "file": "crates/vibe-workspace/src/system_prompt/agent_types/sync.rs",
+      "from_symbol": "vibe_workspace::system_prompt::agent_types::sync::AgentTypeStatus::as_str",
+      "line": 41,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#SYS-WORKER-TYPES",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-workspace/src/system_prompt/agent_types/sync.rs",
+      "from_symbol": "vibe_workspace::system_prompt::agent_types::sync::AgentTypesError",
+      "line": 69,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#SYS-WORKER-TYPES",
+      "verb": "documents"
+    },
+    {
+      "file": "crates/vibe-workspace/src/system_prompt/agent_types/sync.rs",
+      "from_symbol": "vibe_workspace::system_prompt::agent_types::sync::SyncMode",
+      "line": 18,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#SYS-WORKER-TYPES",
+      "verb": "documents"
+    },
+    {
+      "file": "crates/vibe-workspace/src/system_prompt/agent_types/sync.rs",
+      "from_symbol": "vibe_workspace::system_prompt::agent_types::sync::sync_agent_types",
+      "line": 79,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#SYS-WORKER-TYPES",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-workspace/src/system_prompt/agent_types/sync_tests.rs",
+      "from_symbol": "vibe_workspace::system_prompt::agent_types::sync_tests",
+      "line": 9,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#SYS-WORKER-TYPES",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-workspace/src/system_prompt/agent_types/sync_tests.rs",
+      "from_symbol": "vibe_workspace::system_prompt::agent_types::sync_tests::check_reports_missing_current_stale_and_foreign",
+      "line": 112,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#SYS-WORKER-TYPES",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-workspace/src/system_prompt/agent_types/sync_tests.rs",
+      "from_symbol": "vibe_workspace::system_prompt::agent_types::sync_tests::write_creates_types_after_the_ignore_file_and_keeps_foreign_files",
+      "line": 40,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#SYS-WORKER-TYPES",
+      "verb": "verifies"
     },
     {
       "file": "crates/vibe-workspace/src/system_prompt/capture.rs",
