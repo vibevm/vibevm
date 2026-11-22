@@ -43,6 +43,8 @@ use vibe_core::manifest::SpecFormat;
 
 use crate::WorkspaceError;
 
+#[path = "system_prompt/agent_types.rs"]
+pub mod agent_types;
 #[path = "system_prompt/capture.rs"]
 mod capture;
 #[path = "system_prompt/check.rs"]
