@@ -25,7 +25,7 @@ touched.</p>
     <list ordered="true">
       <item>Stage a scratch project and install the adapter into it:</item>
     </list>
-    <fence lang="sh">   cd vibevm/vibepacks/org.vibevm.fractality/fractality/v1.0.0
+    <fence lang="sh">   cd vibevm/vibepacks/org.vibevm.fractality/fractality/v1.0.12
    MT_DIR=$(mktemp -d); MT_HOME="$MT_DIR/home"; MT_PROJ="$MT_DIR/proj"
    mkdir -p "$MT_PROJ"
    EXE="$PWD/target/debug/fractality.exe"

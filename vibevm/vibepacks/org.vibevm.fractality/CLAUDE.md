@@ -99,7 +99,7 @@ Until the backlog items land, this is the working recipe:
    re-resolving.
 5. **Discipline toolchain binary.** The umbrella `rust-ai-native` CLI is
    used from the host package's built tree —
-   `<host-root>/vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v1.0.0/target/debug/rust-ai-native.exe`
+   `<host-root>/vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v1.0.12/target/debug/rust-ai-native.exe`
    (byte-same 1.0.0 sources as this specspace's FQDN `vibevm/vibedeps`
    slot; the
    slot has no `target/` yet). Canonical consumer forms (GUIDE §13:

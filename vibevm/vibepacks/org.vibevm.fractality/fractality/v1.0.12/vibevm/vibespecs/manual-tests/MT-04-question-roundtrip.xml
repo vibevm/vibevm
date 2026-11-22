@@ -20,7 +20,7 @@ waiting on the answer. **Isolated:** scratch `--home`; a dedicated
     <list ordered="true">
       <item>Scratch home with the `mt4` profile and the packet:</item>
     </list>
-    <fence lang="sh">   cd vibevm/vibepacks/org.vibevm.fractality/fractality/v1.0.0
+    <fence lang="sh">   cd vibevm/vibepacks/org.vibevm.fractality/fractality/v1.0.12
    MT04_BASE=$(cygpath -m "$(mktemp -d)")
    MT04_HOME="$MT04_BASE/fractality-home"
    mkdir -p "$MT04_HOME"

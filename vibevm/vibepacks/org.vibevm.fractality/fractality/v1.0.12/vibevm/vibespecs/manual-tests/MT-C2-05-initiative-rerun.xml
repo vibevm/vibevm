@@ -65,7 +65,7 @@ gated on RP5 below.**</p>
     </list>
   </section>
   <section title="Steps (when RP5 authorizes)">
-    <fence lang="sh">cd vibevm/vibepacks/org.vibevm.fractality/fractality/v1.0.0
+    <fence lang="sh">cd vibevm/vibepacks/org.vibevm.fractality/fractality/v1.0.12
 cargo build --workspace
 for n in 1 2 3; do bash spec/manual-tests/trial/run-arm.sh a "$n"; done
 for n in 1 2 3; do bash spec/manual-tests/trial/run-arm.sh b "$n"; done

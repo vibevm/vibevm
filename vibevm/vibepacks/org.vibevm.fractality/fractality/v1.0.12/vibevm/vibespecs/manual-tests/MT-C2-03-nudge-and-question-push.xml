@@ -22,7 +22,7 @@ slot). **Isolated:** scratch `--home` + scratch project; the real
     <list ordered="true">
       <item>Scratch home + adapter + seven work-tool events:</item>
     </list>
-    <fence lang="sh">   cd vibevm/vibepacks/org.vibevm.fractality/fractality/v1.0.0
+    <fence lang="sh">   cd vibevm/vibepacks/org.vibevm.fractality/fractality/v1.0.12
    MT_HOME=$(mktemp -d)/home; EXE="$PWD/target/debug/fractality.exe"
    export FRACTALITY_HOME="$MT_HOME"
    "$EXE" mc start

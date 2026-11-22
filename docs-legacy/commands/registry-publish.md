@@ -75,19 +75,19 @@ Token must be issued by the host and must have `repo:create` permission in the t
 Dry-run a release first:
 
 ```bash
-vibe registry publish ./vibevm/vibepacks/org.vibevm.world/wal/v1.0.0 --dry-run
+vibe registry publish ./vibevm/vibepacks/org.vibevm.world/wal/v1.0.12 --dry-run
 ```
 
 Apply against the configured default registry:
 
 ```bash
-vibe registry publish ./vibevm/vibepacks/org.vibevm.world/wal/v1.0.0
+vibe registry publish ./vibevm/vibepacks/org.vibevm.world/wal/v1.0.12
 ```
 
 Pick a specific registry by name (useful when `vibe.toml` lists several):
 
 ```bash
-vibe registry publish ./vibevm/vibepacks/org.vibevm.world/wal/v1.0.0 --registry corporate
+vibe registry publish ./vibevm/vibepacks/org.vibevm.world/wal/v1.0.12 --registry corporate
 ```
 
 Publish multiple packages from a maintenance script:

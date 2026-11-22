@@ -30,21 +30,22 @@ fn checkout(root: &Path) {
         "<spec xmlns=\"https://vibevm.org/spec/1\"><title id=\"root\">One</title></spec>\n",
     );
     write(
-        &root.join("vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.0.0/vibe.toml"),
+        &root.join("vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.0.12/vibe.toml"),
         "[package]\nname = \"vibevm-docs\"\ngroup = \"org.vibevm.core\"\nversion = \"1.0.0\"\nkind = \"doc\"\n",
     );
     write(
-        &root.join("vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.0.0/vibevm/vibespecs/page.xml"),
+        &root
+            .join("vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.0.12/vibevm/vibespecs/page.xml"),
         "<spec xmlns=\"https://vibevm.org/spec/1\"><title id=\"root\">Page</title></spec>\n",
     );
     // Another kind, with something expensive inside it: the walk must
     // never enter it.
     write(
-        &root.join("vibevm/vibepacks/org.vibevm.doc/web/v1.0.0/vibe.toml"),
+        &root.join("vibevm/vibepacks/org.vibevm.doc/web/v1.0.12/vibe.toml"),
         "[package]\nname = \"web\"\ngroup = \"org.vibevm.doc\"\nversion = \"1.0.0\"\nkind = \"app\"\n",
     );
     write(
-        &root.join("vibevm/vibepacks/org.vibevm.doc/web/v1.0.0/node_modules/x/index.js"),
+        &root.join("vibevm/vibepacks/org.vibevm.doc/web/v1.0.12/node_modules/x/index.js"),
         "module.exports = 1;\n",
     );
 }
@@ -96,7 +97,7 @@ fn an_edit_in_place_moves_the_render_key_although_the_version_stands_still() {
 
     write(
         &tmp.path()
-            .join("vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.0.0/vibevm/vibespecs/page.xml"),
+            .join("vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.0.12/vibevm/vibespecs/page.xml"),
         "<spec xmlns=\"https://vibevm.org/spec/1\"><title id=\"root\">Page two</title></spec>\n",
     );
     let after = host_feed(&host(tmp.path())).expect("a feed").0;
@@ -117,7 +118,7 @@ fn a_renamed_page_moves_the_render_key() {
 
     let pages = tmp
         .path()
-        .join("vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.0.0/vibevm/vibespecs");
+        .join("vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.0.12/vibevm/vibespecs");
     fs::rename(pages.join("page.xml"), pages.join("renamed.xml")).expect("the rename");
     let after = host_feed(&host(tmp.path())).expect("a feed").0;
     assert_ne!(before[1].content_hash, after[1].content_hash);

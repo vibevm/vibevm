@@ -231,7 +231,7 @@ exclude = [
     # explicitly requires its canonical package source to remain untouched.
     # Exclude only the uninstalled README retained as package history; the
     # package's XML specs and the wider namespace remain observed.
-    "vibevm/vibepacks/org.vibevm.world/zai-glm-claude/v1.0.0/README.md",
+    "vibevm/vibepacks/org.vibevm.world/zai-glm-claude/v1.0.12/README.md",
     # A DOCUMENTATION PACKAGE'S EXAMPLE FIXTURES — trees the example runner
     # builds a sandbox from, not text this project authored.
     #

@@ -71,7 +71,7 @@ run's output dir. Build first: `cargo build --workspace`.</p>
 verdict (CONFIRMED / FALSIFIED / INCONCLUSIVE) with the evidence cited.</p>
   </section>
   <section title="Steps">
-    <fence lang="sh">cd vibevm/vibepacks/org.vibevm.fractality/fractality/v1.0.0
+    <fence lang="sh">cd vibevm/vibepacks/org.vibevm.fractality/fractality/v1.0.12
 cargo build --workspace
 for n in 1 2 3; do bash spec/manual-tests/trial/run-arm.sh g "$n"; done
 # results land in target/trial-results/arm-g-run-&lt;n&gt;/</fence>

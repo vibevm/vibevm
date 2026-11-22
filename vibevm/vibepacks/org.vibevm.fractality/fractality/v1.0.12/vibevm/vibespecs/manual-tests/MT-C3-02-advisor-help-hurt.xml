@@ -114,7 +114,7 @@ ADVISED−ALONE delta (PR-adv-1); the advise-call count per advised run
 source file, the score-g.py rule.</p>
   </section>
   <section title="Steps">
-    <fence lang="sh">cd vibevm/vibepacks/org.vibevm.fractality/fractality/v1.0.0
+    <fence lang="sh">cd vibevm/vibepacks/org.vibevm.fractality/fractality/v1.0.12
 cargo build --workspace
 for n in 1 2 3; do bash spec/manual-tests/trial/run-advise.sh alone   "$n"; done
 for n in 1 2 3; do bash spec/manual-tests/trial/run-advise.sh advised "$n"; done

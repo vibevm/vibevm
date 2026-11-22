@@ -17,6 +17,6 @@ how it routes across the fleet's model slots.**
   — the boot snippet a consuming boss loads at session start.
 
 Authored clean-room from the study note
-[`codex-first-study.xml`](https://github.com/vibevm/vibevm/blob/main/vibevm/vibepacks/org.vibevm.fractality/fractality/v1.0.0/vibevm/vibespecs/refs/notes/codex-first-study.xml) (decisions
+[`codex-first-study.xml`](https://github.com/vibevm/vibevm/blob/main/vibevm/vibepacks/org.vibevm.fractality/fractality/v1.0.12/vibevm/vibespecs/refs/notes/codex-first-study.xml) (decisions
 DC1–DC6) plus the IGNITION campaign's live delegation field data —
 never from any external source text.

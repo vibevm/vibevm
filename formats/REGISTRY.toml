@@ -2197,7 +2197,7 @@ sunset = "none"
 # Private derived authority from ordinary install; canonical neutral DTO.
 [format.specmap-authority]
 epoch = 1
-schema = "vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v1.0.0/schemas/specmap_authority.jtd.json"
+schema = "vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v1.0.12/schemas/specmap_authority.jtd.json"
 recoverable = true
 foreign_parsers = "ours"
 unknown_fields = "deny"

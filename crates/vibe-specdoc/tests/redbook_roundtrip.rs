@@ -27,7 +27,7 @@ fn corpus() -> Vec<(String, String)> {
     // this crate is pivot-standalone and does not depend on vibe-core,
     // so the root is spelled literally here).
     let root = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
-        .join("../../vibevm/vibepacks/org.vibevm.world/redbook/v1.0.0");
+        .join("../../vibevm/vibepacks/org.vibevm.world/redbook/v1.0.12");
     let mut files = Vec::new();
     let mut stack = vec![root.clone()];
     while let Some(dir) = stack.pop() {

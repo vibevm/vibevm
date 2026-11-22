@@ -80,7 +80,7 @@ Each prediction gets a per-run observation and a pooled verdict
 (CONFIRMED / FALSIFIED / INCONCLUSIVE) with the evidence cited.</p>
   </section>
   <section title="Steps (when fired)">
-    <fence lang="sh">cd vibevm/vibepacks/org.vibevm.fractality/fractality/v1.0.0
+    <fence lang="sh">cd vibevm/vibepacks/org.vibevm.fractality/fractality/v1.0.12
 cargo build --workspace
 for n in 1 2 3; do bash spec/manual-tests/trial/run-arm.sh g2 "$n"; done
 python spec/manual-tests/trial/score-g2.py</fence>

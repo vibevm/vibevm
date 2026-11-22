@@ -36,7 +36,7 @@ scratch home + scratch project; the real `~/.fractality` untouched.</p>
     </list>
   </section>
   <section title="Steps">
-    <fence lang="sh">cd vibevm/vibepacks/org.vibevm.fractality/fractality/v1.0.0
+    <fence lang="sh">cd vibevm/vibepacks/org.vibevm.fractality/fractality/v1.0.12
 cargo build --workspace          # hooks/daemon/CLI must be one build
 for n in 1 2 3; do bash spec/manual-tests/trial/run-arm.sh a "$n"; done
 # results land in target/trial-results/arm-a-run-&lt;n&gt;/</fence>

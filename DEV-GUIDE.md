@@ -78,7 +78,7 @@ The versions are pinned exactly, together with the framework, by [PROP-057 §12 
 
 ```sh
 corepack enable
-cd vibevm/vibepacks/org.vibevm.doc/web/v1.0.0
+cd vibevm/vibepacks/org.vibevm.doc/web/v1.0.12
 pnpm install --frozen-lockfile
 ```
 
@@ -100,8 +100,8 @@ From the repo root the same floor runs without pnpm at all. Run it directly when
 
 ```sh
 vibevm/vibedeps/org.vibevm.ai-native.typescript-ai-native-lang/1.0.0/target/release/typescript-ai-native.exe \
-  floor --path vibevm/vibepacks/org.vibevm.doc/web/v1.0.0
-node vibevm/vibepacks/org.vibevm.doc/web/v1.0.0/design/audit/contrast.mjs
+  floor --path vibevm/vibepacks/org.vibevm.doc/web/v1.0.12
+node vibevm/vibepacks/org.vibevm.doc/web/v1.0.12/design/audit/contrast.mjs
 ```
 
 **Building the site.** `pnpm build:static` prerenders every route for the server; `pnpm build:embedded` builds only the documentation routes for the shell `vibe` embeds. Both count the pages the generator reports against the pages the manifest declares and fail on a mismatch — the static generator under-generates silently and still exits 0 ([`##STACK-PAGE-COUNT-GATE`](vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml#stack)).
@@ -300,7 +300,7 @@ The `( … )` subshell handles CWD restoration automatically — exit the subshe
 
 **Install.** The server ships with the toolchain: `rustup component add rust-analyzer`. Editor bindings: VS Code / VSCodium — the official *rust-analyzer* extension; Neovim / Emacs / Helix / JetBrains (via the Rust plugin) all drive the same `rust-analyzer` binary.
 
-**Multi-workspace layout — the one gotcha.** This repo is a monorepo of **several Cargo workspaces** (PROP-024). The root workspace ([`Cargo.toml`](Cargo.toml)) excludes `vibevm/vibepacks/` and `vibevm/vibedeps/`, and those carry their *own* workspaces — `vibevm/vibepacks/org.vibevm.fractality/fractality/v1.0.0/`, the AI-native stacks under `vibevm/vibepacks/org.vibevm.ai-native/…`, and the materialized copies under `vibevm/vibedeps/`. So:
+**Multi-workspace layout — the one gotcha.** This repo is a monorepo of **several Cargo workspaces** (PROP-024). The root workspace ([`Cargo.toml`](Cargo.toml)) excludes `vibevm/vibepacks/` and `vibevm/vibedeps/`, and those carry their *own* workspaces — `vibevm/vibepacks/org.vibevm.fractality/fractality/v1.0.12/`, the AI-native stacks under `vibevm/vibepacks/org.vibevm.ai-native/…`, and the materialized copies under `vibevm/vibedeps/`. So:
 
 - Opening the **repo root** indexes the host workspace (`crates/`, `xtask`, `apps/`). That is what you want for `vibe-cli` work.
 - To edit a **nested workspace** (fractality, the discipline stacks, an mcp package), open that subdirectory in a second editor window, or add its `Cargo.toml` to your editor's linked-projects list (VS Code: `rust-analyzer.linkedProjects`). Pointing the root workspace at a nested one slows indexing and confuses `cargo metadata`.
@@ -349,10 +349,10 @@ Full design: [PROP-002 §2.10](vibevm/vibespecs/modules/vibe-registry/PROP-002-d
 
 ```sh
 # Dry-run first (read-only — only hits GET /repos/...).
-cargo run --release -p vibe-cli -- registry publish vibevm/vibepacks/org.vibevm.world/wal/v1.0.0 --dry-run
+cargo run --release -p vibe-cli -- registry publish vibevm/vibepacks/org.vibevm.world/wal/v1.0.12 --dry-run
 
 # Apply.
-cargo run --release -p vibe-cli -- registry publish vibevm/vibepacks/org.vibevm.world/wal/v1.0.0
+cargo run --release -p vibe-cli -- registry publish vibevm/vibepacks/org.vibevm.world/wal/v1.0.12
 ```
 
 The dry-run output shows the synthetic clone URL, the action verb (`Would create` or `Would reuse existing`), and the tag that would be pushed. No token value appears anywhere in output — `vibe` reads the token in-process, redacts on `Display`/`Debug`, and never logs the value. The video-recording-safe defaults are baked in.
@@ -408,7 +408,7 @@ The user-facing documentation of vibevm is being rebuilt as a *documentation pac
 # Check it. Every flag is independent; ask for the ones you want.
 cargo run -p vibe-cli -- doc check --examples --citations --derived \
     --translations --coverage --media \
-    --path vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.0.0
+    --path vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.0.12
 
 # Render it into a directory that can be served as it stands.
 cargo run -p vibe-cli -- doc build --out .vibe/doc --format html
@@ -441,7 +441,7 @@ cargo run -p vibe-cli -- doc build-site --config site.toml --out /srv/site
 cargo run -p vibe-cli -- doc build-site --config site.toml --out /srv/site --no-web
 ```
 
-The two sources are the ones [PROP-057 §9.2](vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml) names, each in the form a project already names a `[[registry]]`: a package **registry**, whose index is the change feed, and the **host's own repository**, which is not a package at all — its root is a `[project]` — and so is read as a checkout the deploy keeps current on disk. A commented example with every default written out is `vibevm/vibepacks/org.vibevm.doc/web/v1.0.0/site.example.toml`; the shape is `schemas/doc_site_config.jtd.json`, registered as the format `doc-site-config`.
+The two sources are the ones [PROP-057 §9.2](vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml) names, each in the form a project already names a `[[registry]]`: a package **registry**, whose index is the change feed, and the **host's own repository**, which is not a package at all — its root is a `[project]` — and so is read as a checkout the deploy keeps current on disk. A commented example with every default written out is `vibevm/vibepacks/org.vibevm.doc/web/v1.0.12/site.example.toml`; the shape is `schemas/doc_site_config.jtd.json`, registered as the format `doc-site-config`.
 
 Nothing in that file authorises anything. The site reads every source anonymously, so there is no `auth`, no token and no environment name in the shape — a configuration that *could* carry a credential invites one onto a renderer with no use for it.
 
@@ -453,12 +453,12 @@ Two consequences worth knowing before you point it at a directory. **The state f
 
 The deployment is two containers and a directory between them ([PROP-057 `##SITE-TWO-CONTAINERS`](vibevm/vibespecs/common/PROP-057-documentation-packages-and-site.xml#site)): a **renderer**, which carries `vibe` built from this checkout and the site package with its dependencies, runs `doc build-site` into the directory and exits; and a **serving** container, stock nginx with `docker/nginx.conf`, which serves that directory and knows nothing else. A new render is a new directory, never a new image.
 
-Both are stages of one file, `vibevm/vibepacks/org.vibevm.doc/web/v1.0.0/docker/Dockerfile`, and its build context is **the repository root** — the renderer needs the binary built from this source, the site package, and the checkout itself, which is one of the two sources it reads. What of the root actually enters the context is an allow-list in `docker/Dockerfile.dockerignore` beside it; a working tree's `target/` alone is hundreds of gigabytes, so a deny-list that forgot one entry would send it all to the daemon.
+Both are stages of one file, `vibevm/vibepacks/org.vibevm.doc/web/v1.0.12/docker/Dockerfile`, and its build context is **the repository root** — the renderer needs the binary built from this source, the site package, and the checkout itself, which is one of the two sources it reads. What of the root actually enters the context is an allow-list in `docker/Dockerfile.dockerignore` beside it; a working tree's `target/` alone is hundreds of gigabytes, so a deny-list that forgot one entry would send it all to the daemon.
 
 To build and run the whole stack locally:
 
 ```sh
-cd vibevm/vibepacks/org.vibevm.doc/web/v1.0.0
+cd vibevm/vibepacks/org.vibevm.doc/web/v1.0.12
 docker compose -f docker/compose.yaml up --build   # renders, then serves on 127.0.0.1:8080
 docker compose -f docker/compose.yaml down
 ```

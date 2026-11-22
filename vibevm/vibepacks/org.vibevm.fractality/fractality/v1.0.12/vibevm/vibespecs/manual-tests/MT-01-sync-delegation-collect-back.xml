@@ -25,7 +25,7 @@ own copy in step 1, and mission-control refuses the run with a loud
     <list ordered="true">
       <item>Make a scratch home, give it the profile, and run the packet:</item>
     </list>
-    <fence lang="sh">   cd vibevm/vibepacks/org.vibevm.fractality/fractality/v1.0.0
+    <fence lang="sh">   cd vibevm/vibepacks/org.vibevm.fractality/fractality/v1.0.12
    MT01_HOME=$(mktemp -d)/fractality-home
    mkdir -p "$MT01_HOME"
    cp ~/.fractality/profiles.toml "$MT01_HOME/profiles.toml"

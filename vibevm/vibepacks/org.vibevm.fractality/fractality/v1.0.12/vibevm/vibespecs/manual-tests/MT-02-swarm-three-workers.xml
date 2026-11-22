@@ -21,7 +21,7 @@ step 1 copies them in.</p>
     <list ordered="true">
       <item>Scratch home, scratch repo, three disjoint-module packets:</item>
     </list>
-    <fence lang="sh">   cd vibevm/vibepacks/org.vibevm.fractality/fractality/v1.0.0
+    <fence lang="sh">   cd vibevm/vibepacks/org.vibevm.fractality/fractality/v1.0.12
    # cygpath -m: the path crosses into Windows processes (mission-control
    # spawns `git -C &lt;repo&gt;`), so it must be a Windows form, not /tmp/....
    MT02_BASE=$(cygpath -m "$(mktemp -d)")

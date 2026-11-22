@@ -452,13 +452,13 @@
       "evidence": [
         "RUSTSEC-2026-0185 (2026-06-22), solution >=0.11.15",
         "host fix: Cargo.lock quinn-proto 0.11.14 -> 0.11.16, audit run 2026-08-03",
-        "vibevm/vibepacks/org.vibevm.fractality/fractality/v1.0.0/Cargo.lock: quinn-proto 0.11.16 (2026-09-10)"
+        "vibevm/vibepacks/org.vibevm.fractality/fractality/v1.0.12/Cargo.lock: quinn-proto 0.11.16 (2026-09-10)"
       ],
       "source": "health-audit A-D inventory at the packages-2026-09 phase-D exit gate (2026-08-03), finding 2026-08-03-02",
       "disposition": "accepted",
       "accepted_reason": "the only surviving fractality package lock now pins the patched 0.11.16 release",
       "tripwires": [
-        "touch:vibevm/vibepacks/org.vibevm.fractality/fractality/v1.0.0/Cargo.lock"
+        "touch:vibevm/vibepacks/org.vibevm.fractality/fractality/v1.0.12/Cargo.lock"
       ],
       "sunset": "re-open if the surviving fractality lock regresses below quinn-proto 0.11.15"
     }
