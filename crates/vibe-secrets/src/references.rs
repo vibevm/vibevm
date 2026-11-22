@@ -8,6 +8,8 @@ mod bindings;
 mod compatibility;
 mod default_scope;
 mod native_settings;
+#[cfg(test)]
+mod vocabulary_tests;
 pub use native_settings::{
     ClaudeNativePreview, CodexNativePreview, HermesNativePreview, OpenCodeNativePreview,
     PiNativePreview, QwenNativePreview,
@@ -27,7 +29,8 @@ pub fn known_reference_harness(harness: &str) -> bool {
 /// This is storage admission only, not provider/API compatibility or permission
 /// to read credentials. Connection protocol/evidence remain with their owner.
 pub fn reference_binding_supported(harness: &str) -> bool {
-    matches!(harness, "pi" | "qwen")
+    vibe_core::agent_ids::AgentId::from_harness(harness)
+        .is_some_and(|agent| agent.row().reference_binding)
 }
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
 #[serde(deny_unknown_fields)]

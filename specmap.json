@@ -72188,36 +72188,36 @@
       "crate_name": "vibe-secrets",
       "file": "crates/vibe-secrets/src/references.rs",
       "item_kind": "fn",
-      "line": 214,
+      "line": 217,
       "symbol": "vibe_secrets::references::Store::create_reference",
-      "end_line": 312,
+      "end_line": 315,
       "fingerprint": "tok1:9e17f060cc83101bb31522d37a1e737d29cc64040ee6fbbafb1a2387b17b09a6"
     },
     {
       "crate_name": "vibe-secrets",
       "file": "crates/vibe-secrets/src/references.rs",
       "item_kind": "fn",
-      "line": 179,
+      "line": 182,
       "symbol": "vibe_secrets::references::Store::reference_snapshot",
-      "end_line": 213,
+      "end_line": 216,
       "fingerprint": "tok1:cfdde7e9d74490c0eca34549405fa54e80941fc3d8934a39198562dea77a97f1"
     },
     {
       "crate_name": "vibe-secrets",
       "file": "crates/vibe-secrets/src/references.rs",
       "item_kind": "fn",
-      "line": 313,
+      "line": 316,
       "symbol": "vibe_secrets::references::Store::remove_reference",
-      "end_line": 370,
+      "end_line": 373,
       "fingerprint": "tok1:807b332228d163286f61d02dbe2bc191a78e6febc435b4423ec23a383cdc9f67"
     },
     {
       "crate_name": "vibe-secrets",
       "file": "crates/vibe-secrets/src/references.rs",
       "item_kind": "fn",
-      "line": 371,
+      "line": 374,
       "symbol": "vibe_secrets::references::Store::select_reference",
-      "end_line": 451,
+      "end_line": 454,
       "fingerprint": "tok1:7325deebd20edd5fc9f4a2ec073c8c11afb5c74f3cd181fde82d68274bec8e24"
     },
     {
@@ -139753,7 +139753,7 @@
     {
       "file": "crates/vibe-secrets/src/references.rs",
       "from_symbol": "vibe_secrets::references::Store::create_reference",
-      "line": 219,
+      "line": 222,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#TS-USER-KEYRING",
       "verb": "implements"
@@ -139761,7 +139761,7 @@
     {
       "file": "crates/vibe-secrets/src/references.rs",
       "from_symbol": "vibe_secrets::references::Store::reference_snapshot",
-      "line": 181,
+      "line": 184,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#TS-USER-KEYRING",
       "verb": "implements"
@@ -139769,7 +139769,7 @@
     {
       "file": "crates/vibe-secrets/src/references.rs",
       "from_symbol": "vibe_secrets::references::Store::remove_reference",
-      "line": 314,
+      "line": 317,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#TS-USER-KEYRING",
       "verb": "implements"
@@ -139777,7 +139777,7 @@
     {
       "file": "crates/vibe-secrets/src/references.rs",
       "from_symbol": "vibe_secrets::references::Store::select_reference",
-      "line": 372,
+      "line": 375,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#TS-USER-KEYRING",
       "verb": "implements"
