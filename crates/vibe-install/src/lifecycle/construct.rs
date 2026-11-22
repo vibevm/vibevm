@@ -6,6 +6,7 @@
 //! world is this run over", and everything left in the parent answers "what
 //! does the run do".
 
+use specmark::spec;
 use std::path::Path;
 use std::sync::Arc;
 
@@ -125,6 +126,7 @@ impl InstallSlotLifecycle {
     /// or a resume's prepared workspace — reaches this directly; the two
     /// public wrappers above discover once and land here too.
     #[allow(clippy::too_many_arguments)]
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#H-SCRIPT")]
     pub fn from_projection_observed_prepared(
         project_root: &Path,
         manifest: &Manifest,

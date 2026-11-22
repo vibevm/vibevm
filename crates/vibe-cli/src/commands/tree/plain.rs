@@ -9,6 +9,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-036#tui");
 
+use specmark::spec;
 use std::collections::{BTreeMap, BTreeSet};
 
 use super::model::{LoadType, Package, PackageTree};
@@ -26,6 +27,7 @@ struct Row {
 /// Render the whole tree to a plain string (PROP-036 §2.11); its branches
 /// are the display language's, in ASCII where the terminal has no
 /// vocabulary (PROP-067 `#coverage`).
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-036#OUT-PLAIN")]
 pub fn render(tree: &PackageTree) -> String {
     let by_id: BTreeMap<&str, &Package> =
         tree.packages.iter().map(|p| (p.id.as_str(), p)).collect();

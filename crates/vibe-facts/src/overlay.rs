@@ -2,6 +2,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-046#laws");
 
+use specmark::spec;
 use std::collections::BTreeMap;
 use std::fs;
 use std::path::Path;
@@ -28,6 +29,7 @@ impl PackageOverlay {
     }
 
     /// Whether any entry belongs to the document denoted by `address_prefix`.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-046#laws")]
     pub fn contains_document(&self, address_prefix: &str) -> bool {
         self.entries
             .range(address_prefix.to_string()..)
@@ -43,6 +45,7 @@ impl PackageOverlay {
 impl Registry {
     /// Validate and project prospective missing entries without writing registry bytes.
     /// Existing entries, including indeterminate entries, retain precedence.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-046#LAW-DERIVATION")]
     pub fn package_overlay_with_additions(
         &self,
         package: &str,
@@ -65,6 +68,7 @@ impl Registry {
     }
 
     /// Project the `origin = "package"` records of one package.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-046#LAW-DERIVATION")]
     pub fn package_overlay(&self, package: &str) -> PackageOverlay {
         PackageOverlay {
             entries: self
@@ -82,6 +86,7 @@ impl Registry {
 ///
 /// Absence (or an unreadable path) is represented as `None`, matching the
 /// derived-manifest wire where no package overlay has no field at all.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-046#LAW-DERIVATION")]
 pub fn overlay_file_hash(project_root: &Path, package: &str) -> Option<String> {
     let path = project_root
         .join(vibe_core::layout::current_vibefacts_root())

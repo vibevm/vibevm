@@ -47,6 +47,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#short-name");
 
+use specmark::spec;
 use std::collections::BTreeMap;
 use std::fmt;
 use std::fs;
@@ -127,6 +128,9 @@ impl AliasTable {
 
     /// Read the table of `data_dir`. An absent file is an empty table —
     /// the state of every registry that has never aliased anything.
+    #[spec(
+        implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#ALIAS-TABLE-IS-AN-INPUT"
+    )]
     pub fn read(data_dir: &Path) -> Result<Self> {
         let file = path(data_dir);
         let text = match fs::read_to_string(&file) {
@@ -148,6 +152,9 @@ impl AliasTable {
 
     /// Parse the table's text. The failure is a plain sentence naming
     /// the row, because the operator who wrote it is the one reading.
+    #[spec(
+        implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#ALIAS-TABLE-IS-AN-INPUT"
+    )]
     pub fn parse(text: &str) -> std::result::Result<Self, String> {
         #[derive(Deserialize)]
         #[serde(deny_unknown_fields)]
@@ -174,6 +181,9 @@ impl AliasTable {
     }
 
     /// Render the table — deterministic, one row per line, alias order.
+    #[spec(
+        implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#ALIAS-TABLE-IS-AN-INPUT"
+    )]
     pub fn render(&self) -> String {
         let mut text = format!("{HEADER}\nschema = {SCHEMA}\n\n[aliases]\n");
         for (alias, target) in &self.rows {
@@ -186,6 +196,9 @@ impl AliasTable {
     /// is empty: a registry that has dropped its last alias must leave
     /// behind the byte-exact tree of one that never had any, or the
     /// listing digest below would carry a ghost for ever.
+    #[spec(
+        implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#ALIAS-TABLE-IS-AN-INPUT"
+    )]
     pub fn write(&self, data_dir: &Path) -> Result<()> {
         let file = path(data_dir);
         if self.rows.is_empty() {
@@ -247,6 +260,7 @@ pub enum AliasFault {
 }
 
 impl AliasFault {
+    #[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#short-name")]
     pub fn alias(&self) -> &str {
         match self {
             AliasFault::Grammar { alias, .. }
@@ -297,6 +311,9 @@ impl fmt::Display for AliasFault {
 /// publish that quietly discarded one of their rows would be found out
 /// much later, by someone else, as a short name that simply does not
 /// work.
+#[spec(
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#ALIAS-WRITER-REFUSES-READER-DROPS"
+)]
 pub fn check(index: &Index, table: &AliasTable) -> Vec<AliasFault> {
     table
         .iter()
@@ -374,6 +391,9 @@ fn bare_name_grammar(alias: &str) -> std::result::Result<(), String> {
 /// whole registry, and the row it drops is one that could not have
 /// resolved anyway. The dropped rows are returned so a surface that
 /// wants to say so can.
+#[spec(
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#ALIAS-WRITER-REFUSES-READER-DROPS"
+)]
 pub fn attach(index: &mut Index, table: AliasTable) -> Vec<AliasFault> {
     let faults = check(index, &table);
     let dropped: Vec<&str> = faults.iter().map(AliasFault::alias).collect();

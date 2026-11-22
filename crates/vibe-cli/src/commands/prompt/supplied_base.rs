@@ -190,6 +190,7 @@ pub(crate) struct Model {
 /// There is deliberately no default: the default base is correct only for a
 /// model that matches no selection row, and "no row matched" is a different
 /// statement from "nobody knows which model this is".
+#[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-076#SYS-SUPPLIED-BASE")]
 pub(crate) fn discover_model(
     program: &Path,
     standing: &[String],
@@ -340,6 +341,7 @@ fn bare_model_id(stated: &str) -> String {
 /// on: first whether a set exists at all, then whether it is what it claims
 /// and has been proved, then which model this launch is, and only then the
 /// composition. Each one is a different thing the operator fixes.
+#[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-076#SYS-SUPPLIED-BASE")]
 pub(crate) fn carrier(request: &Request<'_>) -> Result<Composed, Undeliverable> {
     let Request {
         settings,

@@ -5,6 +5,7 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-059#launcher-operations");
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-059#hidden-installations");
 
+use specmark::spec;
 use std::path::Path;
 
 use vibe_core::manifest::{IconDecl, LauncherKind, LauncherSource, RequirementScope};
@@ -22,6 +23,7 @@ use crate::storage::Storage;
 /// Find the one installed record a coordinate names in the index of `home`:
 /// an exact match, or the slot default among several matching versions; a
 /// miss names `home` (`PROP-059#project-scope`).
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-059#commands")]
 pub fn installed<'a>(
     home: &SettingsRoot,
     index: &'a Index,
@@ -82,6 +84,7 @@ pub fn installed<'a>(
 /// Every installation with its status, whether it is its slot's default,
 /// whether it is hidden, its mark, what it requires and what requires it,
 /// and the environment entries it applied.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-059#launcher-operations")]
 pub fn list(settings: &SettingsRoot) -> Result<wire::ApplicationList, AppError> {
     let index = Index::load(settings)?;
     let storage = Storage::load(settings)?;

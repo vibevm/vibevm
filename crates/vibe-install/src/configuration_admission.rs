@@ -84,6 +84,7 @@ pub fn resolved_packages(packages: &[vibe_workspace::install::ResolvedDep]) -> R
     Ok(())
 }
 
+#[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-069#PACKAGE-ADMISSION")]
 pub(crate) fn planned(planned: &crate::PlannedInstall) -> Result<()> {
     workspace_inputs_for_install(&planned.workspace, &planned.project_root, &planned.manifest)?;
     for check in &planned.path_checks {
@@ -184,6 +185,7 @@ pub(crate) fn planned(planned: &crate::PlannedInstall) -> Result<()> {
 
 /// Read only the lock-selected materialized providers when a Fresh migration
 /// would publish authored inputs without going through normal fetching.
+#[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-069#PACKAGE-ADMISSION")]
 pub(crate) fn locked_packages(
     workspace: &Workspace,
     lock: &vibe_core::manifest::Lockfile,

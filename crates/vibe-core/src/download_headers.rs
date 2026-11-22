@@ -91,6 +91,7 @@ impl std::fmt::Debug for DownloadHeaders {
 impl DownloadHeaders {
     /// Read and validate `path`. Every refusal names the problem and the
     /// line it is on, and happens before anything is contacted.
+    #[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-075#DOWNLOAD-HEADERS")]
     pub fn read(path: &Path) -> Result<Self, DownloadHeaderError> {
         let shown = path.display().to_string();
         let text =
@@ -103,6 +104,7 @@ impl DownloadHeaders {
 
     /// [`Self::read`] on text already in hand; `path` only names the file
     /// in a refusal.
+    #[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-075#DOWNLOAD-HEADERS")]
     pub fn parse(text: &str, path: &str) -> Result<Self, DownloadHeaderError> {
         let mut headers = Vec::new();
         for (index, raw) in text.lines().enumerate() {

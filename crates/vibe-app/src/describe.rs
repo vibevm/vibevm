@@ -33,6 +33,7 @@ use crate::steps::{FeatureRequest, resolve_features};
 /// assert_eq!(describe(&resolved)?.protocol, "vibe-app-describe/1");
 /// # Ok::<(), Box<dyn std::error::Error>>(())
 /// ```
+#[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-065#describe")]
 pub fn describe(
     resolved: &ResolvedPackage,
 ) -> Result<wire::ApplicationDescribe, crate::error::AppError> {
@@ -74,6 +75,7 @@ pub fn describe(
     })
 }
 
+#[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-065#describe")]
 pub(crate) fn describe_option(
     resolved: &ResolvedPackage,
     option: &InstallerOptionDecl,
@@ -445,6 +447,7 @@ fn describe_step(step: &StepDecl) -> wire::Step {
     row
 }
 
+#[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-065#describe")]
 pub(crate) fn describe_application(resolved: &ResolvedPackage) -> wire::Application {
     wire::Application {
         id: resolved.application.id.clone(),

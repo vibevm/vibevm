@@ -34,6 +34,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-045#shape");
 
+use specmark::spec;
 use std::fmt;
 
 use progress_core::model::{Action, ArtifactRequirements, Audience, Stage, State, nearest};
@@ -276,6 +277,7 @@ pub enum NoteKind {
 impl NoteKind {
     pub const ALL: &'static [NoteKind] = &[NoteKind::Note, NoteKind::Tip, NoteKind::Warning];
 
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-045#ROW-DOCVOCAB-NOTE")]
     pub fn as_str(self) -> &'static str {
         match self {
             NoteKind::Note => "note",
@@ -285,6 +287,7 @@ impl NoteKind {
     }
 
     /// The label the Markdown projection prints, capitalised for a reader.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-045#ROW-DOCVOCAB-NOTE")]
     pub fn label(self) -> &'static str {
         match self {
             NoteKind::Note => "Note",
@@ -324,6 +327,7 @@ impl DerivedKind {
         DerivedKind::ManifestField,
     ];
 
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-045#ROW-DOCVOCAB-DERIVED")]
     pub fn as_str(self) -> &'static str {
         match self {
             DerivedKind::CliHelp => "cli-help",
@@ -396,6 +400,7 @@ pub enum CondAgent {
 impl CondOs {
     pub const ALL: &'static [CondOs] = &[CondOs::Windows, CondOs::Macos, CondOs::Linux];
 
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-045#DOC-VOCAB-WHEN-SLOT")]
     pub fn as_str(self) -> &'static str {
         match self {
             CondOs::Windows => "windows",
@@ -415,6 +420,7 @@ impl CondAgent {
         CondAgent::QwenCode,
     ];
 
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-045#DOC-VOCAB-WHEN-SLOT")]
     pub fn as_str(self) -> &'static str {
         match self {
             CondAgent::Claude => "claude",
@@ -429,6 +435,7 @@ impl CondAgent {
 
 impl Cond {
     /// Every legal condition, in the order the hint offers them.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-045#DOC-VOCAB-WHEN-SLOT")]
     pub fn all() -> Vec<Cond> {
         CondOs::ALL
             .iter()
@@ -439,6 +446,7 @@ impl Cond {
     }
 
     /// Parse one condition, or `None` when it is outside the closed list.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-045#DOC-VOCAB-WHEN-SLOT")]
     pub fn parse(s: &str) -> Option<Cond> {
         if let Some(os) = s.strip_prefix("os:") {
             return CondOs::ALL

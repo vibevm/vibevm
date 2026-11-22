@@ -138,6 +138,7 @@ fn core_kind(kind: &wire::LauncherKind) -> LauncherKind {
 /// the process id and replaced atomically, so it never collides with
 /// another start, and a prune that races it only ever removes the record
 /// of a process that is gone.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-059#launcher-runtime")]
 pub(crate) fn register(
     settings: &SettingsRoot,
     answer: &start_wire::ApplicationStart,
@@ -199,6 +200,7 @@ fn records(settings: &SettingsRoot) -> Vec<(PathBuf, Option<RunningRecord>)> {
 /// line each, under the home's lock. A lock another command holds is not
 /// waited for: the dead records stay until the next listing, which is all
 /// a delay costs. Returns the live records.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-059#launcher-runtime")]
 pub(crate) fn sweep(settings: &SettingsRoot, processes: &dyn ProcessTable) -> Vec<RunningRecord> {
     let mut live = Vec::new();
     let mut dead = Vec::new();
@@ -278,6 +280,7 @@ pub fn stop(
     stop_within(settings, target, processes, PATIENCE)
 }
 
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-059#launcher-runtime")]
 pub(crate) fn stop_within(
     settings: &SettingsRoot,
     target: &str,

@@ -59,6 +59,7 @@ pub enum Layer {
 impl Layer {
     /// The precedence rank — higher wins among equally specific rows
     /// (`PROP-066#precedence`).
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-066#layers")]
     pub fn rank(self) -> u8 {
         match self {
             Layer::UserPackage => 0,
@@ -69,6 +70,7 @@ impl Layer {
     }
 
     /// The short name every human view and `--json` document prints.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-066#layers")]
     pub fn label(self) -> &'static str {
         match self {
             Layer::UserPackage => "user-package",
@@ -104,6 +106,7 @@ pub struct LoadedSource {
 impl LoadedSource {
     /// A source that declared nothing — the shape a missing file takes,
     /// because a missing remap file is an absent layer, not an error.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-066#layers")]
     pub fn empty(layer: Layer, source: impl Into<String>) -> Self {
         LoadedSource {
             layer,
@@ -447,6 +450,7 @@ pub fn default_raw_file_rows(hosts: &[(&str, &str)]) -> Vec<RemapRow> {
 /// assert!(files[1].ends_with("b.toml"));
 /// assert!(env_remap_files("  ").is_empty());
 /// ```
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-066#layers")]
 pub fn env_remap_files(raw: &str) -> Vec<PathBuf> {
     raw.split(',')
         .map(str::trim)

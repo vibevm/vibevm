@@ -55,6 +55,7 @@ impl InstallLock {
         Ok(lock)
     }
 
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-019#build")]
     pub(crate) fn acquire(store: &VersionStore) -> Result<InstallLock> {
         let dir = store.data_dir();
         store.guard_mutation_path(&dir)?;

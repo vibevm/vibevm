@@ -3,6 +3,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-059#move");
 
+use specmark::spec;
 use std::fs;
 use std::io;
 use std::path::{Path, PathBuf};
@@ -27,6 +28,7 @@ fn failed(action: &'static str, path: &Path) -> impl FnOnce(io::Error) -> CopyFa
 /// Copy a directory tree; `to` must not exist. Symbolic links are copied
 /// as links, file permissions travel with `fs::copy` and each directory
 /// keeps the permissions of its source.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-059#move")]
 pub(crate) fn copy_tree(from: &Path, to: &Path) -> Result<(), CopyFailure> {
     fs::create_dir(to).map_err(failed("creating", to))?;
     for entry in fs::read_dir(from).map_err(failed("reading", from))? {
@@ -50,6 +52,7 @@ pub(crate) fn copy_tree(from: &Path, to: &Path) -> Result<(), CopyFailure> {
 
 /// Copy a file or a directory tree to `to`, creating parents and merging
 /// into existing directories; an existing file is overwritten.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-065#kinds")]
 pub(crate) fn copy_into(from: &Path, to: &Path) -> Result<(), CopyFailure> {
     let kind = fs::symlink_metadata(from).map_err(failed("reading", from))?;
     if !kind.is_dir() {

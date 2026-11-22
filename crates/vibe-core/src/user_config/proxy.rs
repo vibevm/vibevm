@@ -4,6 +4,7 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-068#proxy");
 
 use serde::{Deserialize, Serialize};
+use specmark::spec;
 use std::path::PathBuf;
 
 /// `[proxy]` section — the one place a proxy is configured
@@ -142,6 +143,7 @@ pub enum RevocationCheck {
 }
 
 impl RevocationCheck {
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-068#proxy-revocation")]
     pub fn as_str(self) -> &'static str {
         match self {
             RevocationCheck::Check => "check",
@@ -152,6 +154,7 @@ impl RevocationCheck {
 
     /// Parse `check` / `best-effort` / `off` (the
     /// `VIBEVM_PROXY_REVOCATION` spelling; `_` reads as `-`).
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-068#proxy-revocation")]
     pub fn parse(raw: &str) -> Option<Self> {
         match raw.trim().to_ascii_lowercase().replace('_', "-").as_str() {
             "check" => Some(RevocationCheck::Check),
@@ -181,6 +184,7 @@ pub enum ProxyMode {
 }
 
 impl ProxyMode {
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-068#proxy")]
     pub fn as_str(self) -> &'static str {
         match self {
             ProxyMode::Explicit => "explicit",
@@ -196,6 +200,7 @@ impl ProxyMode {
     /// assert_eq!(ProxyMode::parse("NONE"), Some(ProxyMode::None));
     /// assert_eq!(ProxyMode::parse("socks"), None);
     /// ```
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-068#proxy")]
     pub fn parse(raw: &str) -> Option<Self> {
         match raw.trim().to_ascii_lowercase().as_str() {
             "explicit" => Some(ProxyMode::Explicit),
@@ -244,6 +249,7 @@ impl PacSource {
 
     /// Parse a `pac` value; a relative path is refused (px would read it
     /// relative to its own directory).
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-068#proxy-px")]
     pub fn parse(raw: &str) -> Result<Self, &'static str> {
         let value = raw.trim();
         if Self::SYSTEM_SPELLINGS
@@ -282,6 +288,7 @@ impl PacSource {
     /// assert_eq!(drive.px_location().as_deref(), Some("C:/Work/opt/proxy.pac"));
     /// assert_eq!(PacSource::System.px_location(), None);
     /// ```
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-068#proxy-px")]
     pub fn px_location(&self) -> Option<String> {
         match self {
             PacSource::Url(url) => Some(url.clone()),
@@ -305,6 +312,7 @@ impl PacSource {
         }
     }
 
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-068#proxy-px")]
     pub fn kind(&self) -> &'static str {
         match self {
             PacSource::Url(_) => "url",
@@ -358,6 +366,7 @@ impl ProxyConfig {
     /// `curl` read both cases, and the uppercase one is what a reader
     /// expects to see in a process listing. A managed px has no address
     /// before an operation starts it, so `mode = "px"` promotes nothing.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-068#proxy")]
     pub fn child_env(&self) -> Vec<(&'static str, String)> {
         if matches!(self.effective_mode(), Some(ProxyMode::Px | ProxyMode::None)) {
             return Vec::new();
@@ -383,6 +392,7 @@ impl ProxyConfig {
     /// assert_eq!(merged.pac.as_deref(), Some("https://pac.example.corp/p.pac"));
     /// assert_eq!(merged.ca_file.unwrap().to_str(), Some("/home/me/ca.pem"));
     /// ```
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-068#proxy")]
     pub fn over(mut self, lower: &ProxyConfig) -> ProxyConfig {
         self.mode = self.mode.or(lower.mode);
         self.https = self.https.take().or_else(|| lower.https.clone());
@@ -413,6 +423,7 @@ impl ProxyConfig {
     /// assert_eq!(owned.problem().unwrap().0, "proxy.px_args");
     /// assert!(ProxyConfig::default().problem().is_none());
     /// ```
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-068#proxy")]
     pub fn problem(&self) -> Option<(&'static str, String, &'static str)> {
         for (key, value) in [
             ("proxy.https", self.https.as_deref()),

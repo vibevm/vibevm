@@ -29,6 +29,7 @@ specmark::scope!(
     "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#configuration-sources-in-precedence-order"
 );
 
+use specmark::spec;
 use std::path::PathBuf;
 
 /// Environment variable that overrides the settings directory wholesale.
@@ -66,6 +67,9 @@ pub fn settings_dir() -> Option<PathBuf> {
 /// // No override and no home is unresolvable.
 /// assert_eq!(settings_dir_from(None, None), None);
 /// ```
+#[spec(
+    implements = "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#configuration-sources-in-precedence-order"
+)]
 pub fn settings_dir_from(override_dir: Option<PathBuf>, home: Option<PathBuf>) -> Option<PathBuf> {
     if let Some(o) = override_dir.filter(|p| !p.as_os_str().is_empty()) {
         return Some(o);

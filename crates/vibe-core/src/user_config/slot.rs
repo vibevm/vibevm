@@ -120,6 +120,7 @@ impl SlotExtras {
     /// assert_eq!(extras.add_items(["pnpm".to_owned()]), 0);
     /// assert_eq!(extras.add, ["typescript", "pnpm"]);
     /// ```
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-075#SLOT-EXTRAS")]
     pub fn add_items(&mut self, items: impl IntoIterator<Item = String>) -> usize {
         let mut added = 0;
         for item in items {
@@ -132,6 +133,7 @@ impl SlotExtras {
     }
 
     /// Append `ids` to [`Self::drop`] the same way.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-075#SLOT-EXTRAS")]
     pub fn drop_ids(&mut self, ids: impl IntoIterator<Item = String>) -> usize {
         let mut added = 0;
         for id in ids {

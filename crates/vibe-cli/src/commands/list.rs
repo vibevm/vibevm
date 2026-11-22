@@ -4,6 +4,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#command-summary");
 
+use specmark::spec;
 use std::path::{Path, PathBuf};
 use std::str::FromStr;
 
@@ -15,6 +16,7 @@ use vibe_core::{PackageKind, machine_json_path};
 use crate::cli::ListArgs;
 use crate::output;
 
+#[spec(implements = "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#command-summary")]
 pub fn run(ctx: &output::Context, args: ListArgs) -> Result<()> {
     let project_root = if args.global {
         super::user::initialized_root()?

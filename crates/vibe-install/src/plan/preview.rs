@@ -2,6 +2,7 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-073#OPERATION-EFFECTS");
 
 use super::*;
+use specmark::spec;
 
 /// Explicit destinations selected by the preview operation, not by package data.
 /// The old store is lookup-only; missing retained metadata can acquire only into
@@ -31,6 +32,7 @@ impl InstallPreview {
     /// let _reasons = plan.package_candidates(group, "demo");
     /// # }
     /// ```
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-073#OPERATION-EFFECTS")]
     pub fn package_candidates(
         &self,
         group: &vibe_core::Group,
@@ -53,6 +55,7 @@ impl InstallPreview {
     /// }
     /// # }
     /// ```
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-073#OPERATION-EFFECTS")]
     pub fn package_sources(
         &self,
     ) -> impl Iterator<
@@ -89,6 +92,7 @@ impl InstallPreview {
 /// # }
 /// ```
 #[allow(clippy::too_many_arguments)]
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-073#OPERATION-EFFECTS")]
 pub fn preview_prepared<S: InstallSource + ?Sized>(
     source: &S,
     project_root: &Path,
@@ -116,6 +120,7 @@ pub fn preview_prepared<S: InstallSource + ?Sized>(
 
 /// Read-only preview with routing's original source-owned top-level selections.
 #[allow(clippy::too_many_arguments)]
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-073#OPERATION-EFFECTS")]
 pub fn preview_prepared_with_selected_roots<S: InstallSource + ?Sized>(
     source: &S,
     project_root: &Path,
@@ -180,6 +185,7 @@ pub fn preview_prepared_with_selected_roots<S: InstallSource + ?Sized>(
 /// let _needed = vibe_install::preview_has_requirements(w, m, false, lock);
 /// # }
 /// ```
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-073#OPERATION-EFFECTS")]
 pub fn preview_has_requirements(
     workspace: &Workspace,
     manifest: &Manifest,

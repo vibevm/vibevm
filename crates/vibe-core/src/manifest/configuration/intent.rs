@@ -57,6 +57,9 @@ pub struct NormalizedConfigurationInput {
     pub parameters: BTreeMap<String, ParameterValue>,
 }
 impl ConfigurationIntentDecl {
+    #[specmark::spec(
+        implements = "spec://org.vibevm.core/vibevm/common/PROP-069#INPUT-NORMALIZATION"
+    )]
     pub(crate) fn validate_shape_at(&self, at: &FieldPath) -> Result<(), FieldError> {
         let check = |id: &str, field: FieldPath| {
             if valid_identifier(id) {

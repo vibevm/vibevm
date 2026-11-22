@@ -1,6 +1,7 @@
 //! Cooperative control of metadata Git children.
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-073#OPERATION-EFFECTS-LAW");
 use command_group::CommandGroup;
+use specmark::spec;
 use std::{
     io::{self, Read},
     process::{Command, Output, Stdio},
@@ -169,6 +170,7 @@ pub(super) fn git_error(source: std::io::Error, cmd: String) -> super::GitError 
 
 /// Fixed metadata evaluation with bounded lifetime and captured stdout. The
 /// stderr policy already selected by the caller is retained.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-073#OPERATION-EFFECTS-LAW")]
 pub fn bounded_output(
     command: &mut Command,
     token: &CancellationToken,

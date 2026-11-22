@@ -9,6 +9,7 @@ specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#r
 use super::*;
 use crate::git_failure::GitOperation;
 use crate::index_client::IndexVersion;
+use specmark::spec;
 
 impl GitPerPackageRegistry {
     /// Fetch `vibe.toml` at an arbitrary git ref (tag, branch,
@@ -28,6 +29,9 @@ impl GitPerPackageRegistry {
     /// path passes whatever the operator declared, so a branch name or a
     /// commit SHA arrives here too. Every step of the ladder takes it as
     /// given.
+    #[spec(
+        implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#registry-model"
+    )]
     pub fn fetch_manifest_at_ref(
         &self,
         group: &Group,
@@ -361,6 +365,9 @@ impl GitPerPackageRegistry {
             .map(|(resolved, _)| resolved)
     }
 
+    #[spec(
+        implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#registry-model"
+    )]
     pub(crate) fn resolve_with_route(
         &self,
         pkgref: &PackageRef,
@@ -442,6 +449,9 @@ impl GitPerPackageRegistry {
         self.fetch_dep_manifest_selected(&resolved, None)
     }
 
+    #[spec(
+        implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#registry-model"
+    )]
     pub(crate) fn fetch_dep_manifest_selected(
         &self,
         resolved: &ResolvedPackage,

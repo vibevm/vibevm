@@ -37,6 +37,9 @@ pub enum RecipeId {
 
 impl RecipeId {
     /// The wire label this recipe stamps in front of the hex digest.
+    #[specmark::spec(
+        implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#identity"
+    )]
     pub fn label(self) -> &'static str {
         match self {
             RecipeId::Legacy0 => "sha256:",
@@ -116,6 +119,9 @@ pub fn recipe1_excludes() -> Vec<&'static str> {
 /// "recipe 1's order does not depend on the input separator" is provable on
 /// every host without touching disk (see
 /// `tests/content_hash_parity.rs::normalisation_precedes_ordering`).
+#[specmark::spec(
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#identity"
+)]
 pub fn order_paths(recipe: RecipeId, rels: &[String]) -> Vec<String> {
     order_entries(recipe, rels.iter().map(|r| (r.clone(), ())).collect())
         .into_iter()
@@ -133,6 +139,9 @@ pub fn order_paths(recipe: RecipeId, rels: &[String]) -> Vec<String> {
 /// filesystem, and a branch that cannot fail is exactly the branch that gets
 /// written as `.expect()` and then has to be argued about. Carrying the file
 /// through removes the branch instead of annotating it.
+#[specmark::spec(
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#identity"
+)]
 pub fn order_entries<T>(recipe: RecipeId, items: Vec<(String, T)>) -> Vec<(String, T)> {
     // Keep the raw input beside its normalised form: recipe 0 orders by the
     // raw platform string, recipe 1 by the normalised one, and both emit the

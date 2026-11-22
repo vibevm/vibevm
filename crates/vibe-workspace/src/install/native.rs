@@ -4,6 +4,7 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#BUILD-PHASE-OWNS
 
 use super::{ResolvedDep, Workspace, WorkspaceError, bootgen, validate_redirect_blocks};
 use crate::extension_world::{OwnerRuntimeEpoch, OwnerRuntimeId};
+use specmark::spec;
 use vibe_core::manifest::SpecFormat;
 
 pub struct NativeInstallCarriage {
@@ -47,6 +48,7 @@ impl NativeInstallCarriage {
         &self.build_owners
     }
 
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#BUILD-PHASE-OWNS-IT")]
     pub fn replay<F>(self, factory: &mut F) -> Result<(), NativeInstallReplayError>
     where
         F: crate::extension_world::CompilerNativeReplayFactory,
@@ -124,6 +126,7 @@ pub struct NativeInstallOutcome {
 }
 
 #[allow(clippy::too_many_arguments)]
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#BUILD-PHASE-OWNS-IT")]
 pub fn regenerate_boot_from_traced_native<F, P>(
     workspace: &Workspace,
     resolution: &[ResolvedDep],

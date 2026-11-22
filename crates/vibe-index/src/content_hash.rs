@@ -17,6 +17,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#deps");
 
+use specmark::spec;
 use std::path::{Path, PathBuf};
 
 use sha2::{Digest, Sha256};
@@ -62,6 +63,7 @@ fn admit_relative_path(recipe: RecipeId, rel: &Path, path: &Path) -> Result<Stri
 /// the two recipes differ only in the ORDER of those files (recipe 1
 /// normalises separators before ordering, recipe 0 orders the platform path
 /// first) and in the wire label stamped on the final hex.
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#PROV-CONTENT-HASH")]
 pub fn compute_content_hash_with(recipe: RecipeId, pkg_dir: &Path) -> Result<String> {
     let excludes: Vec<&str> = match recipe {
         RecipeId::Legacy0 => LEGACY0_EXCLUDES.to_vec(),

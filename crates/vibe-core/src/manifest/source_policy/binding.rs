@@ -2,6 +2,7 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-073#SOURCE-POLICY");
 use super::RegistryPin;
 use crate::{ContentHash, SourceUrl};
+use specmark::spec;
 use std::path::PathBuf;
 
 /// Runtime candidate binding. A value is not contact or acquisition authority;
@@ -58,6 +59,7 @@ pub enum CanonicalSourceBinding {
 }
 impl CanonicalSourceBinding {
     /// Capture all held source constraints, retaining authoritative absence.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-073#LOCKED-SOURCE-LAW")]
     pub fn from_locked(row: &crate::manifest::LockedPackage) -> Self {
         Self::Locked {
             registry: row.registry.clone(),
@@ -71,6 +73,7 @@ impl CanonicalSourceBinding {
     }
 
     /// Registry constraint identity, including a held alias absent from today's catalog.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-073#SOURCE-POLICY")]
     pub fn registry_name(&self) -> Option<&str> {
         match self {
             Self::Registry { registry, .. } => Some(registry.as_str()),

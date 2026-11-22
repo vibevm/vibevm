@@ -6,6 +6,7 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-065#env-step");
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-065#app-dependencies");
 
+use specmark::spec;
 use std::collections::BTreeMap;
 use std::ffi::OsStr;
 use std::path::{Path, PathBuf};
@@ -35,6 +36,7 @@ impl StepPaths {
     /// `base` plus, when the step has requirements, a `PATH` that starts
     /// with their proxy and `bin` directories before `inherited`, and the
     /// `VIBE_APP_USE` choices that make the proxies pick them.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-065#app-dependencies")]
     pub fn child_env(
         &self,
         base: &[(String, String)],

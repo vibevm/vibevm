@@ -77,6 +77,7 @@ pub enum LocationError {
 impl ByteLocation {
     /// Classify a spelled location: an absolute local path, a `file://`
     /// URL, or an `http(s)://` URL.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-066#locations")]
     pub fn parse(raw: &str) -> Result<Self, LocationError> {
         let trimmed = raw.trim();
         // A local path first: `C:\drop` parses as a URL with scheme `c`.
@@ -110,6 +111,7 @@ impl ByteLocation {
 
     /// Classify a remap target. A `path` target must be absolute; a `url`
     /// target follows [`ByteLocation::parse`]; `deny` is never a location.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-066#locations")]
     pub fn of_target(target: &RemapTarget) -> Result<Self, LocationError> {
         match target {
             RemapTarget::Url(url) => Self::parse(url),
@@ -125,6 +127,7 @@ impl ByteLocation {
 
     /// The location as one URL string: remote URLs verbatim, local paths
     /// as `file://` URLs (so a caller with one URL slot can carry either).
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-066#locations")]
     pub fn to_url(&self) -> String {
         match self {
             ByteLocation::Remote(url) => url.clone(),
@@ -145,6 +148,7 @@ impl ByteLocation {
     /// let remote = ByteLocation::Remote("https://n.example/r/".into());
     /// assert_eq!(remote.child("v1.0.0").to_url(), "https://n.example/r/v1.0.0");
     /// ```
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-066#locations")]
     pub fn child(&self, name: &str) -> Self {
         match self {
             ByteLocation::Remote(url) => {

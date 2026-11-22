@@ -2,6 +2,7 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-066#provenance");
 use super::file_guard::{FileGuard, MetadataFiles};
 use crate::error::Result;
+use specmark::spec;
 use std::path::Path;
 use vibe_core::manifest::Lockfile;
 
@@ -31,6 +32,7 @@ pub struct ProjectRecordCapture {
     before: Lockfile,
 }
 impl ProjectRecordCapture {
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-066#provenance")]
     pub fn prepare(
         self,
         planned: &Lockfile,
@@ -53,6 +55,7 @@ impl ProjectRecordCapture {
     }
 }
 impl ProjectRecordPublication {
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-066#provenance")]
     pub fn capture_before(root: &Path, before: &Lockfile) -> Result<ProjectRecordCapture> {
         let path = root.join(Lockfile::FILENAME);
         let lock = FileGuard::capture(&path)?;
@@ -93,6 +96,7 @@ impl ProjectRecordPublication {
         self.files.provenance.recheck()
     }
     /// Publish lock and shared report together, undoing owned metadata on failure.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-066#provenance")]
     pub fn publish(mut self, after: &Lockfile) -> Result<()> {
         if !crate::record::same_selection_set(&self.planned, after) {
             return Err(vibe_core::Error::InvalidLockfile {
@@ -118,6 +122,7 @@ impl ProjectRecordPublication {
     }
     /// The uninstall owner already publishes/undoes its lock; publish this report
     /// last, before it declares metadata success, without acquiring a second lock writer.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-066#provenance")]
     pub fn publish_provenance(mut self) -> Result<()> {
         if let Err(error) = self.files.provenance.publish(self.report.as_deref()) {
             return Err(self.files.undo_records(error));

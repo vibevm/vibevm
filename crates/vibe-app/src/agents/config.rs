@@ -150,6 +150,7 @@ pub struct LauncherDefinition {
 
 impl AgentsConfig {
     /// Read `<settings>/agents.toml`; a missing file is an empty registry.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-064#agent-definition")]
     pub fn load(settings: &SettingsRoot) -> Result<Self, AgentError> {
         let path = settings.agents_path();
         let text = match fs::read_to_string(&path) {
@@ -166,6 +167,7 @@ impl AgentsConfig {
     }
 
     /// Replace `<settings>/agents.toml` atomically.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-064#agent-definition")]
     pub fn save(&self, settings: &SettingsRoot) -> Result<(), AgentError> {
         let path = settings.agents_path();
         let text = toml::to_string(self).map_err(|error| AgentError::Config {
@@ -179,6 +181,7 @@ impl AgentsConfig {
     }
 
     /// A definition merged with its preset, or a bare preset name.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-064#agent-definition")]
     pub fn resolve(&self, name: &str) -> Result<ResolvedAgent, AgentError> {
         let definition = match (self.agent.get(name), preset(name)) {
             (Some(definition), _) => definition.clone(),
@@ -241,6 +244,7 @@ impl AgentsConfig {
     }
 
     /// Add a definition; an existing name is refused.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-064#agent-definition")]
     pub fn add(&mut self, name: &str, definition: AgentDefinition) -> Result<(), AgentError> {
         if self.agent.contains_key(name) {
             return Err(AgentError::Exists { name: name.into() });
@@ -258,6 +262,7 @@ impl AgentsConfig {
     }
 
     /// Remove a definition; the default naming it is cleared.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-064#agent-definition")]
     pub fn remove(&mut self, name: &str) -> Result<(), AgentError> {
         if self.agent.remove(name).is_none() {
             return Err(AgentError::Unknown {
@@ -273,6 +278,7 @@ impl AgentsConfig {
 
     /// Make `name` the default: a definition as it is, or a preset written
     /// as a `[agent.NAME] preset = "NAME"` table first (`vibe agent use`).
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-064#selection")]
     pub fn use_agent(&mut self, name: &str) -> Result<(), AgentError> {
         if !self.agent.contains_key(name) {
             if preset(name).is_none() {
@@ -304,6 +310,7 @@ impl AgentsConfig {
 /// rather than resolved here: this function reads no file, and a trust
 /// answer assembled a second way is exactly the parallel list the one
 /// mechanism exists to prevent.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-064#presets")]
 pub fn agent_list(
     settings: &SettingsRoot,
     config: &AgentsConfig,
@@ -395,6 +402,7 @@ fn trust_row(entry: &TrustEntry, overrides: &[TrustLayer]) -> list_wire::TrustEn
 /// );
 /// assert!(table.placeholders.contains(&"{prompt_file}".to_owned()));
 /// ```
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-064#presets")]
 pub fn preset_table() -> presets_wire::AgentPresets {
     let owned = |template: &[&str]| template.iter().map(|arg| (*arg).to_owned()).collect();
     presets_wire::AgentPresets {

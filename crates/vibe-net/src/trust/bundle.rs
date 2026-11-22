@@ -49,6 +49,7 @@ pub(crate) fn to_pem<'a>(certificates: impl Iterator<Item = &'a [u8]>) -> Vec<u8
 /// `rustls-native-certs` reads (which honours `SSL_CERT_FILE` and
 /// `SSL_CERT_DIR`).
 #[cfg(windows)]
+#[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-068#proxy-git")]
 pub fn system_certificates() -> (Vec<Vec<u8>>, Vec<String>) {
     let mut certificates: Vec<Vec<u8>> = Vec::new();
     let mut errors: Vec<String> = Vec::new();
@@ -79,6 +80,7 @@ pub fn system_certificates() -> (Vec<Vec<u8>>, Vec<String>) {
 
 /// Every certificate this operating system's stores hold, in DER.
 #[cfg(not(windows))]
+#[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-068#proxy-git")]
 pub fn system_certificates() -> (Vec<Vec<u8>>, Vec<String>) {
     let native = rustls_native_certs::load_native_certs();
     let errors = native.errors.iter().map(ToString::to_string).collect();
@@ -124,6 +126,7 @@ pub(crate) fn cached(bytes: &[u8]) -> Result<PathBuf, TrustError> {
 
 /// [`cached`] in an explicit directory — the seam a test drives without
 /// touching the operator's own settings directory.
+#[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-068#proxy-git")]
 pub(crate) fn cached_in(dir: &std::path::Path, bytes: &[u8]) -> Result<PathBuf, TrustError> {
     use sha2::{Digest, Sha256};
     let digest = Sha256::digest(bytes);

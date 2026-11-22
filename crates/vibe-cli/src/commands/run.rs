@@ -2,6 +2,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#HOST-RUN-COMMANDS");
 
+use specmark::spec;
 use std::path::{Path, PathBuf};
 
 use anyhow::{Context, Result, bail};
@@ -11,6 +12,7 @@ use vibe_workspace::interpreter::{Platform, SystemProbe, select_invocation};
 use crate::cli::RunArgs;
 use crate::output;
 
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#HOST-RUN-COMMANDS")]
 pub fn run(ctx: &output::Context, args: RunArgs) -> Result<i32> {
     let root = super::resolve_project_root(&args.path)?;
     let manifest = Manifest::read(root.join(Manifest::FILENAME))?;

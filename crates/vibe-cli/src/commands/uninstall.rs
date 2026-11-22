@@ -8,6 +8,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#command-summary");
 
+use specmark::spec;
 use std::path::{Path, PathBuf};
 
 use crate::exit_code::InstallError;
@@ -28,6 +29,7 @@ mod report;
 use report::{emit_report, handle_adoption_facts};
 mod transaction;
 
+#[spec(implements = "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#command-summary")]
 pub fn run(ctx: &output::Context, args: UninstallArgs) -> Result<()> {
     let project_root = resolve_project_root(&args.path)?;
     let workspace = Workspace::discover(&project_root)

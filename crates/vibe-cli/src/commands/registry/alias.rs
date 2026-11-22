@@ -36,6 +36,7 @@ specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#s
 
 use anyhow::{Context as _, Result, bail};
 use serde::Serialize;
+use specmark::spec;
 use vibe_core::layout_registry::{ALIAS_TABLE_FILE, INDEX_DIR, index_dir};
 use vibe_core::manifest::{Manifest, RegistrySection, RegistryType};
 use vibe_index::aliases::{self, AliasTable};
@@ -346,6 +347,7 @@ fn parse_target(spelling: &str) -> Result<AliasTarget> {
 /// Exposed here, beside the maintainer's own edits, because the merge
 /// rule is a statement about ONE table with two authors and belongs
 /// with the table rather than with the mirror pipeline.
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#short-name")]
 pub(crate) fn mirrored(
     source: &AliasTable,
     target: &AliasTable,

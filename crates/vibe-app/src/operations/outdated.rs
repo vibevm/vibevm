@@ -5,6 +5,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-065#outdated");
 
+use specmark::spec;
 use std::collections::BTreeMap;
 
 use vibe_wire::generated::application_outdated as wire;
@@ -23,6 +24,7 @@ use crate::settings::SettingsRoot;
 /// assert_eq!(report.protocol, "vibe-app-outdated/1");
 /// assert!(report.installations.is_empty());
 /// ```
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-065#outdated")]
 pub fn outdated(
     settings: &SettingsRoot,
     latest: &dyn Fn(&PackageCoordinate) -> Result<String, String>,

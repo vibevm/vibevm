@@ -1,5 +1,6 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-050#closure");
 
+use specmark::spec;
 use std::collections::{BTreeMap, BTreeSet};
 
 use crate::manifest::{AccessLevel, AllowFriendsOverride, OverrideEntry, OverrideTarget};
@@ -65,6 +66,7 @@ struct EffectiveEdge {
 /// });
 /// assert!(analyze(&graph, &root).effective.contains_key("org.x/api"));
 /// ```
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-050#FRIEND-CLOSURE")]
 pub fn analyze(graph: &VisibilityGraph, root: &NodeId) -> Analysis {
     let mut closure = BTreeSet::new();
     loop {

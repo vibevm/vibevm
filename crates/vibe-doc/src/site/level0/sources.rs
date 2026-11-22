@@ -7,6 +7,7 @@ specmark::scope!(
 use crate::citations::{SpecSources, sources::CapturedPages};
 use crate::error::{DocError, Result};
 use crate::pages::{Page, PageSet, SPEC_ROOT, UnreadablePage};
+use specmark::spec;
 use std::collections::BTreeSet;
 use std::path::{Path, PathBuf};
 use vibe_core::manifest::{SelectedSource, SourceInterpretation, select_source_rows};
@@ -36,6 +37,7 @@ fn refused(root: &Path, reason: impl std::fmt::Display) -> DocError {
 }
 
 impl SourcePages {
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-LEVEL0-READ")]
     pub(crate) fn capture(root: &Path, manifest: &str) -> Result<Self> {
         let policy = observe_package_policy(root)?;
         if policy.manifest_bytes() != Some(manifest.as_bytes()) {
@@ -185,6 +187,7 @@ impl SourcePages {
         Ok(())
     }
 
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-LEVEL0-READ")]
     pub(crate) fn recheck(&self) -> Result<()> {
         self.policy.recheck_unchanged()?;
         if self.policy.materialized_record_present()? {

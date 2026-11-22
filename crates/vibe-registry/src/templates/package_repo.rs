@@ -21,6 +21,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-075#TEMPLATE-IN-A-REPO");
 
+use specmark::spec;
 use std::path::PathBuf;
 
 use vibe_core::Group;
@@ -70,6 +71,7 @@ impl TemplateLayer {
     /// `Ok(None)` means the index named no template revision for this
     /// package, which is the ordinary case for every package in a
     /// registry.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-075#TEMPLATE-IN-A-REPO")]
     pub fn for_package_repo(
         &self,
         group: &Group,

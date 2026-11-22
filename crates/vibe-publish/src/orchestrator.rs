@@ -8,6 +8,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#publish");
 
+use specmark::spec;
 use std::path::PathBuf;
 
 use vibe_core::PackageKind;
@@ -56,6 +57,7 @@ pub struct PublishConfig {
 }
 
 impl PublishConfig {
+    #[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#publish")]
     pub fn with_defaults(source_dir: PathBuf, org_url: String) -> Self {
         PublishConfig {
             source_dir,
@@ -161,6 +163,9 @@ impl<'c, C: RepoCreator + ?Sized> Publisher<'c, C> {
     ///   token never appears in any of them (PROP-000 §20).
     ///
     /// The canonical call shape is the [`Publisher`] type's doctest above.
+    #[spec(
+        implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#PUB-REPO-CREATOR"
+    )]
     pub fn publish(&self, config: &PublishConfig) -> Result<PublishOutcome, PublishError> {
         self.publish_controlled(
             config,
@@ -169,6 +174,9 @@ impl<'c, C: RepoCreator + ?Sized> Publisher<'c, C> {
     }
 
     /// Stop future effects at owner checkpoints; accepted remote writes are never undone.
+    #[spec(
+        implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#PUB-REPO-CREATOR"
+    )]
     pub fn publish_controlled(
         &self,
         config: &PublishConfig,

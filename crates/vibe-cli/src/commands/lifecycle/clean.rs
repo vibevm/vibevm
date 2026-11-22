@@ -65,6 +65,7 @@ pub(crate) struct CleanEpoch {
 /// the old discovery did, so the external chain is unchanged and the cause
 /// survives. The backend is derived from the borrow first, before the consume —
 /// still one read, and still nothing re-read.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#ENGINE-ALGORITHM")]
 pub(crate) fn prepare_epoch(
     selected: &Path,
     lease: &std::sync::Arc<vibe_lifecycle::LifecycleLease>,
@@ -134,6 +135,7 @@ pub fn run_clean(
 }
 
 /// Run the independent clean lifecycle: dispatch once, then terminal wipe.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#ENGINE-ALGORITHM")]
 pub(crate) fn run_clean_only(
     ctx: &output::Context,
     args: CleanArgs,

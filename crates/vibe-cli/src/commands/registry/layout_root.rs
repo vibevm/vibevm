@@ -6,6 +6,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#registry-index");
 
+use specmark::spec;
 use std::path::{Path, PathBuf};
 use std::sync::Arc;
 
@@ -41,6 +42,7 @@ pub(crate) fn is_layout(reg: &RegistrySection) -> bool {
 }
 
 /// Open the tree of the layout registry `reg`.
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#registry-index")]
 pub(crate) fn open(
     reg: &RegistrySection,
     mirrors: &[MirrorSection],

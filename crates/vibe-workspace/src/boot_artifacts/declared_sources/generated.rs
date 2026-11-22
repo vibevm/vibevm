@@ -5,6 +5,7 @@ specmark::scope!(
 );
 use super::*;
 use crate::boot::EffectiveBoot;
+use specmark::spec;
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub(crate) struct GeneratedObservation {
@@ -19,6 +20,7 @@ impl DeclaredBootSources {
     pub(crate) fn root(&self) -> &Path {
         &self.root
     }
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-INSTALLED-READ")]
     pub(crate) fn capture_generated(
         &self,
         boot: &EffectiveBoot,

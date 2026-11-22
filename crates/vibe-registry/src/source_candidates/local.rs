@@ -2,11 +2,13 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-073#SOURCE-POLICY");
 use super::*;
 use crate::{LocalRegistry, PackageAcquisition, ResolvedPackage};
+use specmark::spec;
 use std::path::Path;
 use vibe_core::manifest::{CanonicalSourceBinding, SourcePolicyError};
 
 impl LocalRegistry {
     /// Read one already chosen legacy version without enumerating other sources/versions.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-073#SOURCE-POLICY")]
     pub fn retain_default_candidate(
         &self,
         group: &Group,
@@ -72,6 +74,7 @@ impl LocalRegistry {
         })
     }
 
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-073#SOURCE-POLICY")]
     pub fn candidate_inventory(
         &self,
         group: &Group,
@@ -139,6 +142,7 @@ impl LocalRegistry {
 
     /// Preserve the existing local application's source-tree execution posture
     /// without reselecting a version or warming the immutable package store.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-073#SOURCE-POLICY")]
     pub fn retained_source_tree(
         &self,
         candidate: &RetainedSourceCandidate,
@@ -193,6 +197,7 @@ impl LocalRegistry {
     }
 
     /// Acquire the exact retained directory selection, never resolve another version/root.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-073#SOURCE-POLICY")]
     pub fn fetch_candidate_for_install(
         &self,
         candidate: &RetainedSourceCandidate,

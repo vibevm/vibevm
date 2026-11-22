@@ -57,6 +57,7 @@ pub enum MigrationResult {
 
 impl MigrationResult {
     /// The stable spelling of this result.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-075#MIGRATION-FAILURE")]
     pub fn as_str(self) -> &'static str {
         match self {
             Self::Done => "done",
@@ -105,6 +106,7 @@ pub enum ExtrasResult {
 
 impl ExtrasResult {
     /// The stable spelling of this outcome.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-075#SLOT-EXTRAS")]
     pub fn as_str(self) -> &'static str {
         match self {
             Self::Done => "done",
@@ -146,6 +148,7 @@ pub struct ExtrasRecord {
 impl ExtrasRecord {
     /// A record of `id` alone, which is what an installation carries
     /// before any verb has run in it.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-075#SLOT-EXTRAS")]
     pub fn new(id: &str) -> Self {
         Self {
             id: id.to_owned(),
@@ -156,6 +159,7 @@ impl ExtrasRecord {
     /// Whether this record retains anything at all. One that does not is
     /// never written, so an adapter that only ever skipped does not force
     /// a home onto the `/8` reader.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-075#SLOT-EXTRAS")]
     pub fn is_empty(&self) -> bool {
         self.applied.is_empty()
             && self.applied_at.is_none()

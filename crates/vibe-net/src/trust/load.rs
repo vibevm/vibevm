@@ -73,6 +73,7 @@ pub(crate) fn certificates_in_file(path: &Path) -> Result<Vec<Loaded>, TrustErro
 }
 
 /// [`certificates_in_file`] over bytes already in hand.
+#[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-068#proxy-trust")]
 pub(crate) fn certificates_in_bytes(bytes: &[u8], path: &Path) -> Result<Vec<Loaded>, TrustError> {
     let text = String::from_utf8_lossy(bytes);
     if text.contains("-----BEGIN CERTIFICATE-----") {

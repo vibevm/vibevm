@@ -81,6 +81,7 @@ impl TemplateSection {
     /// assert!(section.has_sizes());
     /// # Ok::<(), toml::de::Error>(())
     /// ```
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-075#TEMPLATE-DIGEST-SOURCE")]
     pub fn has_sizes(&self) -> bool {
         match &self.digests {
             None | Some(DigestSource::Sha256Sums { .. }) => false,
@@ -90,6 +91,7 @@ impl TemplateSection {
 
     /// The version-list URL, which never carries a template variable: the
     /// list cannot depend on a version.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-075#TEMPLATE-SPELLING")]
     pub fn version_list_url(&self) -> Option<&str> {
         match &self.versions {
             VersionSource::Json { url, .. } => Some(url),
@@ -100,6 +102,7 @@ impl TemplateSection {
     /// The per-version digest-document URL **template**, over the version
     /// variables only — `None` for a template that declares no digest
     /// source (PROP-075 `#TEMPLATE-NO-DIGEST`).
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-075#TEMPLATE-DIGEST-SOURCE")]
     pub fn digest_url_template(&self) -> Option<&str> {
         match &self.digests {
             Some(DigestSource::Sha256Sums { url, .. } | DigestSource::Json { url, .. }) => {
@@ -297,6 +300,7 @@ impl Scalar {
     /// assert!(!Scalar::Bool(false).is_truthy());
     /// assert!(!Scalar::String(String::new()).is_truthy());
     /// ```
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-075#CHANNEL-SYNTAX")]
     pub fn is_truthy(&self) -> bool {
         match self {
             Self::Bool(value) => *value,

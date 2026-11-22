@@ -18,6 +18,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-019#release-sources");
 
+use specmark::spec;
 use std::io::Read;
 use std::sync::Arc;
 use std::time::Duration;
@@ -57,6 +58,7 @@ pub(crate) enum Answer {
 impl ApiClient {
     /// A client under `admission` (the operation's source policy); `None`
     /// is the uncontrolled posture, where the ambient `[proxy]` applies.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-019#release-sources")]
     pub(crate) fn new(admission: Option<Arc<HttpAdmission>>) -> Result<Self> {
         let mut builder = reqwest::blocking::Client::builder()
             .user_agent(format!("vibevm/{}", env!("CARGO_PKG_VERSION")))
@@ -98,6 +100,7 @@ impl ApiClient {
     /// GET `url` with `headers`, sending `token` as a bearer only to the
     /// origin of `url`. Redirects are followed by hand, each hop admitted.
     /// `None` is a 404/410 answer; the address is returned for messages.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-019#release-sources")]
     pub(crate) fn send(
         &self,
         url: &str,
@@ -129,6 +132,7 @@ impl ApiClient {
 
     /// [`ApiClient::send`] without the status interpretation: the caller
     /// receives the status it did not expect and says what it means.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-019#release-sources")]
     pub(crate) fn request(
         &self,
         url: &str,

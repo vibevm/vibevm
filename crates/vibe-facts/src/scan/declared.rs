@@ -6,6 +6,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-OBSERVATION-LAW");
 
+use specmark::spec;
 use vibe_core::PackageKind;
 use vibe_core::manifest::{
     PackageMeta, SelectedSource, SourceDescriptor, SourceInterpretation, SourceSelectionError,
@@ -103,6 +104,7 @@ pub enum DeclaredDocumentObservation<'a> {
 /// supplied by its host. `None` is unavailable, never an empty source. Only a
 /// selected native interpretation invokes the existing specdoc parser and
 /// authored-fact traversal; XML and Markdown dispatch follow declared media.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-OBSERVATION-LAW")]
 pub fn observe_declared_document<'a>(
     package: &PackageMeta,
     relative_path: &str,

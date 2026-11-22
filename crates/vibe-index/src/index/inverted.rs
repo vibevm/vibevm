@@ -19,6 +19,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#layout");
 
+use specmark::spec;
 use std::collections::BTreeMap;
 use std::fs;
 use std::path::{Path, PathBuf};
@@ -113,6 +114,7 @@ pub struct InvertedView {
 }
 
 impl InvertedView {
+    #[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#layout")]
     pub fn from_entries<'a, I: IntoIterator<Item = &'a VersionEntry>>(entries: I) -> Self {
         let mut by_capability: BTreeMap<String, Vec<CapabilityRow>> = BTreeMap::new();
         let mut by_purl: BTreeMap<String, Vec<PurlRow>> = BTreeMap::new();
@@ -216,6 +218,7 @@ pub struct WrittenInvertedFile {
     pub sha256: String,
 }
 
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#BY-CAP")]
 pub fn write_capability(
     data_dir: &Path,
     slug: &str,
@@ -231,6 +234,7 @@ pub fn write_capability(
     })
 }
 
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#BY-PURL")]
 pub fn write_purl(data_dir: &Path, slug: &str, rows: &[PurlRow]) -> Result<WrittenInvertedFile> {
     let bytes = serialise_rows(rows.iter(), serde_json::to_string)?;
     let path = purl_file(data_dir, slug);
@@ -259,6 +263,7 @@ pub fn parse_capability(bytes: &[u8]) -> Result<Vec<ByCap>> {
 }
 
 /// Read and parse `by-cap/<slug>.jsonl` from `data_dir`.
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#BY-CAP")]
 pub fn read_capability(data_dir: &Path, slug: &str) -> Result<Vec<ByCap>> {
     let path = capability_file(data_dir, slug);
     let bytes = std::fs::read(&path).map_err(|e| Error::Io {
@@ -275,6 +280,7 @@ pub fn parse_purl(bytes: &[u8]) -> Result<Vec<ByPurl>> {
 }
 
 /// Read and parse `by-purl/<slug>.jsonl` from `data_dir`.
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#BY-PURL")]
 pub fn read_purl(data_dir: &Path, slug: &str) -> Result<Vec<ByPurl>> {
     let path = purl_file(data_dir, slug);
     let bytes = std::fs::read(&path).map_err(|e| Error::Io {
@@ -338,6 +344,7 @@ fn count_jsonl(dir: &Path) -> u32 {
         .count() as u32
 }
 
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#layout")]
 pub fn clear_dir(dir: &Path) -> Result<()> {
     if dir.exists() {
         fs::remove_dir_all(dir).map_err(|e| Error::Io {

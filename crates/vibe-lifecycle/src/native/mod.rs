@@ -155,6 +155,7 @@ pub struct ArtifactNativeBackend<'a> {
 
 impl<'a> ArtifactNativeBackend<'a> {
     #[must_use]
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#REF-WIRE-NATIVE")]
     pub fn new(execution: NativeBuildExecution<'a>) -> Self {
         Self {
             execution,

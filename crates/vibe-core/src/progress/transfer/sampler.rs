@@ -9,6 +9,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-068#sampling");
 
+use specmark::spec;
 use std::collections::VecDeque;
 use std::time::Duration;
 
@@ -120,6 +121,7 @@ impl Sampler {
         self.take_observed(since, bytes, None)
     }
 
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-068#sampling")]
     pub(crate) fn take_observed(
         &mut self,
         since: Duration,

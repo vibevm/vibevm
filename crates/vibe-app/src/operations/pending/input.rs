@@ -1,7 +1,9 @@
 //! Restore retained operation inputs; repeated manual flags are checks, never new deltas.
 use super::*;
 use crate::{FeatureRequest, InstallChoice, Mark, RequiredBy};
+use specmark::spec;
 
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-069#APP-CONFIGURATION-CONTINUATION")]
 pub(crate) fn restore(
     settings: &SettingsRoot,
     op: &w::ApplicationPendingOperation,

@@ -110,6 +110,7 @@ const STEP_VARIABLES: [&str; 7] = [
 /// let param = expand_step_template("$param:lang/x", &mut |_| Ok("en".into()));
 /// assert_eq!(param.unwrap(), "en/x");
 /// ```
+#[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-065#templates")]
 pub fn expand_step_template(
     template: &str,
     value: &mut dyn FnMut(StepVar<'_>) -> Result<String, String>,

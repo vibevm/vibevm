@@ -124,6 +124,9 @@ pub fn plan<S: InstallSource + ?Sized>(
 /// [`plan_prepared_with_spec_format`], the prepared compatibility entrypoint. A caller
 /// that already owns those two values calls the prepared sibling directly and
 /// touches the disk for neither.
+#[specmark::spec(
+    implements = "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#install-workflow-in-detail"
+)]
 pub fn plan_with_spec_format<S: InstallSource + ?Sized>(
     source: &S,
     project_root: &Path,
@@ -222,6 +225,9 @@ pub fn plan_prepared_without_publication<S: InstallSource + ?Sized>(
 
 /// Continue ordinary planning with exact top-level candidates selected by this source owner.
 #[allow(clippy::too_many_arguments)]
+#[specmark::spec(
+    implements = "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#install-workflow-in-detail"
+)]
 pub fn plan_prepared_with_selected_roots<S: InstallSource + ?Sized>(
     source: &S,
     project_root: &Path,
@@ -246,6 +252,9 @@ pub fn plan_prepared_with_selected_roots<S: InstallSource + ?Sized>(
 }
 
 #[allow(clippy::too_many_arguments)]
+#[specmark::spec(
+    implements = "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#install-workflow-in-detail"
+)]
 pub fn plan_prepared_with_submission<S: InstallSource + ?Sized>(
     source: &S,
     root: &Path,

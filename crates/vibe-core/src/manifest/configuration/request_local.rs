@@ -4,8 +4,10 @@ use super::{
     ConfigurationIntentDecl, PackageConfiguration,
 };
 use crate::manifest::{ConfigurationSelection, Manifest, ParameterValue};
+use specmark::spec;
 use std::collections::BTreeMap;
 /// Evaluate one exact public unguarded exactly-one data-only choice.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-069#AUTHORED-DEFINITIONS")]
 pub fn evaluate_request_local_data(
     manifest: &Manifest,
     selections: &BTreeMap<String, Vec<String>>,

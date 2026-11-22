@@ -5,6 +5,7 @@ use crate::{
 };
 use anyhow::{Result, anyhow, ensure};
 use serde::Deserialize;
+use specmark::spec;
 use std::path::{Component, Path};
 use vibe_safefs::{Pinned, Project};
 
@@ -37,6 +38,7 @@ struct Input {
     sha256: String,
 }
 
+#[spec(implements = "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#cli-surface")]
 pub fn run(ctx: &output::Context, args: KitArgs) -> Result<()> {
     ensure!(
         !ctx.is_json(),

@@ -7,6 +7,7 @@ specmark::scope!(
 
 use crate::{Error, Result, doc::SpecDoc};
 use quick_xml::events::Event;
+use specmark::spec;
 
 mod markdown;
 pub use markdown::{
@@ -41,6 +42,9 @@ impl AnnotatedXml {
     }
 
     /// Render canonical c1 comments at the checked semantic offsets.
+    #[spec(
+        implements = "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#EMBED-GENERATED-PROVENANCE"
+    )]
     pub fn render(&self) -> String {
         let mut out = String::new();
         let mut cursor = 0;
@@ -55,6 +59,9 @@ impl AnnotatedXml {
 
     /// Observe actual XML tokens and compare both semantics and the generated
     /// tape. Escaped text and CDATA cannot supply comments to this observer.
+    #[spec(
+        implements = "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#EMBED-GENERATED-PROVENANCE"
+    )]
     pub fn observe(&self, xml: &str) -> Result<()> {
         let (actual_document, actual_comments) = crate::observe_annotated_xml(xml)?;
         if actual_document != self.document {
@@ -73,6 +80,9 @@ impl AnnotatedXml {
 
 /// Project explicit generated boundaries through the same parser and scalar
 /// extraction used by `from_markdown`. No authored control spelling is scanned.
+#[spec(
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#EMBED-GENERATED-PROVENANCE"
+)]
 pub fn from_markdown_annotated(text: &str, events: &[SourceComment]) -> Result<AnnotatedXml> {
     let (document, source) = crate::md_in::from_markdown_mapped(text)?;
     let (plain, texts, headings) = crate::xml_out::render(&document, true);

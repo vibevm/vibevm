@@ -96,6 +96,7 @@ pub struct Adaptation {
 
 impl Related {
     /// Everything the catalog says about one coordinate.
+    #[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-057#LEVEL-ZERO")]
     pub fn of(shelves: &crate::site::shelves::Shelves, coordinate: &str) -> Related {
         Related {
             documentation: shelves.documentation_of(coordinate).to_vec(),

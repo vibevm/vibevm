@@ -36,6 +36,7 @@ mod world_projection;
 pub use world_projection::provisional_world;
 
 use anyhow::{Context, Result};
+use specmark::spec;
 use vibe_core::PackageRef;
 use vibe_core::manifest::Lockfile;
 use vibe_install::{InstallRequest, Plan};
@@ -87,6 +88,7 @@ pub fn execute_prepared(
 }
 
 /// Continue this ordinary install with source-owned top-level selections from routing preflight.
+#[spec(implements = "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#install-workflow-in-detail")]
 pub fn execute_prepared_with_selected_roots(
     execution: InstallExecution<'_>,
     after_durable_world: &mut dyn AfterDurableWorld,

@@ -128,6 +128,7 @@ pub enum HandlerError {
 
 impl HandlerError {
     #[must_use]
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#H-SCRIPT")]
     pub fn streams(&self) -> Option<&HandlerStreams> {
         match self {
             Self::NonZero { streams, .. } => Some(streams.as_ref()),
@@ -231,6 +232,7 @@ impl HandlerRuntime<'_> {
         self.dispatch_inner(row, None, &row.key().to_string(), context, None)
     }
 
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#HANDLER-KINDS")]
     pub fn dispatch_execution(
         &self,
         execution: &HandlerExecution,

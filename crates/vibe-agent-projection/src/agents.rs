@@ -36,6 +36,7 @@ pub enum Scope {
 }
 
 impl Scope {
+    #[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#CONFIG-SCOPE")]
     pub fn as_str(self) -> &'static str {
         match self {
             Scope::Project => "project",
@@ -44,6 +45,7 @@ impl Scope {
         }
     }
 
+    #[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#CONFIG-SCOPE")]
     pub fn parse(value: &str) -> Result<Scope> {
         match value {
             "project" => Ok(Scope::Project),
@@ -58,6 +60,7 @@ impl Scope {
     /// Expand a high-level Scope choice into the list of physical
     /// scopes to walk per agent. Both → [Project, User]; the singular
     /// variants → a one-element vector.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#CONFIG-SCOPE")]
     pub fn expand(self) -> Vec<Scope> {
         match self {
             Scope::Both => vec![Scope::Project, Scope::User],
@@ -97,6 +100,7 @@ pub enum What {
 }
 
 impl What {
+    #[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#agent-config")]
     pub fn as_str(self) -> &'static str {
         match self {
             What::Mcp => "mcp",
@@ -105,6 +109,7 @@ impl What {
         }
     }
 
+    #[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#agent-config")]
     pub fn parse(value: &str) -> Result<What> {
         match value {
             "mcp" => Ok(What::Mcp),
@@ -176,6 +181,7 @@ impl AgentUserDirectories {
     /// use vibe_agent_projection::agents::AgentUserDirectories;
     /// let _: AgentUserDirectories = AgentUserDirectories::ambient();
     /// ```
+    #[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#CONFIG-PATH")]
     pub fn ambient() -> Self {
         Self {
             home: dirs::home_dir(),
@@ -224,6 +230,7 @@ impl Agent {
         Agent::Hermes,
     ];
 
+    #[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#AGENT-SET")]
     pub fn as_str(self) -> &'static str {
         match self {
             Agent::ClaudeCode => "claude",
@@ -237,6 +244,9 @@ impl Agent {
         }
     }
 
+    #[spec(
+        implements = "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#AGENT-DETECTION-DEFAULT"
+    )]
     pub fn parse_filter(filter: &str) -> Result<Vec<Agent>> {
         match filter {
             "all" => Ok(Agent::ALL.to_vec()),
@@ -255,6 +265,7 @@ impl Agent {
         }
     }
 
+    #[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#CONFIG-FORMAT")]
     pub fn config_format(self) -> ConfigFormat {
         match self {
             Agent::Codex => ConfigFormat::Toml,
@@ -263,6 +274,9 @@ impl Agent {
         }
     }
 
+    #[spec(
+        implements = "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#CONFIG-SECTION-KEY"
+    )]
     pub fn mcp_section_key(self) -> &'static str {
         match self {
             Agent::OpenCode => "mcp",
@@ -273,6 +287,7 @@ impl Agent {
 
     /// Whether this agent has a meaningful project-scope config path.
     /// Claude Desktop is user-only; Codex also reads trusted project config.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#CONFIG-SCOPE")]
     pub fn supports_project_scope(self) -> bool {
         match self {
             Agent::ClaudeCode
@@ -287,6 +302,7 @@ impl Agent {
 
     /// Whether this agent loads filesystem-backed skill files. Cursor
     /// and Claude Desktop are JSON-config-only.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#SKILL-MANIFEST")]
     pub fn supports_skill(self) -> bool {
         match self {
             Agent::ClaudeCode
@@ -328,6 +344,9 @@ impl Agent {
     /// assert_eq!(v["args"][0], "/c");
     /// assert_eq!(v["args"][1], "vibe");
     /// ```
+    #[spec(
+        implements = "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#CONFIG-WINDOWS-SHIM"
+    )]
     pub fn build_mcp_entry_for(self, windows: bool) -> ConfigPayload {
         // The full launcher argv. On Windows the `.cmd` shim must be run
         // through `cmd /c`; elsewhere `vibe` is a real executable.
@@ -376,6 +395,7 @@ impl Agent {
 
     /// Project-tree presence markers — files / dirs whose existence in
     /// the working tree marks the agent as actively used.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#AGENT-PRESENCE")]
     pub fn presence_markers(self) -> &'static [&'static str] {
         match self {
             Agent::ClaudeCode => &[".claude", "CLAUDE.md"],
@@ -415,6 +435,7 @@ impl Agent {
     }
 
     /// Combined presence: project markers OR user-level dir exists.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#AGENT-PRESENCE")]
     pub fn is_present(self, project_root: Option<&Path>) -> bool {
         if let Some(root) = project_root {
             for m in self.presence_markers() {

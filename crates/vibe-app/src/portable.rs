@@ -173,6 +173,7 @@ fn row_of(record: &Installation) -> wire::Application {
 }
 
 /// The TOML spelling of the set, under a short header comment.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-059#portable-set")]
 pub fn portable_toml(set: &wire::AppsManifest) -> Result<String, AppError> {
     let body = toml::to_string(set).map_err(|error| LifecycleError::PortableInvalid {
         file: "the exported set".into(),
@@ -194,6 +195,7 @@ pub fn portable_toml(set: &wire::AppsManifest) -> Result<String, AppError> {
 /// assert_eq!(set.application[0].installer, "main");
 /// assert!(vibe_app::parse_portable("set.toml", "protocol = \"other/1\"").is_err());
 /// ```
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-059#portable-set")]
 pub fn parse_portable(file: &str, text: &str) -> Result<wire::AppsManifest, AppError> {
     let invalid = |reason: String| LifecycleError::PortableInvalid {
         file: file.into(),
@@ -366,6 +368,7 @@ pub fn import_license(
 /// and parameters it does not declare are dropped and the defaults the row
 /// left out are deselected, so the import reproduces the recorded set rather
 /// than the package's defaults.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-059#portable-set")]
 pub(crate) fn answers(
     row: &wire::Application,
     choice: InstallChoice,
@@ -423,6 +426,7 @@ fn describe(option: &str, features: &[String]) -> String {
 mod tests;
 
 /// The established host fallback for a legacy portable row.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-059#portable-set")]
 pub fn import_choice(row: &wire::Application, options: &[InstallerOptionDecl]) -> InstallChoice {
     let host = detected_platform();
     let offered = options.iter().any(|option| {

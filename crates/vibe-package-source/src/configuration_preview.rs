@@ -4,6 +4,7 @@
 //! to execute effects. Source admission is kept separate from this pure kernel.
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-069#DESCRIBE-EVALUATE-PLAN");
 
+use specmark::spec;
 use std::collections::BTreeMap;
 use vibe_core::configuration::{Cardinality, ChoicePolicy, MergeIntent};
 use vibe_core::manifest::{
@@ -27,6 +28,7 @@ fn unsupported(package: &str, reason: &str) -> PackageConfigurationError {
 
 /// Evaluate only the first admitted definition shape, through the existing
 /// ordinary normalizer/evaluator. Original answers remain separate from output.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-069#EVALUATION")]
 pub(crate) fn evaluate(
     manifest: &Manifest,
     request: &OrdinaryConfigurationPreviewRequest,
@@ -236,6 +238,7 @@ pub(crate) fn evaluate(
 /// the isolated no-default-registry posture (`VIBE_NO_DEFAULT_REGISTRY` exactly
 /// `1`). This crate reads no environment; without that posture the preview
 /// refuses.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-069#DESCRIBE-EVALUATE-PLAN")]
 pub fn configuration_preview(
     trusted_root: &std::path::Path,
     request: &OrdinaryConfigurationPreviewRequest,

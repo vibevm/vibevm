@@ -144,6 +144,9 @@ impl TemplateError {
     /// };
     /// assert_eq!(refusal.code(), "template_cache_missing");
     /// ```
+    #[specmark::spec(
+        implements = "spec://org.vibevm.core/vibevm/common/PROP-075#TEMPLATE-DISCOVERY"
+    )]
     pub fn code(&self) -> &'static str {
         match self {
             TemplateError::IndexRequired { .. } => "template_index_required",

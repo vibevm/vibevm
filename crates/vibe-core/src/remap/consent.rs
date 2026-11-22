@@ -73,6 +73,7 @@ impl OfferState {
     }
 
     /// The word `remap list` prints.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-066#consent")]
     pub fn label(self) -> &'static str {
         match self {
             OfferState::Offered => "offered",
@@ -147,6 +148,7 @@ impl ConsentLedger {
     /// Read the ledger of `home`. A missing file is an empty ledger —
     /// nobody has answered anything yet, which is exactly what an absent
     /// file means.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-066#consent")]
     pub fn load(home: &Path) -> Result<Self, ConsentError> {
         let path = consent_path(home);
         match std::fs::read_to_string(&path) {
@@ -164,6 +166,7 @@ impl ConsentLedger {
     }
 
     /// Write the ledger of `home`, replacing it atomically.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-066#consent")]
     pub fn store(&self, home: &Path) -> Result<(), ConsentError> {
         let path = consent_path(home);
         let body =
@@ -191,6 +194,7 @@ impl ConsentLedger {
     }
 
     /// Record an acceptance of `content_hash`.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-066#consent")]
     pub fn accept(&mut self, key: &str, content_hash: &str, answered: &str) {
         self.packages.insert(
             key.to_owned(),
@@ -205,6 +209,7 @@ impl ConsentLedger {
 
     /// Record a refusal of `content_hash`, so the question is not asked
     /// again.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-066#consent")]
     pub fn reject(&mut self, key: &str, content_hash: &str, answered: &str) {
         self.packages.insert(
             key.to_owned(),
@@ -219,6 +224,7 @@ impl ConsentLedger {
 
     /// Switch an accepted package off or on without forgetting the
     /// acceptance. `false` when nothing is recorded about `key`.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-066#consent")]
     pub fn set_enabled(&mut self, key: &str, enabled: bool) -> bool {
         match self.packages.get_mut(key) {
             Some(record) => {
@@ -326,6 +332,7 @@ pub enum ConsentError {
 /// lock in the workspace is: two sessions answering the same question at
 /// once is an operator mistake with a one-word fix, not something to
 /// serialise silently.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-066#consent")]
 pub fn lock(home: &Path) -> Result<HomeLock, ConsentError> {
     let dir = remap_dir(home);
     std::fs::create_dir_all(&dir).map_err(|source| ConsentError::Io {

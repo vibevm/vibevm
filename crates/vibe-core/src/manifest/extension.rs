@@ -65,6 +65,7 @@ pub enum ExtensionHandler {
 
 impl ExtensionHandler {
     /// The exact lowercase `handler.kind` spelling.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#HANDLER-KINDS")]
     pub const fn kind(&self) -> &'static str {
         match self {
             Self::Builtin { .. } => "builtin",
@@ -261,6 +262,7 @@ pub struct ExtensionDecl {
 
 impl ExtensionDecl {
     /// Revalidate a declaration constructed through Rust rather than TOML.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#CONTRIB-GRAMMAR")]
     pub fn validate(&self) -> Result<(), String> {
         validate_handler_shape(&self.handler, &self.id, "[[extension]]")?;
 
@@ -373,6 +375,7 @@ impl ExtensionDecl {
 /// Every path here is judged by the one declarant-path law
 /// ([`declarant_path`]), the same law `[[skill]]`, `[[mechanism]]
 /// config_schema` and `[[artifacts.*]] inputs` answer to.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#HANDLER-KINDS")]
 pub(crate) fn validate_handler_shape(
     handler: &ExtensionHandler,
     id: &str,
@@ -439,6 +442,7 @@ pub(crate) fn validate_handler_shape(
 }
 
 /// Validate declaration order/identity and the project-or-package role law.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#CONTRIB-GRAMMAR")]
 pub(crate) fn validate_extension_declarations(
     extensions: &[ExtensionDecl],
     has_project: bool,

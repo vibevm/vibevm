@@ -268,6 +268,7 @@ pub struct RowIdentity {
 
 impl RowIdentity {
     /// The identity of one row.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-066#providers")]
     pub fn of(row: &RemapRow) -> Self {
         RowIdentity {
             kind: row.key.kind().to_owned(),
@@ -279,6 +280,7 @@ impl RowIdentity {
     }
 
     /// The row's one-line spelling, for a question or a listing.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-066#display")]
     pub fn display(&self) -> String {
         let mut shown = format!("{} {} → {}", self.kind, self.what, self.to);
         if let Some(package) = &self.scope_package {
@@ -292,6 +294,7 @@ impl RowIdentity {
     }
 
     /// The scope this identity describes, rebuilt.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-066#package")]
     pub fn scope(&self) -> Option<RemapScope> {
         self.scope_package.as_ref().map(|package| RemapScope {
             package: package.clone(),
@@ -398,6 +401,7 @@ fn quoted(value: &str) -> String {
 /// The strictest policy of a set of packages — the rule
 /// `PROP-066#policy` applies across layers, applied here across the
 /// accepted packages of one home.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-066#policy")]
 pub fn strictest_policy(packages: &[RemapPackage]) -> UnmatchedPolicy {
     packages
         .iter()

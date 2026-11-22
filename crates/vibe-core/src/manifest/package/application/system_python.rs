@@ -2,6 +2,7 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-065#system-python");
 
 use serde::{Deserialize, Serialize};
+use specmark::spec;
 
 /// Fixed Python capability, not an executable name or package-authored probe.
 ///
@@ -41,6 +42,7 @@ impl SystemPythonDecl {
     }
 
     /// Judge an already observed typed result. No subprocess or ambient lookup.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-065#system-python")]
     pub fn accepts(&self, implementation: &str, major: u16, minor: u16, soabi: &str) -> bool {
         self.implementation == implementation
             && self.major == major

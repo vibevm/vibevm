@@ -50,6 +50,7 @@ pub enum EcosystemVerb {
 
 impl EcosystemVerb {
     /// The stable spelling, which is also the TOML key.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-075#ECOSYSTEM-ADAPTER")]
     pub fn as_str(self) -> &'static str {
         match self {
             Self::Install => "install",
@@ -132,6 +133,7 @@ fn is_default(value: &bool) -> bool {
 impl EcosystemDecl {
     /// The declaration of one verb, or `None` when the package declares
     /// it not.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-075#ECOSYSTEM-ADAPTER")]
     pub fn verb(&self, verb: EcosystemVerb) -> Option<&StepDecl> {
         match verb {
             EcosystemVerb::Install => Some(&self.install),
@@ -142,6 +144,7 @@ impl EcosystemDecl {
     }
 
     /// The verbs this adapter declares, in verb order.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-075#ECOSYSTEM-ADAPTER")]
     pub fn declared_verbs(&self) -> Vec<EcosystemVerb> {
         EcosystemVerb::all()
             .into_iter()
@@ -160,6 +163,7 @@ impl EcosystemDecl {
     /// the import, `default = true`. `None` when the adapter declares no
     /// `list` verb — there is then nothing to observe — or suppresses the
     /// synthesis with `migration = false`.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-075#ECOSYSTEM-MIGRATION")]
     pub fn migration_entry(&self) -> Option<MigrationDecl> {
         let list = self.list.as_ref()?;
         self.migration.then(|| MigrationDecl {
@@ -214,6 +218,7 @@ impl EcosystemRecommendDecl {
     /// The feature row this recommendation is shorthand for. Ordinary in
     /// every respect, which is what keeps the fixed point of PROP-065
     /// `#feature-tree` unchanged for a package that declares no adapter.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-075#ECOSYSTEM-RECOMMENDS")]
     pub fn feature(&self) -> FeatureDecl {
         FeatureDecl {
             id: self.id.clone(),

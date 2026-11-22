@@ -7,6 +7,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-019#instances");
 
+use specmark::spec;
 use std::time::Duration;
 
 use reqwest::Method;
@@ -41,6 +42,7 @@ pub struct GithubReleaseClient {
 }
 
 impl GithubReleaseClient {
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-019#release-production")]
     pub fn new(
         token: Token,
         owner: impl Into<String>,
@@ -57,6 +59,7 @@ impl GithubReleaseClient {
 
     /// Construct a read-only client for public release discovery and asset
     /// downloads. No Authorization header is sent on any read request.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-019#release-production")]
     pub fn anonymous(
         owner: impl Into<String>,
         repo: impl Into<String>,
@@ -81,6 +84,7 @@ impl GithubReleaseClient {
     }
 
     /// Endpoint and timeout seam for deterministic transport tests.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-019#release-production")]
     pub fn with_endpoints_and_timeouts(
         token: Token,
         owner: impl Into<String>,
@@ -166,6 +170,7 @@ impl GithubReleaseClient {
         })
     }
 
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-019#RELEASE-MUTABLE")]
     pub fn create_release(
         &self,
         request: &CreateGithubRelease,
@@ -182,6 +187,7 @@ impl GithubReleaseClient {
     /// Create a release or update its mutable metadata when the tag already
     /// has one. Moving an existing Git tag is deliberately separate and
     /// explicit via [`Self::force_move_tag`].
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-019#RELEASE-MUTABLE")]
     pub fn upsert_release(
         &self,
         request: &CreateGithubRelease,
@@ -204,6 +210,7 @@ impl GithubReleaseClient {
         )
     }
 
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-019#RELEASE-MUTABLE")]
     pub fn update_release(
         &self,
         release_id: u64,
@@ -222,6 +229,7 @@ impl GithubReleaseClient {
         self.json_response(response, "update release")
     }
     /// Delete a release without deleting the Git tag it references.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-019#RELEASE-MUTABLE")]
     pub fn delete_release(&self, release_id: u64) -> Result<(), GithubReleaseError> {
         let id = release_id.to_string();
         let url = self.api_url(&["releases", &id])?;
@@ -236,6 +244,7 @@ impl GithubReleaseClient {
     }
 
     /// Force-move the Git tag backing a mutable release to `source_commit`.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-019#RELEASE-MUTABLE")]
     pub fn force_move_tag(
         &self,
         tag: &str,
@@ -261,6 +270,7 @@ impl GithubReleaseClient {
 
     /// Point a mutable release tag at `source_commit`, creating the ref when
     /// this version has never been released before.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-019#RELEASE-MUTABLE")]
     pub fn force_move_or_create_tag(
         &self,
         tag: &str,
@@ -273,6 +283,7 @@ impl GithubReleaseClient {
         }
     }
 
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-019#RELEASE-MUTABLE")]
     pub fn create_tag_ref(
         &self,
         tag: &str,
@@ -443,6 +454,7 @@ impl GithubReleaseClient {
     }
 }
 
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-019#BINARY-PUBLISHER-DIGEST")]
 pub fn sha256_digest(bytes: &[u8]) -> String {
     let digest = Sha256::digest(bytes);
     const HEX: &[u8; 16] = b"0123456789abcdef";

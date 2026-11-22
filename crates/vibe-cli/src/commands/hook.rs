@@ -17,6 +17,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-075#ACTIVATION-HOOK");
 
+use specmark::spec;
 use std::path::PathBuf;
 
 use anyhow::{Context, Result, bail};
@@ -27,6 +28,7 @@ use crate::commands::app::{facts, global};
 use crate::output;
 use crate::shell_syntax::Shell;
 
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-075#ACTIVATION-HOOK")]
 pub fn run(ctx: &output::Context, args: HookArgs) -> Result<()> {
     let shell = Shell::parse(&args.shell)?;
     if matches!(shell, Shell::Cmd | Shell::Posix) {

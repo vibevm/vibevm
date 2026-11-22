@@ -8,6 +8,7 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-065#display");
 
 use console::measure_text_width;
+use specmark::spec;
 use vibe_app::Choice;
 
 use crate::output::language::{Role, paint};
@@ -77,6 +78,7 @@ impl ItemStyles {
 /// ends that wrap at its own reset — so leaving the name bare is what lets
 /// the cursor's bold reach it while the dim id and green marker keep their
 /// own colour.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-065#display")]
 pub(crate) fn column_items(choices: &[Choice], styles: &ItemStyles) -> Vec<String> {
     let names: Vec<String> = choices
         .iter()

@@ -51,6 +51,9 @@ pub enum FeatureValue {
 }
 
 impl FeatureValue {
+    #[spec(
+        implements = "spec://org.vibevm.core/vibevm/common/PROP-069#LEGACY-PACKAGE-COMPATIBILITY"
+    )]
     pub fn parse(raw: &str) -> Result<Self, FeatureError> {
         if let Some(path) = raw.strip_prefix("subskill:") {
             if path.is_empty() {
@@ -112,6 +115,9 @@ pub struct FeatureExpansion {
 impl FeatureExpansion {
     /// Union another expansion's values. This operation alone does not perform
     /// cross-package solving or establish downstream effect consumption.
+    #[spec(
+        implements = "spec://org.vibevm.core/vibevm/common/PROP-069#LEGACY-PACKAGE-COMPATIBILITY"
+    )]
     pub fn merge(&mut self, other: &FeatureExpansion) {
         self.active_features
             .extend(other.active_features.iter().cloned());

@@ -1,5 +1,6 @@
 //! Exact row publication acknowledgement and terminal refused-row settlement.
 use super::*;
+use specmark::spec;
 pub(crate) fn ack_import(
     settings: &SettingsRoot,
     target: &w::ApplicationPendingTarget,
@@ -31,6 +32,7 @@ pub(crate) fn ack_import(
 /// An ordinary terminal refusal advances the cohort, unlike a delegated park.
 /// If finish had published a pending row, preserve that installation under the
 /// incumbent failed-finish semantics, without calling it a successful import.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-069#APP-CONFIGURATION-CONTINUATION")]
 pub(crate) fn finish_import_row(
     lock: &crate::MutationLock,
     settings: &SettingsRoot,

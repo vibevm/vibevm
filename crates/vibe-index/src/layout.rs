@@ -25,6 +25,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#layout-registry");
 
+use specmark::spec;
 use std::collections::BTreeMap;
 use std::path::Path;
 
@@ -178,6 +179,9 @@ fn project_records(
 /// Append `facts` to the registry's journal (an `Initialised` first when
 /// the journal has none), project, and persist the index and the listing
 /// it was computed from. Returns the projection written.
+#[spec(
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#LAYOUT-REGISTRY-PROJECTION"
+)]
 pub fn refresh(
     root: &Path,
     identity: &LayoutIdentity,
@@ -214,6 +218,9 @@ pub fn refresh(
 
 /// Write the projection's catalog into `_index/`, then the listing (last:
 /// a listing that matches always vouches for files already written).
+#[spec(
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#LAYOUT-REGISTRY-PROJECTION"
+)]
 pub fn persist(root: &Path, projection: &LayoutProjection, at: DateTime<Utc>) -> Result<()> {
     let dir = layout::index_dir(root);
     projection.index.write_to(&dir, &WriteCtx { at })?;
@@ -230,6 +237,9 @@ pub fn persist(root: &Path, projection: &LayoutProjection, at: DateTime<Utc>) ->
 /// The registry's index for a reader: the persisted files while they are
 /// [`IndexState::Current`], else the same [`project`] computed in memory.
 /// Returns the index and the state the persisted files were found in.
+#[spec(
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#LAYOUT-REGISTRY-PROJECTION"
+)]
 pub fn load_or_project(root: &Path, identity: &LayoutIdentity) -> Result<(Index, IndexState)> {
     let state = layout::index_state(root).map_err(|e| io(root, e))?;
     if state == IndexState::Current {

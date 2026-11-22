@@ -28,6 +28,7 @@ impl NativeKind {
 }
 
 /// Run a verified native installer file with its authored arguments.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-059#installer-separation")]
 pub fn run(
     kind: NativeKind,
     file: &Path,

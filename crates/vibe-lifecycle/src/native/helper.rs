@@ -64,6 +64,7 @@ pub struct NativeHelperCommand {
 }
 
 impl NativeHelperCommand {
+    #[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-073#NATIVE-STOP-LAW")]
     pub fn trusted(program: PathBuf) -> Result<Self, NativeHelperError> {
         if !program.is_absolute() || !program.is_file() {
             return Err(NativeHelperError::Untrusted {
@@ -104,6 +105,7 @@ pub fn attach_native_helper(token: &CancellationToken, command: NativeHelperComm
 
 /// `unknown` once this operation's helper may have loaded or invoked
 /// plugin code, else `not-started`; process termination never upgrades it.
+#[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-073#NATIVE-STOP-LAW")]
 pub fn native_plugin_effects(token: &CancellationToken) -> &'static str {
     match token.existing_operation_resource::<OperationNative>() {
         Some(native) if native.session.effects.load(Ordering::SeqCst) => "unknown",
@@ -402,6 +404,7 @@ fn private_scratch(session: &[u8; SESSION_BYTES]) -> Result<PathBuf, String> {
 ///
 /// Returns `None` when `args` do not select helper mode, so the caller
 /// continues its ordinary boot; otherwise the session's outcome.
+#[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-073#NATIVE-STOP-LAW")]
 pub fn native_helper_entry(args: &[OsString]) -> Option<Result<(), String>> {
     let position = args.iter().position(|arg| arg == HELPER_MODE_ARG)?;
     let rest = &args[position + 1..];

@@ -159,6 +159,9 @@ pub use vibe_core::cancellation::CancellationToken;
 /// schema (§5.2); check the action's [`Capability`] against `granted` (§7.2);
 /// re-check cancellation; then await the action's async body and return its
 /// typed [`InvokeResult`].
+#[specmark::spec(
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-actions/PROP-039#INVOKE-PRIMARY"
+)]
 pub async fn invoke(
     registry: &Registry,
     addr: &ActionAddr,

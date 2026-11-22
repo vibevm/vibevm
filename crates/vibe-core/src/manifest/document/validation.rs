@@ -10,6 +10,7 @@ use crate::manifest::package::{
 };
 use crate::manifest::plane::validate_plane;
 use crate::manifest::{FieldError, FieldPath};
+use specmark::spec;
 
 use super::Manifest;
 
@@ -31,6 +32,9 @@ mod template;
 impl Manifest {
     /// Enforce the role rules: `[project]` ⊕ `[package]`; at least one role
     /// section present; package-role sections require `[package]`.
+    #[spec(
+        implements = "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#unified-manifest"
+    )]
     pub fn validate(&self) -> Result<()> {
         if let Some(layers) = &self.layers {
             layers

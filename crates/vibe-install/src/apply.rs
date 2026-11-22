@@ -4,6 +4,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#install-workflow-in-detail");
 
+use specmark::spec;
 use std::collections::BTreeSet;
 use std::path::Path;
 use std::sync::Arc;
@@ -111,6 +112,7 @@ impl SlotLifecycleSeams {
     /// Narrate nothing and refuse every agent row with remediation. Named, not
     /// defaulted, so choosing it is visible in the diff.
     #[must_use]
+    #[spec(implements = "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#install-workflow-in-detail")]
     pub fn refusing() -> Self {
         Self {
             observer: Arc::new(NoSlotLifecycleObserver),
@@ -132,6 +134,7 @@ impl SlotLifecycleSeams {
 /// effective PROP-045 representation; the package's `slot:` contributions
 /// run through the lifecycle handler engine under `seams` and `lease`.
 #[allow(clippy::too_many_arguments)]
+#[spec(implements = "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#install-workflow-in-detail")]
 pub fn apply_with_spec_format_and_lifecycle_observed<S: InstallSource + ?Sized>(
     source: &S,
     planned: PlannedInstall,
@@ -163,6 +166,7 @@ pub fn apply_with_spec_format_and_lifecycle_observed<S: InstallSource + ?Sized>(
 /// park/failure still aborts before any boot compilation, exactly as
 /// untraced, so a parked run leaves a partial but honest trace.
 #[allow(clippy::too_many_arguments)]
+#[spec(implements = "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#install-workflow-in-detail")]
 pub fn apply_with_spec_format_and_lifecycle_observed_traced<S: InstallSource + ?Sized>(
     source: &S,
     planned: PlannedInstall,
@@ -197,6 +201,7 @@ pub fn apply_with_spec_format_and_lifecycle_observed_traced<S: InstallSource + ?
 /// apply just recorded, and rediscovering it would be a second byte snapshot
 /// of a tree the command is midway through changing.
 #[allow(clippy::too_many_arguments)]
+#[spec(implements = "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#install-workflow-in-detail")]
 pub fn apply_with_spec_format_and_lifecycle_observed_traced_prepared<S: InstallSource + ?Sized>(
     source: &S,
     planned: PlannedInstall,

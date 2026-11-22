@@ -69,6 +69,7 @@ impl CommandSearch {
 
     /// The absolute, canonical path of `name` on this search's `PATH`, or
     /// why there is none.
+    #[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-065#launcher-command")]
     pub fn locate(&self, name: &str) -> Result<PathBuf, String> {
         locate(
             name,

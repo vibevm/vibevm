@@ -9,6 +9,7 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-076#SYS-OPERATIONS-PATH-AND-FLAGS");
 
 use anyhow::Result;
+use specmark::spec;
 use vibe_wire::generated::prompt_build as wire;
 use vibe_workspace::boot_artifacts::{PromptBuild, PromptPaths, build_node_prompt};
 
@@ -19,6 +20,7 @@ use super::Selected;
 /// The protocol tag `vibe-prompt-build/1`.
 pub(crate) const PROTOCOL: &str = "vibe-prompt-build/1";
 
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-076#SYS-OPERATIONS-PATH-AND-FLAGS")]
 pub(crate) fn run(ctx: &output::Context, selected: &Selected) -> Result<()> {
     let built = build_node_prompt(&selected.workspace, &selected.node_rel);
     let report = report(&selected.node_rel, &built);
@@ -33,6 +35,7 @@ pub(crate) fn run(ctx: &output::Context, selected: &Selected) -> Result<()> {
 }
 
 /// Lower one build outcome into its registered report.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-076#SYS-OPERATIONS-PATH-AND-FLAGS")]
 pub(crate) fn report(
     node_rel: &str,
     built: &Result<PromptBuild, vibe_workspace::WorkspaceError>,
@@ -153,6 +156,9 @@ impl Snapshot {
     /// `None` is "say nothing": the project neither had nor has a generated
     /// prefix, which is every project that has not opted in and is exactly
     /// the case where a line would be noise rather than information.
+    #[spec(
+        implements = "spec://org.vibevm.core/vibevm/common/PROP-076#SYS-OPERATIONS-PATH-AND-FLAGS"
+    )]
     pub(crate) fn summary(&self, project_root: &std::path::Path) -> Option<String> {
         let after = Self::of(project_root);
         let boot = project_root.join(vibe_core::layout::current_boot_dir());

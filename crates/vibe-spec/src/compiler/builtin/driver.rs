@@ -1,4 +1,5 @@
 use crate::{CompileObserver, SectionSource, SpecAddress};
+use specmark::spec;
 
 #[cfg(any(test, feature = "test-support"))]
 use super::super::backend::BackendId;
@@ -45,6 +46,7 @@ pub enum ArtifactCompileError {
     NativePolicy(#[from] CompilerNativePolicyError),
 }
 
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#IR-REFACTOR")]
 pub fn compile_artifact(
     plan: ArtifactPlan,
     source: &impl SectionSource,
@@ -75,6 +77,7 @@ pub fn compile_artifact(
 /// The observer is deliberately NOT part of [`ArtifactPlan`], for the
 /// same reason the trace sink is not: a plan is a semantic, digested
 /// value, and an observer is neither.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#OBS-LANE-ANALYZER")]
 pub fn compile_artifact_observed(
     plan: ArtifactPlan,
     source: &impl SectionSource,
@@ -102,6 +105,7 @@ pub fn compile_artifact_observed(
 ///
 /// The sink is deliberately NOT part of [`ArtifactPlan`]: a plan is a
 /// semantic, digested value, and an observer is neither.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#OBS-TRACE")]
 pub fn compile_artifact_traced(
     plan: ArtifactPlan,
     source: &impl SectionSource,
@@ -120,6 +124,7 @@ pub fn compile_artifact_traced(
 
 /// Compile through the same plain schedule with a stack-borrowed native
 /// invoker available to native plan rows.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#COMPILE-NATIVE-ONLY")]
 pub fn compile_artifact_native(
     plan: ArtifactPlan,
     source: &impl SectionSource,
@@ -137,6 +142,7 @@ pub fn compile_artifact_native(
 }
 
 /// Native-aware compile under the existing diagnostic trace observer.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#COMPILE-NATIVE-ONLY")]
 pub fn compile_artifact_native_traced(
     plan: ArtifactPlan,
     source: &impl SectionSource,
@@ -155,6 +161,7 @@ pub fn compile_artifact_native_traced(
 }
 
 /// Native-aware compile under the existing analyzer observer.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#COMPILE-NATIVE-ONLY")]
 pub fn compile_artifact_native_observed(
     plan: ArtifactPlan,
     source: &impl SectionSource,
@@ -173,6 +180,7 @@ pub fn compile_artifact_native_observed(
 }
 
 /// Native-aware compile under an explicit pending-state policy.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#BOOTSTRAP-ORDER")]
 pub fn compile_artifact_native_managed(
     plan: ArtifactPlan,
     source: &impl SectionSource,
@@ -191,6 +199,7 @@ pub fn compile_artifact_native_managed(
 }
 
 /// Managed native compile under the existing diagnostic trace observer.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#BOOTSTRAP-ORDER")]
 pub fn compile_artifact_native_managed_traced(
     plan: ArtifactPlan,
     source: &impl SectionSource,
@@ -210,6 +219,7 @@ pub fn compile_artifact_native_managed_traced(
 }
 
 /// Managed native compile under the existing analyzer observer.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#BOOTSTRAP-ORDER")]
 pub fn compile_artifact_native_managed_observed(
     plan: ArtifactPlan,
     source: &impl SectionSource,
@@ -366,6 +376,7 @@ pub(super) fn retarget_custom_for_test(
 
 #[cfg(feature = "test-support")]
 #[doc(hidden)]
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#IR-REFACTOR")]
 pub fn compile_artifact_opaque_test_vehicle(
     plan: ArtifactPlan,
     source: &impl SectionSource,
@@ -398,6 +409,7 @@ pub fn compile_artifact_missing_backend_test_vehicle(
 
 #[cfg(feature = "test-support")]
 #[doc(hidden)]
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#IR-REFACTOR")]
 pub fn compile_artifact_replacement_test_vehicle(
     plan: ArtifactPlan,
     source: &impl SectionSource,

@@ -19,6 +19,7 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-057#CARD-FIELDS");
 use std::path::Path;
 
 use crate::error::{DocError, Result};
+use specmark::spec;
 
 /// A package's manifest, read as the data a level-0 render needs.
 ///
@@ -122,6 +123,7 @@ impl Manifest {
 }
 
 /// Read a package's manifest.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-057#CARD-FIELDS")]
 pub fn read(source: &Path) -> Result<Manifest> {
     let path = source.join("vibe.toml");
     let text = std::fs::read_to_string(&path).map_err(|e| DocError::io("reading", &path, e))?;
@@ -166,6 +168,7 @@ pub fn read(source: &Path) -> Result<Manifest> {
 /// of its documentation and of its adaptations is computed from the
 /// edges the author declared and from nothing this module invents
 /// (`##REL-NO-OFFICIAL-FLAG`).
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-057#CARD-FIELDS")]
 pub fn synthesise(manifest: &Manifest) -> String {
     let mut out = String::new();
     out.push_str(
@@ -278,6 +281,7 @@ fn quote(text: &str) -> String {
 /// `##CARD-PLACEHOLDERS-GENERATED` does for a role that declared
 /// nothing, and one missing picture must not cost a package its whole
 /// render.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-057#CARD-FIELDS")]
 pub fn copy_media(
     source: &Path,
     work: &Path,
@@ -311,6 +315,7 @@ pub fn copy_media(
 
 /// Carry the read-aloud record across when the package keeps one, so the
 /// manifest's per-page reading dates survive a level-0 render.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-057#OBS-MAINTENANCE-TOOLS")]
 pub fn copy_reviews(source: &Path, work: &Path) -> Result<()> {
     let from = source.join(crate::manifest::REVIEWS);
     if !from.is_file() {

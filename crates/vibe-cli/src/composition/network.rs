@@ -6,6 +6,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-068#proxy");
 
+use specmark::spec;
 use vibe_core::user_config::{
     ProxyConfig, ProxyMode, RevocationCheck, TlsConfig, UserConfig, effective_extra_ca,
 };
@@ -16,6 +17,7 @@ use vibe_core::user_config::{
 /// (read through the composition root's `env`) applied; return the
 /// variables the table promotes into the environment. An unusable table is said once, with
 /// its fix, and the run continues direct, as before `[proxy]` existed.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-068#proxy")]
 pub(crate) fn install_route(
     effective: &ProxyConfig,
     tls: &TlsConfig,

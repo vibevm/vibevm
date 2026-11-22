@@ -3,6 +3,8 @@
 //! writes under the user's `Connections` key, and the two reductions that
 //! turn its proxy and bypass strings into what px and vibe read.
 
+use specmark::spec;
+
 /// `DefaultConnectionSettings` flag: connect directly.
 pub const CONNECTION_DIRECT: u32 = 0x1;
 /// `DefaultConnectionSettings` flag: use the proxy server named below.
@@ -95,6 +97,7 @@ impl ConnectionSettings {
 ///
 /// assert!(parse_connection_settings(&[0, 1, 2]).is_err());
 /// ```
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-068#proxy-system")]
 pub fn parse_connection_settings(bytes: &[u8]) -> Result<ConnectionSettings, String> {
     let mut at = 0usize;
     let word = |at: &mut usize| -> Option<u32> {
@@ -163,6 +166,7 @@ pub fn parse_connection_settings(bytes: &[u8]) -> Result<ConnectionSettings, Str
 /// assert_eq!(pick_upstream("socks=s.example.corp:1080"), None);
 /// assert_eq!(pick_upstream("   "), None);
 /// ```
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-068#proxy-system")]
 pub fn pick_upstream(raw: &str) -> Option<String> {
     let strip = |value: &str| {
         let value = value.trim();
@@ -213,6 +217,7 @@ pub fn pick_upstream(raw: &str) -> Option<String> {
 /// assert_eq!(bypass_list("<local>"), None);
 /// assert_eq!(bypass_list(""), None);
 /// ```
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-068#proxy-system")]
 pub fn bypass_list(raw: &str) -> Option<String> {
     let mut out: Vec<&str> = Vec::new();
     for entry in raw

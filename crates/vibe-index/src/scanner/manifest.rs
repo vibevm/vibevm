@@ -60,6 +60,9 @@ pub fn parse_manifest(bytes: &[u8]) -> Result<Manifest> {
 /// The `[package]` table — every indexable node is a publishable package.
 /// A manifest without one (a plain `[project]`, a bare `[workspace]`) is
 /// not an index entry.
+#[spec(
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#PROV-MANIFEST-FIELDS"
+)]
 pub fn require_package(manifest: &Manifest) -> Result<&PackageMeta> {
     manifest.package.as_ref().ok_or_else(|| {
         Error::Malformed(
@@ -70,6 +73,7 @@ pub fn require_package(manifest: &Manifest) -> Result<&PackageMeta> {
 
 /// Map a `vibe-core` package kind onto the index's own [`PackageKind`].
 /// See the module docs for why the index keeps its own enum.
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#root")]
 pub fn package_kind(kind: CorePackageKind) -> PackageKind {
     match kind {
         CorePackageKind::Flow => PackageKind::Flow,

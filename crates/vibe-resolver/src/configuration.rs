@@ -48,6 +48,7 @@ impl ConfigurationSnapshot {
     /// configuration input cannot be merged yet: refuse it instead of
     /// letting the bare edge disappear behind the authored configuration
     /// (PROP-069 `#CONSUMER-MERGE`). Every solve path applies this check.
+    #[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-069#CONSUMER-MERGE")]
     pub(crate) fn refuse_unmerged_incoming_edges(
         &self,
         graph: &ResolvedGraph,
@@ -257,6 +258,9 @@ impl ConfigurationSnapshot {
         }
     }
     /// Source-aware metadata is keyed by both retained binding and manifest witness.
+    #[specmark::spec(
+        implements = "spec://org.vibevm.core/vibevm/common/PROP-069#CANDIDATE-BOUNDARY"
+    )]
     pub(crate) fn retained_source(
         &self,
         source: &vibe_registry::source_candidates::RetainedSourceCandidate,
@@ -363,6 +367,9 @@ impl ConfigurationSnapshot {
     }
 
     /// Admitted lock history remains separate from replacement candidate meaning.
+    #[specmark::spec(
+        implements = "spec://org.vibevm.core/vibevm/common/PROP-069#CANDIDATE-BOUNDARY"
+    )]
     pub fn with_history(
         inputs: PackageConfigurationInputs,
         previous: BTreeMap<String, PackageConfiguration>,
@@ -381,6 +388,9 @@ impl ConfigurationSnapshot {
         }
     }
     /// Opt-in from an unchanged single exact-root ordinary operation only.
+    #[specmark::spec(
+        implements = "spec://org.vibevm.core/vibevm/common/PROP-069#CANDIDATE-BOUNDARY"
+    )]
     pub fn with_guarded_locked_rows(mut self, rows: &[vibe_core::manifest::LockedPackage]) -> Self {
         self.guarded_locked = rows
             .iter()
@@ -389,6 +399,9 @@ impl ConfigurationSnapshot {
         self
     }
     /// Recheck the actual acquired route/hash after a gate-only transition.
+    #[specmark::spec(
+        implements = "spec://org.vibevm.core/vibevm/common/PROP-069#CANDIDATE-BOUNDARY"
+    )]
     pub fn check_guarded_acquisition(
         &self,
         cached: &vibe_registry::CachedPackage,
@@ -497,6 +510,9 @@ impl ConfigurationSnapshot {
         .solve(roots)
     }
     /// Selected evaluated record; rejected candidates never contribute state.
+    #[specmark::spec(
+        implements = "spec://org.vibevm.core/vibevm/common/PROP-069#CANDIDATE-BOUNDARY"
+    )]
     pub fn configuration(
         &self,
         group: &Group,
@@ -517,6 +533,9 @@ impl ConfigurationSnapshot {
             .map_err(|error| SolveError::Provider(DepProviderError::Configuration(error)))
     }
     /// Actual captured metadata for the final acquisition drift check.
+    #[specmark::spec(
+        implements = "spec://org.vibevm.core/vibevm/common/PROP-069#CANDIDATE-BOUNDARY"
+    )]
     pub fn original(
         &self,
         group: &Group,
@@ -529,6 +548,9 @@ impl ConfigurationSnapshot {
             .map(|c| c.original.clone())
     }
     /// Visibility consumes the same selected active-declaration view as solving.
+    #[specmark::spec(
+        implements = "spec://org.vibevm.core/vibevm/common/PROP-069#CANDIDATE-BOUNDARY"
+    )]
     pub fn manifest(&self, package: &PackageRef) -> Result<Manifest, SolveError> {
         let candidates = self.candidates.borrow();
         let found = candidates

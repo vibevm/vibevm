@@ -33,6 +33,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-076#SYS-QWEN");
 
+use specmark::spec;
 use std::fmt;
 use std::path::{Path, PathBuf};
 
@@ -76,6 +77,7 @@ pub enum QwenMode {
 impl QwenMode {
     /// The spelling Qwen Code's own `SystemPromptInteractionMode` uses,
     /// which is also what the sampling helper is given.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-076#SYS-QWEN")]
     pub fn as_str(self) -> &'static str {
         match self {
             QwenMode::Interactive => "interactive",
@@ -276,6 +278,7 @@ fn bare_word<'a>(args: &[&'a str]) -> Option<&'a str> {
 /// assert!(tty(&["mcp"]).is_err());
 /// assert_eq!(piped(&["mcp"]), Ok(QwenMode::Headless));
 /// ```
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-076#SYS-QWEN")]
 pub fn qwen_mode(session: &QwenSession<'_>) -> Result<QwenMode, String> {
     let args = session.args;
     if flag_present(args, "--acp") || flag_present(args, "--experimental-acp") {
@@ -388,6 +391,7 @@ pub fn qwen_carrier_is_ours(value: &str, carrier_dir: &Path) -> bool {
 /// let foreign = QwenAmbient { system_md: None, identity_md: Some("/etc/brand.md") };
 /// assert!(qwen_precondition(&[], &foreign, dir).is_some());
 /// ```
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-076#SYS-QWEN")]
 pub fn qwen_precondition(
     args: &[&str],
     ambient: &QwenAmbient<'_>,
@@ -488,6 +492,7 @@ pub struct QwenCarrier {
 }
 
 /// The one sentence a note reports a composed carrier with.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-076#SYS-QWEN")]
 pub fn qwen_carrier_note(carrier: &QwenCarrier, lane: &Path) -> String {
     format!(
         "`{}` names a {}-byte file: Qwen Code's OWN identity sentence for the {} session shape \

@@ -14,6 +14,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-066#locator");
 
+use specmark::spec;
 use std::path::{Path, PathBuf};
 
 /// The local file a chosen location names, or `None` when the location is
@@ -41,6 +42,7 @@ use std::path::{Path, PathBuf};
 ///     Some(Path::new("/srv/mirror/index.json").to_path_buf())
 /// );
 /// ```
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-066#locations")]
 pub fn local_file(chosen: &str, declared: &str) -> Option<PathBuf> {
     let path = if let Some(rest) = chosen.strip_prefix("file://") {
         // `file:///abs` and the Windows `file://C:/…` spelling both land

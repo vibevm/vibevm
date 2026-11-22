@@ -1,6 +1,7 @@
 //! One owned native supervisor stays alive across project-prefix selection.
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-076#SYS-HARNESS-EXECUTABLE");
 use anyhow::{Result, bail};
+use specmark::spec;
 use std::path::{Path, PathBuf};
 use std::process::{Child, Command};
 use vibe_app::Interrupt;
@@ -23,6 +24,7 @@ pub(crate) struct Selection {
 }
 
 /// Only native cwd/session selectors require the two-stage launch.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-076#SYS-HERMES-PI-NATIVE")]
 pub(crate) fn requested(args: &[String]) -> bool {
     args.iter().any(|arg| {
         matches!(
@@ -55,6 +57,7 @@ pub(crate) fn requested(args: &[String]) -> bool {
 }
 
 impl Selection {
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-076#SYS-HERMES-PI-NATIVE")]
     pub(crate) fn start(
         settings: &Path,
         program: &Path,
@@ -146,6 +149,7 @@ impl Selection {
         &self.ready.cwd
     }
 
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-076#SYS-HERMES-PI-NATIVE")]
     pub(crate) fn launch(mut self, prefix: Option<&Path>) -> Result<i32> {
         let interrupted = self.signals.poll(Some(self.child.id()));
         let capability = Project::open(self.temporary.path())?;

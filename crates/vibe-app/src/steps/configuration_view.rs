@@ -4,6 +4,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-065#plan");
 
+use specmark::spec;
 use vibe_core::manifest::{RequirementScope, StepPhase};
 use vibe_wire::generated::configuration::e1::app_plan as wire;
 
@@ -11,6 +12,7 @@ use super::plan::Plan;
 
 impl Plan {
     /// The common app-plan document; secret values are absent from its evaluation.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-065#plan")]
     pub fn to_configuration_wire(&self) -> Result<wire::AppPlan, crate::AppError> {
         let configuration = self
             .configuration

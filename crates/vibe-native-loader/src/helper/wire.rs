@@ -3,6 +3,7 @@
 //! The helper performs only open, manifest and invoke on its cached handles;
 //! every manifest, request and reply admission stays in the parent loader.
 
+use specmark::spec;
 use std::path::PathBuf;
 
 const OPEN: u8 = 1;
@@ -75,6 +76,7 @@ pub(crate) enum Reply {
 }
 
 impl Request {
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-073#NATIVE-STOP-LAW")]
     pub(crate) fn encode(&self) -> Result<Vec<u8>, String> {
         let mut out = Vec::new();
         match self {
@@ -130,6 +132,7 @@ impl Request {
 }
 
 impl Reply {
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-073#NATIVE-STOP-LAW")]
     pub(crate) fn encode(&self) -> Result<Vec<u8>, String> {
         let mut out = Vec::new();
         match self {
@@ -163,6 +166,7 @@ impl Reply {
         Ok(out)
     }
 
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-073#NATIVE-STOP-LAW")]
     pub(crate) fn decode(bytes: &[u8]) -> Result<Self, String> {
         let mut cursor = Cursor(bytes);
         Ok(match cursor.u8()? {

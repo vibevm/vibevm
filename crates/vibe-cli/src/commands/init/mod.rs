@@ -18,6 +18,7 @@ mod package;
 mod prompts;
 mod root_role;
 
+use specmark::spec;
 use std::fs;
 use std::path::{Path, PathBuf};
 
@@ -33,6 +34,7 @@ use crate::output;
 // Re-export items accessed from other modules (resolver.rs, install/ etc.).
 pub(crate) use helpers::{current_timestamp_utc, strip_unc_public};
 
+#[spec(implements = "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#project-initialization")]
 pub fn run(ctx: &output::Context, args: InitArgs) -> Result<()> {
     let positional = &args.positional;
 

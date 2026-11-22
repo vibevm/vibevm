@@ -4,6 +4,7 @@ specmark::scope!(
 );
 
 use super::{ApplicationValidationError as Fault, validation::hex64};
+use specmark::spec;
 use vibe_wire::generated::migration::e1::operation_report::*;
 
 /// Internal construction failure retains all observed evidence for the owner.
@@ -39,6 +40,9 @@ pub struct ReportBuilder {
     pub(super) report: OperationReport,
 }
 impl ReportBuilder {
+    #[spec(
+        implements = "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-APPLICATION-WIRE"
+    )]
     pub fn new(operation: Option<OperationReportOperation>, operation_id: Option<String>) -> Self {
         Self {
             report: OperationReport {
@@ -76,6 +80,9 @@ impl ReportBuilder {
         self.report.outcome = outcome;
         // Effects/warnings/residue survive failures, including publication errors.
     }
+    #[spec(
+        implements = "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-APPLICATION-WIRE"
+    )]
     pub fn into_report(self) -> Result<OperationReport, ReportValidationFailure> {
         match validate_operation_report(&self.report) {
             Ok(()) => Ok(self.report),
@@ -108,6 +115,9 @@ fn invalid(field: &'static str, reason: &'static str) -> Fault {
 
 /// Logical result consistency, not a substitute for native evidence. In
 /// particular a refused/uncertain report may retain completed earlier effects.
+#[spec(
+    implements = "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-APPLICATION-WIRE"
+)]
 pub fn validate_operation_report(r: &OperationReport) -> Result<(), Fault> {
     if r.schema != 1 {
         return Err(invalid("schema", "unsupported operation report schema"));

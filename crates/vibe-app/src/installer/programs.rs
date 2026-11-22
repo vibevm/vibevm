@@ -18,6 +18,7 @@ pub fn windows_cmd() -> PathBuf {
 /// Windows PowerShell 5.1 of the running Windows:
 /// `%SystemRoot%\System32\WindowsPowerShell\v1.0\powershell.exe` when it
 /// exists, otherwise the bare name for PATH lookup.
+#[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-065#execution")]
 pub fn windows_powershell() -> PathBuf {
     windows_system_program(
         r"System32\WindowsPowerShell\v1.0\powershell.exe",

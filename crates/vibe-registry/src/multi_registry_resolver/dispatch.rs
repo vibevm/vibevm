@@ -9,6 +9,9 @@ use super::*;
 
 impl MultiRegistryResolver {
     /// Consume the already selected source once, preserving special/local routes.
+    #[specmark::spec(
+        implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#registry-model"
+    )]
     pub fn fetch_for_install(
         &self,
         resolution: &MultiResolution,
@@ -109,6 +112,9 @@ impl MultiRegistryResolver {
     }
 
     /// Observed sibling used by install's per-package fetch loop.
+    #[specmark::spec(
+        implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#registry-model"
+    )]
     pub fn fetch_with_expected_hash_progress(
         &self,
         resolution: &MultiResolution,
@@ -305,6 +311,9 @@ impl MultiRegistryResolver {
 
     /// Compatibility placement API. Pre-effect admission uses `prepare_in_place`
     /// and applies its retained candidate without resolving the source again.
+    #[specmark::spec(
+        implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#registry-model"
+    )]
     pub fn materialise_in_place(
         &self,
         resolution: &MultiResolution,

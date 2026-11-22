@@ -1,6 +1,7 @@
 //! One reviewed setup subject over existing metadata, not installation.
 use super::*;
 use sha2::{Digest, Sha256};
+use specmark::spec;
 use vibe_secrets::{ReferenceBinding, ReferenceSelection};
 #[derive(Debug, Serialize)]
 pub struct SetupRow {
@@ -58,6 +59,7 @@ impl Frames {
 impl Store {
     /// Aliases are resolved by trusted CLI composition; binding includes each
     /// requested name and canonical result so a remap changes the subject.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-000#TS-KEYRING-CONSUMER")]
     pub fn setup_preview(
         &self,
         aliases: &BTreeMap<String, String>,

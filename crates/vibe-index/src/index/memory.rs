@@ -9,6 +9,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#identity");
 
+use specmark::spec;
 use std::collections::BTreeMap;
 use std::path::{Path, PathBuf};
 
@@ -108,6 +109,7 @@ impl Index {
     /// stamped `at`. The clock enters here, at the edge — callers pass
     /// the command's single clock reading; the writer modules never
     /// call the clock themselves.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#identity")]
     pub fn new(
         registry: impl Into<String>,
         registry_url: impl Into<String>,
@@ -135,6 +137,9 @@ impl Index {
     /// stored under the same version number touches nothing — a
     /// mutation that changes nothing must not write, and must not
     /// publish, anything.
+    #[spec(
+        implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#IDENTITY-TUPLE"
+    )]
     pub fn upsert(&mut self, entry: VersionEntry) -> bool {
         let key = (entry.group.clone(), entry.name.clone());
         let pkg = self.by_pkgref.entry(key).or_insert_with(|| {
@@ -156,6 +161,9 @@ impl Index {
     /// present. Empty packages stay in the map (zero-version package
     /// rows are valid; consumers that want to prune them call
     /// [`Index::remove_package`]).
+    #[spec(
+        implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#IDENTITY-TUPLE"
+    )]
     pub fn remove_version(&mut self, group: &Group, name: &str, version: &semver::Version) -> bool {
         let key = (group.clone(), name.to_string());
         let Some(pkg) = self.by_pkgref.get_mut(&key) else {
@@ -197,6 +205,7 @@ impl Index {
     /// is the writer's number (it rides into `repomd.json`, which every
     /// reader parses). An ANSWERING surface must ask
     /// `crate::index::quarantine::usable_version_count` instead.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#identity")]
     pub fn version_count(&self) -> u32 {
         self.by_pkgref
             .values()
@@ -230,6 +239,7 @@ impl Index {
     /// `ctx.at`: same index, same `WriteCtx` ⇒ byte-identical output
     /// (F2-1); same index, DIFFERENT `WriteCtx` ⇒ byte-identical too,
     /// because an unchanged projection never reaches the stamp (B-072).
+    #[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#identity")]
     pub fn write_to(&self, data_dir: &Path, ctx: &WriteCtx) -> Result<()> {
         if self.already_projected(data_dir)? {
             return Ok(());
@@ -419,6 +429,7 @@ impl Index {
     /// and are collected into the in-memory carrier, and so do aliases
     /// — which is what lets a reader of a CURRENT persisted catalog
     /// answer a short spelling without opening `aliases.toml` at all.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#identity")]
     pub fn load_from(data_dir: &Path) -> Result<Self> {
         let manifest = repomd::read(data_dir)?;
         let name_entries = by_name::read_all(data_dir)?;

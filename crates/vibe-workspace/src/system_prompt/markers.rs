@@ -33,6 +33,7 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-076#SYS-LANE-MARKERS");
 
 use sha2::{Digest, Sha256};
+use specmark::spec;
 
 use crate::WorkspaceError;
 
@@ -58,6 +59,7 @@ pub enum MarkerKind {
 
 impl MarkerKind {
     /// The keyword this half spells.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-076#SYS-LANE-MARKERS")]
     pub fn keyword(self) -> &'static str {
         match self {
             MarkerKind::Begin => LANE_BEGIN,
@@ -107,6 +109,7 @@ pub struct VerifiedSegment {
 ///     "ca978112ca1bbdcafac231b39a23dc4da786eff8147c4e72b9807785afee48bb"
 /// );
 /// ```
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-076#SYS-LANE-MARKERS")]
 pub fn sha256_hex(bytes: &[u8]) -> String {
     let mut hasher = Sha256::new();
     hasher.update(bytes);
@@ -154,6 +157,7 @@ pub fn hash12(bytes: &[u8]) -> String {
 /// // An empty body gets no inserted byte, because no marker needs one.
 /// assert_eq!(segment_hash12(b""), hash12(b""));
 /// ```
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-076#SYS-LANE-MARKERS")]
 pub fn segment_hash12(bytes: &[u8]) -> String {
     if bytes.is_empty() || bytes.ends_with(b"\n") {
         return hash12(bytes);
@@ -176,6 +180,7 @@ pub fn segment_hash12(bytes: &[u8]) -> String {
 /// );
 /// # Ok::<(), vibe_workspace::WorkspaceError>(())
 /// ```
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-076#SYS-LANE-MARKERS")]
 pub fn marker_line(
     kind: MarkerKind,
     node_id: &str,
@@ -222,6 +227,7 @@ pub(super) fn marker_field(what: &str, value: &str) -> Result<(), WorkspaceError
 /// Matching is on the **trimmed** line, so a marker is recognised wherever a
 /// harness indented it, and a line that merely mentions the keyword inside
 /// other text is not a marker.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-076#SYS-LANE-MARKERS")]
 pub fn parse_marker_line(line: &str) -> Option<LaneMarker> {
     let trimmed = line.trim();
     let inner = trimmed.strip_prefix("<!--")?.strip_suffix("-->")?.trim();
@@ -254,6 +260,7 @@ pub fn parse_marker_line(line: &str) -> Option<LaneMarker> {
 /// inside a segment's own bytes. Returns the verified segments in delivered
 /// order, so a caller holding the boot plan can compare that order with
 /// INDEX's — the one check only the caller can make.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-076#SYS-LANE-MARKERS")]
 pub fn verify_lane_markers(bytes: &[u8]) -> Result<Vec<VerifiedSegment>, WorkspaceError> {
     let text = std::str::from_utf8(bytes).map_err(|error| {
         compose_error(

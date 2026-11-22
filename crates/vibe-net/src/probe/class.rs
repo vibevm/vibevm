@@ -44,6 +44,7 @@ pub enum FailureClass {
 }
 
 impl FailureClass {
+    #[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-068#dl")]
     pub fn code(self) -> &'static str {
         match self {
             Self::Policy => "dl_source_policy",
@@ -64,6 +65,7 @@ impl FailureClass {
     }
 
     /// What the failure is, in words, for a row of the phase list.
+    #[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-068#dl")]
     pub fn label(self) -> &'static str {
         match self {
             Self::Policy => "refused by source policy",
@@ -83,6 +85,7 @@ impl FailureClass {
         }
     }
 
+    #[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-068#dl")]
     pub fn exit_code(self) -> u8 {
         match self {
             Self::Policy => 4,
@@ -102,6 +105,7 @@ impl FailureClass {
         }
     }
 
+    #[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-068#dl")]
     pub fn fix(self) -> &'static str {
         match self {
             Self::Policy => {

@@ -8,11 +8,13 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#form-factor");
 
+use specmark::spec;
 use vibe_core::manifest::RegistrySection;
 
 /// Resolve `<index_url>` for the named registry from environment.
 /// Mirrors the `VIBEVM_INDEX_URL_<REGISTRY>` shape used by
 /// `vibe-publish::post_hook`.
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#form-factor")]
 pub fn index_url_for(registry: &str) -> Option<String> {
     let suffix = registry_env_suffix(registry);
     if suffix.is_empty() {
@@ -85,6 +87,7 @@ pub enum IndexUrlSource {
 /// is unchanged. The same `RegistrySection` shape serves the project
 /// `vibe.toml` and the machine-global `~/.vibe/registry.toml`, so the
 /// key carries in both columns.
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#form-factor")]
 pub fn resolve_index_url(registry: &RegistrySection) -> IndexUrlResolution {
     remapped(resolve_index_url_with(
         index_url_for(&registry.name),

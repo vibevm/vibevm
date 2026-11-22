@@ -1,6 +1,7 @@
 //! One read-only interpretation of explicit lower-layer grants and relations.
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-074#LAYERED-PREFIX");
 use serde::Serialize;
+use specmark::spec;
 use std::{
     collections::{BTreeMap, BTreeSet},
     path::Path,
@@ -36,6 +37,7 @@ pub struct Relation {
 }
 impl Relation {
     /// One qualified provenance line shared by plain and interactive views.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-074#LAYER-RELATION-TRANSPORT")]
     pub fn display_line(&self) -> String {
         format!(
             "relation {} {:?}: {}@{} {} -> {:?}:{}@{}:{} — {} ({})",
@@ -61,6 +63,7 @@ pub struct Resolution {
 }
 impl Resolution {
     /// A late notice does not remove any earlier shared prefix bytes.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-074#LAYER-RELATION-TRANSPORT")]
     pub fn notice(&self, layer: LayerName) -> String {
         let mut text = String::new();
         for r in self
@@ -88,6 +91,7 @@ struct Target {
 }
 /// Inputs are ordered project, user, override. Optional-layer errors deny that
 /// layer, never grant authority by omission or prevent the base project boot.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-074#LAYER-EFFECTIVE-RELATIONS")]
 pub fn resolve(inputs: &[LayerInput<'_>]) -> Resolution {
     let mut result = Resolution::default();
     let mut targets = BTreeMap::<(LayerName, String, String), Target>::new();

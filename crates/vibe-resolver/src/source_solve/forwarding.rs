@@ -2,6 +2,7 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-069#EFFECT-CONSUMERS");
 use super::*;
 use crate::source_candidates::{ActiveSourceEdge, EdgeOwner};
+use specmark::spec;
 use vibe_core::manifest::{
     ConfigurationEffect, ForwardStrength, ForwardedInput, PackageConfiguration,
 };
@@ -228,6 +229,7 @@ pub(super) fn prepare<P: SourceCandidateProvider>(
     Ok((!result.pairs.is_empty()).then_some(result))
 }
 impl Preseed {
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-069#EFFECT-CONSUMERS")]
     pub fn validate(&self, solved: &SourceResolvedGraph) -> Result<(), SolveError> {
         if solved.selected.values().any(|metadata| {
             !metadata.view.recommends.packages.is_empty()

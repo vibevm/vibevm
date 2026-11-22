@@ -52,6 +52,9 @@ impl PxPin {
     /// information: vibe does not check px against it, here or anywhere
     /// (owner decision 2026-11-09, `PROP-019#companion-tools`), so a pin
     /// that drops the digests is still a pin.
+    #[specmark::spec(
+        implements = "spec://org.vibevm.core/vibevm/common/PROP-019#COMPANION-TOOLS-ANY-PX"
+    )]
     pub fn parse(text: &str) -> Option<Self> {
         let table: toml::Table = toml::from_str(text).ok()?;
         let text = |table: &toml::Table, key: &str| -> Option<String> {
@@ -94,6 +97,9 @@ impl PxPin {
     /// assert_eq!(pin.name, "px");
     /// assert!(pin.asset("x86_64-pc-windows-msvc").is_some());
     /// ```
+    #[specmark::spec(
+        implements = "spec://org.vibevm.core/vibevm/common/PROP-019#COMPANION-TOOLS-LAW"
+    )]
     pub fn embedded() -> &'static PxPin {
         static PIN: OnceLock<PxPin> = OnceLock::new();
         PIN.get_or_init(|| {
@@ -125,6 +131,7 @@ impl PxPin {
 }
 
 /// The distribution target of this build, as release assets name it.
+#[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-019#COMPANION-TOOLS-LAW")]
 pub fn running_target() -> Option<&'static str> {
     match (std::env::consts::ARCH, std::env::consts::OS) {
         ("x86_64", "windows") => Some("x86_64-pc-windows-msvc"),
@@ -185,6 +192,7 @@ pub struct InstalledPx {
 }
 
 /// The record's text, for the writer that installs px.
+#[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-019#COMPANION-TOOLS-LAW")]
 pub fn record_text(
     executable: &str,
     source: &str,
@@ -207,6 +215,7 @@ pub fn record_text(
 
 /// The px in one store directory: its record when vibe wrote one, else the
 /// executable found by name (a store filled by an older vibe).
+#[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-019#COMPANION-TOOLS-LAW")]
 pub fn stored_in(directory: &Path) -> Option<InstalledPx> {
     let record = std::fs::read_to_string(directory.join(RECORD_FILE))
         .ok()
@@ -241,6 +250,7 @@ pub fn stored_in(directory: &Path) -> Option<InstalledPx> {
 /// Every px in `root`, the pinned version's first, then `custom`, then the
 /// rest newest-looking first — so the order a lookup takes is the same on
 /// every machine.
+#[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-019#COMPANION-TOOLS-LAW")]
 pub fn stored_all(root: &Path) -> Vec<InstalledPx> {
     let pin = PxPin::embedded();
     let mut names: Vec<String> = std::fs::read_dir(root)
@@ -285,6 +295,7 @@ pub fn stored_executable() -> Option<PathBuf> {
 
 /// What a missing px is told to the user: the store directory, the asset
 /// file name a drop or release must carry for this target, and the repair.
+#[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-019#COMPANION-TOOLS-LAW")]
 pub fn missing_hint() -> String {
     let pin = PxPin::embedded();
     let target = running_target().unwrap_or("this platform");

@@ -20,6 +20,9 @@ impl PreparedBuild {
     pub fn built(&self) -> &Built {
         &self.built
     }
+    #[specmark::spec(
+        implements = "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-DOC-CENSUS"
+    )]
     pub fn recheck(&self) -> Result<()> {
         self.pages.recheck().map_err(|message| DocError::Page {
             path: self.root.clone(),

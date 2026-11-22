@@ -77,6 +77,7 @@ impl SlotJudgmentContext {
     /// assert!(!context.trusts("org.vibevm"));
     /// ```
     #[must_use]
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-065#ordinary-plan")]
     pub fn consenting() -> Self {
         Self {
             command_present: never,

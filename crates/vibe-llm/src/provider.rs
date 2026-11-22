@@ -20,6 +20,7 @@ pub struct ChatMessage {
 }
 
 impl ChatMessage {
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#AGENT-PROVIDER-SEAM")]
     pub fn new(role: ChatRole, content: impl Into<String>) -> Self {
         Self {
             role,
@@ -44,6 +45,7 @@ pub struct ChatInput {
 }
 
 impl ChatInput {
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#AGENT-PROVIDER-SEAM")]
     pub fn new(messages: Vec<ChatMessage>) -> Result<Self, ChatInputError> {
         if messages.is_empty() {
             return Err(ChatInputError::EmptyMessages);

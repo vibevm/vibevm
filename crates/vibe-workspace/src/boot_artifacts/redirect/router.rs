@@ -72,6 +72,7 @@ pub struct RouterFacts {
 impl RouterFacts {
     /// The facts for a directory whose identity and lane are not at hand —
     /// the shape [`render_redirect`] and the non-traced write path use.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-076#SYS-NO-RECURSION")]
     pub fn undeclared(spec_format: SpecFormat) -> Self {
         Self {
             node_id: UNDECLARED_NODE_ID.to_owned(),
@@ -100,6 +101,7 @@ pub const UNDECLARED_NODE_ID: &str = "-";
 /// (`#SYS-PROSPECTIVE-ENTRYPOINT`). The declared half is
 /// [`Manifest::consumer_node`]'s coordinate rather than a reading of
 /// `[project]`/`[package]` of its own, for the same reason.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-076#SYS-NO-RECURSION")]
 pub fn router_node_id(manifest: Option<&Manifest>, self_coord: &SelfCoordinate) -> String {
     let declared = manifest
         .and_then(Manifest::consumer_node)
@@ -145,6 +147,7 @@ pub fn render_redirect_with_spec_format(spec_format: SpecFormat) -> String {
 /// order, with the three sentences that name a lane file replaced by ones
 /// that say there is none — rather than a shorter block, so that a reader
 /// comparing two projects' blocks is comparing the same shape.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-076#SYS-NO-RECURSION")]
 pub fn render_router(facts: &RouterFacts) -> String {
     let static_rel = static_path(facts.spec_format);
     let index_rel = layout_paths::boot(vibe_core::layout::INDEX_MD);
@@ -352,6 +355,7 @@ impl CodexBudget {
     ///     CodexBudget::Near { .. }
     /// ));
     /// ```
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-076#SYS-CODEX-DECLARED-BUDGET")]
     pub fn against(end: usize, limit: usize) -> Self {
         if end > limit {
             CodexBudget::Truncated { end, limit }
@@ -368,6 +372,7 @@ impl CodexBudget {
     /// writer raises the `Truncated` case as a refusal and `vibe check`
     /// reports the `Near` case as a warning, and a reader comparing the two
     /// messages should see the same measurement.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-076#SYS-CODEX-DECLARED-BUDGET")]
     pub fn message(self, name: &str) -> Option<String> {
         let (end, limit, verdict) = match self {
             CodexBudget::Fits => return None,
@@ -399,6 +404,7 @@ impl CodexBudget {
     /// lost is authored text at the tail. The remedy is not "shorten the
     /// file" but "put the rules where a session actually reads them" — the
     /// boot lane, which is read by file and is not truncated at all.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-076#SYS-CODEX-DECLARED-BUDGET")]
     pub fn whole_file(name: &str, len: usize, limit: usize) -> Option<String> {
         let lost = len.checked_sub(limit).filter(|lost| *lost > 0)?;
         Some(format!(

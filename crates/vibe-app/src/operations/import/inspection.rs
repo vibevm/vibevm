@@ -1,9 +1,11 @@
 //! The finite cohort's effect footprint includes retained plans not yet started.
 use super::{document::ImportWork, pending, store};
 use crate::{AppError, SettingsRoot};
+use specmark::spec;
 use std::collections::BTreeSet;
 use vibe_wire::generated::shared as w;
 
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-069#APP-CONFIGURATION-CONTINUATION")]
 pub(crate) fn effect_keys(
     settings: &SettingsRoot,
     document: &ImportWork,

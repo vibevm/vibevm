@@ -87,6 +87,7 @@ impl std::ops::Deref for ParameterResolution {
 /// an update, else an attended prompt, else the default. A required
 /// parameter without a value, a value the type refuses, a `path` that must
 /// exist and does not, or a `--set` naming no parameter is a refusal.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-065#parameters")]
 pub(crate) fn resolve_parameters(
     option: &InstallerOptionDecl,
     set: &[(String, String)],
@@ -283,6 +284,7 @@ pub struct PlanLicense {
 /// Admit the declared license: `--accept-license`, the same license
 /// accepted by the recorded installation, or a yes in an attended terminal
 /// after the text is shown; anything else refuses before any download.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-065#license")]
 pub(crate) fn admit_license(
     option: &InstallerOptionDecl,
     key: &str,

@@ -82,6 +82,7 @@ impl VersionSelect {
     /// The stored, kebab-case spelling — the one written in
     /// `config.toml`, read from `VIBE_VERSIONS_SELECT` and printed by
     /// `vibe show config`.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-075#VERSIONS-SELECT")]
     pub fn as_str(self) -> &'static str {
         match self {
             VersionSelect::Newest => "newest",
@@ -97,6 +98,7 @@ impl VersionSelect {
     }
 
     /// The comma-separated spellings, for the `fix:` of a refusal.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-075#VERSIONS-SELECT")]
     pub fn spellings() -> String {
         VersionSelect::ALL
             .iter()
@@ -162,6 +164,7 @@ pub struct Candidate {
 
 impl Candidate {
     /// A candidate this machine can install with no network.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-075#VERSIONS-SELECT")]
     pub fn available(version: semver::Version) -> Self {
         Candidate {
             version,
@@ -170,6 +173,7 @@ impl Candidate {
     }
 
     /// A candidate whose payload would have to be downloaded.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-075#VERSIONS-SELECT")]
     pub fn unavailable(version: semver::Version) -> Self {
         Candidate {
             version,
@@ -223,6 +227,7 @@ pub enum Selection {
 /// assert_eq!(pick(&pre).unwrap().to_string(), "2.0.0-rc.1");
 /// assert!(pick(&[]).is_none());
 /// ```
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-075#VERSIONS-SELECT")]
 pub fn pick(candidates: &[semver::Version]) -> Option<&semver::Version> {
     candidates
         .iter()
@@ -252,6 +257,7 @@ pub fn pick(candidates: &[semver::Version]) -> Option<&semver::Version> {
 /// assert_eq!(admitted(&req, &domain, None).len(), 2);
 /// assert_eq!(admitted(&VersionSpec::Latest, &domain, None).len(), 3);
 /// ```
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-075#VERSIONS-SELECT")]
 pub fn admitted(
     spec: &VersionSpec,
     domain: &[semver::Version],

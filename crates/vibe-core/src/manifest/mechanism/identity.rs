@@ -14,6 +14,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#ONE-MACHINE");
 
+use specmark::spec;
 use std::fmt;
 use std::str::FromStr;
 
@@ -48,6 +49,7 @@ pub enum MechanismRole {
 
 impl MechanismRole {
     /// The exact lowercase wire spelling.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#ONE-MACHINE")]
     pub const fn as_str(&self) -> &'static str {
         match self {
             Self::Build => "build",
@@ -308,6 +310,7 @@ pub struct ProviderPin {
 
 impl ProviderPin {
     /// Parse and validate an exact provider pin.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#ONE-MACHINE")]
     pub fn parse(input: &str) -> Result<Self, ProviderPinParseError> {
         let refuse = |reason: &str| ProviderPinParseError {
             input: input.to_owned(),
@@ -383,6 +386,7 @@ impl ProviderPin {
     }
 
     /// The provider's declaring group, or `None` for a project host.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#ONE-MACHINE")]
     pub fn group(&self) -> Option<&crate::Group> {
         match &self.owner {
             ProviderOwner::Package { group, .. } => Some(group),
@@ -391,6 +395,7 @@ impl ProviderPin {
     }
 
     /// The provider's declaring package name, or `None` for a project host.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#ONE-MACHINE")]
     pub fn package(&self) -> Option<&crate::PackageName> {
         match &self.owner {
             ProviderOwner::Package { package, .. } => Some(package),
@@ -399,6 +404,7 @@ impl ProviderPin {
     }
 
     /// The owning project's name, or `None` for a package owner.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#ONE-MACHINE")]
     pub fn host_project(&self) -> Option<&str> {
         match &self.owner {
             ProviderOwner::Package { .. } => None,
@@ -471,6 +477,7 @@ impl ProviderPinParseError {
 /// byte-for-byte copy there was one drift away from two grammars of one
 /// identity. Exporting the predicate makes the wire a DELEGATE of this one
 /// authority; the function lends a `bool` and nothing else.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#ONE-MACHINE")]
 pub fn is_portable_token(value: &str) -> bool {
     let bytes = value.as_bytes();
     if bytes.is_empty() {
@@ -494,6 +501,7 @@ pub fn is_portable_token(value: &str) -> bool {
 /// letter, digit or `+`, with no `..` run. Wider than the portable-token
 /// grammar of ids because `g++`, `clang++` and `python3.12` are real
 /// commands a package must be able to publish.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#ONE-MACHINE")]
 pub fn is_command_name(value: &str) -> bool {
     let bytes = value.as_bytes();
     let edge_ok = |byte: u8| byte.is_ascii_lowercase() || byte.is_ascii_digit();

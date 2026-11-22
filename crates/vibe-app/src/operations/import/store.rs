@@ -1,6 +1,7 @@
 //! The sole finite cohort record under the existing application-work subsystem.
 use super::*;
 use crate::SettingsRoot;
+use specmark::spec;
 use std::{fs, path::PathBuf};
 pub(crate) use vibe_wire::generated::application::e3::legacy_import_work::ImportWork;
 const PROTOCOL: &str = "vibe-app-import-work/3";
@@ -22,6 +23,7 @@ pub(crate) fn failure(settings: &SettingsRoot, id: &str, reason: &str) -> AppErr
     }
     .into()
 }
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-069#APP-CONFIGURATION-CONTINUATION")]
 pub(crate) fn load(settings: &SettingsRoot, id: &str) -> Result<ImportWork, AppError> {
     let directory = path(settings, id)?;
     let bytes = fs::read(directory.join("import.json"))
@@ -160,6 +162,7 @@ fn encode(settings: &SettingsRoot, document: &ImportWork) -> Result<Vec<u8>, App
     bytes.push(b'\n');
     Ok(bytes)
 }
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-069#APP-CONFIGURATION-CONTINUATION")]
 pub(crate) fn save(settings: &SettingsRoot, document: &ImportWork) -> Result<(), AppError> {
     let directory = path(settings, &document.target.operation)?;
     let bytes = encode(settings, document)?;

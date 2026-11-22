@@ -15,6 +15,7 @@ pub struct ControlledProcessRunner {
     observer: Option<Arc<dyn ProcessOutputObserver>>,
 }
 impl ControlledProcessRunner {
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-073#OPERATION-EFFECTS-LAW")]
     pub fn new(cancellation: CancellationToken) -> Self {
         Self {
             cancellation,

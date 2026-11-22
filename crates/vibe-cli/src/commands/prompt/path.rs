@@ -3,6 +3,7 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-076#SYS-OPERATIONS-PATH-AND-FLAGS");
 
 use anyhow::{Result, bail};
+use specmark::spec;
 use vibe_wire::generated::prompt_path as wire;
 use vibe_workspace::system_prompt::{ArtifactFacts, PromptCheck, check_node_prompt};
 
@@ -14,6 +15,7 @@ use super::Selected;
 /// The protocol tag `vibe-prompt-path/1`.
 pub(crate) const PROTOCOL: &str = "vibe-prompt-path/1";
 
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-076#SYS-OPERATIONS-PATH-AND-FLAGS")]
 pub(crate) fn run(ctx: &output::Context, selected: &Selected, part: PromptPart) -> Result<()> {
     let tracked = selected.tracked();
     let request = selected.request(&tracked, None);

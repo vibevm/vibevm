@@ -24,6 +24,7 @@ pub enum RequirementScope {
 
 impl RequirementScope {
     /// The stable spelling (`build`, `runtime`).
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-065#app-dependencies")]
     pub fn as_str(self) -> &'static str {
         match self {
             Self::Build => "build",
@@ -65,6 +66,7 @@ pub enum RequirementDecl {
 
 impl RequirementDecl {
     /// The `group/name@requirement` spelling.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-065#app-dependencies")]
     pub fn package(&self) -> &str {
         match self {
             Self::Spelled(package) => package,
@@ -74,6 +76,7 @@ impl RequirementDecl {
 
     /// The declared scope, or `default` (`build` for a step, `runtime` for
     /// an option) when none is declared.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-065#app-dependencies")]
     pub fn scope_or(&self, default: RequirementScope) -> RequirementScope {
         match self {
             Self::Spelled(_) => default,

@@ -44,6 +44,7 @@ pub struct Moved {
 /// let error = vibe_app::storage_move(&settings, "org.example/tool@1.0.0", "default", None);
 /// assert!(error.unwrap_err().to_string().contains("not_installed"));
 /// ```
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-059#move")]
 pub fn relocate(
     settings: &SettingsRoot,
     spelling: &str,
@@ -149,6 +150,7 @@ pub fn relocate(
 /// assert_eq!(report.orphans.len(), 1);
 /// assert!(!dir.path().join("opt/apps/tool/stray").exists());
 /// ```
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-059#move")]
 pub fn gc(settings: &SettingsRoot, delete: bool) -> Result<wire::ApplicationStorageGc, AppError> {
     let _lock = settings.lock()?;
     let index = Index::load(settings)?;

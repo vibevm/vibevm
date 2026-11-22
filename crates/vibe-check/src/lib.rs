@@ -177,6 +177,7 @@ pub enum CheckId {
 }
 
 impl CheckId {
+    #[spec(implements = "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#linter")]
     pub fn as_str(&self) -> &'static str {
         match self {
             CheckId::ManifestValidity => "manifest_validity",
@@ -211,6 +212,7 @@ impl CheckId {
     /// Excludes [`CheckId::BootGraphIntegrity`], which is wired externally in
     /// `vibe check` over the installed workspace (PROP-038 §3) rather than as a
     /// vibe-check cell — it has no project-file-only cell to register here.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#linter")]
     pub fn all() -> &'static [CheckId] {
         &[
             CheckId::ManifestValidity,
@@ -258,6 +260,7 @@ pub enum Severity {
 }
 
 impl Severity {
+    #[spec(implements = "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#linter")]
     pub fn as_str(&self) -> &'static str {
         match self {
             Severity::Error => "error",
@@ -342,6 +345,7 @@ impl CheckReport {
     pub fn push(&mut self, f: Finding) {
         self.findings.push(f);
     }
+    #[spec(implements = "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#linter")]
     pub fn count(&self, severity: Severity) -> usize {
         self.findings
             .iter()
@@ -489,6 +493,7 @@ pub trait Check {
 /// assert_eq!(checks.len(), 24);
 /// assert_eq!(checks[0].id(), CheckId::ManifestValidity);
 /// ```
+#[spec(implements = "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#linter")]
 pub fn all_checks() -> Vec<Box<dyn Check>> {
     vec![
         Box::new(ManifestValidityCheck),

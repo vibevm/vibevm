@@ -6,6 +6,7 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-064#agent-definition
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-064#presets");
 
 use anyhow::Result;
+use specmark::spec;
 use vibe_app::{AgentDefinition, AgentsConfig, AppError, SettingsRoot};
 
 use crate::cli::{AgentArgs, AgentCommand};
@@ -31,6 +32,7 @@ pub(crate) mod program;
 use crate::commands::app::global;
 use crate::output;
 
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-064#agent-definition")]
 pub fn run(ctx: &output::Context, args: AgentArgs) -> Result<()> {
     let settings = global::settings_root()?;
     match args.command {

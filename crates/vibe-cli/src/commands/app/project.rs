@@ -7,6 +7,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-059#project-scope");
 
+use specmark::spec;
 use std::path::{Path, PathBuf};
 
 use anyhow::{Context, Result, bail};
@@ -52,6 +53,7 @@ struct Materialise<'a> {
 
 /// `vibe install [PACKAGE…]` inside a project: the ordinary project install,
 /// then every app dependency of the lockfile that the project home lacks.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-059#project-scope")]
 pub(crate) fn install(
     ctx: &output::Context,
     args: InstallArgs,
@@ -146,6 +148,7 @@ pub(crate) fn update(
 /// `vibe uninstall PACKAGE` inside a project: every project-home
 /// installation of an app dependency is uninstalled there first, then the
 /// ordinary project uninstall removes its dependency row.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-059#project-scope")]
 pub(crate) fn uninstall(
     ctx: &output::Context,
     args: UninstallArgs,
@@ -522,6 +525,7 @@ fn needs_materialisation(package: &LockedPackage, roots: &[PackageRef], index: &
 
 /// Judge only the selected operation's acquired/locked manifests, never a
 /// registry neighbour or a second resolution. No app-home mutation is allowed.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-059#project-scope")]
 pub(crate) fn admit_selected(
     root: &Path,
     packages: &[LockedPackage],

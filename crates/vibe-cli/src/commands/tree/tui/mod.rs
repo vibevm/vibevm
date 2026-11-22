@@ -82,6 +82,7 @@ type Global = SalsaAppContext<AppEvent, anyhow::Error>;
 /// static-first) are loaded from the `vibe.tree.*` settings before the loop
 /// starts (PROP-037 §9); a missing or corrupt settings file falls back to the
 /// built-in defaults and is swallowed + warned, never a hard error.
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-036#TUI-DEFAULT")]
 pub fn run(tree: PackageTree) -> Result<()> {
     let mut app = App::new(tree);
     app.apply_prefs(settings::TreeSettings::new());

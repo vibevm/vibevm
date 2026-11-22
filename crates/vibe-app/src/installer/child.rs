@@ -190,6 +190,7 @@ const MAX_DETAIL: usize = 400;
 const READER_GRACE: Duration = Duration::from_secs(2);
 
 /// Run one child to completion; non-zero, or an interrupt, is an error.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-059#child-output")]
 pub(crate) fn run_child(
     command: &mut Command,
     what: &str,
@@ -316,6 +317,7 @@ fn own_process_group(_command: &mut Command, _stdin_null: bool) {}
 /// Run one child attached to the terminal: every standard stream is
 /// inherited, nothing is captured (an interactive agent session,
 /// `PROP-064#modes`); an interrupt is still forwarded and waited for.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-059#child-output")]
 pub(crate) fn run_attached(
     command: &mut Command,
     what: &str,

@@ -4,6 +4,7 @@ specmark::scope!(
 );
 use super::*;
 use crate::source_policy::{PackagePolicyCheckpoint, PackageSourceMode, observe_package_policy_in};
+use specmark::spec;
 use vibe_safefs::{Pinned, Project};
 
 pub(crate) struct SourceLocation {
@@ -47,6 +48,9 @@ impl SourceLocation {
             _ => None,
         }
     }
+    #[spec(
+        implements = "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#URI-OBSERVED-SOURCE-READ"
+    )]
     pub(crate) fn read_with_overlay<'a>(
         &self,
         overlay: Option<&'a [u8]>,

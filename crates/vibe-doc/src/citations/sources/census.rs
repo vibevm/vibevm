@@ -67,6 +67,9 @@ impl CapturedPages {
     pub fn set(&self) -> &PageSet {
         &self.set
     }
+    #[specmark::spec(
+        implements = "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-DOC-CENSUS"
+    )]
     pub fn documents(&self) -> Vec<String> {
         let mut names: Vec<_> = self
             .set
@@ -83,6 +86,9 @@ impl CapturedPages {
         names.sort();
         names
     }
+    #[specmark::spec(
+        implements = "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-DOC-CENSUS"
+    )]
     pub fn recheck(&self) -> Result<(), String> {
         match &self.guard {
             Guard::Authored(policy, inventory) => policy

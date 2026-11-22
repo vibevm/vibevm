@@ -64,6 +64,7 @@ pub fn launcher_command(executable: &str) -> Option<&str> {
 /// assert!(!is_launcher_command_name("$app_bin"));
 /// assert!(!is_launcher_command_name(""));
 /// ```
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-065#launcher-command")]
 pub fn is_launcher_command_name(name: &str) -> bool {
     !name.is_empty()
         && !name
@@ -106,6 +107,7 @@ impl LauncherKind {
     }
 
     /// The stable spelling (`gui`, `tui`, `command`).
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-059#launch-points")]
     pub fn as_str(self) -> &'static str {
         match self {
             Self::Gui => "gui",
@@ -136,6 +138,7 @@ pub enum LauncherSource {
 
 impl LauncherSource {
     /// The stable spelling (`authored`, `desktop-entry`).
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-059#desktop-entries")]
     pub fn as_str(self) -> &'static str {
         match self {
             Self::Authored => "authored",
@@ -191,6 +194,7 @@ pub enum IconSlot {
 
 impl IconSlot {
     /// The slot's name as `--prefer` and the JSON documents spell it.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-059#menu")]
     pub fn name(self) -> &'static str {
         match self {
             Self::Svg => "svg",
@@ -206,6 +210,7 @@ impl IconSet {
     /// Every named file with its slot: the SVG, rasters by ascending size,
     /// then `ico`, `icns` and `symbolic`. A raster key that is not a
     /// decimal size is listed as size `0`; validation refuses it.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-059#menu")]
     pub fn files(&self) -> Vec<(IconSlot, &str)> {
         let mut out = Vec::new();
         if let Some(svg) = &self.svg {
@@ -262,6 +267,7 @@ pub enum IconDecl {
 impl IconDecl {
     /// The named files with their slots; a short-form path is an SVG when
     /// it ends in `.svg`, otherwise a PNG of unknown size.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-059#menu")]
     pub fn files(&self) -> Vec<(IconSlot, &str)> {
         match self {
             Self::Path(path) if path.is_empty() => Vec::new(),
@@ -343,6 +349,7 @@ pub struct LauncherActionDecl {
 /// assert_eq!(png_dimensions(&png), Some((48, 48)));
 /// assert_eq!(png_dimensions(b"GIF89a"), None);
 /// ```
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-059#menu")]
 pub fn png_dimensions(bytes: &[u8]) -> Option<(u32, u32)> {
     const SIGNATURE: &[u8] = b"\x89PNG\r\n\x1a\n";
     if bytes.len() < 24 || &bytes[..8] != SIGNATURE || &bytes[12..16] != b"IHDR" {

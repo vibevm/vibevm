@@ -86,6 +86,9 @@ pub enum Classification {
 
 impl Classification {
     /// The word a report prints.
+    #[specmark::spec(
+        implements = "spec://org.vibevm.core/vibevm/common/PROP-057#OBS-RULE-EDGE-UNPINNED"
+    )]
     pub fn as_str(self) -> &'static str {
         match self {
             Classification::Citation => "citation",
@@ -174,6 +177,9 @@ impl Report {
     }
 
     /// How many of each class the walk found.
+    #[specmark::spec(
+        implements = "spec://org.vibevm.core/vibevm/common/PROP-057#OBS-RULE-EDGE-UNPINNED"
+    )]
     pub fn counts(&self) -> Counts {
         let mut c = Counts::default();
         for citation in &self.citations {
@@ -192,6 +198,9 @@ impl Report {
     }
 
     /// The human form.
+    #[specmark::spec(
+        implements = "spec://org.vibevm.core/vibevm/common/PROP-057#OBS-RULE-EDGE-UNPINNED"
+    )]
     pub fn render(&self) -> String {
         let mut out = String::new();
         for bad in &self.unresolved {
@@ -261,6 +270,9 @@ pub struct Counts {
 ///     Classification::SelfAddress
 /// );
 /// ```
+#[specmark::spec(
+    implements = "spec://org.vibevm.core/vibevm/common/PROP-057#OBS-RULE-EDGE-UNPINNED"
+)]
 pub fn classify(uri: &str, self_coordinate: &str) -> Classification {
     // The ellipsis and the angle-bracket placeholder are the two forms
     // the manual uses to show an address without writing one. Both are
@@ -342,6 +354,9 @@ pub fn resolve(uri: &str, sources: &SpecSources) -> std::result::Result<RuleText
 /// build. An address that does not resolve is simply absent from the map
 /// — [`check`] is where that is a failure; a renderer's job is to say so
 /// on the page, not to abort the render.
+#[specmark::spec(
+    implements = "spec://org.vibevm.core/vibevm/common/PROP-057#OBS-RULE-EDGE-UNPINNED"
+)]
 pub fn resolve_rules(set: &PageSet, sources: &SpecSources) -> BTreeMap<String, RuleText> {
     let mut out = BTreeMap::new();
     let mut seen: BTreeSet<String> = BTreeSet::new();
@@ -382,6 +397,9 @@ pub struct DocEdge {
 /// Only `rule` blocks mint edges. An address in prose is checked, because
 /// a dead address is dead wherever it is written, but the `documents`
 /// relation is a declaration and `rule` is how a page declares it.
+#[specmark::spec(
+    implements = "spec://org.vibevm.core/vibevm/common/PROP-057#OBS-RULE-EDGE-UNPINNED"
+)]
 pub fn edges(package_dir: &Path, self_coordinate: &str) -> Result<Vec<DocEdge>> {
     let set = pages::read_package(package_dir)?;
     let mut out = Vec::new();
@@ -410,6 +428,9 @@ pub fn edges(package_dir: &Path, self_coordinate: &str) -> Result<Vec<DocEdge>> 
 /// One question per address, and no other: does the anchor exist. A
 /// placeholder, a teaching address and a self-address are counted and
 /// passed over — resolving them is what would be wrong.
+#[specmark::spec(
+    implements = "spec://org.vibevm.core/vibevm/common/PROP-057#OBS-RULE-EDGE-UNPINNED"
+)]
 pub fn check(package_dir: &Path, self_coordinate: &str, sources: &SpecSources) -> Result<Report> {
     let captured = sources
         .capture_pages(package_dir)

@@ -24,6 +24,7 @@ pub struct OpenAiCompatibleProvider {
 }
 
 impl OpenAiCompatibleProvider {
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#AGENT-PROVIDER-SEAM")]
     pub fn new(
         model: impl Into<String>,
         endpoint: Endpoint,

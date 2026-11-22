@@ -3,6 +3,7 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-073#LOCKED-SOURCE");
 use crate::builder::{effective_registry_config, project_local_layer};
 use crate::{PackageSourceOptions, SourceOperation};
 use anyhow::{Context, Result, bail};
+use specmark::spec;
 use std::{path::Path, sync::Arc};
 use vibe_core::{GlobalRegistryConfig, GlobalRegistrySource, manifest::Manifest};
 use vibe_registry::{MultiRegistryResolver, source_policy_provider::SourcePolicyProvider};
@@ -97,6 +98,7 @@ impl vibe_registry::multi_registry_resolver::RegistryCatalogProvider for Declara
     }
 }
 /// Capture invocation data only. No binary, config closure or catalog is opened.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-073#LOCKED-SOURCE")]
 pub fn source_operation(
     options: &PackageSourceOptions,
     manifest: &Manifest,
@@ -131,6 +133,7 @@ pub fn source_operation(
 /// `seed_defaults` is the composition root's reading of the
 /// `VIBE_NO_DEFAULT_REGISTRY` posture (`true` when it is unset): this library
 /// never reads the ambient environment itself.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-073#LOCKED-SOURCE")]
 pub fn deferred_user_registry(seed_defaults: bool) -> GlobalRegistrySource {
     let missing = if !seed_defaults {
         GlobalRegistryConfig::default()
@@ -178,6 +181,7 @@ pub fn deferred_user_registry(seed_defaults: bool) -> GlobalRegistrySource {
 /// # let _ = resolver;
 /// # Ok::<(), anyhow::Error>(())
 /// ```
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-073#LOCKED-SOURCE")]
 pub fn registry_resolver(
     operation: &SourceOperation,
     registries: Vec<vibe_core::manifest::RegistrySection>,

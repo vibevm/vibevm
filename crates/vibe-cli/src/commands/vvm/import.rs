@@ -9,6 +9,7 @@
 //! executables found beside it under their canonical names, and each one
 //! missing is reported with what does not work without it.
 
+use specmark::spec;
 use std::path::{Path, PathBuf};
 
 use anyhow::{Context, Result, bail};
@@ -53,6 +54,7 @@ struct ObservedPayload {
     reused: Option<InstallRecord>,
 }
 
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-019#CMD-IMPORT")]
 pub(crate) fn perform_import(
     ctx: &output::Context,
     store: &VersionStore,

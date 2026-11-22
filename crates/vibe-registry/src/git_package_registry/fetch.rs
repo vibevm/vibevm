@@ -9,6 +9,7 @@ specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#r
 
 use super::*;
 use crate::store::{self, InsertOutcome};
+use specmark::spec;
 
 mod api;
 mod identity;
@@ -133,6 +134,9 @@ impl GitPerPackageRegistry {
     /// working-tree destination changes. Returns the canonical source URL,
     /// the version tag, the resolved commit (the in-place identity, §2.5),
     /// and the slot's manifest.
+    #[spec(
+        implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#registry-model"
+    )]
     pub fn materialise_in_place(
         &self,
         resolved: &ResolvedPackage,

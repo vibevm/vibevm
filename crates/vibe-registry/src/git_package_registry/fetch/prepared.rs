@@ -344,6 +344,9 @@ impl GitPerPackageRegistry {
     ) -> Result<PreparedInPlace, RegistryError> {
         self.prepare_in_place_on_route(resolved, slot, None)
     }
+    #[specmark::spec(
+        implements = "spec://org.vibevm.core/vibevm/common/PROP-069#PACKAGE-ADMISSION"
+    )]
     pub(crate) fn prepare_in_place_on_route(
         &self,
         resolved: &ResolvedPackage,

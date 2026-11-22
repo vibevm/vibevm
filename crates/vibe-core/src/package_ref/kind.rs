@@ -6,6 +6,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#pkgref");
 
+use specmark::spec;
 use std::fmt;
 use std::str::FromStr;
 
@@ -105,6 +106,9 @@ pub enum PackageKind {
 }
 
 impl PackageKind {
+    #[spec(
+        implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#KIND-METADATA"
+    )]
     pub const fn as_str(self) -> &'static str {
         match self {
             PackageKind::Flow => "flow",

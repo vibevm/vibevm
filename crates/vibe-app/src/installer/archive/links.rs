@@ -46,6 +46,7 @@ pub enum LinkMode {
 impl LinkMode {
     /// Symbolic links where creating one needs no privilege, copies
     /// elsewhere (Windows).
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-059#installer-separation")]
     pub fn native() -> Self {
         if cfg!(unix) {
             Self::Symlink

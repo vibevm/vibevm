@@ -43,6 +43,7 @@ pub enum RecommendationOutcome {
 
 impl RecommendationOutcome {
     /// The stable spelling the report and the plan carry.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-077#APP-RECOMMENDS")]
     pub fn as_str(self) -> &'static str {
         match self {
             Self::Installed => "installed",

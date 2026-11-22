@@ -31,6 +31,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-038#edge-recursion");
 
+use specmark::spec;
 use std::cmp::Reverse;
 use std::collections::{BinaryHeap, HashMap, HashSet};
 
@@ -218,6 +219,7 @@ pub struct ZoneMembership {
 /// assert_eq!(zone.dynamic_edges.len(), 1);
 /// assert_eq!(zone.dynamic_edges[0].0, id("a"));
 /// ```
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-038#edge-recursion")]
 pub fn resolve_zone(root: &UnitId, units: &HashMap<UnitId, UnitInput>) -> ZoneMembership {
     let mut membership = ZoneMembership::default();
     let mut static_visited: HashSet<UnitId> = HashSet::new();
@@ -312,6 +314,7 @@ fn descend(
 /// let zone = resolve_zone(&id("root"), &table);
 /// assert_eq!(topo_zone(&zone.static_members, &table), vec![id("a"), id("root")]);
 /// ```
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-038#edge-recursion")]
 pub fn topo_zone(members: &HashSet<UnitId>, units: &HashMap<UnitId, UnitInput>) -> Vec<UnitId> {
     let ids: Vec<UnitId> = members.iter().cloned().collect();
     let index: HashMap<&UnitId, usize> = ids.iter().enumerate().map(|(i, id)| (id, i)).collect();

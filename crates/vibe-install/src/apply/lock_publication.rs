@@ -2,6 +2,7 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-073#LOCKED-SOURCE");
 use super::file_guard::FileGuard;
 use crate::error::Result;
+use specmark::spec;
 use std::path::Path;
 use vibe_core::manifest::Lockfile;
 
@@ -17,6 +18,7 @@ pub struct LockPublication {
     original: Lockfile,
 }
 impl LockPublication {
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-073#LOCKED-SOURCE")]
     pub fn capture(root: &Path) -> Result<Self> {
         let guard = FileGuard::capture(&root.join(Lockfile::FILENAME))?;
         let text = guard
@@ -30,6 +32,7 @@ impl LockPublication {
     pub fn lockfile(&self) -> &Lockfile {
         &self.original
     }
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-073#LOCKED-SOURCE")]
     pub fn publish(mut self, after: &Lockfile) -> Result<bool> {
         let before = self
             .guard

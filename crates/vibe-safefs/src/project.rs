@@ -114,6 +114,7 @@ impl std::error::Error for ExclusiveChildError {
 impl Project {
     /// Open the trusted absolute project root. The only ambient-authority open
     /// in this crate.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-056#SEC-CONTAINMENT")]
     pub fn open(project_root: &Path) -> Result<Self> {
         if !project_root.is_absolute() {
             bail!(
@@ -142,6 +143,7 @@ impl Project {
     }
 
     /// The project root itself as a pinned directory.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-056#SEC-CONTAINMENT")]
     pub fn root_dir(&self) -> Result<Pinned> {
         Ok(Pinned {
             dir: self
@@ -159,6 +161,7 @@ impl Project {
 
     /// Walk to a descendant directory one component at a time, refusing
     /// links/reparse points; create missing components when `create`.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-056#SEC-NO-FOLLOW")]
     pub fn dir(&self, components: &[&str], create: bool) -> Result<Pinned> {
         let mut dir = self
             .root
@@ -200,6 +203,7 @@ impl Project {
     /// Walk to a descendant directory, returning `Ok(None)` only when it (or
     /// an ancestor of it) does not exist. Every other failure propagates:
     /// removal paths must not collapse arbitrary errors into absence.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-056#SEC-NO-FOLLOW")]
     pub fn dir_if_present(&self, components: &[&str]) -> Result<Option<Pinned>> {
         let mut dir = self
             .root
@@ -249,6 +253,7 @@ impl Project {
     /// inspected through a no-follow child capability which is dropped before
     /// removal — Windows refuses to delete a directory an open handle still
     /// names.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-056#SEC-NO-FOLLOW")]
     pub fn remove_dir_if_empty(&self, directory: &Pinned, name: &str) -> Result<bool> {
         ensure_safe_component(name)?;
         let child = match directory.dir.open_dir_nofollow(name) {
@@ -285,6 +290,9 @@ impl Project {
     /// on it, and then prove the path still names the object that was locked.
     /// The handle is released by drop or process death; a second holder blocks
     /// until this one finishes.
+    #[spec(
+        implements = "spec://org.vibevm.core/vibevm/common/PROP-056#EXTERNAL-EXISTING-OBSERVATION"
+    )]
     pub fn lock(&self, name: &str) -> Result<LockGuard> {
         match self.acquire(name, true)? {
             Some(guard) => Ok(guard),

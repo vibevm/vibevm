@@ -7,6 +7,7 @@ use super::{
     ArchiveFormatDecl, InstallerMethod, InstallerOptionDecl, NativeFormatDecl, ResultDecl,
     ShellInterpreter, StepDecl, StepKind, StepOrigin, StepPhase,
 };
+use specmark::spec;
 
 /// The steps an option runs, in order: its authored `[[steps]]`, or the
 /// mapping of its `installation` method, with `pre_install` as a leading
@@ -39,6 +40,7 @@ use super::{
 ///     .collect();
 /// assert_eq!(kinds, ["sources", "recipe"]);
 /// ```
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-065#sugar")]
 pub fn steps_of(option: &InstallerOptionDecl) -> Vec<StepDecl> {
     let hook_interpreter = match &option.installation {
         Some(InstallerMethod::Shell { interpreter, .. }) => *interpreter,
@@ -175,6 +177,7 @@ fn method_steps(method: &InstallerMethod, steps: &mut Vec<StepDecl>) {
 
 /// The result an option declares: the method's ownership for the short
 /// spelling, otherwise `result` (owned when absent).
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-065#sugar")]
 pub fn result_of(option: &InstallerOptionDecl) -> ResultDecl {
     match &option.installation {
         Some(

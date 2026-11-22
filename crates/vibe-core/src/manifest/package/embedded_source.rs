@@ -4,6 +4,7 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-021#source-abstraction");
 
 use serde::{Deserialize, Serialize};
+use specmark::spec;
 
 use crate::content_hash::ContentHash;
 use crate::manifest::declarant_path::{declarant_path, is_windows_device_name};
@@ -109,6 +110,9 @@ fn valid_upstream_author(author: &str) -> bool {
 }
 
 impl EmbeddedSourceDecl {
+    #[spec(
+        implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-021#source-abstraction"
+    )]
     pub fn validate(&self) -> Result<(), String> {
         if !valid_embedded_source_name(&self.name) {
             return Err(format!(

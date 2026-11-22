@@ -3,6 +3,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#lockfile");
 
+use specmark::spec;
 use std::path::PathBuf;
 
 use serde::{Deserialize, Serialize};
@@ -121,6 +122,7 @@ pub struct SubskillSourceWitness {
 
 impl LockedSubskill {
     /// Judge only the configured witness shape; filesystem admission is separate.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#lockfile")]
     pub fn validate_source_witness(
         &self,
         package_pin: &crate::ContentHash,

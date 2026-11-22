@@ -22,6 +22,7 @@ fn list_item_content(line: &str) -> Option<usize> {
 /// Re-exported from [`crate::parse`](super) for the
 /// vibe-specdoc adapter (PROP-045 S1), which reads the same marker grammar
 /// when it rebuilds block structure over a parse — one reader, no drift.
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#PARSE-COUNTABLE")]
 pub fn list_marker_len(line: &str) -> Option<usize> {
     let indent = line.len() - line.trim_start().len();
     let rest = &line[indent..];
@@ -85,6 +86,7 @@ pub fn task_box_len(t: &str) -> usize {
 /// Re-exported from [`crate::parse`](super) for the
 /// vibe-specdoc adapter (PROP-045 S1), which drops the same rows when it
 /// rebuilds a table over a parse — one row grammar, no drift.
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#PARSE-COUNTABLE")]
 pub fn is_delimiter_row(cells: &[(usize, usize)], text: &str) -> bool {
     !cells.is_empty()
         && cells.iter().all(|&(s, e)| {
@@ -100,6 +102,7 @@ pub fn is_delimiter_row(cells: &[(usize, usize)], text: &str) -> bool {
 /// vibe-specdoc adapter (PROP-045 S1), which splits rows with the same
 /// scanner when it rebuilds a table over a parse — one cell grammar, no
 /// drift.
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#PARSE-COUNTABLE")]
 pub fn row_cells(text: &str, s: usize, e: usize) -> Vec<(usize, usize)> {
     let bytes = text.as_bytes();
     let bars: Vec<usize> = (s..e).filter(|&i| bytes[i] == b'|').collect();

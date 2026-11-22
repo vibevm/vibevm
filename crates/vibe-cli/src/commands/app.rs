@@ -44,6 +44,7 @@ mod views;
 mod wizard;
 
 use launch::{launcher_listing, run_launcher};
+use specmark::spec;
 use views::{print_installers, print_list, print_listing};
 
 use std::path::Path;
@@ -55,6 +56,7 @@ use crate::output;
 
 use boundary::{from_home, resolved, state_verb};
 
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-059#launcher-operations")]
 pub fn run(
     ctx: &output::Context,
     args: AppArgs,

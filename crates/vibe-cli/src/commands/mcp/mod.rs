@@ -50,6 +50,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#lifecycle");
 
+use specmark::spec;
 use std::fs;
 use std::io::IsTerminal;
 use std::path::{Path, PathBuf};
@@ -91,6 +92,7 @@ pub(crate) struct McpRuntime {
     pub(crate) seed_default_registry: bool,
 }
 
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#lifecycle")]
 pub fn run(ctx: &output::Context, args: McpArgs, runtime: McpRuntime) -> Result<()> {
     let mut resolved = ctx.clone();
     if !matches!(args.command, McpSubcommand::Serve(_))
@@ -121,6 +123,7 @@ pub fn run(ctx: &output::Context, args: McpArgs, runtime: McpRuntime) -> Result<
 }
 
 /// Register one already materialised global MCP package in the selected agents.
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-027#REG-PROJECT-SCOPE")]
 pub(crate) fn register_global_package(
     ctx: &output::Context,
     project_root: &Path,
@@ -193,6 +196,7 @@ pub(crate) fn preflight_refresh_global_package(ctx: &output::Context, package: &
     package_registration::preflight_user_refresh(package, &ctx.agent_user_dirs)
 }
 
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-027#REG-ACTIVATION")]
 pub(crate) fn refresh_global_package(
     ctx: &output::Context,
     project_root: &Path,

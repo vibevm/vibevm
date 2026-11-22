@@ -32,6 +32,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-074#USER-PROJECT-ROOT-REPORT");
 
+use specmark::spec;
 use std::path::{Path, PathBuf};
 
 use crate::settings::user_project_root_from;
@@ -58,6 +59,7 @@ pub enum Command {
 impl Command {
     /// The wire spelling.
     #[must_use]
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-074#USER-PROJECT-ROOT-REPORT")]
     pub const fn as_str(self) -> &'static str {
         match self {
             Self::Init => "user:init",
@@ -174,6 +176,7 @@ pub struct Report {
 impl Report {
     /// A finished, successful observation.
     #[must_use]
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-074#USER-PROJECT-ROOT-REPORT")]
     pub fn success(
         command: Command,
         root: Option<PathBuf>,
@@ -200,6 +203,7 @@ impl Report {
 
     /// A refusal before any write.
     #[must_use]
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-074#USER-PROJECT-ROOT-REPORT")]
     pub fn refused(
         command: Command,
         root: Option<PathBuf>,
@@ -270,6 +274,7 @@ impl UserProjectRefusal {
 
     /// The sentence, for an ordinary error display.
     #[must_use]
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-074#USER-PROJECT-ROOT-REPORT")]
     pub fn reason(&self) -> &str {
         // A refusal always carries one: `refused` sets it.
         self.report
@@ -296,6 +301,7 @@ impl std::error::Error for UserProjectRefusal {}
 /// Unresolved settings and a relative value both refuse with a `None` root —
 /// never a cwd guess — and the refusal keeps a stable reason
 /// (`#USER-PROJECT-ROOT-PATH`, `#USER-PROJECT-ROOT-ADMISSION`).
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-074#USER-PROJECT-ROOT-ADMISSION")]
 pub fn selected_settings(settings: Option<PathBuf>) -> Result<PathBuf, UserProjectRefusal> {
     let (reason, remedy) = match settings {
         Some(settings) if settings.is_absolute() => return Ok(settings),
@@ -333,6 +339,7 @@ fn wrong_settings(reason: Unresolved, remedy: &str) -> Report {
 
 /// The admitted absolute personal root (`#USER-PROJECT-ROOT-ADMISSION`).
 /// Pure: no filesystem, no environment.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-074#USER-PROJECT-ROOT-ADMISSION")]
 pub fn admit_root(settings: Option<PathBuf>) -> Result<PathBuf, UserProjectRefusal> {
     let settings = selected_settings(settings)?;
     if settings

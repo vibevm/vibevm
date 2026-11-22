@@ -12,6 +12,7 @@ use crate::cli::{
 use crate::commands::facts::FactsSubcommand;
 use crate::commands::refactor::RefactorCommand;
 use crate::output::{Context, ProgressMode};
+use specmark::spec;
 use vibe_core::progress::{Progress, ProgressTask};
 
 /// Every top-level Clap command, used by the policy-inventory regression.
@@ -146,6 +147,7 @@ impl CommandPolicy {
 ///
 /// `terminal_attached` is supplied by the composition root so the default
 /// `tree` route can distinguish its TUI from its redirected plain rendering.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-060#COMMAND-COVERAGE")]
 pub(crate) fn policy(command: &Command, terminal_attached: bool) -> CommandPolicy {
     use CommandPolicy::{
         ExistingRoot, FastMetadata, FiniteFallback, Interactive, InteractiveFallback,

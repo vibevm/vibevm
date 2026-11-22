@@ -50,6 +50,7 @@ pub struct ResolvedIcon {
 impl ResolvedIcon {
     /// Resolve every file of `icon` with `locate`, which turns a template
     /// into an existing absolute path or says why it cannot.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-059#menu")]
     pub fn resolve(icon: &IconDecl, locate: impl Fn(&str) -> Result<PathBuf, String>) -> Self {
         let files = icon
             .files()
@@ -95,6 +96,7 @@ impl ResolvedIcon {
     /// slot when it has a file, otherwise the smallest raster not smaller
     /// than `size`, else the largest raster, else the SVG, else the `ico`,
     /// `icns` or symbolic file. A preferred `png` follows the raster rule.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-059#menu")]
     pub fn choose(&self, size: u32, prefer: Option<&str>) -> Option<&ResolvedIconFile> {
         let existing = || self.files.iter().filter(|file| file.path.is_some());
         let of = |slot: &str| existing().find(|file| file.slot == slot);

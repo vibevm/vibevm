@@ -27,6 +27,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-075#TEMPLATE-DOMAIN-SEAM");
 
+use specmark::spec;
 use std::collections::BTreeMap;
 use std::path::{Path, PathBuf};
 use std::time::Duration;
@@ -239,6 +240,7 @@ impl TemplateLayer {
     /// );
     /// assert_eq!(layer.ttl(), Duration::from_secs(900));
     /// ```
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-075#TEMPLATE-DOMAIN-SEAM")]
     pub fn with_transport(
         settings_root: &Path,
         ttl: Duration,
@@ -259,6 +261,7 @@ impl TemplateLayer {
     }
 
     /// Note the lock record of a version this invocation materialised.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-075#TEMPLATE-LOCK-RECORD")]
     pub fn record(&self, coordinate: &str, record: LockedTemplate, version: &semver::Version) {
         if let Ok(mut recorded) = self.recorded.lock() {
             recorded
@@ -271,6 +274,7 @@ impl TemplateLayer {
     /// Note the channel a requirement on this version was lowered
     /// through, so the lock row can carry `via_channel` and
     /// `vibe update` re-lower it (PROP-075 `#CHANNEL-SYNTAX`).
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-075#CHANNEL-SYNTAX")]
     pub fn record_channel(
         &self,
         coordinate: &str,
@@ -289,6 +293,7 @@ impl TemplateLayer {
     /// are `None` for an ordinary published package resolved by an
     /// ordinary requirement, which is what keeps a lock with no template
     /// and no channel byte-identical.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-075#TEMPLATE-LOCK-RECORD")]
     pub fn noted(&self, group: &Group, name: &str, version: &semver::Version) -> Noted {
         let key = (format!("{group}/{name}"), version.clone());
         self.recorded
@@ -328,6 +333,7 @@ impl TemplateLayer {
     /// The fetched version-list document of a `kind = "json"` source,
     /// through the cache and this invocation's posture. `None` for a
     /// `kind = "list"` source, which needs no document at all.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-075#TEMPLATE-CACHE")]
     pub fn version_document(
         &self,
         template: &ActiveTemplate,
@@ -379,6 +385,7 @@ impl TemplateLayer {
     /// revalidated**: a cached one is returned without a request, which
     /// is exactly what makes the alarm of `#TEMPLATE-LOCK-RECORD`
     /// meaningful rather than a race.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-075#TEMPLATE-CACHE")]
     pub fn digest_document(
         &self,
         template: &ActiveTemplate,
@@ -436,6 +443,7 @@ impl TemplateLayer {
 /// assert!(digest_url_for(&none, &"1.0.0".parse()?).is_none());
 /// # Ok::<(), Box<dyn std::error::Error>>(())
 /// ```
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-075#TEMPLATE-DIGEST-SOURCE")]
 pub fn digest_url_for(section: &TemplateSection, version: &semver::Version) -> Option<String> {
     let template = section.digest_url_template()?;
     Some(
@@ -470,6 +478,7 @@ fn digest_url(template: &ActiveTemplate, version: &semver::Version) -> Option<St
 /// let verdict = vibe_registry::templates::is_rendered_tree(Path::new("/anywhere"));
 /// assert!(verdict || !verdict);
 /// ```
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-075#TEMPLATE-DOMAIN-SEAM")]
 pub fn is_rendered_tree(path: &Path) -> bool {
     let Some(layer) = active() else {
         return false;
@@ -484,6 +493,7 @@ pub fn is_rendered_tree(path: &Path) -> bool {
 }
 
 /// The lock record of a full render (PROP-075 `#TEMPLATE-LOCK-RECORD`).
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-075#TEMPLATE-LOCK-RECORD")]
 pub fn lock_record(
     template: &ActiveTemplate,
     render: &FullRender,

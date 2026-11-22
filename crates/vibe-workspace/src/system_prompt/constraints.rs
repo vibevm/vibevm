@@ -40,6 +40,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-076#SYS-HARNESS-DELIVERY");
 
+use specmark::spec;
 use std::path::Path;
 
 use vibe_core::manifest::{HarnessDelivery, Manifest};
@@ -86,6 +87,7 @@ impl BlockShape {
     }
 
     /// The shape's own name, as a refusal spells it.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-076#SYS-HARNESS-DELIVERY")]
     pub fn as_str(self) -> &'static str {
         match self {
             BlockShape::Router => "router",
@@ -110,6 +112,7 @@ impl BlockShape {
 /// assert!(refusal.contains("C1"), "{refusal}");
 /// assert!(refusal.contains("gemini"), "{refusal}");
 /// ```
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-076#SYS-HARNESS-DELIVERY")]
 pub fn one_block_shape(declared: &[(&str, BlockShape)]) -> Result<BlockShape, String> {
     let mut chosen: Option<(&str, BlockShape)> = None;
     for (harness, shape) in declared {
@@ -135,6 +138,7 @@ pub fn one_block_shape(declared: &[(&str, BlockShape)]) -> Result<BlockShape, St
 }
 
 /// C1's shape half over one node's own manifest.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-076#SYS-HARNESS-DELIVERY")]
 pub fn manifest_block_shape(manifest: &Manifest) -> Result<BlockShape, String> {
     let shapes: Vec<(&str, BlockShape)> = super::HarnessKind::ALL
         .into_iter()
@@ -152,6 +156,7 @@ pub fn manifest_block_shape(manifest: &Manifest) -> Result<BlockShape, String> {
 /// on one condition and say two different things, because one is about the
 /// declaration being incoherent and the other about what a single harness
 /// ends up with.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-076#SYS-HARNESS-DELIVERY")]
 pub fn delivery_constraints(
     node_dir: &Path,
     manifest: &Manifest,

@@ -90,6 +90,9 @@ fn short_hash(s: &str) -> String {
 /// same directory name and hold different work, so they must never share
 /// a bucket — and unlike a repo's parent directory, a hash is always
 /// available and always distinct.
+#[specmark::spec(
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-047#erasure"
+)]
 pub fn repo_id(root: &Path) -> String {
     let name = root
         .file_name()
@@ -108,6 +111,9 @@ pub fn repo_id(root: &Path) -> String {
 /// checkout with no branch to name — a detached HEAD, or a tree git
 /// cannot answer about — gets the `detached` bucket rather than an error:
 /// the payload is optional by construction.
+#[specmark::spec(
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-047#erasure"
+)]
 pub fn branch_slug(branch: Option<&str>) -> String {
     match branch.map(str::trim).filter(|b| !b.is_empty()) {
         Some(b) => format!("{}-{}", slugify(b), short_hash(b)),
@@ -150,6 +156,9 @@ pub fn branch_slug(branch: Option<&str>) -> String {
 /// // Nothing configured and no home is simply no sidecar.
 /// assert_eq!(resolve_dir(root, None, None, Some("main"), "c1"), None);
 /// ```
+#[specmark::spec(
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-047#erasure"
+)]
 pub fn resolve_dir(
     root: &Path,
     cfg_dir: Option<&str>,

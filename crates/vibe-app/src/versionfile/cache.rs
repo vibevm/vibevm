@@ -12,6 +12,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-075#VERSION-FILE-FORMATS");
 
+use specmark::spec;
 use std::fs;
 use std::path::{Path, PathBuf};
 
@@ -36,6 +37,7 @@ pub fn path(settings: &SettingsRoot) -> PathBuf {
 
 /// Resolve the version files for `from`, reading the cache when it still
 /// describes the filesystem and refreshing it otherwise.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-075#VERSION-FILE-FORMATS")]
 pub fn resolve(
     settings: &SettingsRoot,
     from: &Path,
@@ -76,6 +78,7 @@ pub fn resolve(
 
 /// Forget every cached resolution of this home, for a `vibe cache`-style
 /// sweep and for a test that wants a cold read.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-075#VERSION-FILE-FORMATS")]
 pub fn clear(settings: &SettingsRoot) {
     let _ = fs::remove_file(path(settings));
 }

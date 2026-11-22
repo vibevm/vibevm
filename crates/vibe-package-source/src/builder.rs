@@ -6,6 +6,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#install-workflow-in-detail");
 
+use specmark::spec;
 use std::path::{Path, PathBuf};
 
 use anyhow::{Context, Result, anyhow, bail};
@@ -161,6 +162,7 @@ fn declared_source_available(
 /// configured"; `true` means it would build a resolver, subject only to the
 /// flag-contradiction guards, which are the caller's own argument errors and
 /// not a missing source.
+#[spec(implements = "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#install-workflow-in-detail")]
 pub fn any_package_source(
     options: &PackageSourceOptions,
     manifest: &Manifest,
@@ -236,6 +238,7 @@ pub fn any_package_source(
 /// }
 /// # let _ = build;
 /// ```
+#[spec(implements = "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#install-workflow-in-detail")]
 pub fn build_install_resolver(
     options: &PackageSourceOptions,
     manifest: &Manifest,
@@ -260,6 +263,7 @@ pub fn build_install_resolver(
 /// Observed sibling of [`build_install_resolver`]. The handle is retained by
 /// this invocation's resolver and used only for registry/cache work.
 #[allow(clippy::too_many_arguments)]
+#[spec(implements = "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#install-workflow-in-detail")]
 pub fn build_install_resolver_with_progress(
     options: &PackageSourceOptions,
     manifest: &Manifest,
@@ -330,6 +334,7 @@ pub struct InstallResolverRequest<'a> {
 }
 
 /// Deferred sibling used by project/global operations and preview.
+#[spec(implements = "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#install-workflow-in-detail")]
 pub fn build_install_resolver_with_sources(
     request: InstallResolverRequest<'_>,
     global: GlobalRegistrySource,
@@ -343,6 +348,7 @@ pub fn build_install_resolver_with_sources(
     build_install_resolver_with_operation(request, &operation)
 }
 
+#[spec(implements = "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#install-workflow-in-detail")]
 pub fn build_install_resolver_with_operation(
     request: InstallResolverRequest<'_>,
     operation: &SourceOperation,

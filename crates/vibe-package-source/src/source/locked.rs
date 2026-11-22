@@ -1,6 +1,7 @@
 //! Explicit operation intent and workspace observations for held sources.
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-073#LOCKED-SOURCE");
 use super::*;
+use specmark::spec;
 impl InstallResolver {
     /// Permit a deliberate version update while retaining every held source.
     /// ```
@@ -8,6 +9,9 @@ impl InstallResolver {
     /// let _same_sources = source.with_locked_updates();
     /// # }
     /// ```
+    #[spec(
+        implements = "spec://org.vibevm.core/vibevm/common/PROP-073#UPDATE-SOURCE-RESELECTION-LAW"
+    )]
     pub fn with_locked_updates(self) -> Self {
         match self {
             Self::Multi(held, solver) => Self::Multi(Box::new(held.with_locked_updates()), solver),
@@ -57,6 +61,9 @@ impl InstallResolver {
     /// let _source = source.with_reselected_sources(&["org.example/demo".to_string()]);
     /// # }
     /// ```
+    #[spec(
+        implements = "spec://org.vibevm.core/vibevm/common/PROP-073#UPDATE-SOURCE-RESELECTION-LAW"
+    )]
     pub fn with_reselected_sources(self, keys: &[String]) -> Self {
         match self {
             Self::Multi(held, solver) => Self::Multi(
@@ -99,6 +106,7 @@ impl InstallResolver {
     /// let _source = source.with_forced_refetch();
     /// # }
     /// ```
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-073#LOCKED-SOURCE-LAW")]
     pub fn with_forced_refetch(self) -> Self {
         match self {
             Self::Multi(held, solver) => Self::Multi(Box::new(held.with_forced_refetch()), solver),
@@ -136,6 +144,7 @@ impl InstallResolver {
     /// let _source = source.with_locked_checkouts(std::collections::HashMap::new());
     /// # }
     /// ```
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-073#LOCKED-SOURCE")]
     pub fn with_locked_checkouts(
         self,
         paths: std::collections::HashMap<String, std::path::PathBuf>,

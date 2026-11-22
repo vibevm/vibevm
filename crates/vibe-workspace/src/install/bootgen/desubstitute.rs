@@ -5,6 +5,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-038#units");
 
+use specmark::spec;
 use std::collections::HashMap;
 
 use vibe_core::manifest::LinkType;
@@ -38,6 +39,7 @@ use crate::boot::{BootEntry, EffectiveBoot};
 /// `pub` (re-exported at [`crate::install::desubstitute_covered_units`]) so
 /// the once-each topology can be exercised at the unit level without a full
 /// install.
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-038#units")]
 pub fn desubstitute_covered_units(
     effective: &mut EffectiveBoot,
     table: &HashMap<UnitId, UnitInput>,

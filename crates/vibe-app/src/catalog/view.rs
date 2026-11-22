@@ -55,6 +55,7 @@ pub struct LauncherCatalog {
 impl LauncherCatalog {
     /// Read the three files of one home. An invalid user layer refuses the
     /// listing rather than answering an arrangement that is not the user's.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-059#launcher-catalog")]
     pub fn load(settings: &SettingsRoot) -> Result<Self, StateError> {
         Ok(Self {
             home: settings.path().to_path_buf(),
@@ -83,6 +84,7 @@ impl LauncherCatalog {
     /// The fields one launcher of `package_key` contributes beyond its own
     /// declaration. `icon` is the launcher's own resolved icon file, which
     /// is the effective icon while the user has named none of their own.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-059#launcher-catalog")]
     pub(crate) fn fields(
         &self,
         package_key: &str,

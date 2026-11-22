@@ -55,6 +55,7 @@ use crate::error::{DocError, Result};
 use crate::manifest;
 use crate::numbering::{Numbering, block_at, number_blocks};
 use crate::pages::{Page, PageSet, document_of};
+use specmark::spec;
 
 mod borrowed;
 mod selection;
@@ -111,6 +112,7 @@ impl Problem {
     /// the manifest's: a chapter the source does not declare is a defect
     /// of the `[navigation]` table, and naming a page for it would send
     /// the reader of a report to the wrong file.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-057#LOC-MIRROR")]
     pub fn page(&self) -> &str {
         match self {
             Problem::MissingPage { page }
@@ -131,6 +133,7 @@ impl Problem {
     /// `adapts` is the coordinate of the documentation being mirrored, so
     /// a block divergence can name BOTH pages — the one to read and the
     /// one to fix — instead of an address that could be either.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-057#LOC-MIRROR")]
     pub fn render(&self, adapts: &str) -> String {
         match self {
             Problem::MissingPage { page } => format!(
@@ -225,6 +228,7 @@ impl Report {
     }
 
     /// The human form.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-057#LOC-MIRROR")]
     pub fn render(&self) -> String {
         let mut out = String::new();
         let adapts = self.adapts.as_deref().unwrap_or("<unknown>");
@@ -279,6 +283,7 @@ fn where_from(source: Source) -> &'static str {
 /// A source the four sources cannot reach IS an error. A mirror check
 /// with nothing to mirror against has no verdict to give, and reporting
 /// green would be the worst of the three possible answers.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-057#LOC-MIRROR")]
 pub fn check(package_dir: &Path, sources: &SpecSources) -> Result<Report> {
     let Some(Adapted {
         coordinate,
@@ -378,6 +383,7 @@ fn unmirrored_glossary(source: Option<String>, translation: Option<String>) -> V
 
 /// Compare two read packages. Split from [`check`] so the comparison is
 /// testable without a registry, a store or a checkout anywhere near it.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-057#LOC-MIRROR")]
 pub fn compare(source: &PageSet, translation: &PageSet) -> Report {
     let mut report = Report {
         pages: translation.pages.len(),

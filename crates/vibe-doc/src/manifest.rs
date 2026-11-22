@@ -37,6 +37,7 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-057#SEO-MANIFEST-AND
 
 mod card;
 pub(crate) use card::Card;
+use specmark::spec;
 
 pub mod layer;
 pub mod navigation;
@@ -86,6 +87,7 @@ pub struct Options {
 
 impl Options {
     /// A build at `rendered_at` of something never published.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-057#SEO-MANIFEST-AND-RESOLVER")]
     pub fn at(rendered_at: DateTime<Utc>) -> Options {
         Options {
             rendered_at,
@@ -129,6 +131,7 @@ impl Options {
 /// .unwrap();
 /// assert_eq!(built.manifest.package.name, "vibevm-docs");
 /// ```
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-057#SEO-MANIFEST-AND-RESOLVER")]
 pub fn build(package_dir: &Path, sources: &SpecSources, options: &Options) -> Result<Built> {
     let card = Card::read(package_dir)?;
     let captured = sources
@@ -178,6 +181,7 @@ pub struct Built {
     pub unreadable: Vec<String>,
 }
 
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-057#SEO-MANIFEST-AND-RESOLVER")]
 pub(crate) fn assemble(
     card: &Card,
     set: &PageSet,
@@ -299,6 +303,7 @@ pub(crate) fn assemble(
 /// Render a manifest as the bytes `/doc/manifest.json` serves: pretty
 /// JSON with a closing newline, the shape every other machine document in
 /// this repository is written in.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-057#SEO-MANIFEST-AND-RESOLVER")]
 pub fn to_json(manifest: &DocManifest) -> String {
     let mut text = serde_json::to_string_pretty(manifest)
         // The type is generated from the schema and holds only JSON
@@ -331,6 +336,7 @@ pub fn to_json(manifest: &DocManifest) -> String {
 /// assert_eq!(adapted, vec![("org.demo/lib-docs".to_owned(), "^0.1".to_owned())]);
 /// assert!(vibe_doc::manifest::relations(dir.path(), "documents").unwrap().is_empty());
 /// ```
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-057#SEO-MANIFEST-AND-RESOLVER")]
 pub fn relations(package_dir: &Path, key: &str) -> Result<Vec<(String, String)>> {
     let path = package_dir.join(crate::derived::manifest::MANIFEST);
     let text = std::fs::read_to_string(&path).map_err(|e| DocError::io("reading", &path, e))?;
@@ -379,6 +385,7 @@ fn relation(parsed: &toml::Value, key: &str) -> Vec<(String, String)> {
 ///
 /// assert_eq!(vibe_doc::manifest::language(dir.path()).unwrap(), "ru");
 /// ```
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-057#LOC-LANGUAGE-FIELD")]
 pub fn language(package_dir: &Path) -> Result<String> {
     let path = package_dir.join(crate::derived::manifest::MANIFEST);
     let text = std::fs::read_to_string(&path).map_err(|e| DocError::io("reading", &path, e))?;

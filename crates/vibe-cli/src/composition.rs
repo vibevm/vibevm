@@ -196,6 +196,7 @@ pub(crate) fn select_installed_destination(
     Ok(())
 }
 
+#[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-019#CMD-VARS")]
 pub(crate) fn run_vars(
     args: VarsArgs,
     self_location: Option<&commands::vvm::SelfLocation>,
@@ -359,6 +360,7 @@ pub(crate) fn project_preview(cmd: &crate::cli::Command) -> bool {
 /// plane, ever ask it. Everywhere else the flag is a usage refusal naming
 /// it, because a flag silently ignored is worse than a flag refused
 /// (`PROP-077#NO-RECOMMENDS-FLAG`).
+#[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-077#NO-RECOMMENDS-FLAG")]
 pub(crate) fn admit_no_recommends(passed: bool, cmd: &crate::cli::Command) -> anyhow::Result<()> {
     use crate::cli::{AppCommand, Command};
     if !passed

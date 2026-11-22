@@ -55,6 +55,7 @@ impl ProjectionDrift {
     }
 
     /// The stable per-path diagnostics shared by both command surfaces.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#persistence")]
     pub fn lines(&self) -> Vec<String> {
         let mut lines = Vec::new();
         for rel in &self.extra {
@@ -103,6 +104,7 @@ pub fn check_catalog(data_dir: &Path) -> Result<CheckOutcome> {
 ///
 /// Both `vibe-index rebuild --check` and the compatibility
 /// `cargo xtask rebuild --check` wrapper call this function.
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#persistence")]
 pub fn run_check(data_dir: &Path) -> Result<()> {
     let outcome = check_catalog(data_dir)?;
     if outcome.drift.is_clean() {

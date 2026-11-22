@@ -11,6 +11,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#registry-layers");
 
+use specmark::spec;
 use std::collections::HashSet;
 use std::path::{Path, PathBuf};
 
@@ -115,6 +116,9 @@ pub enum RegistryScope {
 
 impl RegistryScope {
     /// The spelling used by `--scope` and in reports.
+    #[spec(
+        implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#registry-layers"
+    )]
     pub const fn as_str(self) -> &'static str {
         match self {
             RegistryScope::Local => "local",
@@ -125,6 +129,9 @@ impl RegistryScope {
     }
 
     /// Case-insensitive parse of a `--scope` value.
+    #[spec(
+        implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#registry-layers"
+    )]
     pub fn parse(input: &str) -> Option<Self> {
         [
             RegistryScope::Local,
@@ -205,6 +212,9 @@ impl<'a> RegistryLayers<'a> {
 
     /// Every visible registry row with the layer that declared it, in
     /// effective (priority) order.
+    #[spec(
+        implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#registry-layers"
+    )]
     pub fn origins(&self) -> Vec<(RegistryScope, RegistrySection)> {
         let mut seen = HashSet::new();
         let mut rows = Vec::new();
@@ -219,6 +229,9 @@ impl<'a> RegistryLayers<'a> {
     }
 
     /// The resolution-ready merge of every layer.
+    #[spec(
+        implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#REGISTRY-LAYER-PRECEDENCE"
+    )]
     pub fn merge(&self) -> EffectiveRegistryConfig {
         let registries = self.origins().into_iter().map(|(_, row)| row).collect();
         let mut mirrors = Vec::new();

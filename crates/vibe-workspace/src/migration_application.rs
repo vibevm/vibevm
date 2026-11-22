@@ -51,6 +51,9 @@ pub struct OwnedManifestMigrationFile {
 }
 
 impl OwnedManifestMigrationFile {
+    #[specmark::spec(
+        implements = "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-APPLICATION-WIRE"
+    )]
     pub fn new(
         project_root: &Path,
         target_relative: &str,
@@ -209,6 +212,9 @@ impl ApplicationValidationError {
             operation_id: None,
         }
     }
+    #[specmark::spec(
+        implements = "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-APPLICATION-WIRE"
+    )]
     pub fn generated_error(&self) -> ApplicationError {
         ApplicationError {
             code: self.code.clone(),

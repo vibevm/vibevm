@@ -23,6 +23,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#two-trees");
 
+use specmark::spec;
 use std::fs;
 use std::path::{Path, PathBuf};
 
@@ -73,6 +74,7 @@ pub fn slot_rel_path(group: &Group, name: &str, version: &semver::Version) -> St
 
 /// The absolute on-disk slot path — `workspace_root` joined with
 /// [`slot_rel_path`]. In-memory only; never persist an absolute path.
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#TREE-VIBEDEPS")]
 pub fn slot_abs_path(
     workspace_root: &Path,
     group: &Group,
@@ -112,6 +114,7 @@ pub fn is_materialised(
 ///
 /// Returns the slot-relative payload paths, forward-slashed and sorted. The
 /// slot record is written last from that footprint and is not returned.
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#TREE-VIBEDEPS")]
 pub fn materialise(
     workspace_root: &Path,
     group: &Group,
@@ -146,6 +149,7 @@ pub enum CopyMode {
 /// Like [`materialise`] but selects how each file is placed (PROP-022
 /// §2.2/§2.3). The slot still presents a full tree and the returned
 /// footprint is identical — only the on-disk byte-sharing differs.
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#two-trees")]
 pub fn materialise_with(
     workspace_root: &Path,
     group: &Group,
@@ -251,6 +255,7 @@ fn refuse_reserved_source_record(content_src: &Path) -> Result<(), WorkspaceErro
 
 /// Remove a package's dependency slot, if it exists. Returns `true` when a
 /// slot was present and deleted, `false` when there was nothing to remove.
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#two-trees")]
 pub fn remove_slot(
     workspace_root: &Path,
     group: &Group,
@@ -308,6 +313,7 @@ pub fn is_in_place_slot(workspace_root: &Path, group: &Group, name: &str) -> boo
 /// `.git` is
 /// preserved (unlike [`materialise`], which strips it) so the slot stays a
 /// git working tree manageable in place.
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#two-trees")]
 pub fn materialise_in_place(
     workspace_root: &Path,
     group: &Group,
@@ -348,6 +354,7 @@ pub fn materialise_in_place(
 }
 
 /// Remove an `in-place` slot if present. Returns `true` when one was deleted.
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#two-trees")]
 pub fn remove_in_place_slot(
     workspace_root: &Path,
     group: &Group,
@@ -366,6 +373,7 @@ pub fn remove_in_place_slot(
 /// (PROP-022 §2.7 — an in-place slot is not vendored). Idempotent; creates
 /// `.gitignore` when missing. The entry is written with a trailing slash so
 /// git treats it as a directory ignore.
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#two-trees")]
 pub fn ensure_gitignored(workspace_root: &Path, entry: &str) -> Result<(), WorkspaceError> {
     let path = workspace_root.join(".gitignore");
     let existing = match fs::read_to_string(&path) {

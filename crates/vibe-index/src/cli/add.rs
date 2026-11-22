@@ -12,6 +12,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#root");
 
+use specmark::spec;
 use std::path::PathBuf;
 
 use chrono::Utc;
@@ -51,6 +52,7 @@ pub struct Args {
     pub commit: Option<String>,
 }
 
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#MODE-CLI")]
 pub fn run(args: Args) -> Result<()> {
     let entry = add(args)?;
     println!(
@@ -65,6 +67,7 @@ pub fn run(args: Args) -> Result<()> {
 /// has just pushed to a local index checkout through this, in process, so
 /// the entry is born by the same code as one an operator adds by hand.
 /// Returns the entry as it went into the journal.
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#MODE-CLI")]
 pub fn add(args: Args) -> Result<VersionEntry> {
     // F2-1 — the clock enters here, once per command: the same `at`
     // stamps the entry's `indexed_at` and the written manifest, so two

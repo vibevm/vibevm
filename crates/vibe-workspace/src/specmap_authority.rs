@@ -2,6 +2,7 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-074#AI-NATIVE-AUTHORITY-BRIDGE");
 use crate::{Workspace, WorkspaceError};
 use specmap_core::generated::specmap_authority::{Dependency, Input, SpecmapAuthority};
+use specmark::spec;
 use std::{
     collections::{BTreeMap, BTreeSet, VecDeque},
     path::Path,
@@ -29,6 +30,7 @@ fn fingerprint(root: &Path, path: &str) -> Result<Input, WorkspaceError> {
     })
 }
 /// Verify after lifecycle callbacks; never claim fresh authority over changed inputs.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-074#AI-NATIVE-AUTHORITY-BRIDGE")]
 pub fn verify_current(node: &Path) -> Result<(), WorkspaceError> {
     specmap_core::authority::context(node)
         .map_err(|error| fail(node, error))?
@@ -37,6 +39,7 @@ pub fn verify_current(node: &Path) -> Result<(), WorkspaceError> {
 }
 /// Publish after ordinary durable boot and final manifest/lock publication.
 /// Empty/no-op installs also refresh this derived artifact, never init or reads.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-074#AI-NATIVE-AUTHORITY-BRIDGE")]
 pub fn publish(
     workspace: &Workspace,
     node: &Path,

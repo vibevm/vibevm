@@ -2,6 +2,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-075#TEMPLATE-VARIABLE-GRAMMAR");
 
+use specmark::spec;
 use std::fmt;
 
 /// Why a render was refused. The kind is the stable token a caller matches
@@ -32,6 +33,7 @@ pub enum RenderErrorKind {
 
 impl RenderErrorKind {
     /// The stable token, as a refusal code.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-075#TEMPLATE-VARIABLE-GRAMMAR")]
     pub fn as_str(self) -> &'static str {
         match self {
             Self::Template => "template_declaration",

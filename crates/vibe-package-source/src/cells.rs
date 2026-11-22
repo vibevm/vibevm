@@ -18,6 +18,7 @@ specmark::scope!(
     "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#configuration-sources-in-precedence-order"
 );
 
+use specmark::spec;
 use std::path::PathBuf;
 
 use vibe_registry::{LocalRegistry, MultiRegistryResolver, RegistryError};
@@ -95,6 +96,9 @@ pub(crate) const FLAGS: &[FlagInfo] = &[
 
 /// Interpret the parsed surface state into selection flags. The only
 /// place flag values are decided.
+#[spec(
+    implements = "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#configuration-sources-in-precedence-order"
+)]
 pub(crate) fn selection_flags(
     provider: ProviderCell,
     solver_override: Option<&'static str>,
@@ -189,6 +193,7 @@ pub(crate) fn solve_cell(
     }
 }
 
+#[spec(implements = "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#dependency-resolver")]
 pub(crate) fn dep_solver<'a>(
     flags: &SelectionFlags,
     resource: ProviderResource<'a>,
@@ -336,6 +341,7 @@ pub(crate) use top_level::{readmit_top_level_cell, select_top_level_cell};
 /// The masked re-solve through the selected provider and solver cells —
 /// the `InstallSource::solve_masked` construction site (R-001). The same
 /// selection the ordinary solve made, wrapped in the visibility mask.
+#[spec(implements = "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#dependency-resolver")]
 pub(crate) fn solve_masked_cell(
     flags: &SelectionFlags,
     resource: ProviderResource<'_>,
@@ -407,6 +413,7 @@ pub(crate) fn solve_configured_cell(
 }
 
 /// Source-aware selection stays at the existing cell-selection boundary.
+#[spec(implements = "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#dependency-resolver")]
 pub(crate) fn solve_metadata_cell(
     flags: &SelectionFlags,
     source: &crate::source::InstallResolver,

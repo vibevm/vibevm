@@ -30,6 +30,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-076#SYS-READ-ONLY-CHECK");
 
+use specmark::spec;
 use std::path::{Path, PathBuf};
 
 use vibe_core::layout;
@@ -71,6 +72,7 @@ pub enum CheckVerdict {
 
 impl CheckVerdict {
     /// The verdict's own one-word name, as a report spells it.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-076#SYS-READ-ONLY-CHECK")]
     pub fn as_str(&self) -> &'static str {
         match self {
             CheckVerdict::Equal => "equal",
@@ -83,6 +85,7 @@ impl CheckVerdict {
     }
 
     /// The reasons, in report order.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-076#SYS-READ-ONLY-CHECK")]
     pub fn reasons(&self) -> Vec<String> {
         match self {
             CheckVerdict::Equal => Vec::new(),
@@ -234,6 +237,7 @@ impl PromptCheck {
 /// all and still has to name the command that fixes it, and two spellings
 /// of one command is how two surfaces come to print different advice about
 /// the same node.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-076#SYS-READ-ONLY-CHECK")]
 pub fn build_remedy(node_rel: &str) -> String {
     if node_rel == "." {
         "vibe prompt build".to_owned()
@@ -243,6 +247,7 @@ pub fn build_remedy(node_rel: &str) -> String {
 }
 
 /// Check one node's published prefix against its current inputs.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-076#SYS-READ-ONLY-CHECK")]
 pub fn check_node_prompt(request: &CheckRequest<'_>) -> Result<PromptCheck, WorkspaceError> {
     let boot = request.node_dir.join(layout::current_boot_dir());
     let system = ArtifactFacts::read(boot.join(layout::SYSTEM_MD))?;

@@ -5,6 +5,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-065#update-and-rollback");
 
+use specmark::spec;
 use vibe_core::manifest::result_of;
 pub(super) mod retirement;
 
@@ -24,6 +25,7 @@ use super::{
 /// Update one installed app package to the newest resolved version. An
 /// owned update keeps the replaced installation hidden until the next
 /// successful update of the slot (`PROP-065#update-and-rollback`).
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-065#update-and-rollback")]
 pub fn update(
     ctx: &OperationContext<'_>,
     resolved: &ResolvedPackage,

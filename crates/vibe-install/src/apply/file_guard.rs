@@ -259,6 +259,9 @@ pub(crate) fn publish_admitted_manifest(
 }
 
 impl MetadataFiles {
+    #[specmark::spec(
+        implements = "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#APPLY-FILE-UNDO"
+    )]
     pub fn capture(
         selected: &Path,
         lock: &Path,

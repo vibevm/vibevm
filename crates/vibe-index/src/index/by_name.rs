@@ -12,6 +12,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#short-name");
 
+use specmark::spec;
 use std::fs;
 use std::path::{Path, PathBuf};
 
@@ -32,6 +33,9 @@ pub fn file_path(data_dir: &Path, name: &str) -> PathBuf {
 }
 
 /// Serialise `entry` to pretty-printed JSON bytes (with trailing newline).
+#[spec(
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#BY-NAME-CANDIDATES"
+)]
 pub fn serialise(entry: &NameEntry) -> Result<Vec<u8>> {
     let mut bytes = serde_json::to_vec_pretty(entry).map_err(|e| {
         Error::Malformed(format!(
@@ -43,6 +47,9 @@ pub fn serialise(entry: &NameEntry) -> Result<Vec<u8>> {
     Ok(bytes)
 }
 
+#[spec(
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#BY-NAME-CANDIDATES"
+)]
 pub fn write(data_dir: &Path, entry: &NameEntry) -> Result<WrittenFile> {
     let bytes = serialise(entry)?;
     let path = file_path(data_dir, &entry.name);
@@ -54,6 +61,9 @@ pub fn write(data_dir: &Path, entry: &NameEntry) -> Result<WrittenFile> {
     })
 }
 
+#[spec(
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#BY-NAME-CANDIDATES"
+)]
 pub fn read(data_dir: &Path, name: &str) -> Result<NameEntry> {
     let path = file_path(data_dir, name);
     let bytes = fs::read(&path).map_err(|e| Error::Io {
@@ -69,6 +79,9 @@ pub fn parse(bytes: &[u8]) -> Result<NameEntry> {
 
 /// Walk `<data-dir>/by-name/` and return every name's candidate set.
 /// Used by the load + verify paths.
+#[spec(
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#BY-NAME-CANDIDATES"
+)]
 pub fn read_all(data_dir: &Path) -> Result<Vec<NameEntry>> {
     let root = dir(data_dir);
     if !root.is_dir() {
@@ -97,6 +110,9 @@ pub fn read_all(data_dir: &Path) -> Result<Vec<NameEntry>> {
 }
 
 /// Count of `by-name/*.json` files — one per distinct bare name.
+#[spec(
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#BY-NAME-CANDIDATES"
+)]
 pub fn entry_count(data_dir: &Path) -> u32 {
     let root = dir(data_dir);
     if !root.is_dir() {

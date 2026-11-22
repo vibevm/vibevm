@@ -12,6 +12,7 @@
 //! that name.
 
 use anyhow::Result;
+use specmark::spec;
 use vibe_app::{Index, SettingsRoot};
 
 use super::render::render_collision;
@@ -92,6 +93,7 @@ pub(crate) fn slot_target(
 /// only adds the third. `only_installed` is `--installed`, which answers
 /// from this home and the template cache alone and so has no third tier
 /// at all (PROP-075 `#VERSIONS-LIST-OUTPUT`).
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#short-name")]
 pub(crate) fn versions_target(
     ctx: &output::Context,
     home: &SettingsRoot,

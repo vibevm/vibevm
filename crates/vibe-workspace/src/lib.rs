@@ -205,6 +205,7 @@ impl Workspace {
 
     /// The absolute on-disk path of a node by its `rel_path` — `"."` is
     /// the root. In-memory only; do not persist the result.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#nesting")]
     pub fn node_abs_path(&self, rel: &str) -> PathBuf {
         if rel == "." {
             self.root.clone()
@@ -285,6 +286,7 @@ impl Workspace {
     /// Iterate every node in the workspace — the root first (as `"."`),
     /// then every member — paired with its manifest. The order after the
     /// root is `rel_path`-sorted.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#nesting")]
     pub fn iter_nodes(&self) -> impl Iterator<Item = (&str, &Manifest)> {
         std::iter::once((".", &self.root_manifest)).chain(
             self.members

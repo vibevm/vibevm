@@ -23,6 +23,7 @@
 
 #![forbid(unsafe_code)]
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-018#vibe-skill");
+use specmark::spec;
 
 pub mod activation;
 pub mod agents;
@@ -43,6 +44,7 @@ pub mod pkgskill;
 /// assert_eq!(preview_status("unchanged", true), "unchanged");
 /// ```
 #[doc(hidden)]
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-018#vibe-skill")]
 pub fn preview_status(base: &'static str, dry_run: bool) -> &'static str {
     match (base, dry_run) {
         ("created", true) => "would-create",

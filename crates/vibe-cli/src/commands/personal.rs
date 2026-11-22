@@ -5,6 +5,7 @@ use crate::{
     output,
 };
 use anyhow::{Result, bail};
+use specmark::spec;
 use std::path::PathBuf;
 
 fn refuse_installer_steps(steps: &AppStepArgs) -> Result<()> {
@@ -27,6 +28,7 @@ fn refuse_installer_steps(steps: &AppStepArgs) -> Result<()> {
     Ok(())
 }
 
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-074#USER-PROJECT-INSTALLED-ROUTING")]
 pub(crate) fn select_installed_destination(
     command: &mut crate::cli::Command,
     explicit_path: bool,
@@ -60,6 +62,7 @@ pub(crate) fn select_installed_destination(
 }
 
 /// Installed requests choose one owner for the entire invocation, before mutation.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-074#USER-PROJECT-INSTALLED-ROUTING")]
 pub(crate) fn installed_destination(
     packages: &[String],
     explicit_path: bool,
@@ -148,6 +151,7 @@ pub(crate) fn installed_destination(
     Ok(personal)
 }
 
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-074#USER-PROJECT-INSTALL-ROUTING")]
 pub(crate) fn automatic_install(
     ctx: &output::Context,
     mut args: InstallArgs,
@@ -408,6 +412,9 @@ fn root() -> Result<PathBuf> {
     super::user::initialized_root()
 }
 
+#[spec(
+    implements = "spec://org.vibevm.core/vibevm/common/PROP-074#USER-PROJECT-LIFECYCLE-ADMISSION"
+)]
 pub(crate) fn install(
     ctx: &output::Context,
     mut args: InstallArgs,
@@ -448,6 +455,9 @@ pub(crate) fn install(
     }
 }
 
+#[spec(
+    implements = "spec://org.vibevm.core/vibevm/common/PROP-074#USER-PROJECT-LIFECYCLE-ADMISSION"
+)]
 pub(crate) fn update(
     ctx: &output::Context,
     mut args: UpdateArgs,

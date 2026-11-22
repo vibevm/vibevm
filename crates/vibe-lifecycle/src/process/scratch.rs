@@ -25,6 +25,7 @@ impl PendingReply {
         &self.path
     }
 
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#REPLY-SHAPE")]
     pub fn read_capped(&mut self, cap: usize) -> Result<Vec<u8>, ScratchError> {
         verify_regular_in(&self.path, &self.scratch)?;
         let mut file = open_nofollow(&self.path)?;
@@ -58,6 +59,7 @@ impl PendingReply {
         drop(self.file.take());
     }
 
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#REPLY-SHAPE")]
     pub fn consume(self) -> Result<(), ScratchError> {
         let path = self.path.clone();
         drop(self.file);

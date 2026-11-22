@@ -6,12 +6,14 @@ specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#BOUN
 use anyhow::{Result, bail};
 use progress_core::doc::Severity;
 use progress_core::rollup;
+use specmark::spec;
 
 use crate::cli::ProgressCheckArgs;
 use crate::output::Context;
 
 use super::progress::grounding::{ground, refresh_state};
 
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#BOUNDARY-CLI")]
 pub(crate) fn run(ctx: &Context, args: &ProgressCheckArgs) -> Result<()> {
     let grounding = ctx.progress().task("Grounding facts corpus");
     let mut grounded = match ground(&args.common) {

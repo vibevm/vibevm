@@ -55,6 +55,7 @@ pub(super) fn icon_slot_field(at: &FieldPath, icon: &IconDecl, slot: IconSlot) -
 /// assert_eq!(findings.len(), 1);
 /// assert!(findings[0].message.contains("does not exist"));
 /// ```
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-059#menu")]
 pub fn icon_findings(
     root: &Path,
     application: Option<&ApplicationDecl>,

@@ -81,6 +81,7 @@ pub fn app_exit_code(class: vibe_app::ErrorClass) -> u8 {
     }
 }
 
+#[specmark::spec(implements = "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#exit-codes")]
 pub fn as_exit_code(err: &anyhow::Error) -> ExitCode {
     // PROP-068 `#dl`: every classified `vibe dl` failure has its own status.
     if let Some(dl) = err.downcast_ref::<crate::commands::dl::DlError>() {

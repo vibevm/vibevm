@@ -78,6 +78,7 @@ pub enum Method {
 
 impl Method {
     /// The method an option records: its `installation.type`, or `steps`.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-059#index")]
     pub fn of(option: &InstallerOptionDecl) -> Self {
         match &option.installation {
             Some(InstallerMethod::Shell { .. }) => Self::Shell,
@@ -90,6 +91,7 @@ impl Method {
         }
     }
 
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-059#index")]
     pub fn as_str(self) -> &'static str {
         match self {
             Self::Shell => "shell",
@@ -116,6 +118,7 @@ pub enum StepOutcome {
 }
 
 impl StepOutcome {
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-065#execution")]
     pub fn as_str(self) -> &'static str {
         match self {
             Self::Done => "done",
@@ -282,6 +285,7 @@ pub enum Mark {
 
 impl Mark {
     /// The stable spelling (`manual`, `auto`).
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-065#uninstall-tree")]
     pub fn as_str(self) -> &'static str {
         match self {
             Self::Manual => "manual",
@@ -394,6 +398,7 @@ impl Index {
     /// `PROP-077#APP-RECOMMENDS-MECHANICS`). An owner that records both a
     /// requirement and a recommendation of the same target is **not** weak:
     /// the strong edge is the one that decides.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-065#uninstall-tree")]
     pub fn required_by(&self, key: &str) -> Vec<ReverseEdge<'_>> {
         let mut found: Vec<ReverseEdge<'_>> = Vec::new();
         for (owner, record) in &self.installations {
@@ -421,6 +426,7 @@ impl Index {
         self.installations.get(key).map(wire_form::identity_record)
     }
 
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-059#index")]
     pub fn to_wire(&self) -> wire::ApplicationIndex {
         wire::ApplicationIndex {
             protocol: match self.minimum_reader() {
@@ -454,6 +460,7 @@ impl Index {
         }
     }
 
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-059#index")]
     pub fn from_wire(document: wire::ApplicationIndex) -> Result<Self, String> {
         protocol::carries(&document)?;
         let mut installations = BTreeMap::new();

@@ -7,6 +7,7 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-068#proxy");
 
 use crate::user_config::{ProxyConfig, ProxyMode, RevocationCheck};
+use specmark::spec;
 
 /// Which layer decided the effective `[proxy] mode` (`PROP-068#proxy`).
 ///
@@ -50,6 +51,7 @@ impl ModeOrigin {
     /// // Every other layer reads the same whichever axis asks.
     /// assert_eq!(ModeOrigin::Site.label(PAC_ENV), "site profile");
     /// ```
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-068#proxy")]
     pub fn label(self, env_var: &'static str) -> &'static str {
         match self {
             ModeOrigin::Env => env_var,
@@ -57,6 +59,7 @@ impl ModeOrigin {
         }
     }
 
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-068#proxy")]
     pub fn as_str(self) -> &'static str {
         match self {
             ModeOrigin::Default => "default",
@@ -94,6 +97,7 @@ impl ModeOrigin {
 /// assert_eq!(effective_pac(Some(&site), &ProxyConfig::default(), Some("system")),
 ///            (Some("system".to_owned()), ModeOrigin::Env));
 /// ```
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-068#proxy-px")]
 pub fn effective_pac(
     site: Option<&ProxyConfig>,
     user: &ProxyConfig,
@@ -138,6 +142,7 @@ pub fn effective_pac(
 ///     (RevocationCheck::Check, ModeOrigin::Default)
 /// );
 /// ```
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-068#proxy-revocation")]
 pub fn effective_revocation(
     site: Option<&ProxyConfig>,
     user: &ProxyConfig,
@@ -155,6 +160,7 @@ pub fn effective_revocation(
     }
 }
 
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-068#proxy")]
 pub fn effective_mode(
     site: Option<&ProxyConfig>,
     user: &ProxyConfig,

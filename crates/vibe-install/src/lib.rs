@@ -27,6 +27,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#install-workflow-in-detail");
 
+use specmark::spec;
 use std::collections::BTreeSet;
 use std::path::Path;
 
@@ -357,6 +358,7 @@ pub trait InstallSource {
 /// let mutable = vibe_install::mutable_locked_sources(std::path::Path::new("."), &rows);
 /// assert!(mutable.is_empty());
 /// ```
+#[spec(implements = "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#install-workflow-in-detail")]
 pub fn mutable_locked_sources(
     root: &std::path::Path,
     rows: &[vibe_core::manifest::LockedPackage],
@@ -378,6 +380,7 @@ pub fn mutable_locked_sources(
 /// let paths = vibe_install::locked_checkout_paths(std::path::Path::new("."), &[]);
 /// assert!(paths.is_empty());
 /// ```
+#[spec(implements = "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#install-workflow-in-detail")]
 pub fn locked_checkout_paths(
     root: &std::path::Path,
     rows: &[vibe_core::manifest::LockedPackage],

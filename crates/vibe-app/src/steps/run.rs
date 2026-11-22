@@ -6,6 +6,7 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-065#failure");
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-065#resume");
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-065#display");
 
+use specmark::spec;
 use std::fs;
 use std::path::{Path, PathBuf};
 
@@ -82,6 +83,7 @@ pub(crate) struct Run<'a> {
 impl<'a> Run<'a> {
     /// Check the resume point and the forced / update variants before
     /// anything changes on disk.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-065#execution")]
     pub fn new(
         ctx: &'a OperationContext<'a>,
         resolved: &'a ResolvedPackage,

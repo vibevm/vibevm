@@ -12,6 +12,7 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-068#proxy-system");
 
 use super::{SystemProxyOrigin, bypass_list};
+use specmark::spec;
 
 /// What a desktop's proxy settings say, in the one shape both desktops
 /// reduce to: the mode, a PAC URL when the mode is `pac`, a fixed proxy
@@ -73,6 +74,7 @@ impl DesktopProxy {
 /// `mode 'auto'` is a PAC URL (`autoconfig-url`), and an empty one means
 /// auto-discovery; `mode 'manual'` is the `https` child's `host`/`port`,
 /// else the `http` child's. `ignore-hosts` is the bypass list.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-068#proxy-system")]
 pub(crate) fn parse_gnome_settings(text: &str) -> DesktopProxy {
     let mut mode = None;
     let mut autoconfig = None;
@@ -126,6 +128,7 @@ pub(crate) fn parse_gnome_settings(text: &str) -> DesktopProxy {
 /// `httpProxy`), 2 is a PAC URL (`Proxy Config Script`), 3 is
 /// auto-discovery, 4 defers to the environment, and anything else is no
 /// proxy. `NoProxyFor` is the bypass list.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-068#proxy-system")]
 pub(crate) fn parse_kioslaverc(text: &str) -> DesktopProxy {
     let mut in_section = false;
     let mut kind = None;
@@ -200,6 +203,7 @@ pub(crate) fn parse_kioslaverc(text: &str) -> DesktopProxy {
 /// A loopback address is never taken: it is vibe's own px (or another
 /// local proxy vibe cannot describe to px), and px pointed at itself is a
 /// loop. `no_proxy` becomes the bypass list.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-068#proxy-system")]
 pub(crate) fn env_proxy(
     vars: &[(String, String)],
 ) -> (

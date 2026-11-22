@@ -59,6 +59,7 @@ impl Choice {
     /// ```
     /// assert_eq!(vibe_app::Choice::named("MSI", "msi").label(), "MSI (msi)");
     /// ```
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-059#installer-options")]
     pub fn named(name: &str, id: &str) -> Self {
         Self {
             name: name.into(),
@@ -68,6 +69,7 @@ impl Choice {
     }
 
     /// The flat spelling of the row, with every part it carries.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-059#installer-options")]
     pub fn label(&self) -> String {
         let mut label = format!("{}{}", "  ".repeat(self.depth), self.name);
         if let Some(id) = &self.id {
@@ -98,6 +100,7 @@ pub struct InstallChoice {
 }
 
 /// The predefined platform id of this host, if it has one.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-059#installer-options")]
 pub fn detected_platform() -> Option<&'static str> {
     match std::env::consts::OS {
         "linux" => Some("linux"),
@@ -201,6 +204,7 @@ fn ordered(
 /// let option = select_option(&manifest.installer_options, &choice, None).unwrap();
 /// assert_eq!(option.id, "apt");
 /// ```
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-059#installer-options")]
 pub fn select_option(
     options: &[InstallerOptionDecl],
     choice: &InstallChoice,
@@ -349,6 +353,7 @@ fn listed_launcher(launcher: &vibe_core::manifest::LauncherDecl) -> Value {
 
 /// The `vibe-application-install-options/1` listing of every option, grouped
 /// by platform and architecture with the detected entries first.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-059#installer-options")]
 pub fn options_listing(package: &str, options: &[InstallerOptionDecl]) -> Value {
     let host_platform = detected_platform();
     let host_arch = detected_arch();

@@ -58,6 +58,7 @@ pub use unix::{FIXTURE_ENV, HostKind, KIND_ENV};
 ///     assert!(error.to_string().contains("fix:"), "{error}");
 /// }
 /// ```
+#[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-068#proxy-system")]
 pub fn resolve() -> Result<SystemProxy, SystemProxyError> {
     if let Some(source) = installed_source() {
         return resolve_with(source.as_ref());
@@ -92,6 +93,7 @@ fn windows_resolve() -> Result<SystemProxy, SystemProxyError> {
 
 /// This host's own Windows reader, for a diagnostic that wants one
 /// setting rather than the resolution's verdict. `None` off Windows.
+#[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-068#proxy-system")]
 pub fn host_source() -> Option<&'static dyn WindowsProxySource> {
     #[cfg(windows)]
     {

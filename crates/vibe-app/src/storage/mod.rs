@@ -104,6 +104,7 @@ struct InstallLibrary {
 
 impl Storage {
     /// Read `storage.toml` (absent means only the default library).
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-059#storage-libraries")]
     pub fn load(settings: &SettingsRoot) -> Result<Self, StateError> {
         let path = settings.storage_path();
         let config = match fs::read_to_string(&path) {
@@ -186,6 +187,7 @@ impl Storage {
     }
 
     /// Every library, the default first.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-059#storage-libraries")]
     pub fn libraries(&self) -> Vec<Library> {
         let mut all = vec![Library {
             id: DEFAULT_LIBRARY.into(),
@@ -195,6 +197,7 @@ impl Storage {
         all
     }
 
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-059#storage-libraries")]
     pub fn path_of(&self, id: &str) -> Option<PathBuf> {
         if id == DEFAULT_LIBRARY {
             return Some(self.default_path.clone());
@@ -208,6 +211,7 @@ impl Storage {
 
     /// A library is available when its path is a directory whose marker
     /// carries the configured id.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-059#availability")]
     pub fn availability(&self, id: &str) -> Availability {
         let Some(path) = self.path_of(id) else {
             return Availability::Unavailable(format!("library `{id}` is not configured"));
@@ -231,6 +235,7 @@ impl Storage {
 
     /// The root of a library an operation is about to write into. The default
     /// library is created on first use; any other must already be available.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-059#storage-libraries")]
     pub fn usable(&self, id: &str) -> Result<PathBuf, StateError> {
         let path = self
             .path_of(id)
@@ -267,6 +272,7 @@ impl Storage {
 }
 
 /// Create a library directory and its marker.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-059#storage-libraries")]
 pub fn create_library(path: &Path, id: &str) -> Result<(), StateError> {
     fs::create_dir_all(path.join("apps")).map_err(|source| io("creating", path, source))?;
     let marker = LibraryMarker {

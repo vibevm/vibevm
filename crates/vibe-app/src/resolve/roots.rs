@@ -10,6 +10,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-075#VERSIONS-CHANNEL-DISCOVERY");
 
+use specmark::spec;
 use std::path::{Path, PathBuf};
 
 use crate::error::ResolveError;
@@ -57,6 +58,7 @@ pub struct DirectoryRoots {
 impl DirectoryRoots {
     /// Roots named outright — `--registry DIR`, an embedded registry —
     /// which nothing captured and so need no lease.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-075#VERSIONS-CHANNEL-DISCOVERY")]
     pub fn given(roots: Vec<PathBuf>) -> Self {
         DirectoryRoots {
             roots,
@@ -66,6 +68,7 @@ impl DirectoryRoots {
 
     /// Put `roots` ahead of the ones the configured chain contributed,
     /// keeping the lease.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-075#VERSIONS-CHANNEL-DISCOVERY")]
     pub fn ahead_of(mut self, roots: impl IntoIterator<Item = PathBuf>) -> Self {
         let mut ahead: Vec<PathBuf> = roots.into_iter().collect();
         ahead.append(&mut self.roots);
@@ -93,6 +96,7 @@ impl DirectoryRoots {
 /// directory root at all, so every listing answered the version union
 /// alone, with no channel table, no origins and no template provenance
 /// (PROP-075 `#VERSIONS-CHANNEL-DISCOVERY`).
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-075#VERSIONS-CHANNEL-DISCOVERY")]
 pub fn directory_roots_from_global_with_operation(
     settings_root: &Path,
     offline: bool,

@@ -8,6 +8,7 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-067#question");
 
 use dialoguer::{Confirm, Input, MultiSelect, Select};
+use specmark::spec;
 use vibe_app::Choice;
 
 use super::{ItemStyles, answer, answers, column_items, key_legend, space_before_question};
@@ -73,6 +74,7 @@ pub(crate) fn choose_opt(
 
 /// A read-only answer collector whose interruption restores the terminal.
 /// Existing application/confirmation prompts retain their established policy.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-067#question")]
 pub(crate) fn choose_opt_interruptible(
     prompt: &str,
     choices: &[Choice],
@@ -190,6 +192,7 @@ pub(crate) fn choose_many(
 }
 
 /// Hidden explicit replacement input, with no collapsed value report.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-067#question")]
 pub(crate) fn secret(prompt: &str) -> dialoguer::Result<String> {
     use dialoguer::theme::Theme;
     use ratatui_crossterm::crossterm::{

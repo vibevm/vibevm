@@ -3,6 +3,7 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-073#NATIVE-MATERIALI
 use super::capture::{CapturedContext, selected_git_dir, validate_selected_directory};
 use super::*;
 use crate::git_backend::{PayloadBytes, verbatim};
+use specmark::spec;
 use std::collections::BTreeMap;
 use std::fs;
 
@@ -57,6 +58,7 @@ impl NativeMaterialisation {
         self.validate_before_publication()
     }
     /// Cooperative drift check, before the publication owner's move-aside.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-073#NATIVE-MATERIALISATION-LAW")]
     pub fn validate_before_publication(&self) -> Result<(), GitError> {
         for child in &self.children {
             child.validate_before_publication()?;

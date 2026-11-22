@@ -9,6 +9,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-075#ECOSYSTEM-ADAPTER");
 
+use specmark::spec;
 use std::fs;
 use std::path::{Path, PathBuf};
 
@@ -101,6 +102,7 @@ fn runs(parent: &Path) -> Vec<PathBuf> {
 /// Every kept adapter work directory of the home, oldest first. This is
 /// what `vibe app work` lists and cleans beside the installation and
 /// migration work directories.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-075#ECOSYSTEM-ADAPTER")]
 pub fn kept_runs(settings: &SettingsRoot) -> Vec<PathBuf> {
     let mut found = Vec::new();
     for slot in directories(&settings.app_ecosystem_dir()) {
@@ -112,6 +114,7 @@ pub fn kept_runs(settings: &SettingsRoot) -> Vec<PathBuf> {
 }
 
 /// The adapter work directories of one slot, oldest first.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-075#ECOSYSTEM-ADAPTER")]
 pub fn work_runs(settings: &SettingsRoot, slot: &str) -> Vec<PathBuf> {
     let mut found = Vec::new();
     for version in directories(&settings.app_ecosystem_dir().join(sanitised(slot))) {

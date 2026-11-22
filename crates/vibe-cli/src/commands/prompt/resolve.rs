@@ -3,6 +3,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-076#SYS-OPERATIONS-SURFACE");
 
+use specmark::spec;
 use std::path::{Path, PathBuf};
 use std::process::Command;
 
@@ -28,6 +29,7 @@ pub(crate) struct Selected {
 
 /// Resolve the node: an explicit `--node` wins, otherwise the selection the
 /// workspace itself discovers from the directory.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-076#SYS-OPERATIONS-SURFACE")]
 pub(crate) fn select(path: &Path, node: Option<&str>) -> Result<Selected> {
     let selected = Workspace::discover_selected(path).context("discovering the workspace")?;
     let workspace = selected.workspace;

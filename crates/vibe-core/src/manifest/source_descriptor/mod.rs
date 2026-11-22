@@ -5,6 +5,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-DESCRIPTOR-GRAMMAR");
 
+use specmark::spec;
 use std::path::Path;
 
 use serde::{Deserialize, Serialize};
@@ -290,6 +291,7 @@ impl PackageMeta {
 /// Non-addressing scoped consumers may supply a diagnostic root label and
 /// discard the returned identity; the selector never validates or grants a
 /// native coordinate. It reads neither filesystem metadata nor source bytes.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-DESCRIPTOR-PRECEDENCE")]
 pub fn select_source_rows<'a>(
     coordinate: &str,
     rows: &'a [SourceDescriptor],

@@ -33,6 +33,7 @@
 //! readable as residue by the next run rather than mistakable for a clean
 //! publication.
 
+use specmark::spec;
 use std::io::Write;
 
 use anyhow::{Result, bail};
@@ -71,6 +72,7 @@ impl Project {
 
     /// Create without replacing any occupant, setting an optional Unix mode
     /// on the held stage before its name becomes visible.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-056#SEC-NO-FOLLOW")]
     pub fn publish_new_in_with_mode(
         &self,
         directory: &Pinned,

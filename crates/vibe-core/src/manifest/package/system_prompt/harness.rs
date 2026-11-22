@@ -9,6 +9,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-076#SYS-HARNESS-DELIVERY");
 
+use specmark::spec;
 use std::fmt;
 
 use serde::{Deserialize, Serialize};
@@ -98,6 +99,7 @@ impl HarnessTable {
     /// assert_eq!(read.harness.delivery("claude"), HarnessDelivery::Read);
     /// # Ok::<(), toml::de::Error>(())
     /// ```
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-076#SYS-HARNESS-DELIVERY")]
     pub fn delivery(&self, harness: &str) -> HarnessDelivery {
         let declared = match harness {
             "claude" => self.claude.as_ref().and_then(|claude| claude.delivery),
@@ -264,6 +266,7 @@ pub enum HarnessDelivery {
 
 impl HarnessDelivery {
     /// The declared spelling.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-076#SYS-HARNESS-DELIVERY")]
     pub fn as_str(self) -> &'static str {
         match self {
             HarnessDelivery::Launch => "launch",

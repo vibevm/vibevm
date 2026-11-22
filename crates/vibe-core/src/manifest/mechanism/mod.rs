@@ -19,6 +19,7 @@ mod wire;
 #[path = "tests.rs"]
 mod tests;
 
+use specmark::spec;
 use std::fmt;
 use std::path::PathBuf;
 use std::str::FromStr;
@@ -85,6 +86,7 @@ pub struct MechanismDecl {
 
 impl MechanismDecl {
     /// Revalidate a declaration constructed through Rust rather than TOML.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#ONE-MACHINE")]
     pub fn validate(&self) -> Result<(), String> {
         if !is_portable_token(&self.id) {
             return Err(format!(
@@ -166,6 +168,7 @@ pub enum MechanismFreshness {
 
 impl MechanismFreshness {
     /// The exact lowercase wire spelling.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#ONE-MACHINE")]
     pub const fn as_str(&self) -> &'static str {
         match self {
             Self::Engine => "engine",

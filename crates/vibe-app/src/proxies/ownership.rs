@@ -17,6 +17,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-059#proxy");
 
+use specmark::spec;
 use std::collections::BTreeMap;
 use std::fs;
 use std::io::Read;
@@ -139,6 +140,7 @@ impl Inventory {
         self.records.remove(name);
     }
 
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-059#proxy")]
     pub(crate) fn save(&self) -> Result<(), AppError> {
         let file = File {
             schema: INVENTORY_SCHEMA,

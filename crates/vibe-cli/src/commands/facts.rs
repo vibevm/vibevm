@@ -81,6 +81,7 @@ pub enum FactsSubcommand {
     },
 }
 
+#[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-046#CLI-FACTS")]
 pub fn run(ctx: &output::Context, args: FactsArgs) -> Result<()> {
     match args.command {
         FactsSubcommand::Check(args) => super::facts_check::run(ctx, &args),

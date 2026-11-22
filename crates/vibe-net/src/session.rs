@@ -58,6 +58,7 @@ impl std::fmt::Debug for NetworkSession {
 
 impl NetworkSession {
     /// A session over `route`, observing no operation.
+    #[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-068#proxy")]
     pub fn new(route: ProxyRoute) -> Self {
         Self {
             route,
@@ -103,6 +104,7 @@ impl NetworkSession {
     /// The address of this operation's px, starting it on first use.
     /// A failure is remembered: the operation does not retry px on every
     /// request, and [`Self::px_failure`] reports the cause once.
+    #[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-068#proxy-px")]
     pub fn px_address(&self) -> Result<SocketAddr, PxError> {
         let Some(settings) = self.route.px() else {
             return Err(PxError::Closed);
@@ -148,6 +150,7 @@ impl NetworkSession {
     }
 
     /// The process id of the running px, if one runs.
+    #[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-068#proxy-px")]
     pub fn px_pid(&self) -> Option<u32> {
         match &*self.px.lock().unwrap_or_else(PoisonError::into_inner) {
             PxSlot::Running(process) => Some(process.id()),
@@ -156,6 +159,7 @@ impl NetworkSession {
     }
 
     /// The cause px could not serve this operation, once it failed.
+    #[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-068#proxy-px")]
     pub fn px_failure(&self) -> Option<PxError> {
         match &*self.px.lock().unwrap_or_else(PoisonError::into_inner) {
             PxSlot::Failed(error) => Some(error.clone()),
@@ -164,6 +168,7 @@ impl NetworkSession {
     }
 
     /// The proxy a request to `url` goes through: `None` is direct.
+    #[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-068#proxy")]
     pub fn proxy_for(&self, url: &url::Url) -> Result<Option<url::Url>, PxError> {
         match self.route.choice_for(url) {
             None => Ok(None),
@@ -181,6 +186,7 @@ impl NetworkSession {
 
     /// The operation's trust set: the operating system's verifier plus
     /// `[tls] extra_ca` / `[proxy] ca_file`, read once.
+    #[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-068#proxy-trust")]
     pub fn trust(&self) -> Result<&Arc<TrustSet>, NetError> {
         if let Some(set) = self.trust.get() {
             return Ok(set);
@@ -205,6 +211,7 @@ impl NetworkSession {
 
     /// Kill and reap px, and drop the scratch. Later requests that need px
     /// fail with [`PxError::Closed`] instead of starting another one.
+    #[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-068#proxy-px")]
     pub fn close(&self) {
         let previous = std::mem::replace(
             &mut *self.px.lock().unwrap_or_else(PoisonError::into_inner),
@@ -247,6 +254,7 @@ impl NetworkGuard {
     /// Finish a synchronous metadata phase and bind the same guard to the
     /// execution token. Old px/scratch are closed before a new session exists.
     /// Call only after every preflight request and child has returned.
+    #[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-068#proxy-px")]
     pub fn bind_execution(&mut self, token: &CancellationToken) -> Result<(), NetError> {
         if token
             .existing_operation_resource::<NetworkSession>()
@@ -299,6 +307,7 @@ pub fn enter(token: &CancellationToken, route: ProxyRoute) -> NetworkGuard {
 
 /// The current operation's session; outside one, a process-wide session
 /// over the installed route ([`vibe_core::net::route`]).
+#[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-068#proxy")]
 pub fn current() -> Arc<NetworkSession> {
     if let Some(session) = CURRENT
         .lock()

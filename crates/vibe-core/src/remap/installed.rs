@@ -92,6 +92,7 @@ pub struct InstalledRemaps {
 
 impl InstalledRemaps {
     /// Read the index of `home`. A missing file is an empty index.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-066#package")]
     pub fn load(home: &Path) -> Result<Self, ConsentError> {
         let path = installed_path(home);
         match std::fs::read_to_string(&path) {
@@ -109,6 +110,7 @@ impl InstalledRemaps {
     }
 
     /// Write the index of `home`, replacing it atomically.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-066#package")]
     pub fn store(&self, home: &Path) -> Result<(), ConsentError> {
         let path = installed_path(home);
         let body =
@@ -125,6 +127,7 @@ impl InstalledRemaps {
     }
 
     /// Add or replace a record, keeping the index sorted by key.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-066#package")]
     pub fn upsert(&mut self, entry: InstalledRemap) {
         self.packages
             .retain(|existing| existing.package.key != entry.package.key);
@@ -134,6 +137,7 @@ impl InstalledRemaps {
     }
 
     /// Drop the record for `key`, returning it.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-066#package")]
     pub fn remove(&mut self, key: &str) -> Option<InstalledRemap> {
         let found = self
             .packages
@@ -144,6 +148,7 @@ impl InstalledRemaps {
 
     /// Just the offers, in index order — what the Locator and the provider
     /// map are built from.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-066#package")]
     pub fn offers(&self) -> Vec<RemapPackage> {
         let mut offers: Vec<RemapPackage> =
             self.packages.iter().map(|e| e.package.clone()).collect();
@@ -176,6 +181,7 @@ pub fn offer_from_tree(tree: &Path, content_hash: &str) -> Result<RemapPackage, 
 }
 
 /// The same, from an already parsed manifest.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-066#package")]
 pub fn offer_from_manifest(
     manifest: &Manifest,
     content_hash: &str,

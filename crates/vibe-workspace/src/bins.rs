@@ -194,6 +194,9 @@ impl DeclaredBinary {
     /// };
     /// assert!(bin.release_artifact().to_string_lossy().contains("release"));
     /// ```
+    #[spec(
+        implements = "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-025#SLOT-RESIDENT"
+    )]
     pub fn release_artifact(&self) -> PathBuf {
         self.slot
             .join("target")
@@ -204,6 +207,9 @@ impl DeclaredBinary {
     /// The slot-resident **debug** artifact — where a plain `cargo build`
     /// (no `--release`) in the slot lands. Preferred over the release
     /// build when it exists on disk (see [`Self::artifact`]).
+    #[spec(
+        implements = "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-025#SLOT-RESIDENT"
+    )]
     pub fn debug_artifact(&self) -> PathBuf {
         self.slot
             .join("target")
@@ -239,6 +245,7 @@ impl DeclaredBinary {
     /// assert!(artifact.starts_with(&bin.slot));
     /// assert!(artifact.to_string_lossy().contains("release"));
     /// ```
+    #[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-025#dispatch")]
     pub fn artifact(&self) -> PathBuf {
         let debug = self.debug_artifact();
         if debug.exists() {
@@ -252,6 +259,7 @@ impl DeclaredBinary {
 /// Every `[[binary]]` reachable from the project's lockfile slots,
 /// sorted by name. A missing lockfile is an empty set, not an error
 /// (a fresh project has nothing installed yet).
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-025#BIN-LIST")]
 pub fn collect_binaries(project_root: &Path) -> Result<Vec<DeclaredBinary>, BinsError> {
     let ws = Workspace::discover(project_root).map_err(|e| BinsError::Workspace {
         path: project_root.to_path_buf(),
@@ -291,6 +299,7 @@ pub fn collect_binaries(project_root: &Path) -> Result<Vec<DeclaredBinary>, Bins
 }
 
 /// Find one declared binary by its PATH-facing name.
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-025#dispatch")]
 pub fn find_binary<'a>(
     bins: &'a [DeclaredBinary],
     name: &str,
@@ -326,6 +335,7 @@ pub struct DeclaredMcpServer {
 /// missing lockfile is an empty set. A declaration whose binary does
 /// not resolve is skipped here — the manifest validator refuses such
 /// packages at install time, so a slot cannot normally carry one.
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-025#dispatch")]
 pub fn collect_mcp_servers(project_root: &Path) -> Result<Vec<DeclaredMcpServer>, BinsError> {
     let ws = Workspace::discover(project_root).map_err(|e| BinsError::Workspace {
         path: project_root.to_path_buf(),

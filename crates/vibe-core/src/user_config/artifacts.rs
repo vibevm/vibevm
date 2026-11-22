@@ -85,6 +85,7 @@ impl ReleaseSourceKind {
     ];
 
     /// The stored, lower-case spelling.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-019#release-sources")]
     pub fn as_str(self) -> &'static str {
         match self {
             ReleaseSourceKind::Github => "github",
@@ -301,6 +302,7 @@ pub(crate) fn expand_home(path: &Path, home: Option<&Path>) -> Result<PathBuf, I
 /// assert!(install_root_at(Path::new(r"C:\Work"), None).is_ok());
 /// assert!(install_root_at(Path::new("opt"), Some(&home)).is_err());
 /// ```
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-019#INSTALL-ROOT-HOME")]
 pub fn install_root_at(path: &Path, home: Option<&Path>) -> Result<PathBuf, InstallRootError> {
     let expanded = expand_home(path, home)?;
     if !crate::site_profile::is_absolute_anywhere(&expanded) {
@@ -330,6 +332,7 @@ pub(crate) fn home_expanded(path: &Path, home: Option<&Path>) -> PathBuf {
 impl ArtifactsConfig {
     /// This table with its drops resolved against `home`.
     #[must_use]
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-066#drops")]
     pub fn with_home(&self, home: Option<&Path>) -> Self {
         ArtifactsConfig {
             vibe: self.vibe.as_deref().map(|path| home_expanded(path, home)),
@@ -344,6 +347,7 @@ impl ArtifactsConfig {
 impl SelfConfig {
     /// This table with its per-user paths resolved against `home`.
     #[must_use]
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-019#INSTALL-ROOT-HOME")]
     pub fn with_home(&self, home: Option<&Path>) -> Self {
         SelfConfig {
             path: self.path.as_deref().map(|path| home_expanded(path, home)),
@@ -417,6 +421,7 @@ impl SelfConfig {
     /// taken whole from the higher declaring layer) must not be decided by
     /// it. A table that carries only an `install_root` declares no release
     /// source.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-019#release-sources")]
     pub fn release_is_default(&self) -> bool {
         let SelfConfig {
             source,

@@ -60,6 +60,7 @@ fn selection(kind: SourceKind) -> SourceSelectionKind {
 /// assert_eq!(evidence.source_url.as_deref(), Some("https://example.test/demo"));
 /// assert_eq!(evidence.source_kind, None);
 /// ```
+#[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-073#SOURCE-EVIDENCE-LAW")]
 pub fn locked_source_evidence(record: &vibe_core::manifest::LockedPackage) -> SourceEvidence {
     SourceEvidence {
         registry: record.registry.clone(),
@@ -76,6 +77,7 @@ pub fn locked_source_evidence(record: &vibe_core::manifest::LockedPackage) -> So
 
 /// Report captured source-binding facts only; metadata discovery is not payload acquisition.
 /// Held missing kind stays unknown. URL credentials/query are removed by the existing owner.
+#[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-073#SOURCE-EVIDENCE-LAW")]
 pub fn binding_source_evidence(
     binding: &vibe_core::manifest::CanonicalSourceBinding,
 ) -> SourceEvidence {

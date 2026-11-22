@@ -79,6 +79,7 @@ impl SystemProxyOrigin {
     /// assert_eq!(SystemProxyOrigin::KdeSettings.as_str(), "KDE settings");
     /// assert_eq!(SystemProxyOrigin::WpadDiscovery.as_str(), "WPAD discovery");
     /// ```
+    #[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-068#proxy-system")]
     pub fn as_str(self) -> &'static str {
         match self {
             SystemProxyOrigin::PolicyUser => "policy HKCU",
@@ -169,6 +170,7 @@ impl SystemProxy {
     ///     "system → http://wpad.example.corp/wpad.dat (from GNOME settings)"
     /// );
     /// ```
+    #[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-068#proxy-system")]
     pub fn describe(&self) -> String {
         let what = match (&self.pac_url, &self.upstream) {
             (Some(url), _) => url.clone(),

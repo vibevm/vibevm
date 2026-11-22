@@ -3,6 +3,7 @@
 //! along the seam between the public provider/solver contract and the
 //! machinery behind it.
 
+use specmark::spec;
 use std::collections::{HashMap, HashSet, VecDeque};
 
 use vibe_core::manifest::Manifest;
@@ -71,6 +72,7 @@ pub(crate) struct Chosen {
 /// and exact-pin every dependency edge to the version chosen for it. Both
 /// solver cells route through here, so they produce byte-identical graphs
 /// — which is exactly what the differential oracle asserts.
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#solver")]
 pub(crate) fn build_resolved_graph(
     root_order: &[(Group, String)],
     mut chosen: HashMap<(Group, String), Chosen>,

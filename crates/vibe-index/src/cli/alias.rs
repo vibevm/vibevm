@@ -19,6 +19,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#short-name");
 
+use specmark::spec;
 use std::path::PathBuf;
 
 use clap::{Parser, Subcommand};
@@ -72,6 +73,9 @@ pub enum Action {
     List,
 }
 
+#[spec(
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#REGISTRY-OWNED-ALIASES"
+)]
 pub fn run(args: Args) -> Result<()> {
     let data_dir = args.data_dir.clone();
     let mut table = AliasTable::read(&data_dir)?;

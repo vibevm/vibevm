@@ -41,6 +41,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-073#NATIVE-MATERIALISATION");
 
+use specmark::spec;
 use std::path::Path;
 
 /// `$GIT_DIR/info/attributes` of a working copy vibe reads as data: no
@@ -89,6 +90,7 @@ pub(crate) fn argv<'a>(args: &[&'a str]) -> Vec<&'a str> {
 /// the upgrade path — a machine that already has a converted clone repairs it
 /// on first use rather than carrying the fault until the clone's freshness
 /// window expires.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-073#NATIVE-DATA-BYTES")]
 pub(crate) fn install(git_dir: &Path) -> std::io::Result<bool> {
     let path = git_dir.join("info").join("attributes");
     if std::fs::read(&path).is_ok_and(|held| held == ATTRIBUTES.as_bytes()) {

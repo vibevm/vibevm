@@ -1,3 +1,4 @@
+use specmark::spec;
 use std::fs;
 use std::io::{self, Read, Write};
 use std::path::{Path, PathBuf};
@@ -90,6 +91,7 @@ fn planned_shims(bin_dir: &Path) -> Vec<PlannedShim> {
 /// refuses the whole operation and leaves the directory exactly as it was.
 /// Only the leaf files vibe writes are path-guarded — the directory's other
 /// tenants, links included, are none of vibe's business.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-019#SHIM-FOREIGN-REFUSED")]
 pub(crate) fn write_shims(store: &VersionStore) -> Result<()> {
     let bin_dir = store.shim_dir();
     store.guard_mutation_path(&bin_dir)?;

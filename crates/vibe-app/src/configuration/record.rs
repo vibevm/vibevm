@@ -1,8 +1,10 @@
 //! Structural admission of historical configuration; never rerun host checks on index read.
 use super::{definition, vocabulary};
+use specmark::spec;
 use vibe_core::manifest::ParameterType;
 use vibe_wire::generated::shared as w;
 
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-069#APP-CONFIGURATION-BASIS")]
 pub(crate) fn validate(record: &w::ConfigurationRecord) -> Result<(), String> {
     let d = definition::read_definition(&record.definition)?;
     let expected = d

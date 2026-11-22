@@ -18,6 +18,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#OBS-TRACE");
 
+use specmark::spec;
 use vibe_wire::generated::shared::{CompileTraceReport, Duration, TimingRow, TraceReportStatus};
 
 use crate::output;
@@ -71,6 +72,7 @@ pub(crate) fn quiet_suffix(report: &CompileTraceReport) -> String {
 }
 
 /// One heading, one aligned timing table, every warning once.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#OBS-TRACE")]
 pub(crate) fn render_human(ctx: &output::Context, report: &CompileTraceReport) {
     ctx.rule(&format!("compile trace: {}", status(report)));
     ctx.step(&format!("run {}", report.run_id));

@@ -109,6 +109,7 @@ pub enum PxError {
 
 /// Where vibe looks for a px it carries: `tools/px/` beside the running
 /// executable and beside its parent directory (a `bin/` layout).
+#[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-068#proxy-px")]
 pub fn bundled_px_candidates() -> Vec<PathBuf> {
     let Ok(exe) = std::env::current_exe() else {
         return Vec::new();
@@ -137,6 +138,7 @@ pub fn bundled_px_candidates() -> Vec<PathBuf> {
 /// `vibe self px status` asks exactly this question and must not call a
 /// store without the pinned copy a failure when `px_path` or PATH answers
 /// (`PROP-019#companion-tools`).
+#[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-068#proxy-px")]
 pub fn locate(settings: &PxSettings) -> Result<PathBuf, PxError> {
     let mut searched = Vec::new();
     if let Some(path) = &settings.path {
@@ -184,6 +186,7 @@ pub fn locate(settings: &PxSettings) -> Result<PathBuf, PxError> {
 /// never auto-detects, because on a managed Windows desktop its detection
 /// finds nothing (`PROP-068#proxy-px`). The settings may have changed
 /// since the last operation, so the answer is read now and not cached.
+#[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-068#proxy-px")]
 pub(crate) fn route_args(
     settings: &PxSettings,
     no_proxy: Option<&str>,
@@ -225,6 +228,7 @@ pub(crate) fn route_args(
 }
 
 /// A free loopback port, released for px to bind.
+#[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-068#proxy-px")]
 pub(crate) fn free_port() -> Result<u16, PxError> {
     TcpListener::bind(SocketAddrV4::new(Ipv4Addr::LOCALHOST, 0))
         .and_then(|listener| listener.local_addr())
@@ -278,6 +282,7 @@ exit \"$s\"\n";
 impl PxProcess {
     /// Start `program` listening on a free loopback port and wait until it
     /// accepts connections. `stopped` is polled while waiting.
+    #[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-068#proxy-px")]
     pub(crate) fn start(
         program: &Path,
         settings: &PxSettings,
@@ -448,6 +453,7 @@ pub(crate) fn log_tail(path: &Path) -> String {
 
 /// `px --test=<target>` with the route settings, bounded by `timeout`:
 /// `Ok(())` when px reports success (exit 0), else the exit and output tail.
+#[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-068#proxy-px")]
 pub(crate) fn self_test(
     program: &Path,
     settings: &PxSettings,

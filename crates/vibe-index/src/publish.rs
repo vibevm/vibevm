@@ -19,6 +19,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#root");
 
+use specmark::spec;
 use std::fmt;
 use std::path::Path;
 use std::process::Command;
@@ -40,6 +41,9 @@ pub fn preflight(data_dir: &Path) -> crate::error::Result<()> {
 /// The checks are the server's, unchanged: a checkout that is not a
 /// working copy has nothing to commit into, and one whose `state/` is not
 /// ignored would stage whatever a local server left there.
+#[spec(
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#AUTO-PUBLISH-REFUSES-WITHOUT-A-WORKING-COPY"
+)]
 pub fn preflight_checkout(data_dir: &Path) -> crate::error::Result<()> {
     preflight_for(
         data_dir,
@@ -88,6 +92,7 @@ fn preflight_for(data_dir: &Path, who: &str, before: &str) -> crate::error::Resu
 /// **not** fail the HTTP request (Р4) — the mutation already succeeded
 /// and stays on disk, and a later successful push carries the queued
 /// commit forward.
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#auto-publish")]
 pub fn commit_and_push(data_dir: &Path, message: &str) -> Result<PublishOutcome, PublishError> {
     if commit(data_dir, message)? == PublishOutcome::NothingToCommit {
         return Ok(PublishOutcome::NothingToCommit);
@@ -99,6 +104,7 @@ pub fn commit_and_push(data_dir: &Path, message: &str) -> Result<PublishOutcome,
 /// The commit half of [`commit_and_push`], for a caller that pushes only
 /// when asked (`vibe registry publish --push-index`). `Published` here
 /// means «committed»; an empty diff is `NothingToCommit`, success (Р6).
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#auto-publish")]
 pub fn commit(data_dir: &Path, message: &str) -> Result<PublishOutcome, PublishError> {
     // Stage every change in the working copy. `state/` is gitignored, so
     // tokens stay out — preflight guarantees it before we ever get here.

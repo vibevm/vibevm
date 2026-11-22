@@ -33,6 +33,7 @@ pub struct Consulted {
 
 impl Consulted {
     /// Observe `path` now.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-075#VERSION-FILE-FORMATS")]
     pub fn observe(path: PathBuf) -> Self {
         let stamp = fs::metadata(&path).ok().and_then(|meta| {
             let modified = meta
@@ -97,6 +98,7 @@ fn upward(from: &Path, stop_at: Option<&Path>) -> Vec<PathBuf> {
 }
 
 /// Search for every slot of `declared`, from `from` upward.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-075#VERSION-FILE-FORMATS")]
 pub fn search(from: &Path, stop_at: Option<&Path>, declared: &Declared) -> Search {
     let mut outcome = Search::default();
     // The slots still looking, each with its rows in declaration order.

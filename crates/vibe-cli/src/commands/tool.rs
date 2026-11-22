@@ -11,6 +11,7 @@ pub(crate) mod px;
 pub(crate) mod which;
 
 use anyhow::Result;
+use specmark::spec;
 use vibe_core::cancellation::CancellationToken;
 
 use crate::cli::{
@@ -43,6 +44,7 @@ pub fn env(read: fn(&str) -> Option<String>, verbose: bool) -> ToolEnv {
 
 /// `vibe tool <tool> …`. The exit code is the child's for `exec`, so the
 /// answer is a code rather than `()`.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-068#proxy-tool")]
 pub fn run(
     ctx: &output::Context,
     args: &ToolArgs,

@@ -13,6 +13,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-075#TEMPLATE-TWO-STAGE");
 
+use specmark::spec;
 use std::path::{Path, PathBuf};
 
 use vibe_core::manifest::{Manifest, TemplateRenderChanged, differing_digest_fields};
@@ -97,6 +98,7 @@ impl TemplateLayer {
     /// A **full** render of one produced version: the digest document is
     /// read (from the cache when it is there, which is always after the
     /// first time) and substituted.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-075#TEMPLATE-TWO-STAGE")]
     pub fn full(
         &self,
         template: &ActiveTemplate,
@@ -140,6 +142,7 @@ impl TemplateLayer {
     /// Everything above this returns the `ResolvedPackage` every caller
     /// already expects, which is the whole point: below the four call
     /// sites nothing learns that a manifest was rendered.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-075#TEMPLATE-TWO-STAGE")]
     pub fn materialise(
         &self,
         template: &ActiveTemplate,

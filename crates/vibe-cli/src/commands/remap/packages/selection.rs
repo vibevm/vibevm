@@ -1,11 +1,13 @@
 //! Read-only source-owned kind preflight.
 use super::*;
+use specmark::spec;
 pub(crate) struct Selection {
     pub(super) resolver: InstallResolver,
     pub(super) candidates: Vec<vibe_registry::source_candidates::RetainedSourceCandidate>,
     _scratch: Option<tempfile::TempDir>,
 }
 
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-066#package")]
 pub(crate) fn claims_with_progress(
     args: &InstallArgs,
     offline: bool,

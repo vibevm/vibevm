@@ -190,6 +190,7 @@ pub(crate) fn install_agent_backend_from(
 /// answer to "which node is this", and a second discovery a second answer to
 /// "what does its tree look like".
 #[allow(clippy::too_many_arguments)]
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#AGENT-CLI")]
 pub(crate) fn run_prelude(
     ctx: &output::Context,
     selection: PreparedSelection,

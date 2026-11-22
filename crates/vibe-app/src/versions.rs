@@ -80,6 +80,7 @@ pub struct Domain {
 impl Domain {
     /// A domain of concretely published versions alone — the answer for
     /// every package that carries no template.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-075#VERSIONS-LIST-OUTPUT")]
     pub fn of_published(versions: impl IntoIterator<Item = semver::Version>) -> Self {
         Domain {
             versions: versions

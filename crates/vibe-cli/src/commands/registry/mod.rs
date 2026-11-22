@@ -27,6 +27,7 @@ mod sync;
 mod sync_home;
 mod vendor;
 
+use specmark::spec;
 use std::path::{Path, PathBuf};
 
 use anyhow::{Result, anyhow};
@@ -37,6 +38,7 @@ use crate::output;
 
 /// `root_offline` is the root `--offline` flag; the commands that reach
 /// the network resolve the rest of the ladder themselves.
+#[spec(implements = "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#registry")]
 pub fn run(ctx: &output::Context, args: RegistryArgs, root_offline: bool) -> Result<()> {
     match args.command {
         RegistrySubcommand::Sync(sub) => sync::run_sync(ctx, sub, root_offline),

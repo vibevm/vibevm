@@ -3,6 +3,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-065#kinds");
 
+use specmark::spec;
 use std::fs;
 use std::path::{Component, Path, PathBuf};
 use std::process::Command;
@@ -138,6 +139,7 @@ pub(crate) fn input_file(work: &Path, step: &StepDecl) -> PathBuf {
 }
 
 /// Run one step; a shell or native step returns its uninstall data.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-065#kinds")]
 pub(crate) fn run(cx: &StepContext<'_>, step: &StepDecl) -> Result<AuthoredCommands, AppError> {
     let what = match step.origin {
         StepOrigin::PreInstall => "pre_install".to_owned(),

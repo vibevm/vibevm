@@ -5,6 +5,7 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-059#storage-libraries");
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-059#move");
 
+use specmark::spec;
 use std::path::{Path, PathBuf};
 
 use anyhow::{Context, Result};
@@ -17,6 +18,7 @@ use crate::cli::{StorageArgs, StorageCommand};
 use crate::commands::app::global;
 use crate::output;
 
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-059#storage-libraries")]
 pub fn run(ctx: &output::Context, args: StorageArgs) -> Result<()> {
     let settings = global::settings_root()?;
     match args.command {

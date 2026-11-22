@@ -136,6 +136,9 @@ impl InstallRollback {
         });
         fs::rename(&candidate, slot).map_err(|e| io_err(slot, e))
     }
+    #[specmark::spec(
+        implements = "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#install-workflow-in-detail"
+    )]
     pub(crate) fn ignore_checked(
         &mut self,
         root: &Path,
@@ -164,6 +167,9 @@ impl InstallRollback {
             reason,
         })
     }
+    #[specmark::spec(
+        implements = "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#install-workflow-in-detail"
+    )]
     pub fn new(workspace_root: &Path) -> Self {
         let deps = workspace_root.join(vibe_core::layout::current_vibedeps_root());
         let stash_parent = deps
@@ -200,6 +206,9 @@ impl InstallRollback {
 
     /// Before `slot` is reconciled in place: a missing slot is recorded as
     /// created, a present one is copied into the stash.
+    #[specmark::spec(
+        implements = "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#install-workflow-in-detail"
+    )]
     pub(crate) fn before_reconcile(&mut self, slot: &Path) -> Result<(), WorkspaceError> {
         if fs::symlink_metadata(slot).is_err() {
             self.steps.push(Step::Created {
@@ -236,6 +245,9 @@ impl InstallRollback {
 
     /// After durable publication, retain verified backups explicitly. Failure
     /// is custody uncertainty, never permission to restore a committed lock.
+    #[specmark::spec(
+        implements = "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#install-workflow-in-detail"
+    )]
     pub fn retain_checked_retirements(
         &mut self,
     ) -> Result<Vec<super::checked_removal::RetainedRetirementBackup>, String> {
@@ -288,6 +300,9 @@ impl InstallRollback {
     /// files, and every resolved package's unit lane, are recorded first; what
     /// the regeneration left is recorded after it, whether it succeeded or
     /// failed, so an undo restores exactly the files it changed.
+    #[specmark::spec(
+        implements = "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#install-workflow-in-detail"
+    )]
     pub fn regenerate_boot<T>(
         &mut self,
         workspace: &crate::Workspace,
@@ -373,6 +388,9 @@ impl InstallRollback {
     /// Undo every recorded change, newest first, and tell `observer` that each
     /// of `materialised` is no longer a change this apply made. On failure the
     /// stash is retained and its path named in the returned reason.
+    #[specmark::spec(
+        implements = "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#install-workflow-in-detail"
+    )]
     pub fn restore(
         &mut self,
         observer: Option<&dyn SlotLifecycle>,

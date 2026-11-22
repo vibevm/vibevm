@@ -185,6 +185,7 @@ impl UserConfig {
     /// The `[slot.<slot>.extras.<ecosystem>]` table to edit, created empty
     /// when the file holds neither — what `vibe app extras add|drop|import`
     /// writes into before [`Self::save`].
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-075#SLOT-EXTRAS")]
     pub fn extras_mut(&mut self, slot: &str, ecosystem: &str) -> &mut SlotExtras {
         self.slot
             .entry(slot.to_owned())
@@ -341,6 +342,9 @@ impl UserConfig {
     /// [`config_file_candidates`]. Whether that candidate exists does not
     /// change the answer; a missing file is `UserConfig::default()`, and
     /// the reported path is where [`UserConfig::save`] would write.
+    #[spec(
+        implements = "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#configuration-sources-in-precedence-order"
+    )]
     pub fn default_path() -> Option<PathBuf> {
         if let Some(custom) = location::override_path() {
             return Some(custom);
@@ -358,6 +362,7 @@ impl UserConfig {
     ///
     /// A command that edits and saves the user's file reads it with
     /// [`Self::load_own`], so no site value is ever written into it.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-019#SITE-PROFILE-LAYER")]
     pub fn load() -> Result<Self, UserConfigError> {
         let own = Self::load_own()?;
         match crate::site_profile::installed().map_err(|e| UserConfigError::Site(Box::new(e)))? {
@@ -368,6 +373,9 @@ impl UserConfig {
 
     /// The user's own file at [`Self::default_path`], without the site
     /// layer — what an editor loads before [`Self::save`].
+    #[spec(
+        implements = "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#configuration-sources-in-precedence-order"
+    )]
     pub fn load_own() -> Result<Self, UserConfigError> {
         let Some(path) = Self::default_path() else {
             return Ok(UserConfig::default());
@@ -402,6 +410,7 @@ impl UserConfig {
     /// assert_eq!(effective.self_source.source, None);
     /// assert_eq!(effective.artifacts.packages.unwrap().to_str(), Some("/srv/drop"));
     /// ```
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-019#SITE-PROFILE-LAYER")]
     pub fn over_site(mut self, site: &crate::site_profile::SiteProfile) -> UserConfig {
         // The release decision is one pair, taken whole from the higher
         // declaring layer; `[self] install_root` answers a different
@@ -442,6 +451,9 @@ impl UserConfig {
 
     /// Like [`Self::load`] but reads from an explicit path. Used by
     /// the entry-point loader and by tests.
+    #[spec(
+        implements = "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#configuration-sources-in-precedence-order"
+    )]
     pub fn load_from(path: &Path) -> Result<Self, UserConfigError> {
         if !path.exists() {
             return Ok(UserConfig::default());
@@ -459,6 +471,9 @@ impl UserConfig {
 
     /// Save the user config to its canonical path, creating the parent
     /// directory if needed. Used by `vibe init` to persist `last_author`.
+    #[spec(
+        implements = "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#configuration-sources-in-precedence-order"
+    )]
     pub fn save(&self) -> Result<(), UserConfigError> {
         let Some(path) = crate::settings::user_config_path() else {
             return Ok(()); // no settings dir — the layer is optional
@@ -468,6 +483,9 @@ impl UserConfig {
 
     /// Save to an explicit path, keeping an existing file's comments and
     /// unchanged bytes ([`crate::toml_preserve::render_preserving`]).
+    #[spec(
+        implements = "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#configuration-sources-in-precedence-order"
+    )]
     pub fn save_to(&self, path: &Path) -> Result<(), UserConfigError> {
         if let Some(parent) = path.parent() {
             std::fs::create_dir_all(parent).map_err(|source| UserConfigError::Io {

@@ -212,6 +212,9 @@ pub fn observe_package_policy(root: &Path) -> Result<PackagePolicyObservation, S
 /// assert_eq!(policy.mode(), PackageSourceMode::MissingManifest);
 /// policy.recheck_unchanged().unwrap();
 /// ```
+#[specmark::spec(
+    implements = "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-ADMISSION-BOUNDARY"
+)]
 pub fn observe_package_policy_in(
     project: &Project,
     root: &Pinned,
@@ -439,6 +442,9 @@ impl PackagePolicyObservation {
         PackagePolicyCheckpoint { state: self.state }
     }
     /// Read through the originally held root, checking its selected logical name.
+    #[specmark::spec(
+        implements = "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-ADMISSION-BOUNDARY"
+    )]
     pub fn read_source_observation(
         &self,
         relative: &str,
@@ -454,6 +460,9 @@ impl PackagePolicyObservation {
     }
 
     /// Read through the originally held root, checking its selected logical name.
+    #[specmark::spec(
+        implements = "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-ADMISSION-BOUNDARY"
+    )]
     pub fn read_source_bytes(&self, relative: &str) -> Result<Option<Vec<u8>>, SourcePolicyError> {
         self.state.named_root()?;
         self.project.read_source_bytes(relative).map_err(|_| {

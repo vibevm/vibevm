@@ -164,6 +164,7 @@ pub struct SlotExposure<'a> {
 
 impl<'a> SlotExposure<'a> {
     /// The exposure of one operation context.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-059#path-directories")]
     pub fn of(ctx: &OperationContext<'a>) -> Self {
         Self {
             proxy_image: ctx.proxy_image,
@@ -173,6 +174,7 @@ impl<'a> SlotExposure<'a> {
 
     /// An exposure with the proxy image alone: usable only where no slot
     /// can gain or lose a payload directory on PATH.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-059#path-directories")]
     pub fn image_only(proxy_image: &'a Path) -> Self {
         Self {
             proxy_image,

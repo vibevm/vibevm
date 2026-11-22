@@ -21,6 +21,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-076#SYS-HARNESS-DELIVERY");
 
+use specmark::spec;
 use std::path::Path;
 
 use vibe_core::manifest::{HarnessDelivery, HarnessTable, Manifest};
@@ -91,6 +92,7 @@ impl HarnessKind {
     ];
 
     /// The kind's own name, which is also the manifest's harness key.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-076#SYS-HARNESS-DELIVERY")]
     pub fn as_str(self) -> &'static str {
         match self {
             HarnessKind::Claude => "claude",
@@ -113,6 +115,7 @@ impl HarnessKind {
     /// The flags that must not already be in a user's own arguments,
     /// because passing two of them is how a session silently gets a system
     /// prompt nobody chose.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-076#SYS-HARNESS-DELIVERY")]
     pub fn conflicting_flags(self) -> &'static [&'static str] {
         match self {
             HarnessKind::Claude => &[
@@ -154,6 +157,7 @@ impl HarnessKind {
     /// opencode`" — because the whole point of the rule is that the *data*
     /// ships with the harness's package; knowing which package that is, is
     /// how the lookup starts. Nothing about a prompt is decided here.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-076#SYS-SUPPLIED-BASE")]
     pub fn base_package(self) -> Option<(&'static str, &'static str)> {
         match self {
             HarnessKind::OpenCode => Some(("org.vibevm.opencode", "opencode")),
@@ -178,6 +182,7 @@ impl HarnessKind {
     /// two harnesses with a file-based slot and `read` for the rest. Reading
     /// `Launch` for every kind here was harmless while the set held only
     /// those two and is not once it does not.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-076#SYS-HARNESS-DELIVERY")]
     pub fn delivery(self, manifest: &Manifest) -> HarnessDelivery {
         manifest.system_prompt.as_ref().map_or_else(
             || HarnessTable::default().delivery(self.as_str()),
@@ -276,6 +281,7 @@ pub struct LaunchInputs<'a> {
 /// A kind in `read` delivery takes **no** flags and says so in one line:
 /// the project asked for the router to do the work, and adding the slot
 /// anyway would deliver the lane twice.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-076#SYS-HARNESS-DELIVERY")]
 pub fn launch_flags(
     kind: HarnessKind,
     delivery: HarnessDelivery,
@@ -487,6 +493,7 @@ pub enum CarrierVerdict {
 ///     CarrierVerdict::Unknown { .. }
 /// ));
 /// ```
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-076#SYS-CODEX-PROFILE-TOP-LEVEL")]
 pub fn codex_carrier_verdict(reported: &str) -> CarrierVerdict {
     let Some(version) = parse_version(reported) else {
         return CarrierVerdict::Unknown {

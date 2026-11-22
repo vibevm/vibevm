@@ -4,6 +4,7 @@
 //! projects are parsed in memory; no SYSTEM, member, lock or boot is consulted.
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-074#USER-PROJECT-INIT-SAFETY");
 
+use specmark::spec;
 use std::path::{Component, Path, PathBuf};
 use vibe_core::cancellation::CancellationToken;
 use vibe_core::manifest::Manifest;
@@ -106,6 +107,7 @@ fn walk(project: &Project, names: &[String]) -> FsResult<Option<Pinned>> {
 
 /// Observe without mutation, lock acquisition or member traversal.
 #[must_use]
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-074#USER-PROJECT-STATUS")]
 pub fn status(root: &Path) -> Observation {
     let result = anchor(root).and_then(|(project, names)| {
         Ok(match walk(&project, &names)? {
@@ -153,6 +155,7 @@ fn observe(project: &Project, directory: &Pinned, root: &Path, command: Command)
     }
 }
 
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-074#USER-PROJECT-INIT-SAFETY")]
 pub fn init(
     root: &Path,
     cancellation: &CancellationToken,

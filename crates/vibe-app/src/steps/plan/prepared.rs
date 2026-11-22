@@ -1,5 +1,6 @@
 //! Ephemeral planner-owned answers. Never serialized or included in error chains.
 use super::*;
+use specmark::spec;
 
 pub(crate) enum PreparedInstall {
     Ready(Box<Plan>),
@@ -65,6 +66,7 @@ impl PreparedSelection {
     }
 
     /// Consume the one ephemeral selection; host facts are rebuilt by the caller.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-065#plan")]
     pub(crate) fn continue_plan(self, input: &PlanInput<'_>) -> Result<Plan, AppError> {
         self.revalidate(input.resolved)?;
         if input.option != &self.option {

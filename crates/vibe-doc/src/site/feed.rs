@@ -46,6 +46,7 @@ use vibe_wire::generated::shared::VersionEntry;
 
 use super::config::{Host, Registry};
 use crate::error::{DocError, Result};
+use specmark::spec;
 
 /// Where a version is read from when the time comes to render it.
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -113,6 +114,7 @@ pub struct Feed {
 /// makes every one of its packages look unpublished. Rendering that
 /// answer would deploy the disappearance of a whole registry over a
 /// working site.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-057#SITE-SOURCE-REGISTRY")]
 pub fn poll(site: &super::config::Site) -> Result<Feed> {
     let mut feed = Feed::default();
     for registry in &site.registries {
@@ -136,6 +138,7 @@ pub fn poll(site: &super::config::Site) -> Result<Feed> {
 /// reads. That ladder's top rung is an operator's environment variable,
 /// and inheriting it is deliberate: a machine that re-points its index
 /// re-points the site built on it too.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-057#SITE-SOURCE-REGISTRY")]
 pub fn registry_feed(registry: &Registry) -> Result<(Vec<Pair>, String)> {
     let section = registry.as_section();
     let base = match vibe_registry::index_client::resolve_index_url(&section) {
@@ -225,6 +228,7 @@ pub fn registry_feed(registry: &Registry) -> Result<(Vec<Pair>, String)> {
 
 /// Read the host's checkout: the project itself, and the documentation
 /// packages it carries in-tree.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-057#SITE-HOST-CHECKOUT")]
 pub fn host_feed(host: &Host) -> Result<(Vec<Pair>, String)> {
     let root = &host.checkout;
     let manifest = root.join("vibe.toml");

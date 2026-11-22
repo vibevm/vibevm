@@ -106,6 +106,9 @@ pub(crate) fn actual_home(settings: &SettingsRoot) -> Result<String, AppError> {
 pub(crate) fn work(settings: &SettingsRoot, package: &PackageCoordinate) -> PathBuf {
     settings.app_work_dir().join(package.directory_name())
 }
+#[specmark::spec(
+    implements = "spec://org.vibevm.core/vibevm/common/PROP-069#APP-CONFIGURATION-CONTINUATION"
+)]
 pub(crate) fn load(
     settings: &SettingsRoot,
     package: &PackageCoordinate,

@@ -9,6 +9,7 @@ specmark::scope!(
 
 use super::{FileResolver, ResolveError};
 use crate::address::{Authority, SpecAddress};
+use specmark::spec;
 #[cfg(test)]
 use std::path::Path;
 
@@ -22,6 +23,9 @@ impl FileResolver {
     /// Preserve explicit package/revision pins. Without a package pin, ordinary
     /// installed lookup uses its existing newest rule and versionless spelling.
     /// A non-pattern still denotes exactly itself; a true empty set is legal.
+    #[spec(
+        implements = "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#SOURCE-GLOB-BINDING"
+    )]
     pub fn expand_pattern(&self, addr: &SpecAddress) -> Result<Vec<SpecAddress>, ResolveError> {
         if !is_pattern(addr) {
             return Ok(vec![addr.clone()]);

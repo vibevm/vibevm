@@ -4,6 +4,7 @@ specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#
 
 use super::*;
 use crate::install::bootgen::regenerate_boot_from_traced;
+use specmark::spec;
 
 /// Materialise a resolution into the workspace under exactly one
 /// dependency-slot lifecycle mode and regenerate every node's boot artifacts
@@ -37,6 +38,7 @@ use crate::install::bootgen::regenerate_boot_from_traced;
 /// materialise-and-regenerate core. Pre-install park/failure still aborts
 /// before any boot compilation — the recorder is only ever BORROWED here,
 /// never opened or finished.
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#install")]
 pub fn apply_resolution_with_spec_format_and_slot_lifecycle_traced(
     workspace: &Workspace,
     resolution: &[ResolvedDep],
@@ -62,6 +64,7 @@ pub fn apply_resolution_with_spec_format_and_slot_lifecycle_traced(
     clippy::too_many_arguments,
     reason = "the additive compatibility seam preserves the established apply inputs and adds only borrowed checked placements"
 )]
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#install")]
 pub fn apply_resolution_with_spec_format_and_slot_lifecycle_traced_placements(
     workspace: &Workspace,
     resolution: &[ResolvedDep],
@@ -142,6 +145,7 @@ pub fn apply_resolution_with_spec_format_and_slot_lifecycle_traced_placements(
 /// Materialisation and pre-install callbacks finish before the exact supplied
 /// resolution is lowered and compiled; no Cargo process is reachable here.
 #[allow(clippy::too_many_arguments)]
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#install")]
 pub fn apply_resolution_with_spec_format_and_slot_lifecycle_traced_native<F, G, P>(
     workspace: &Workspace,
     resolution: &[ResolvedDep],
@@ -190,6 +194,7 @@ where
 
 /// Observed native-aware sibling used by the install command.
 #[allow(clippy::too_many_arguments)]
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#install")]
 pub fn apply_resolution_with_spec_format_and_slot_lifecycle_traced_native_progress<F, G, P>(
     workspace: &Workspace,
     resolution: &[ResolvedDep],
@@ -242,6 +247,7 @@ where
     clippy::too_many_arguments,
     reason = "the additive native sibling preserves the predecessor's independently borrowed lowering, provider and progress inputs and adds checked placements"
 )]
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#install")]
 pub fn apply_resolution_with_spec_format_and_slot_lifecycle_traced_native_progress_placements<
     F,
     G,

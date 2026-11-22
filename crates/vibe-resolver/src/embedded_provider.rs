@@ -75,6 +75,7 @@ impl<'a> EmbeddedDepProvider<'a> {
     /// `embedded` with project-local first when project-packages are
     /// discovered, then vibe-embedded, so the inner ordering of the local
     /// family already reflects the developer-in-project precedence.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-030#precedence")]
     pub fn new(
         embedded: LocalCompositeDepProvider<'a>,
         declared: Option<MultiRegistryDepProvider<'a>>,

@@ -14,6 +14,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#cli-surface");
 
+use specmark::spec;
 use std::path::PathBuf;
 
 use anyhow::Result;
@@ -126,6 +127,7 @@ impl ReinstallDraft {
         }
     }
 
+    #[spec(implements = "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#cli-surface")]
     pub(crate) fn render(
         self,
         ctx: &output::Context,

@@ -25,6 +25,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-076#SYS-SIDECAR");
 
+use specmark::spec;
 use vibe_core::manifest::{HostChoice, LaneForm, TargetOs};
 use vibe_wire::generated::system_prompt_meta as wire;
 
@@ -59,6 +60,7 @@ pub struct SidecarFacts<'a> {
 ///
 /// Pure, like the composer: every member is a function of the witnessed
 /// inputs, the declared settings and the composed bytes.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-076#SYS-SIDECAR")]
 pub fn compose_sidecar(
     inputs: &CapturedPrefixInputs,
     settings: &PrefixSettings,
@@ -128,6 +130,7 @@ pub fn compose_sidecar(
 
 /// Render the sidecar's bytes: pretty JSON with one trailing newline, the
 /// convention every generated sidecar in the tree already follows.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-076#SYS-SIDECAR")]
 pub fn render_sidecar_bytes(meta: &wire::SystemPromptMeta) -> Result<Vec<u8>, WorkspaceError> {
     let mut bytes = serde_json::to_vec_pretty(meta).map_err(|error| {
         compose_error(

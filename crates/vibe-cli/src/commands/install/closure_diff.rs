@@ -11,6 +11,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-050#verification");
 
+use specmark::spec;
 use std::collections::BTreeMap;
 use std::path::Path;
 
@@ -71,6 +72,7 @@ impl ClosureDiff {
 /// written one, with the lane-size samples taken before and after the
 /// apply. Deterministic: member rows sort by their rendered text, lane
 /// rows keep [`watched_lanes`] order.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-050#verification")]
 pub fn closure_diff(
     old: &Lockfile,
     new: &Lockfile,
@@ -180,6 +182,7 @@ pub fn lane_sizes(root: &Path) -> Vec<(String, Option<u64>)> {
 /// `closure unchanged` line, so a routine re-install adds no noise. JSON
 /// mode emits one `"<command>:closure-diff"` document ahead of the final
 /// report, shaped like the neighbouring events (`install:plan` et al).
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-050#verification")]
 pub(crate) fn emit_closure_diff(
     ctx: &output::Context,
     command: &str,

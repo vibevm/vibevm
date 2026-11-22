@@ -39,6 +39,7 @@ impl DesktopFile {
     /// Parse the text of one file. Blank lines and `#` comments are
     /// skipped; a key before any group, a line that is neither a group
     /// header nor `Key=Value`, or a duplicate key is refused.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-059#desktop-entries")]
     pub fn parse(text: &str) -> Result<Self, String> {
         let mut file = Self::default();
         let mut current: Option<String> = None;
@@ -86,6 +87,7 @@ impl DesktopFile {
 
     /// Every `Key[locale]` value of a key by its locale, the locale written
     /// as a language tag (`de_DE` becomes `de-DE`, an encoding is dropped).
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-059#desktop-entries")]
     pub fn localised(&self, group: &str, key: &str) -> BTreeMap<String, String> {
         let prefix = format!("{key}[");
         self.groups
@@ -100,6 +102,7 @@ impl DesktopFile {
     }
 
     /// A boolean value (`true` / `false`); anything else is absent.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-059#desktop-entries")]
     pub fn boolean(&self, group: &str, key: &str) -> Option<bool> {
         match self.raw(group, key)?.trim() {
             "true" => Some(true),
@@ -110,6 +113,7 @@ impl DesktopFile {
 
     /// A `;`-separated list with `\;` kept as a literal semicolon; empty
     /// items are dropped.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-059#desktop-entries")]
     pub fn list(&self, group: &str, key: &str) -> Vec<String> {
         let Some(raw) = self.raw(group, key) else {
             return Vec::new();
@@ -194,6 +198,7 @@ fn language_tag(locale: &str) -> String {
 /// assert_eq!(exec_words("tool --open=%u 100%%").unwrap(), ["tool", "--open={url}", "100%"]);
 /// assert!(exec_words("tool \"unterminated").is_err());
 /// ```
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-059#desktop-entries")]
 pub fn exec_words(exec: &str) -> Result<Vec<String>, String> {
     let mut words: Vec<String> = Vec::new();
     let mut word = String::new();

@@ -31,6 +31,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#OBS-TRACE");
 
+use specmark::spec;
 use std::path::PathBuf;
 use std::sync::Arc;
 
@@ -128,6 +129,7 @@ fn prepare_direct_install(
 }
 
 /// `vibe install`, end to end.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#OBS-TRACE")]
 pub(crate) fn run(
     ctx: &output::Context,
     args: InstallArgs,
@@ -144,6 +146,7 @@ pub(crate) fn run(
 }
 
 /// Opt-in only from the actual post-install project application dispatcher.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#OBS-TRACE")]
 pub(crate) fn run_project_applications(
     ctx: &output::Context,
     args: InstallArgs,
@@ -159,6 +162,7 @@ pub(crate) fn run_project_applications(
     )
 }
 
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#OBS-TRACE")]
 pub(crate) fn run_user_project(
     ctx: &output::Context,
     args: InstallArgs,
@@ -204,6 +208,7 @@ impl vibe_orchestrator::ports::PackageSourceFactory for SelectedSource<'_> {
         ))
     }
 }
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#OBS-TRACE")]
 pub(crate) fn run_selected(
     ctx: &output::Context,
     args: InstallArgs,

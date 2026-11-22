@@ -93,6 +93,9 @@ pub(super) fn handoff_member(delegation: &vibe_lifecycle::Delegation) -> Install
 }
 
 /// The typed slot rows this command itself ran, for its own document.
+#[specmark::spec(
+    implements = "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#install-workflow-in-detail"
+)]
 pub(crate) fn contribution_rows(reports: &[SlotLifecycleReport]) -> Vec<InstallContributionReport> {
     reports
         .iter()
@@ -209,6 +212,9 @@ fn ritual_suffix(summary: WorldCallbackSummary) -> String {
 /// own row shape. They reach the document alongside the slot rows: `vibe
 /// install` is the outermost command on this path, so its single report is the
 /// only place either kind can be observed.
+#[specmark::spec(
+    implements = "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#install-workflow-in-detail"
+)]
 pub(crate) fn phase_rows(
     rows: &[vibe_wire::generated::lifecycle_report::LifecycleContributionReport],
 ) -> Vec<InstallContributionReport> {

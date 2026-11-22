@@ -13,6 +13,7 @@ use super::{
     bypass_list,
     desktop::{DesktopMode, DesktopProxy},
 };
+use specmark::spec;
 
 /// The macOS proxy dictionary, reduced to the one shape every host's
 /// settings reduce to.
@@ -23,6 +24,7 @@ use super::{
 /// `ExceptionsList` is the bypass list. An `…Enable` that is off is
 /// ignored exactly as macOS ignores it, so a stale URL left behind by a
 /// switched-off profile never becomes the route.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-068#proxy-system")]
 pub(crate) fn parse_scutil_proxies(text: &str) -> DesktopProxy {
     let mut values: Vec<(String, String)> = Vec::new();
     let mut exceptions: Vec<String> = Vec::new();

@@ -7,6 +7,7 @@ use super::{
 use crate::steps::{Previous, StepsFile};
 use crate::storage::Storage;
 use crate::{AppError, Index, InstallRequest, Lifecycle, Mark, Outcome, ResolvedPackage};
+use specmark::spec;
 use vibe_wire::generated::shared as w;
 
 #[cfg(test)]
@@ -20,6 +21,7 @@ pub use remediation::{
 
 /// Install one app package into the current user's settings root: its
 /// requirements first (`PROP-065#app-dependencies`), then the package.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-069#APP-CONFIGURATION-CONTINUATION")]
 pub fn install(
     ctx: &OperationContext<'_>,
     resolved: &ResolvedPackage,

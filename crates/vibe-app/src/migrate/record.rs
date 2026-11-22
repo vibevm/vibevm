@@ -9,6 +9,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-075#MIGRATION-FAILURE");
 
+use specmark::spec;
 use std::fs;
 use std::path::{Path, PathBuf};
 
@@ -119,6 +120,7 @@ fn runs(pair: &Path) -> Vec<PathBuf> {
 /// Every kept migration work directory of the home, oldest first. This is
 /// what `vibe app work` lists and cleans beside the installation work
 /// directories (PROP-075 `#MIGRATION-FAILURE`).
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-075#MIGRATION-FAILURE")]
 pub fn kept_runs(settings: &SettingsRoot) -> Vec<PathBuf> {
     let mut found = Vec::new();
     for slot in directories(&settings.app_migrate_dir()) {
@@ -130,6 +132,7 @@ pub fn kept_runs(settings: &SettingsRoot) -> Vec<PathBuf> {
 }
 
 /// The migration work directories of one slot, oldest first.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-075#MIGRATION-FAILURE")]
 pub fn work_runs(settings: &SettingsRoot, slot: &str) -> Vec<PathBuf> {
     let mut found = Vec::new();
     for pair in directories(&settings.app_migrate_dir().join(sanitised(slot))) {

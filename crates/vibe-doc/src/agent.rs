@@ -90,6 +90,7 @@ pub fn read_page(
 
 /// Request-local data from the SAME captured page source. None retains the
 /// incumbent source/language behavior and never synthesizes selected values.
+#[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-057#OBS-AUDIENCE-AGENT")]
 pub fn read_page_with_input(
     address: &str,
     format: Format,

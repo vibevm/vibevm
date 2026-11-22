@@ -3,6 +3,7 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-050#effective-set");
 
 use super::{EdgeDecl, NodeId};
 use crate::manifest::Manifest;
+use specmark::spec;
 
 /// Append one weak edge per accepted recommendation of `manifest`.
 ///
@@ -35,6 +36,7 @@ use crate::manifest::Manifest;
 /// assert!(edges[0].weak);
 /// assert_eq!(edges[0].to, "org.x/companion");
 /// ```
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-050#WEAK-EDGES-ARE-ORDINARY-EDGES")]
 pub fn append_recommended_edges(
     manifest: &Manifest,
     edges: &mut Vec<EdgeDecl>,

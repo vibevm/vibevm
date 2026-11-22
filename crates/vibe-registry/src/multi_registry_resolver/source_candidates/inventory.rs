@@ -1,9 +1,11 @@
 //! Enumerate alternatives without changing the existing default version domain.
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-073#SOURCE-POLICY");
 use super::*;
+use specmark::spec;
 use std::collections::{BTreeMap, BTreeSet};
 impl MultiRegistryResolver {
     /// A stable allowed inventory. Held coordinates never demand the current catalog.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-073#SOURCE-POLICY")]
     pub fn candidate_inventory(
         &self,
         group: &Group,

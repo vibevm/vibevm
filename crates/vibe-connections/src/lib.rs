@@ -73,6 +73,9 @@ pub struct Metadata {
     pub default_model: String,
 }
 impl Metadata {
+    #[specmark::spec(
+        implements = "spec://org.vibevm.core/vibevm/common/PROP-000#TS-KEYRING-CONSUMER"
+    )]
     pub fn validate(&self) -> Result<(), Error> {
         for text in [&self.label, &self.default_model] {
             if text.is_empty() || text.len() > 256 || text.chars().any(char::is_control) {
@@ -230,12 +233,18 @@ pub struct Snapshot {
 /// ```
 pub struct Store(vibe_secrets::Store, std::path::PathBuf);
 impl Store {
+    #[specmark::spec(
+        implements = "spec://org.vibevm.core/vibevm/common/PROP-000#TS-KEYRING-CONSUMER"
+    )]
     pub fn at_settings(settings: &Path) -> Result<Self, Error> {
         Ok(Self(
             vibe_secrets::Store::at_settings(settings)?,
             settings.to_path_buf(),
         ))
     }
+    #[specmark::spec(
+        implements = "spec://org.vibevm.core/vibevm/common/PROP-000#TS-KEYRING-CONSUMER"
+    )]
     pub fn list(&self) -> Result<Snapshot, Error> {
         let snapshot = self.0.reference_snapshot("ai")?;
         let mut items = BTreeMap::new();
@@ -259,6 +268,9 @@ impl Store {
             items,
         })
     }
+    #[specmark::spec(
+        implements = "spec://org.vibevm.core/vibevm/common/PROP-000#TS-KEYRING-CONSUMER"
+    )]
     pub fn details(&self, id: &SecretId) -> Result<Connection, Error> {
         self.list()?
             .items
@@ -325,6 +337,9 @@ fn selection(index: vibe_secrets::ReferenceIndex) -> DefaultSelection {
     }
 }
 impl Store {
+    #[specmark::spec(
+        implements = "spec://org.vibevm.core/vibevm/common/PROP-000#TS-KEYRING-CONSUMER"
+    )]
     pub fn default_selection(&self) -> Result<DefaultSelection, Error> {
         let snapshot = self.0.reference_snapshot("ai")?;
         // Validate exactly the metadata snapshot whose selection is returned.
@@ -336,6 +351,9 @@ impl Store {
         }
         Ok(selection(snapshot.index))
     }
+    #[specmark::spec(
+        implements = "spec://org.vibevm.core/vibevm/common/PROP-000#TS-KEYRING-CONSUMER"
+    )]
     pub fn set_default(&self, id: &SecretId, expected: u64) -> Result<DefaultSelection, Error> {
         self.default_scope_preview(id, DefaultScope::DefaultOnly)?;
         Ok(selection(self.0.select_reference(
@@ -400,6 +418,7 @@ fn snapshot_metadata(
 /// ));
 /// assert_eq!(metadata_capability("unheard-of"), MetadataCapability::Unknown);
 /// ```
+#[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-000#TS-KEYRING-CONSUMER")]
 pub fn metadata_capability(harness: &str) -> MetadataCapability {
     match harness {
         "pi" => MetadataCapability::Compatible {
@@ -467,6 +486,9 @@ pub struct BindingObservation {
     pub capability: MetadataCapability,
 }
 impl Store {
+    #[specmark::spec(
+        implements = "spec://org.vibevm.core/vibevm/common/PROP-000#TS-KEYRING-CONSUMER"
+    )]
     pub fn binding(&self, harness: &str) -> Result<BindingObservation, Error> {
         if !vibe_secrets::known_reference_harness(harness) {
             return Err(Error::Invalid);
@@ -519,6 +541,9 @@ impl Store {
             capability: metadata_capability(harness),
         })
     }
+    #[specmark::spec(
+        implements = "spec://org.vibevm.core/vibevm/common/PROP-000#TS-KEYRING-CONSUMER"
+    )]
     pub fn set_binding(
         &self,
         harness: &str,

@@ -13,6 +13,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-075#TEMPLATE-CONCRETE-WINS");
 
+use specmark::spec;
 use std::collections::{BTreeMap, BTreeSet};
 
 use vibe_core::manifest::ChannelRule;
@@ -44,6 +45,7 @@ pub enum Origin {
 
 impl Origin {
     /// The word `vibe app versions` prints.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-075#VERSIONS-LIST-OUTPUT")]
     pub fn label(self) -> &'static str {
         match self {
             Origin::Template => "template",
@@ -76,6 +78,7 @@ impl VersionDomain {
     /// );
     /// assert_eq!(domain.all().len(), 2);
     /// ```
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-075#TEMPLATE-CONCRETE-WINS")]
     pub fn all(&self) -> Vec<semver::Version> {
         self.produced
             .union(&self.published)
@@ -87,6 +90,7 @@ impl VersionDomain {
 
     /// A domain of published versions alone — the answer when a package
     /// carries no template.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-075#TEMPLATE-CONCRETE-WINS")]
     pub fn of_published(published: BTreeSet<semver::Version>) -> Self {
         VersionDomain {
             published,
@@ -96,6 +100,7 @@ impl VersionDomain {
 
     /// Where this version comes from, or `None` when the domain has no
     /// such version.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-075#TEMPLATE-CONCRETE-WINS")]
     pub fn origin(&self, version: &semver::Version) -> Option<Origin> {
         match (
             self.produced.contains(version),
@@ -138,6 +143,7 @@ impl TemplateLayer {
     /// unioned with the concretely published ones, the template
     /// revisions excluded, and the channel table computed from the
     /// template's `[[template.channel]]` rules.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-075#TEMPLATE-CONCRETE-WINS")]
     pub fn domain(&self, template: &ActiveTemplate) -> Result<VersionDomain, TemplateError> {
         let document = self.version_document(template)?;
         let (records, skipped) = vibe_template::version_records(

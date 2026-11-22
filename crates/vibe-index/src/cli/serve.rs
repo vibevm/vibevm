@@ -2,6 +2,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#root");
 
+use specmark::spec;
 use std::net::SocketAddr;
 use std::path::{Path, PathBuf};
 
@@ -59,6 +60,7 @@ pub struct Args {
     pub rate_limit_per_ip: u32,
 }
 
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#MODE-SERVER")]
 pub fn run(args: Args) -> Result<()> {
     // Ladder (PROP-005 §3.5, B-086): resolve the `git` member once
     // here so the auto-commit-push path below shells out through the
@@ -158,6 +160,7 @@ pub fn run(args: Args) -> Result<()> {
 /// §4.4). Extracted from [`run`] so a test can drive the exact boot
 /// decision — rises from a journal-only data-dir, refuses a
 /// catalog-only one — without binding a listener.
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#MODE-SERVER")]
 pub fn boot_index(data_dir: &Path) -> Result<Index> {
     let journal_dir = default_dir(data_dir);
     let records = replay(&journal_dir).map_err(|e| match e {

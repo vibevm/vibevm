@@ -42,6 +42,7 @@ pub struct SessionChoices {
 impl SessionChoices {
     /// Parse a whole `VIBE_APP_USE` value: entries separated by `;`,
     /// whitespace trimmed, empty entries ignored.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-059#session-selection")]
     pub fn parse(text: &str) -> Result<Self, AppError> {
         let mut choices = Self::default();
         for entry in text.split(';').filter(|entry| !entry.trim().is_empty()) {
@@ -51,6 +52,7 @@ impl SessionChoices {
     }
 
     /// Apply one `SLOT=KEY` entry, replacing an earlier choice for the slot.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-059#session-selection")]
     pub fn apply(&mut self, entry: &str) -> Result<(), AppError> {
         let malformed = || AppError::SessionChoice {
             entry: entry.trim().to_owned(),
@@ -80,6 +82,7 @@ impl SessionChoices {
     }
 
     /// The canonical `slot=key;slot=key` value, slots in sorted order.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-059#session-selection")]
     pub fn render(&self) -> String {
         self.choices
             .iter()

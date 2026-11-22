@@ -1,9 +1,11 @@
 //! Versioned narrow integer/profile vertical; source gate and normalizer stay shared.
 use super::*;
+use specmark::spec;
 use vibe_wire::generated::{
     ordinary_integer_preview_request as request, ordinary_integer_preview_result as result,
 };
 
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-069#ORIGINAL-INTENT")]
 pub fn original(input: &request::Input) -> ConfigurationIntentDecl {
     ConfigurationIntentDecl {
         policy: ChoicePolicy::RequireSelection,
@@ -33,6 +35,7 @@ pub fn original(input: &request::Input) -> ConfigurationIntentDecl {
 
 /// The integer/profile counterpart of [`super::configuration_preview`]; the
 /// host supplies the same `default_registry_isolated` posture.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-069#DESCRIBE-EVALUATE-PLAN")]
 pub fn preview(
     root: &std::path::Path,
     req: &request::OrdinaryIntegerPreviewRequest,

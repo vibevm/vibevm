@@ -4,6 +4,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#manifest-schema");
 
+use specmark::spec;
 use std::fmt;
 
 use toml_edit::{Item, Table, TableLike, Value};
@@ -96,6 +97,7 @@ impl FieldPath {
     /// the leaf when it has one, else the element or table it names.
     /// `None` when the source does not parse or does not spell the path
     /// (a field that is absent, or one the manifest derives from sugar).
+    #[spec(implements = "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#manifest-schema")]
     pub fn locate(&self, source: &str) -> Option<(usize, usize)> {
         let document = toml_edit::Document::parse(source).ok()?;
         let mut node = Node::Table(document.as_table());
@@ -206,6 +208,7 @@ pub struct FieldError {
 }
 
 impl FieldError {
+    #[spec(implements = "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#manifest-schema")]
     pub fn new(field: FieldPath, message: impl Into<String>) -> Self {
         Self {
             field,
@@ -215,6 +218,7 @@ impl FieldError {
 
     /// The same field with a different sentence, for a caller that adds
     /// the context the validator did not have (the option's id).
+    #[spec(implements = "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#manifest-schema")]
     pub fn reworded(self, message: impl FnOnce(&str) -> String) -> Self {
         Self {
             message: message(&self.message),

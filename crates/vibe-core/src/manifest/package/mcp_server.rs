@@ -9,6 +9,7 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-027#manifest");
 
 use serde::{Deserialize, Serialize};
+use specmark::spec;
 
 /// The closed set of substitution variables a server's `args` may
 /// carry, resolved by `vibe mcp install` at registration time
@@ -102,6 +103,7 @@ impl McpServerDecl {
     /// ).unwrap();
     /// assert_eq!(s.unknown_arg_vars(), vec!["{secret}".to_string()]);
     /// ```
+    #[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-027#ARGS-CLOSED-SET")]
     pub fn unknown_arg_vars(&self) -> Vec<String> {
         let mut out = Vec::new();
         for arg in &self.args {

@@ -19,6 +19,7 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-075#SLOT-EXTRAS");
 
 use anyhow::Result;
+use specmark::spec;
 use vibe_app::{EcosystemRequest, ExtrasApply, ExtrasPolicy, OperationContext, SettingsRoot};
 use vibe_core::manifest::EcosystemVerb;
 use vibe_wire::generated::application_ecosystem as wire;
@@ -256,6 +257,7 @@ pub(crate) struct AfterInstall<'a> {
     pub no_extras: bool,
 }
 
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-075#SLOT-EXTRAS")]
 pub(crate) fn after_install(
     ctx: &output::Context,
     settings: &SettingsRoot,

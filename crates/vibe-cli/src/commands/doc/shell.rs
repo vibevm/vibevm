@@ -31,6 +31,7 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-057#SHELL-INSTALL-CO
 
 pub mod fetch;
 
+use specmark::spec;
 use std::path::{Path, PathBuf};
 
 use anyhow::{Context, Result, bail};
@@ -43,6 +44,7 @@ use crate::output::language::{Block, Glyph, Kind, LabelValue, Line, Stream, befo
 use fetch::{Fetcher, HttpFetcher};
 
 /// Run `vibe doc shell …`.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-057#SHELL-INSTALL-COMMAND")]
 pub fn run(ctx: &output::Context, args: DocShellArgs, env: DocEnv) -> Result<()> {
     match args.command {
         None => run_status(DocShellStatusArgs { json: false }, env),

@@ -18,6 +18,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#TRANSFORM-PLAN-IDENTITY");
 
+use specmark::spec;
 use std::collections::BTreeMap;
 use std::sync::Arc;
 
@@ -68,6 +69,7 @@ impl TransformRegistry {
     /// never cloned into the refusal — the epoch is nonzero, and the name is
     /// not already cataloged. Epoch and stage are read from the behavior
     /// itself, so a stored row can never disagree with the object it holds.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#TRANSFORM-PLAN-IDENTITY")]
     pub(crate) fn register(
         &mut self,
         behavior: Arc<dyn TransformBehavior>,

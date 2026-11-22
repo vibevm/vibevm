@@ -1,4 +1,5 @@
 //! Optional positions captured by the incumbent Markdown writer.
+use specmark::spec;
 use std::ops::{Deref, DerefMut};
 
 pub(crate) struct TextSite {
@@ -95,6 +96,7 @@ impl Output {
         self.rows.extend(inner.rows);
         self.statuses.extend(inner.statuses);
     }
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-045#materialisation")]
     pub fn append_quoted(&mut self, mut inner: Self) {
         let mut positions = self.capture.then(|| vec![0; inner.text.len() + 1]);
         let mut source = 0;

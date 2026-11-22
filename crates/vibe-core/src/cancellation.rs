@@ -1,5 +1,6 @@
 //! Cooperative cancellation shared by command and action owners.
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-073#OPERATION-EFFECTS-LAW");
+use specmark::spec;
 use std::sync::{
     Arc,
     atomic::{AtomicBool, AtomicU8, AtomicUsize, Ordering},
@@ -142,6 +143,7 @@ impl std::fmt::Debug for CancellationToken {
 #[error("operation cancelled at a cooperative checkpoint")]
 pub struct Cancelled;
 impl CancellationToken {
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-073#OPERATION-EFFECTS-LAW")]
     pub fn new() -> Self {
         Self {
             controlled: true,
@@ -157,12 +159,14 @@ impl CancellationToken {
     pub fn cancel(&self) {
         self.state.requested.store(true, Ordering::SeqCst);
     }
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-073#OPERATION-EFFECTS-LAW")]
     pub fn is_cancelled(&self) -> bool {
         if self.poll.as_ref().is_some_and(|poll| poll()) {
             self.cancel();
         }
         self.state.requested.load(Ordering::SeqCst)
     }
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-073#OPERATION-EFFECTS-LAW")]
     pub fn checkpoint(&self) -> Result<(), Cancelled> {
         if self.is_cancelled() {
             self.state.acknowledged.store(true, Ordering::SeqCst);
@@ -208,6 +212,7 @@ impl CancellationToken {
     /// token.restored();
     /// assert_eq!(token.publication_state(), "restored");
     /// ```
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-073#OPERATION-EFFECTS-LAW")]
     pub fn adopt_completed_effect(&self, effect: Box<dyn CompletedEffect>) {
         if self.state.publication.load(Ordering::SeqCst) == 2 {
             return;
@@ -218,6 +223,7 @@ impl CancellationToken {
     /// when an earlier one failed; a failure marks the operation's local
     /// effects unowned (so it can never be reported `restored`) and every
     /// failure's account is returned, joined.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-073#OPERATION-EFFECTS-LAW")]
     pub fn undo_completed_effects(&self) -> Result<(), String> {
         let effects = std::mem::take(&mut *self.completed_effects());
         let failures: Vec<String> = effects
@@ -245,6 +251,7 @@ impl CancellationToken {
     }
     /// Record one paid LLM request about to be dispatched. Remote effects
     /// never mark local publication as needing recovery.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-073#OPERATION-EFFECTS-LAW")]
     pub fn llm_request_started(&self) -> LlmRequest {
         self.state.llm_in_flight.fetch_add(1, Ordering::SeqCst);
         LlmRequest {
@@ -255,6 +262,7 @@ impl CancellationToken {
     /// Aggregate provider-side effect, in the cancellation report's closed
     /// `effect` vocabulary: `unknown` while any request is unresolved or was
     /// interrupted, `completed` when every dispatched request was answered.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-073#OPERATION-EFFECTS-LAW")]
     pub fn llm_effect(&self) -> &'static str {
         if self.state.llm_unknown.load(Ordering::SeqCst)
             || self.state.llm_in_flight.load(Ordering::SeqCst) > 0
@@ -269,6 +277,7 @@ impl CancellationToken {
     pub fn publishing(&self) {
         self.state.publication.fetch_max(1, Ordering::SeqCst);
     }
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-073#OPERATION-EFFECTS-LAW")]
     pub fn restored(&self) {
         let _ = self
             .state
@@ -282,6 +291,7 @@ impl CancellationToken {
         self.completed_effects().clear();
     }
     /// Conservative classification until the recovery owner reports more.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-073#OPERATION-EFFECTS-LAW")]
     pub fn publication_state(&self) -> &'static str {
         let state = self.state.publication.load(Ordering::SeqCst);
         // A completed effect no rollback owner undid is still on disk.
@@ -323,6 +333,7 @@ pub struct WeakCancellationToken {
 }
 impl WeakCancellationToken {
     /// The operation's token while any owning clone is still alive.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-073#OPERATION-EFFECTS-LAW")]
     pub fn upgrade(&self) -> Option<CancellationToken> {
         Some(CancellationToken {
             state: self.state.upgrade()?,
@@ -341,6 +352,7 @@ impl std::fmt::Debug for WeakCancellationToken {
 }
 impl CancellationToken {
     /// A view that observes this operation without owning it.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-073#OPERATION-EFFECTS-LAW")]
     pub fn downgrade(&self) -> WeakCancellationToken {
         WeakCancellationToken {
             state: Arc::downgrade(&self.state),
@@ -359,6 +371,7 @@ impl CancellationToken {
     /// assert_eq!((*first, *second), (7, 7));
     /// assert_eq!(*vibe_core::cancellation::CancellationToken::new().operation_resource(|| 9_u32), 9);
     /// ```
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-073#OPERATION-EFFECTS-LAW")]
     pub fn operation_resource<T: std::any::Any + Send + Sync>(
         &self,
         init: impl FnOnce() -> T,
@@ -379,6 +392,7 @@ impl CancellationToken {
         created
     }
     /// The operation's `T` only when an earlier call already created it.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-073#OPERATION-EFFECTS-LAW")]
     pub fn existing_operation_resource<T: std::any::Any + Send + Sync>(&self) -> Option<Arc<T>> {
         self.resources
             .slots

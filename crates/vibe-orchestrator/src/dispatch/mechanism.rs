@@ -215,6 +215,7 @@ fn project_identity(manifest: &Manifest) -> String {
 /// are unique within a package), but this function is handed a slice, and
 /// a law that only held against authored rows would be a law about where
 /// the duplicate came from rather than about the identity.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#R8-ARTIFACT-RUNTIME")]
 pub(crate) fn lower_binaries(
     artifacts: Option<&ArtifactsSection>,
     binaries: &[BinaryDecl],

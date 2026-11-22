@@ -1,4 +1,5 @@
 use anyhow::Result;
+use specmark::spec;
 use vibe_lifecycle::RunMetadata;
 use vibe_wire::generated::lifecycle_plan::{LifecyclePlan, PlannedContribution};
 
@@ -31,6 +32,7 @@ pub(crate) fn emit_transition_outcome(
     Ok(())
 }
 
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#SURFACE-THE-RITUAL")]
 pub(crate) fn surface_plan(
     ctx: &output::Context,
     plan: &vibe_install::SlotLifecyclePlan,

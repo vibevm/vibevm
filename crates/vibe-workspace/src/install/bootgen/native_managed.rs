@@ -1,5 +1,6 @@
 //! Bound-epoch boot regeneration through the one managed native compiler.
 
+use specmark::spec;
 use std::collections::{BTreeMap, HashMap, HashSet};
 
 use vibe_core::manifest::{BootCategory, SpecFormat};
@@ -36,6 +37,7 @@ impl BoundBootRegeneration {
     }
 }
 
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#install")]
 pub(crate) fn regenerate_boot_from_bound_native<P: OwnerNativeCompileProvider>(
     workspace: &Workspace,
     resolution: &[ResolvedDep],

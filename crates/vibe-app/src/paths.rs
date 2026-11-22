@@ -212,6 +212,7 @@ fn wanted(
 /// let synced = vibe_app::sync_slot_paths(&home, &index, &storage, &lock).unwrap();
 /// assert!(synced.needed.is_empty() && synced.released.is_empty());
 /// ```
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-059#path-directories")]
 pub fn sync_locked(
     settings: &SettingsRoot,
     index: &Index,
@@ -308,6 +309,7 @@ pub fn sync_locked(
 /// entries actually changed, so the common operation writes the index once.
 /// A failure after the environment was changed leaves the apply to be
 /// repeated: both implementations are idempotent per entry.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-059#path-directories")]
 pub(crate) fn apply_locked(
     settings: &SettingsRoot,
     index: &mut Index,
@@ -405,6 +407,7 @@ fn same_entries(left: &[EnvEntry], right: &[EnvEntry]) -> bool {
 ///
 /// A directory the payload does not have is left out, exactly as the links
 /// leave it out.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-059#session-selection")]
 pub fn session_dirs(
     settings: &SettingsRoot,
     index: &Index,
@@ -441,6 +444,7 @@ pub fn slot_link_dirs(settings: &SettingsRoot, index: &Index, slot: &str) -> Vec
 }
 
 /// The durable PATH entry one link directory needs (`PROP-065#env-step`).
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-059#path-directories")]
 pub fn path_entry(dir: &Path) -> EnvEntry {
     EnvEntry {
         step: PATH_LINK_STEP.to_owned(),

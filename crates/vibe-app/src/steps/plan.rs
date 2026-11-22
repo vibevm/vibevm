@@ -286,6 +286,7 @@ pub(crate) fn plan(input: &PlanInput<'_>) -> Result<Plan, AppError> {
     }
 }
 
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-065#plan")]
 pub(crate) fn prepare_install(
     input: &PlanInput<'_>,
     request_node: bool,

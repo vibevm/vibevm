@@ -3,6 +3,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#publish");
 
+use specmark::spec;
 use std::path::Path;
 use std::process::{Command, Output};
 
@@ -133,6 +134,9 @@ pub(super) fn is_concurrent_ref_rejection(stderr_lowercase: &str) -> bool {
 
 /// Replace `userinfo` (everything between `://` and `@`) in URL-looking
 /// substrings with `***` before any Git diagnostic reaches a user surface.
+#[spec(
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#TOKEN-SECRECY-INVARIANT"
+)]
 pub fn redact_credentials(s: impl AsRef<str>) -> String {
     let s = s.as_ref();
     let mut out = String::with_capacity(s.len());
@@ -193,6 +197,7 @@ fn join_args_redacted(args: &[&str]) -> String {
     parts.join(" ")
 }
 
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#publish")]
 pub(crate) fn git_command(cwd: &Path, args: &[&str]) -> Command {
     let mut cmd = Command::new("git");
     // PROP-068 `#proxy-git`: the configured route, before the subcommand.

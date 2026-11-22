@@ -77,6 +77,9 @@ pub enum ContactRefusal {
 impl HttpAdmission {
     /// Require canonical keys: no terminal DNS root dot, URL/IP/IDNA-normalized.
     /// Report labels are never expanded into hosting families.
+    #[specmark::spec(
+        implements = "spec://org.vibevm.core/vibevm/common/PROP-073#HTTP-ADMISSION-LAW"
+    )]
     pub fn new(hosts: impl IntoIterator<Item = impl Into<String>>) -> Result<Self, ContactRefusal> {
         let mut denied = BTreeSet::new();
         for host in hosts {
@@ -93,6 +96,9 @@ impl HttpAdmission {
     /// into an ordinary construction error.
     /// Check only a selected Git endpoint's host before transport/config lowering.
     /// This grants no HTTP request capability or alternate protocol execution.
+    #[specmark::spec(
+        implements = "spec://org.vibevm.core/vibevm/common/PROP-073#HTTP-ADMISSION-LAW"
+    )]
     pub fn check_git_host(&self, address: &str) -> Result<(), crate::GitError> {
         let raw = address.strip_prefix("git+").unwrap_or(address);
         let parsed = if raw.contains("://") {
@@ -182,6 +188,7 @@ impl From<ClientBuildError> for HttpGetError {
 
 /// Bound pools never follow a hidden redirect or inherit a proxy/retry policy;
 /// the configured route is applied after this (`PROP-068#proxy`).
+#[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-073#HTTP-ADMISSION-LAW")]
 pub(crate) fn bound_builder(builder: ClientBuilder) -> ClientBuilder {
     builder
         .redirect(reqwest::redirect::Policy::none())
@@ -323,6 +330,9 @@ fn walk(
     Err(ContactRefusal::RedirectLimit.into())
 }
 impl HttpGetError {
+    #[specmark::spec(
+        implements = "spec://org.vibevm.core/vibevm/common/PROP-073#HTTP-ADMISSION-LAW"
+    )]
     pub fn from_io(error: std::io::Error) -> Self {
         let kind = error.kind();
         match error.into_inner() {

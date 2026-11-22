@@ -8,6 +8,7 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-067#list");
 use super::glyphs::GlyphSet;
 use super::roles::{Role, paint};
 use super::width::{measure, viewport, wrap};
+use specmark::spec;
 
 /// The rows of one table under a header.
 #[derive(Debug, Clone, Default)]
@@ -65,6 +66,7 @@ impl Table {
         self.render_at(viewport())
     }
 
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-067#list")]
     pub(crate) fn render_at(&self, width: usize) -> String {
         let frame = match GlyphSet::detect() {
             GlyphSet::Unicode => &UNICODE,

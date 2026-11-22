@@ -2,7 +2,9 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-073#SOURCE-POLICY");
 use super::{RegistryPin, SourcePolicyError};
 use crate::manifest::{LockedPackage, RegistrySection};
+use specmark::spec;
 
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-073#SOURCE-POLICY-LAW")]
 pub fn validate_registry_aliases(
     rows: &[RegistrySection],
     scope: &'static str,
@@ -20,6 +22,7 @@ pub fn validate_registry_aliases(
     Ok(())
 }
 /// A held matching alias is checked before any current catalog is needed.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-073#LOCKED-SOURCE-LAW")]
 pub fn validate_locked_registry_pin(
     package: &str,
     pin: &RegistryPin,
@@ -34,6 +37,7 @@ pub fn validate_locked_registry_pin(
     }
     Ok(())
 }
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-073#SOURCE-POLICY-LAW")]
 pub fn validate_new_registry_pin(
     package: &str,
     pin: &RegistryPin,

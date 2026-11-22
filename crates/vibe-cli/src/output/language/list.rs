@@ -117,6 +117,7 @@ impl List {
         self.render_at(viewport())
     }
 
+    #[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-067#list")]
     pub(crate) fn render_at(&self, width: usize) -> String {
         let columns = self
             .rows

@@ -117,6 +117,7 @@ fn next_default(index: &Index, slot: &str, except: &str) -> Option<String> {
 /// let error = vibe_app::expose(&settings, "org.example/gcc", exposure).unwrap_err();
 /// assert_eq!(error.code(), "not_installed");
 /// ```
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-059#hidden-installations")]
 pub fn expose(
     settings: &SettingsRoot,
     spelling: &str,
@@ -150,6 +151,7 @@ pub fn expose(
 
 /// Hide an installation: its proxies and its place among the alternatives
 /// go, and the default passes to the next exposed provider when it held it.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-059#hidden-installations")]
 pub fn hide(
     settings: &SettingsRoot,
     spelling: &str,
@@ -177,6 +179,7 @@ pub fn hide(
 }
 
 /// Set the manual/auto mark (`vibe app mark manual|auto`).
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-065#uninstall-tree")]
 pub fn mark(
     settings: &SettingsRoot,
     spelling: &str,
@@ -198,6 +201,7 @@ pub fn mark(
 }
 
 /// Set or clear the `held` flag (`vibe app hold | unhold`).
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-065#update-and-rollback")]
 pub fn hold(
     settings: &SettingsRoot,
     spelling: &str,
@@ -223,6 +227,7 @@ pub fn hold(
 
 /// Expose the kept previous installation of the package, make it the slot
 /// default again and hide the newer one, which becomes the kept one.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-065#update-and-rollback")]
 pub fn rollback(
     settings: &SettingsRoot,
     spelling: &str,

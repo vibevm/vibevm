@@ -7,6 +7,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#entry");
 
+use specmark::spec;
 use std::path::Path;
 
 use chrono::{DateTime, Utc};
@@ -53,6 +54,7 @@ pub struct EntrySource {
 /// assert_eq!(entry.name, "demo");
 /// assert_eq!(entry.files_count, 1);
 /// ```
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#ENTRY-SCHEMA")]
 pub fn entry_from_tree(dir: &Path, source: EntrySource) -> Result<VersionEntry> {
     let manifest_path = dir.join("vibe.toml");
     let manifest_bytes = std::fs::read(&manifest_path).map_err(|e| Error::Io {

@@ -57,6 +57,7 @@ pub struct SystemTargets {
 
 impl SystemTargets {
     /// The platform this build runs on.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-059#launcher-runtime")]
     pub fn host_platform() -> SystemPlatform {
         if cfg!(windows) {
             SystemPlatform::Windows

@@ -28,6 +28,9 @@ impl ConfigurationDecl {
         self.compile_choices_at(&FieldPath::root().table("configuration"))
     }
 
+    #[specmark::spec(
+        implements = "spec://org.vibevm.core/vibevm/common/PROP-069#AUTHORED-DEFINITIONS"
+    )]
     pub(crate) fn compile_choices_at(&self, at: &FieldPath) -> Result<ChoiceModel, FieldError> {
         self.validate_local(at)?;
         let nodes = self

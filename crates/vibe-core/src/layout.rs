@@ -16,6 +16,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-052#root");
 
+use specmark::spec;
 use std::path::PathBuf;
 
 // ---------------------------------------------------------------------------
@@ -183,6 +184,7 @@ const USE_NEW_LAYOUT: bool = true;
 ///
 /// This is what crate code should call instead of spelling a root:
 /// PROP-052 L2 allows the root names to exist only in this module.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-052#THE-LAYOUT")]
 pub fn current_specs_root() -> PathBuf {
     if USE_NEW_LAYOUT {
         vibespecs_root()
@@ -193,6 +195,7 @@ pub fn current_specs_root() -> PathBuf {
 
 /// The packages root of whichever layout is live: `packages` today,
 /// `vibevm/vibepacks` after the flip.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-052#THE-LAYOUT")]
 pub fn current_packages_root() -> PathBuf {
     if USE_NEW_LAYOUT {
         vibepacks_root()
@@ -203,6 +206,7 @@ pub fn current_packages_root() -> PathBuf {
 
 /// The dependency-slot root of whichever layout is live: `vibedeps`
 /// today, `vibevm/vibedeps` after the flip.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-052#THE-LAYOUT")]
 pub fn current_vibedeps_root() -> PathBuf {
     if USE_NEW_LAYOUT {
         vibedeps_root()
@@ -213,6 +217,7 @@ pub fn current_vibedeps_root() -> PathBuf {
 
 /// The facts root of whichever layout is live: `vibefacts` today,
 /// `vibevm/vibefacts` after the flip.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-052#THE-LAYOUT")]
 pub fn current_vibefacts_root() -> PathBuf {
     if USE_NEW_LAYOUT {
         vibefacts_root()
@@ -288,6 +293,7 @@ pub fn current_boot_gitignore() -> PathBuf {
 /// ignore file, removed together when a node opts out, and reported together
 /// when git tracks one (PROP-076 `#SYS-ARTIFACTS-NOT-TRACKED`). A caller that
 /// enumerated two of them would be a caller that one day forgets the third.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-052#root")]
 pub fn current_boot_prompt_artifacts() -> [PathBuf; 3] {
     [
         current_boot_system(),
@@ -316,6 +322,7 @@ pub fn current_boot_system_template() -> PathBuf {
 /// // nothing owns it, nothing removes it as a stale artifact.
 /// assert!(!layout::is_generated_boot_output(&layout::current_boot_system_template()));
 /// ```
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-052#root")]
 pub fn is_generated_boot_output(relative: &std::path::Path) -> bool {
     generated_boot_paths().iter().any(|path| relative == path)
         || (relative.parent() == Some(current_boot_dir().as_path())
@@ -397,6 +404,7 @@ fn reserved_boot_paths() -> [PathBuf; 8] {
 /// assert!(layout::is_reserved_boot_source(&layout::current_boot_dir().join("system-template.MD")));
 /// assert!(layout::is_reserved_boot_source(&layout::current_boot_dir().join("system.META.json")));
 /// ```
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-052#root")]
 pub fn is_reserved_boot_source(relative: &std::path::Path) -> bool {
     let spelling = relative.to_string_lossy().replace('\\', "/");
     reserved_boot_paths()

@@ -7,6 +7,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#UNIT-PUBLICATION-TRANSACTION");
 
+use specmark::spec;
 use std::path::Path;
 
 use vibe_core::manifest::SpecFormat;
@@ -67,6 +68,7 @@ pub(crate) fn finish_index(
     output
 }
 
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#UNIT-PUBLICATION-TRANSACTION")]
 pub(crate) fn read_unit_index_freshness(text: &str) -> Result<RecordedUnitFreshness, ()> {
     let mut fingerprint = None;
     let mut fingerprint_line = None;

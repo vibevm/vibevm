@@ -20,6 +20,7 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#registry-auth");
 
 use reqwest::header::{HeaderMap, HeaderName, HeaderValue};
+use specmark::spec;
 
 use vibe_core::manifest::{AuthKind, RegistrySection};
 
@@ -92,6 +93,9 @@ impl IndexAuth {
     /// [`IndexAuth::plan`] so it is unit-testable without mutating
     /// process env (forbidden under `#![forbid(unsafe_code)]` on
     /// edition 2024+, where `std::env::set_var` is `unsafe`).
+    #[spec(
+        implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#INDEX-AUTH-IS-NOT-A-SECOND-REGIME"
+    )]
     pub fn for_registry(
         reg: &RegistrySection,
         base_url: &str,

@@ -23,6 +23,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-057#SHELL-RELEASE-ASSET");
 
+use specmark::spec;
 use std::io::Read;
 use std::path::{Path, PathBuf};
 use std::time::Duration;
@@ -189,6 +190,7 @@ fn hex(bytes: &[u8]) -> String {
 /// A zip entry's name is attacker-controlled by construction — it is a
 /// string inside the file being verified — so it is checked before it
 /// becomes a path, the same rule the reader's routes follow.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-057#SHELL-RELEASE-ASSET")]
 pub(crate) fn unpack(archive: &Path, into: &Path) -> Result<usize> {
     let file =
         std::fs::File::open(archive).with_context(|| format!("opening `{}`", archive.display()))?;

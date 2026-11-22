@@ -393,6 +393,7 @@ pub(crate) fn refresh_state(g: &mut Ground) -> Result<Refresh> {
 }
 
 /// Refresh using a snapshot preloaded before a command's earlier writes.
+#[specmark::spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-047#tool")]
 pub(crate) fn refresh_state_with_evidence(
     g: &mut Ground,
     evidence: &EvidenceSnapshot,

@@ -113,6 +113,9 @@ impl<'a> ImportScope<'a> {
         }
     }
 
+    #[specmark::spec(
+        implements = "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-AUTO-BINDINGS"
+    )]
     pub(crate) fn dependency(
         &self,
         owner: &str,
@@ -166,6 +169,9 @@ impl<'a> ImportScope<'a> {
             .ok_or_else(|| invalid(owner, "required imported binding is missing"))
     }
 
+    #[specmark::spec(
+        implements = "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-AUTO-BINDINGS"
+    )]
     pub(crate) fn admit(
         &self,
         ctx: &OperationContext<'_>,
@@ -211,6 +217,9 @@ impl<'a> ImportScope<'a> {
         Ok((resolved, option))
     }
 
+    #[specmark::spec(
+        implements = "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-AUTO-BINDINGS"
+    )]
     pub(crate) fn request(
         &self,
         ctx: &OperationContext<'_>,

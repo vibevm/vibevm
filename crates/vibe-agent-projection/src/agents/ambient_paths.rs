@@ -3,6 +3,7 @@
 //! The lifecycle deploy lane uses the injected-home helpers in `home_paths`;
 //! these methods retain the original public API for MCP and skill commands.
 
+use specmark::spec;
 use std::path::{Path, PathBuf};
 
 use anyhow::{Result, anyhow, bail};
@@ -39,6 +40,7 @@ impl Agent {
     /// );
     /// # Ok::<(), anyhow::Error>(())
     /// ```
+    #[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#CONFIG-PATH")]
     pub fn config_path_with_dirs(
         self,
         scope: Scope,
@@ -167,6 +169,7 @@ impl Agent {
     /// (Cursor, Claude Desktop) regardless of scope. Returns `Ok(None)`
     /// for project scope when the agent has no project surface (Claude
     /// Desktop, Codex — though those are skill-unsupported anyway).
+    #[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#skill")]
     pub fn skill_path(self, scope: Scope, project_root: Option<&Path>) -> Result<Option<PathBuf>> {
         if !self.supports_skill() {
             return Ok(None);
@@ -283,6 +286,7 @@ impl Agent {
     /// [`home_paths`] — never this one.
     ///
     /// [`home_paths`]: self::home_paths
+    #[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#skill")]
     pub fn skills_root(self, scope: Scope, project_root: Option<&Path>) -> Result<Option<PathBuf>> {
         if !self.supports_skill() {
             return Ok(None);

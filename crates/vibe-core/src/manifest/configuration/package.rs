@@ -192,6 +192,7 @@ pub enum PackageConfigurationError {
 impl PackageConfiguration {
     /// Pure lexical targets requiring an operation-owned host existence check.
     /// This grants no IO or readiness and is safe for history inspection.
+    #[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-069#EVALUATION")]
     pub fn host_path_targets(&self) -> Vec<&str> {
         self.definition
             .parameters
@@ -221,6 +222,7 @@ impl PackageConfiguration {
     }
 
     /// Evaluate separately typed candidate-owned requests without inventing user input.
+    #[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-069#EVALUATION")]
     pub fn evaluate_with_forwarded(
         manifest: &Manifest,
         consumers: &BTreeMap<String, ConfigurationIntentDecl>,
@@ -257,6 +259,7 @@ impl PackageConfiguration {
         )
     }
 
+    #[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-069#EVALUATION")]
     pub(crate) fn evaluate_parts(
         package: String,
         kind: crate::PackageKind,

@@ -4,6 +4,7 @@ specmark::scope!(
     r = 1
 );
 use super::*;
+use specmark::spec;
 use std::path::PathBuf;
 use vibe_spec::source_policy::{CapturedAuthoredBoot, PackagePolicyObservation};
 #[derive(Debug)]
@@ -15,6 +16,7 @@ pub(crate) struct PreparedNodeBoot {
     captured: Option<CapturedAuthoredBoot>,
 }
 impl PreparedNodeBoot {
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-HOST-BOOT")]
     pub(crate) fn prepare(
         node_dir: &Path,
         node_rel: &str,
@@ -95,6 +97,7 @@ impl PreparedNodeBoot {
             }
         }
     }
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-HOST-BOOT")]
     pub(crate) fn simple(
         &self,
         entry: &crate::boot::BootEntry,

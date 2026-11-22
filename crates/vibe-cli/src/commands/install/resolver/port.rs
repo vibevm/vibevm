@@ -7,6 +7,7 @@
 //! stays here at the CLI's composition root.
 
 use anyhow::{Context, Result};
+use specmark::spec;
 use vibe_core::PackageRef;
 use vibe_core::manifest::{Lockfile, Manifest};
 use vibe_orchestrator::ports::{InstallManifestMutation, PackageSourceBuild, PackageSourceFactory};
@@ -138,6 +139,7 @@ pub(crate) fn explicit_version_moves(
 }
 
 impl CliPackageSourceFactory<'_> {
+    #[spec(implements = "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#install-workflow-in-detail")]
     pub(crate) fn build_source(
         &self,
         input: PackageSourceBuild<'_>,

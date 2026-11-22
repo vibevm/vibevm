@@ -6,6 +6,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-068#verbs");
 
+use specmark::spec;
 use std::collections::{BTreeMap, BTreeSet};
 use std::time::Duration;
 
@@ -30,6 +31,7 @@ pub enum TransferEventKind {
 }
 
 impl TransferEventKind {
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-068#verbs")]
     pub fn as_str(self) -> &'static str {
         match self {
             Self::Started => "started",
@@ -66,6 +68,7 @@ pub struct TransferEvent {
 }
 
 impl TransferEvent {
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-068#verbs")]
     pub fn bare(event: TransferEventKind, id: &str, batch: &str) -> Self {
         Self {
             at: format_millis(unix_millis()),
@@ -162,6 +165,7 @@ pub struct TransferWatch<'a> {
 
 impl<'a> TransferWatch<'a> {
     /// Connect: one `started` line for every transfer already active.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-068#verbs")]
     pub fn open(
         journal: &'a TransferJournal,
         alive: &dyn Fn(u32) -> bool,
@@ -194,6 +198,7 @@ impl<'a> TransferWatch<'a> {
     }
 
     /// Everything that happened since the previous read.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-068#verbs")]
     pub fn poll(&mut self, alive: &dyn Fn(u32) -> bool) -> Vec<TransferEvent> {
         let live = self.journal.sweep(alive);
         let mut events = Vec::new();
@@ -276,6 +281,7 @@ impl<'a> TransferWatch<'a> {
 /// watch(&journal, &|_| false, Duration::ZERO, &mut || { ticks += 1; ticks > 2 }, &mut |_| { seen += 1; true });
 /// assert_eq!(seen, 0);
 /// ```
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-068#verbs")]
 pub fn watch(
     journal: &TransferJournal,
     alive: &dyn Fn(u32) -> bool,

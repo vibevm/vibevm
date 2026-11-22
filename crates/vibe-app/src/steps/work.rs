@@ -31,6 +31,7 @@ const WORK_PROTOCOL: &str = "vibe-app-work/1";
 /// assert_eq!(vibe_app::human_bytes(912), "912 B");
 /// assert_eq!(vibe_app::human_bytes(1536), "1.5 KiB");
 /// ```
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-065#work")]
 pub fn human_bytes(bytes: u64) -> String {
     const UNITS: [&str; 5] = ["B", "KiB", "MiB", "GiB", "TiB"];
     let mut value = bytes as f64;
@@ -48,6 +49,7 @@ pub fn human_bytes(bytes: u64) -> String {
 
 /// The bytes a file holds, or a directory tree below `path`. A symbolic
 /// link counts as the link, so no tree is walked twice.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-065#work")]
 pub(crate) fn tree_bytes(path: &Path) -> u64 {
     let Ok(meta) = fs::symlink_metadata(path) else {
         return 0;

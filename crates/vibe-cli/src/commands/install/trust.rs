@@ -106,6 +106,7 @@ fn question(request: &SlotConsentRequest) -> String {
 ///
 /// `assume_yes` is `--assume-yes`, which `--unattended` implies: the per-run
 /// escape agent steps already use, reused rather than reinvented.
+#[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-065#ordinary-trust")]
 pub(crate) fn judgment(
     ctx: &output::Context,
     assume_yes: bool,

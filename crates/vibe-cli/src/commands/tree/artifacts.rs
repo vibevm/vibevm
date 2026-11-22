@@ -79,6 +79,7 @@ impl From<XmlCommentCodecError> for StaticDecompileError {
 /// line up to (not including) the next marker. Nested
 /// `<!-- embed: {addr} -->` … `<!-- /embed: {addr} -->` pairs become
 /// [`super::model::EmbedSpan`]s with file-relative 1-based line numbers.
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-036#STATIC-DECOMPILE")]
 pub fn decompile_static(
     text: &str,
 ) -> std::result::Result<Vec<StaticContribution>, StaticDecompileError> {

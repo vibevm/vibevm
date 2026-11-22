@@ -23,6 +23,7 @@ pub const WINDOWS_PLATFORM_VARIABLES: &[&str] = &[
 /// The platform variables of `environment` a child keeps: on Windows the
 /// [`WINDOWS_PLATFORM_VARIABLES`] (names compared without case, as Windows
 /// does); elsewhere none.
+#[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-073#NATIVE-WINDOWS-LAW")]
 pub fn platform_variables<'a>(
     environment: impl IntoIterator<Item = (&'a std::ffi::OsStr, &'a std::ffi::OsStr)>,
     windows: bool,
@@ -86,6 +87,7 @@ pub(super) fn has_https_helper(helpers: &Path) -> bool {
 /// returns the verbatim form on Windows, which a POSIX shell, an OpenSSH
 /// configuration and the Git for Windows launcher do not all accept.
 /// Another path is returned unchanged.
+#[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-073#NATIVE-WINDOWS-LAW")]
 pub fn simplified_path(path: PathBuf) -> PathBuf {
     let Some(text) = path.to_str() else {
         return path;
@@ -126,6 +128,7 @@ pub const PROGRAM_DATA_TOKEN: &str = "__PROGRAMDATA__";
 /// `program_data`, written with the Windows separator throughout. `None`
 /// when `path` does not begin with that token followed by a separator —
 /// the token is a whole leading component, never a prefix of a name.
+#[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-073#NATIVE-WINDOWS-LAW")]
 pub fn expand_program_data(path: &str, program_data: &str) -> Option<String> {
     let tail = path
         .strip_prefix(PROGRAM_DATA_TOKEN)?
@@ -149,6 +152,7 @@ pub fn expand_program_data(path: &str, program_data: &str) -> Option<String> {
 /// every drive the process might be on. `windows` is a parameter, not a
 /// `cfg`, so the Windows decision is tested on every platform; with
 /// `windows` false this is exactly [`Path::is_absolute`].
+#[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-073#NATIVE-WINDOWS-LAW")]
 pub fn absolute_path(path: &Path, windows: bool) -> bool {
     if !windows {
         return path.is_absolute();
@@ -168,6 +172,7 @@ pub fn absolute_path(path: &Path, windows: bool) -> bool {
 
 /// A Windows named-pipe path (`\\.\pipe\name`), by either separator
 /// spelling: the endpoint of the Windows OpenSSH agent.
+#[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-073#NATIVE-WINDOWS-LAW")]
 pub fn named_pipe(path: &Path) -> bool {
     path.to_str().is_some_and(|text| {
         let text = text.replace('/', "\\");
@@ -182,6 +187,7 @@ pub fn named_pipe(path: &Path) -> bool {
 /// to (`<prefix>/cmd/git.exe`, `<prefix>/bin/git.exe` or
 /// `<prefix>/mingw64/bin/git.exe` → `<prefix>/usr/bin/ssh.exe`): the client
 /// Git for Windows itself runs unless it was installed to use another.
+#[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-073#NATIVE-WINDOWS-LAW")]
 pub fn bundled_ssh(git: &Path, exists: impl Fn(&Path) -> bool) -> Option<PathBuf> {
     git.ancestors()
         .skip(1)
@@ -207,6 +213,7 @@ pub struct WindowsSshClient {
 /// caller's `HOME`, like Git itself. The Windows OpenSSH client reads
 /// `%ProgramData%\ssh\ssh_config`, the profile directory, and the agent's
 /// named pipe `\\.\pipe\openssh-ssh-agent`.
+#[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-073#NATIVE-WINDOWS-LAW")]
 pub fn windows_ssh_client(
     executable: PathBuf,
     program_data: Option<PathBuf>,

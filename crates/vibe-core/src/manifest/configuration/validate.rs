@@ -3,6 +3,7 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-069#AUTHORED-SCOPES"
 use super::*;
 use crate::PackageKind;
 use crate::manifest::{FieldError, FieldPath, Requires, declarant_path, is_portable_token};
+use specmark::spec;
 use std::collections::BTreeSet;
 
 use crate::configuration::valid_identifier as literal;
@@ -186,6 +187,7 @@ impl ConfigurationDecl {
         Ok(())
     }
 
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-069#AUTHORED-SCOPES")]
     pub(crate) fn validate_scope(
         &self,
         requires: &Requires,

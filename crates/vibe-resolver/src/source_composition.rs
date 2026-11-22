@@ -1,5 +1,6 @@
 //! Ordered source families retain their original version domain and source owner.
 use crate::{DepProviderError, SourceCandidateProvider};
+use specmark::spec;
 use std::collections::{BTreeMap, BTreeSet};
 use vibe_core::Group;
 use vibe_registry::source_candidates::*;
@@ -48,6 +49,7 @@ pub(crate) fn first<T>(
         name: name.into(),
     }))
 }
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#solver")]
 pub(crate) fn inventory(
     providers: &[&dyn SourceCandidateProvider],
     group: &Group,

@@ -24,6 +24,7 @@ use super::readme::{self, Block};
 use super::{Composed, Related};
 use crate::error::{DocError, Result};
 use crate::pages::SPEC_ROOT;
+use specmark::spec;
 
 /// Where the manifest reference page is served from.
 pub const MANIFEST_PAGE: &str = "manifest.xml";
@@ -35,6 +36,7 @@ pub const README_PAGE: &str = "readme.xml";
 pub const BOOT_SNIPPET_PAGE: &str = "boot-snippet.xml";
 
 /// Write the composed pages of a level-0 render.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-057#LEVEL-ZERO")]
 pub fn compose(
     source: &Path,
     work: &Path,

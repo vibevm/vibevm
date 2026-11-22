@@ -29,6 +29,7 @@ pub(crate) enum Present {
 
 /// Classify the path: a POSIX symlink or a Windows junction reads back as
 /// [`Present::Link`]; anything else that exists is [`Present::Other`].
+#[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-059#path-directories")]
 pub(crate) fn inspect(path: &Path) -> std::io::Result<Present> {
     let metadata = match fs::symlink_metadata(path) {
         Ok(metadata) => metadata,
@@ -63,6 +64,7 @@ pub(crate) fn normalise(path: PathBuf) -> PathBuf {
 
 /// Remove the link at `path`; a missing one is already removed. Only a link
 /// is ever removed here — the caller classifies first.
+#[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-059#path-directories")]
 pub(crate) fn remove(path: &Path) -> std::io::Result<()> {
     let result = if cfg!(windows) {
         // A junction is a directory entry; a POSIX symlink is a file entry.
@@ -82,6 +84,7 @@ pub(crate) fn remove(path: &Path) -> std::io::Result<()> {
 /// so a reader never sees the name missing; Windows has no atomic rename
 /// over a junction, so the old junction is removed and the new one created
 /// under the home's mutation lock.
+#[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-059#path-directories")]
 pub(crate) fn point(path: &Path, target: &Path) -> std::io::Result<()> {
     if let Some(parent) = path.parent() {
         fs::create_dir_all(parent)?;

@@ -102,6 +102,7 @@ pub(crate) fn names_a_launcher(index: &Index, key: &str) -> bool {
 /// An unreadable or malformed counter reads as `0` rather than refusing a
 /// listing: the number is a change hint, and a client that sees it go
 /// backwards refetches, which is what it would do anyway.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-059#launcher-catalog")]
 pub fn revision(settings: &SettingsRoot) -> u64 {
     fs::read_to_string(settings.revision_path())
         .ok()

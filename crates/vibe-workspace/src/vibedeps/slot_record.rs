@@ -47,6 +47,7 @@ pub enum SlotFileDisposition {
 }
 
 /// Read and validate the slot record rooted at `slot`.
+#[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#SLOT-RECORD")]
 pub fn read_slot_record(slot: &Path) -> Result<SlotRecord, String> {
     let path = slot.join(SLOT_RECORD_FILENAME);
     refuse_record_symlink(&path)?;
@@ -232,6 +233,7 @@ fn record_to_wire(record: &SlotRecord) -> WireSlotRecord {
 /// existing bounded-memory path for large package payloads. Callers
 /// that already own exact bytes use [`sha256_bytes`] instead; the parity
 /// test below pins both entry points to one SHA-256 spelling.
+#[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#SLOT-RECORD")]
 pub fn sha256_file(path: &Path) -> Result<String, String> {
     let mut file = fs::File::open(path)
         .map_err(|error| format!("cannot open `{}` for SHA-256: {error}", path.display()))?;
@@ -261,6 +263,7 @@ pub fn sha256_bytes(bytes: &[u8]) -> String {
 
 /// Verify exactly the payload files named by `record`, ignoring every
 /// unrecorded path in the slot.
+#[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#SLOT-RECORD")]
 pub fn verify_recorded_files(slot: &Path, record: &SlotRecord) -> Result<(), String> {
     validate_record(record)
         .map_err(|error| format_validation_error(&slot.join(SLOT_RECORD_FILENAME), error))?;
@@ -291,6 +294,7 @@ pub fn verify_recorded_files(slot: &Path, record: &SlotRecord) -> Result<(), Str
 
 /// Compute recipe-0 aggregate identity from exactly the sorted recorded
 /// payload paths: `path || NUL || bytes || NUL`.
+#[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#SLOT-RECORD")]
 pub fn compute_recorded_payload_hash(
     slot: &Path,
     files: &[SlotFile],

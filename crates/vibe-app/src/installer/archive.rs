@@ -55,6 +55,7 @@ pub fn extract(
 
 /// [`extract`] with an explicit [`LinkMode`], so both modes are testable
 /// on every platform.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-059#installer-separation")]
 pub fn extract_with(
     archive: &Path,
     format: ArchiveFormat,

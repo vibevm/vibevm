@@ -35,6 +35,7 @@ use std::collections::BTreeMap;
 use std::fmt;
 use std::path::{Path, PathBuf};
 
+use specmark::spec;
 use vibe_core::Group;
 use vibe_core::manifest::Lockfile;
 use vibe_registry::{LocalRegistry, store};
@@ -60,6 +61,7 @@ pub enum Source {
 }
 
 impl Source {
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-057#LOCAL-WARMUP")]
     pub fn as_str(self) -> &'static str {
         match self {
             Source::Checkout => "checkout",
@@ -138,6 +140,7 @@ impl SpecSources {
     /// let world = SpecSources::for_checkout("/repo", Some("org.vibevm.core"), "vibevm");
     /// assert!(world.has_checkout());
     /// ```
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-057#LOCAL-WARMUP")]
     pub fn for_checkout(
         repo_root: impl Into<PathBuf>,
         group: Option<&str>,
@@ -198,6 +201,7 @@ impl SpecSources {
 
     /// Find the instance of `<group>/<name>` the chain offers, nearest
     /// source first.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-057#LOCAL-WARMUP")]
     pub fn instance_of(&self, group: &str, name: &str) -> Option<Instance> {
         if let Some((coord, root)) = &self.checkout
             && coord.group.as_deref() == Some(group)
@@ -229,6 +233,7 @@ impl SpecSources {
     }
 
     /// Fallible selection for native consumers: a malformed selected lock is not absence.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-057#LOCAL-WARMUP")]
     pub(crate) fn selected_instance(
         &self,
         group: &str,
@@ -292,6 +297,7 @@ impl SpecSources {
     /// root» half — including the inversion of the lossy `PROP-042`
     /// truncation back to `PROP-042-example-thing.xml` — is
     /// [`vibe_spec::FileResolver`], which owns that law.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-057#LOCAL-WARMUP")]
     pub fn locate(&self, address: &SpecAddress) -> Result<Located, String> {
         let (group, name) = match &address.authority {
             Authority::Package { group, name, .. } => (group.clone(), name.clone()),

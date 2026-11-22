@@ -7,6 +7,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-059#menu");
 
+use specmark::spec;
 use std::collections::BTreeSet;
 use std::fs;
 use std::path::{Component, Path, PathBuf};
@@ -71,6 +72,7 @@ fn package_relative_files(installation: &Installation) -> BTreeSet<&str> {
 /// missing, or that a link resolves outside the package tree, is not copied
 /// (the listings report it missing); the copies are written beside the old
 /// ones and renamed over them.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-059#menu")]
 pub(crate) fn copy_package_icons(
     home: &SettingsRoot,
     installation: &Installation,
@@ -133,6 +135,7 @@ fn stage(
 }
 
 /// Remove the copies of `package` from `home`; nothing to remove is fine.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-059#menu")]
 pub(crate) fn remove_package_icons(home: &SettingsRoot, package: &PackageCoordinate) {
     let _ = fs::remove_dir_all(copies_dir(home, package));
 }

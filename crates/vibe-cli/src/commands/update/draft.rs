@@ -15,6 +15,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#install-workflow-in-detail");
 
+use specmark::spec;
 use std::path::{Path, PathBuf};
 
 use anyhow::Result;
@@ -152,6 +153,7 @@ impl UpdateDraft {
         }
     }
 
+    #[spec(implements = "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#install-workflow-in-detail")]
     pub(crate) fn render(
         self,
         ctx: &output::Context,

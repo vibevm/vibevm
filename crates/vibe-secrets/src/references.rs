@@ -1,6 +1,7 @@
 //! Fixed trusted participant reference index; metadata-only, no value access.
 use super::*;
 use sha2::{Digest, Sha256};
+use specmark::spec;
 const LIMIT: usize = 1024 * 1024;
 mod bindings;
 mod compatibility;
@@ -176,6 +177,7 @@ fn encode(index: &ReferenceIndex) -> Result<String, Error> {
 impl Store {
     /// Observe a fixed trusted consumer inventory; a registered absent index is
     /// unknown. Never creates a root, locks or timestamps.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-000#TS-USER-KEYRING")]
     pub fn reference_snapshot(&self, participant: &str) -> Result<ReferenceSnapshot, Error> {
         owner(participant)?;
         let Some((project, root)) = self.open(false)? else {
@@ -213,6 +215,7 @@ impl Store {
     /// authentication or proof that supplied bytes are nonsecret. Trusted owner
     /// code must classify input; never expose this as a generic tool operation.
     /// No caller root/paths/value handle or callback is accepted.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-000#TS-USER-KEYRING")]
     pub fn create_reference(
         &self,
         participant: &str,
@@ -307,6 +310,7 @@ impl Store {
         Ok(id)
     }
     /// Explicit unbinding retains owner registration, immutable config and secret.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-000#TS-USER-KEYRING")]
     pub fn remove_reference(
         &self,
         participant: &str,
@@ -364,6 +368,7 @@ impl Store {
         Ok(())
     }
     /// Select only metadata; never opts a harness into managed authentication.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-000#TS-USER-KEYRING")]
     pub fn select_reference(
         &self,
         participant: &str,

@@ -96,6 +96,7 @@ const HEADER: &str = "# Managed by vibe (PROP-065#env-step): one line per applie
 impl ProfileEnvironment {
     /// `settings` is the user settings root holding `env.sh`; `home` the
     /// user's home directory holding the shell startup files.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-065#env-step")]
     pub fn new(settings: &Path, home: &Path) -> Self {
         Self {
             settings: settings.to_path_buf(),
@@ -233,6 +234,7 @@ fn fish_line(entry: &EnvEntry) -> String {
 /// let settings = vibe_app::SettingsRoot::new(dir.path());
 /// assert!(vibe_app::recorded_environment(&settings).unwrap().is_empty());
 /// ```
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-065#env-step")]
 pub fn recorded_environment(settings: &SettingsRoot) -> Result<Vec<EnvEntry>, crate::AppError> {
     let index = Index::load(settings)?;
     Ok(index

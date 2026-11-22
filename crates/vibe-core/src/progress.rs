@@ -23,6 +23,7 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-060#OBSERVATION");
 
 pub mod transfer;
 
+use specmark::spec;
 use std::fmt;
 use std::sync::Arc;
 use std::sync::atomic::{AtomicU8, AtomicU64, Ordering};
@@ -263,6 +264,7 @@ impl Progress {
     }
 
     /// Creates an invocation-owned progress tree backed by `observer`.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-060#OBSERVATION")]
     pub fn new(observer: Arc<dyn ProgressObserver + Send + Sync>) -> Self {
         Self {
             inner: Some(Arc::new(ProgressInner {
@@ -426,6 +428,7 @@ impl ProgressTask {
     }
 
     /// Returns a progress handle whose new tasks are children of this task.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-060#OBSERVATION")]
     pub fn progress(&self) -> Progress {
         let Some(state) = &self.state else {
             return Progress::default()
@@ -447,6 +450,7 @@ impl ProgressTask {
     }
 
     /// Reports a measurement obtained from work the operation already needs.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-060#OBSERVATION")]
     pub fn set_progress(&self, completed: u64, total: Option<u64>, unit: &str) {
         if let Some(state) = &self.state
             && state.is_active()
@@ -463,6 +467,7 @@ impl ProgressTask {
     }
 
     /// Reports a bounded diagnostic detail for this task.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-060#OBSERVATION")]
     pub fn detail(&self, detail: impl Into<String>) {
         if let Some(state) = &self.state
             && state.is_active()
@@ -475,6 +480,7 @@ impl ProgressTask {
 
     /// Reports a warning or error produced by child work. Unlike routine
     /// detail, CLI renderers keep these visible without verbose mode.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-060#OBSERVATION")]
     pub fn diagnostic(&self, level: ProgressDiagnosticLevel, message: impl Into<String>) {
         if let Some(state) = &self.state
             && state.is_active()
@@ -494,6 +500,7 @@ impl ProgressTask {
     }
 
     /// Marks the task intentionally skipped.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-060#OBSERVATION")]
     pub fn skip(&self, reason: impl Into<String>) {
         if let Some(state) = &self.state {
             state.terminate(ProgressEventKind::Skipped {
@@ -503,6 +510,7 @@ impl ProgressTask {
     }
 
     /// Marks the task failed without changing the operation's own error.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-060#OBSERVATION")]
     pub fn fail(&self, message: impl Into<String>) {
         if let Some(state) = &self.state {
             state.terminate(ProgressEventKind::Failed {

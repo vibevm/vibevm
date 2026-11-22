@@ -8,6 +8,7 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#markup");
 
 use crate::model::{Action, Audience, Stage, State};
+use specmark::spec;
 
 /// A lexed `<status …>` element, attributes still raw.
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -46,6 +47,7 @@ pub struct DecodedAttrs {
 }
 
 /// Try to lex a `<status` element starting exactly at `at` in `s`.
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#STATUS-ELEMENT")]
 pub fn lex_element(s: &str, at: usize) -> Option<RawElement> {
     let rest = &s[at..];
     let tag = "<status";
@@ -142,6 +144,7 @@ pub fn lex_element(s: &str, at: usize) -> Option<RawElement> {
 }
 
 /// Decode raw attribute pairs into the closed vocabularies (PROP-043 §3.2).
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#VOCAB-CLOSED")]
 pub fn decode_attrs(raw: &[(String, String)]) -> DecodedAttrs {
     let mut d = DecodedAttrs::default();
     for (name, value) in raw {
@@ -216,6 +219,7 @@ pub fn decode_attrs(raw: &[(String, String)]) -> DecodedAttrs {
 /// lookahead, which only the bare form needs), any `@word` whose word is not a
 /// legal stage, a stage followed by `/notastate` (that is a candidate typo —
 /// the caller decides whether position makes it marker-shaped enough to flag).
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#SHORTHAND-FORMS")]
 pub fn lex_shorthand(s: &str, at: usize) -> Option<RawShorthand> {
     let rest = &s[at..];
     if !rest.starts_with('@') {

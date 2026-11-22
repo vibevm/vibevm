@@ -39,6 +39,7 @@ use markers::scan_markers;
 use requires::scan_requirements;
 use requires_owner::check_requirement_owners;
 use sha2::{Digest, Sha256};
+use specmark::spec;
 use swallowed::check_swallowed_anchors;
 use units::collect_units;
 
@@ -54,6 +55,9 @@ pub use facts::{
 };
 
 /// Parse one Markdown document.
+#[spec(
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#PARSE-MARKDOWN-FIRST"
+)]
 pub fn parse_document(path: &str, text: &str) -> ParsedDoc {
     let mut doc = ParsedDoc {
         path: path.to_string(),

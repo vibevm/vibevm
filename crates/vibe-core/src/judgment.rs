@@ -71,6 +71,7 @@ impl Verdict {
     ///
     /// assert_eq!(Verdict::Run.reason(), None);
     /// ```
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-065#ordinary-plan")]
     pub fn reason(&self) -> Option<&str> {
         match self {
             Self::Run => None,

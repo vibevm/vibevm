@@ -23,6 +23,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-076#SYS-CACHE-FACTS");
 
+use specmark::spec;
 use std::collections::BTreeMap;
 
 use anyhow::{Result, bail};
@@ -69,6 +70,7 @@ impl ProviderUsage {
     /// which covers the shapes both live spellings use. A response with no
     /// usage object at all is a refusal: a diagnostics report built from
     /// nothing would be indistinguishable from one built from zeros.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-076#SYS-CACHE-FACTS")]
     pub(crate) fn read(body: &str) -> Result<Self> {
         let document: serde_json::Value = serde_json::from_str(body)
             .map_err(|error| anyhow::anyhow!("the provider response does not parse: {error}"))?;

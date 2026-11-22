@@ -6,6 +6,9 @@ use super::*;
 
 /// Resolve native captured bytes without granting any filesystem or source
 /// authority. The caller owns the metadata/byte observation and read role.
+#[specmark::spec(
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#URI-OBSERVED-SOURCE-READ"
+)]
 pub fn resolve_captured_declared_source(
     address: &SpecAddress,
     metadata: ResolvedSourceMetadata,

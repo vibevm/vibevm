@@ -16,6 +16,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-076#SYS-HARNESS-DELIVERY");
 
+use specmark::spec;
 use std::path::Path;
 
 use super::HarnessKind;
@@ -103,6 +104,7 @@ pub const QWEN_MEASURED_VERSION: &str = "0.27.2";
 /// base prompt. [`qwen_closed_slots`] is that half, kept separate because it
 /// is what a `read` delivery and a soft launch have to say and the carrier
 /// description is not.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-076#SYS-QWEN")]
 pub fn qwen_carrier_description() -> String {
     format!(
         "Qwen Code's launch carrier is `QWEN_SYSTEM_IDENTITY_MD`: a path to a file holding \
@@ -147,6 +149,7 @@ pub fn qwen_carrier_description() -> String {
 /// `general.outputStyle`, which Qwen Code says itself. The identity carrier
 /// is the same idea reduced to the one paragraph that *is* knowable, which
 /// is why it ships and this does not.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-076#SYS-QWEN")]
 pub fn qwen_closed_slots() -> String {
     format!(
         "Qwen Code's other two instruction slots stay closed, for opposite reasons. \

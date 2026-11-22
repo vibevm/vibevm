@@ -22,6 +22,7 @@ use std::path::{Path, PathBuf};
 use vibe_specdoc::doc::{SpecDoc, Vocabulary};
 
 use crate::error::{DocError, Result};
+use specmark::spec;
 
 /// Where a package keeps the text it publishes, relative to its root.
 pub const SPEC_ROOT: &str = "vibevm/vibespecs";
@@ -98,6 +99,7 @@ impl PageSet {
 /// assert_eq!(set.pages[0].rel, "start/hello.xml");
 /// assert!(set.unreadable.is_empty());
 /// ```
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-057#PIPE-LIBRARY")]
 pub fn read_package(package_dir: &Path) -> Result<PageSet> {
     let captured = crate::citations::SpecSources::new()
         .capture_pages(package_dir)
@@ -108,6 +110,7 @@ pub fn read_package(package_dir: &Path) -> Result<PageSet> {
     Ok(captured.set().clone())
 }
 
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-057#PIPE-LIBRARY")]
 pub(crate) fn read_legacy(package_dir: &Path) -> Result<PageSet> {
     use vibe_spec::source_policy::{PackageSourceMode, observe_package_policy};
     let policy = observe_package_policy(package_dir)?;
@@ -163,6 +166,7 @@ pub(crate) fn read_legacy(package_dir: &Path) -> Result<PageSet> {
 ///     vec!["start/index".to_string()]
 /// );
 /// ```
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-057#PIPE-LIBRARY")]
 pub fn documents(package_dir: &Path) -> Result<Vec<String>> {
     use vibe_spec::source_policy::{PackageSourceMode, observe_package_policy};
     let policy = observe_package_policy(package_dir)?;
@@ -200,6 +204,7 @@ pub fn document_of(rel: &str) -> &str {
 ///
 /// A missing spec root is not an error: a package may legitimately carry
 /// no pages yet, and an empty walk says so more usefully than a refusal.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-057#PIPE-LIBRARY")]
 pub(crate) fn walk_package(package_dir: &Path) -> Result<Vec<(String, PathBuf)>> {
     let root = package_dir.join(SPEC_ROOT);
     if !root.is_dir() {

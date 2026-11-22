@@ -49,6 +49,7 @@ pub enum PinTarget {
 
 impl PinTarget {
     /// The stable spelling (`taskbar`, `favorites`).
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-059#launcher-catalog")]
     pub fn as_str(self) -> &'static str {
         match self {
             Self::Taskbar => "taskbar",
@@ -143,6 +144,7 @@ pub struct UserLaunchers {
 
 impl UserLaunchers {
     /// Read the layer; an absent file is an empty arrangement.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-059#launcher-catalog")]
     pub fn load(settings: &SettingsRoot) -> Result<Self, StateError> {
         let path = settings.user_launchers_path();
         match fs::read_to_string(&path) {
@@ -164,6 +166,7 @@ impl UserLaunchers {
 
     /// Replace the layer without a revision of its own, for a change that
     /// bumps once for several files.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-059#launcher-catalog")]
     pub(crate) fn write(&self, settings: &SettingsRoot) -> Result<(), StateError> {
         let path = settings.user_launchers_path();
         let body = toml::to_string(self).map_err(|error| StateError::UserLaunchers {
@@ -188,6 +191,7 @@ impl UserLaunchers {
 
     /// The names of the collections one launcher key sits in, in the order
     /// the collections are kept.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-059#launcher-catalog")]
     pub fn collections_of(&self, key: &str) -> Vec<String> {
         self.collections
             .iter()
@@ -197,6 +201,7 @@ impl UserLaunchers {
     }
 
     /// Where one launcher key is pinned.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-059#launcher-catalog")]
     pub fn pins_of(&self, key: &str) -> Vec<PinTarget> {
         [
             (PinTarget::Taskbar, &self.pins.taskbar),
@@ -234,6 +239,7 @@ impl UserLaunchers {
     }
 
     /// The `vibe-app-collections/1` document of this layer.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-059#launcher-catalog")]
     pub fn to_wire(&self, settings: &SettingsRoot) -> wire::ApplicationCollections {
         wire::ApplicationCollections {
             protocol: "vibe-app-collections/1".into(),

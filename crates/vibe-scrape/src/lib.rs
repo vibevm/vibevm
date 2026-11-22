@@ -4,6 +4,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-056#IMPL-A");
 
+use specmark::spec;
 use std::path::{Component, Path, PathBuf};
 
 pub mod contract;
@@ -21,6 +22,7 @@ const DEFAULT_CONTRACT: &str = "vibevm/scrape/contract.toml";
 const CONTRACT_CAP: usize = 1024 * 1024;
 
 /// Parse, observe and fully prepare a scrape without mutating the project.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-056#IMPL-A")]
 pub fn prepare(request: ScrapeRequest) -> Result<PreparedScrape, ScrapeError> {
     prepare_with_health(request, |project, contract, inventory| {
         let mut resolver = health::SystemHealthResolver::new(project);
@@ -102,6 +104,7 @@ pub fn check_contract(request: ScrapeRequest) -> Result<PreparedScrape, ScrapeEr
 
 /// Create the conservative schema-1 default contract, refusing an existing
 /// file. The parent walk rejects links before the exclusive create.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-056#IMPL-A")]
 pub fn init_contract(root: &Path) -> Result<PathBuf, ScrapeError> {
     if !root.is_absolute() {
         return Err(ScrapeError::request("project root must be absolute"));

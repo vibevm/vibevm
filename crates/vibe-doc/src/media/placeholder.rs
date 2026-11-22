@@ -35,6 +35,7 @@ mod raster;
 mod tests;
 
 use sha2::{Digest, Sha256};
+use specmark::spec;
 use vibe_core::PackageKind;
 
 /// The banner's canvas, in the proportion D-20 gives it (3:1).
@@ -101,6 +102,9 @@ pub struct Card {
 impl Card {
     /// The banner of `coordinate`: the ground, its pattern, and the
     /// kind's glyph standing at the left where a title would begin.
+    #[spec(
+        implements = "spec://org.vibevm.core/vibevm/common/PROP-057#CARD-PLACEHOLDERS-GENERATED"
+    )]
     pub fn banner(coordinate: &str, kind: PackageKind) -> Card {
         let seed = seed(coordinate);
         let mut card = ground(&seed, BANNER.0, BANNER.1);
@@ -113,6 +117,9 @@ impl Card {
     /// The icon of `coordinate`: the same ground, no pattern, and the
     /// glyph filling it. An icon is read at 32 px on a shelf, and a
     /// pattern at that size is noise.
+    #[spec(
+        implements = "spec://org.vibevm.core/vibevm/common/PROP-057#CARD-PLACEHOLDERS-GENERATED"
+    )]
     pub fn icon(coordinate: &str, kind: PackageKind) -> Card {
         let seed = seed(coordinate);
         let mut card = ground(&seed, ICON.0, ICON.1);
@@ -129,6 +136,7 @@ impl Card {
     /// The title is drawn by [`raster`], not carried here, because the
     /// SVG backend has no font to set it in and inventing one would put
     /// a picture on the site that the crawler's copy does not match.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-057#CARD-PREVIEW-COMPOSED")]
     pub fn preview(coordinate: &str, kind: PackageKind) -> Card {
         let seed = seed(coordinate);
         let mut card = ground(&seed, PREVIEW.0, PREVIEW.1);
@@ -141,6 +149,9 @@ impl Card {
     /// The picture as inline SVG: no script, no external reference, no
     /// file — markup a page embeds and a content policy needs no
     /// exception for.
+    #[spec(
+        implements = "spec://org.vibevm.core/vibevm/common/PROP-057#CARD-PLACEHOLDERS-GENERATED"
+    )]
     pub fn to_svg(&self) -> String {
         let mut out = format!(
             "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 {w} {h}\" \

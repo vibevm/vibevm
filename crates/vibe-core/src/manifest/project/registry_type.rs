@@ -60,6 +60,9 @@ impl RegistryType {
     ];
 
     /// The stored (lower-case) spelling.
+    #[spec(
+        implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#REGISTRY-TYPE-FIELD"
+    )]
     pub const fn as_str(self) -> &'static str {
         match self {
             RegistryType::Github => "github",
@@ -71,6 +74,9 @@ impl RegistryType {
     }
 
     /// Case-insensitive parse; surrounding whitespace is ignored.
+    #[spec(
+        implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#REGISTRY-TYPE-FIELD"
+    )]
     pub fn parse(input: &str) -> Option<Self> {
         let wanted = input.trim();
         Self::ALL
@@ -81,6 +87,9 @@ impl RegistryType {
     /// The type a declaration without `type` gets: `file:` → `localdir`,
     /// host `github.com` → `github`, host `gitverse.ru` → `gitverse`, any
     /// other URL → `git`. `monorepo` is never inferred.
+    #[spec(
+        implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#REGISTRY-TYPE-FIELD"
+    )]
     pub fn infer(url: &str) -> Self {
         let trimmed = url.trim();
         if trimmed.to_ascii_lowercase().starts_with("file:") {
@@ -103,6 +112,9 @@ impl RegistryType {
     }
 
     /// The accepted spellings, for diagnostics.
+    #[spec(
+        implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#REGISTRY-TYPE-FIELD"
+    )]
     pub fn expected_list() -> String {
         Self::ALL
             .iter()

@@ -17,6 +17,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#command-summary");
 
+use specmark::spec;
 use std::collections::BTreeSet;
 use std::path::{Path, PathBuf};
 
@@ -33,6 +34,7 @@ use crate::commands::install::{InstallResolver, build_install_resolver, exact_pi
 use crate::commands::short_name;
 use crate::output;
 
+#[spec(implements = "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#command-summary")]
 pub(crate) fn run(ctx: &output::Context, args: CacheAddArgs, root_offline: bool) -> Result<()> {
     let progress = ctx.progress();
     let preparation = progress.task("Preparing cache warm-up");
@@ -308,6 +310,7 @@ fn warm_ref(coordinate: &str, constraint: &str) -> Option<PackageRef> {
 /// The offline ladder is resolved here once, exactly like `vibe
 /// install` (PROP-010 §2.5): root `--offline` > `VIBE_OFFLINE` >
 /// user-config `[net].offline`.
+#[spec(implements = "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#command-summary")]
 pub(crate) fn cache_resolver(path: &Path, root_offline: bool) -> Result<(InstallResolver, bool)> {
     let user_config = UserConfig::load().context("loading the user config")?;
     let offline = output::resolve_offline(root_offline, user_config.net.offline);

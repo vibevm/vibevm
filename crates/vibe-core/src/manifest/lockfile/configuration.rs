@@ -397,6 +397,7 @@ impl Lockfile {
         Ok(())
     }
 
+    #[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-069#PERSISTENCE")]
     pub(crate) fn for_write(&self) -> Result<Self> {
         // Stage A deliberately has no public writer for submitted history.
         if self

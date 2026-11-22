@@ -1,5 +1,6 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-050#model");
 
+use specmark::spec;
 use std::collections::BTreeMap;
 
 use serde::{Deserialize, Deserializer, Serialize};
@@ -79,6 +80,7 @@ impl VisibilityMeta {
     ///
     /// assert!(VisibilityMeta::default().is_empty());
     /// ```
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-050#VISIBILITY-SECTION")]
     pub fn is_empty(&self) -> bool {
         self.friends.is_empty()
             && self.unfriend.is_empty()
@@ -187,6 +189,7 @@ impl OverrideTable {
     /// ).unwrap();
     /// assert_eq!(table.targets().unwrap().len(), 1);
     /// ```
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-050#OVERRIDE-ANYWHERE")]
     pub fn targets(&self) -> Result<Vec<(OverrideTarget, &OverrideEntry)>, String> {
         self.0
             .iter()

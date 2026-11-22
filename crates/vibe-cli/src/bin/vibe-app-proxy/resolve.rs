@@ -2,6 +2,7 @@
 //! `storage.toml`, mirroring `vibe-app`'s library availability and launcher
 //! template rules without depending on that crate.
 
+use specmark::spec;
 use std::collections::BTreeMap;
 use std::ffi::OsString;
 use std::fs;
@@ -53,6 +54,7 @@ struct Marker {
 pub(crate) const SESSION_OFF: &str = "none";
 
 /// Resolve `command` for the proxy at `exe` under the session value `session`.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-059#proxy")]
 pub(crate) fn resolve(exe: &Path, command: &str, session: Option<&str>) -> Result<Launch, String> {
     let home = home_of(exe)?;
     let index = read_index(&home)?;
@@ -284,6 +286,7 @@ fn library_root(home: &Path, id: &str) -> Result<PathBuf, String> {
 /// (PROP-059 `#desktop-entries`): `{file}` / `{url}` take the first caller
 /// argument, `{files}` / `{urls}` all of them, an unfilled placeholder
 /// argument is dropped, and caller arguments no placeholder took follow.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-059#desktop-entries")]
 pub(crate) fn operands(args: &[String], caller: &[OsString]) -> Vec<OsString> {
     let mut consumed = false;
     let mut out = Vec::new();
@@ -399,6 +402,7 @@ fn contained(vars: &Vars<'_>, template: &str, field: &str) -> Result<PathBuf, St
 
 /// One-pass expansion of `$app_root`, `$app_bin`, `$vibe_home` (braced or
 /// not) and `$$`; `$project_root` needs a project, which a proxy never has.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-059#launcher-paths")]
 pub(crate) fn expand(template: &str, vars: &Vars<'_>, what: &str) -> Result<String, String> {
     let mut result = String::new();
     let mut chars = template.chars().peekable();

@@ -145,6 +145,7 @@ impl ProviderMap {
     }
 
     /// The providers of one row, as `remap list` shows them.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-066#providers")]
     pub fn providers_of(&self, row: &RowIdentity) -> &[String] {
         self.rows
             .iter()
@@ -178,6 +179,7 @@ impl ProviderMap {
 
     /// Write the map under the home's lock. The caller holds
     /// [`super::consent::lock`]; this function only replaces the file.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-066#providers")]
     pub fn store(&self, home: &Path) -> Result<(), ConsentError> {
         let path = providers_path(home);
         let body =
@@ -190,6 +192,7 @@ impl ProviderMap {
 
     /// Read the map of `home`; a missing or unreadable file is an empty
     /// map, because the map is derived and the next write replaces it.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-066#providers")]
     pub fn load(home: &Path) -> Self {
         std::fs::read_to_string(providers_path(home))
             .ok()
@@ -232,6 +235,7 @@ pub struct Probed {
 impl Reachability {
     /// Read the record of `home`; a missing or unreadable file is an empty
     /// record, because nothing has been probed yet.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-066#diagnostics-reachability")]
     pub fn load(home: &Path) -> Self {
         std::fs::read_to_string(reachability_path(home))
             .ok()
@@ -240,6 +244,7 @@ impl Reachability {
     }
 
     /// Write the record of `home`.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-066#diagnostics-reachability")]
     pub fn store(&self, home: &Path) -> Result<(), ConsentError> {
         let path = reachability_path(home);
         let body =

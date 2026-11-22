@@ -1,11 +1,13 @@
 //! Ordinary-only answer intake; source-bound preview is not apply permission.
 use crate::{cli::InstallArgs, output};
 use anyhow::{Result, anyhow, bail, ensure};
+use specmark::spec;
 use vibe_wire::generated::{
     ordinary_configuration_preview_request::{Input, OrdinaryConfigurationPreviewRequest},
     ordinary_install_answers::OrdinaryInstallAnswers,
 };
 
+#[spec(implements = "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#install-workflow-in-detail")]
 pub(crate) fn prepare(ctx: &output::Context, args: &mut InstallArgs) -> Result<()> {
     if args.ordinary_answers.is_none() && !args.ordinary_interactive {
         return Ok(());

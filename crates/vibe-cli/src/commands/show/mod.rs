@@ -30,6 +30,7 @@ mod purls;
 mod source_path;
 mod subskills;
 
+use specmark::spec;
 use std::path::{Path, PathBuf};
 
 use anyhow::{Context, Result, bail};
@@ -38,6 +39,7 @@ use vibe_core::manifest::Manifest;
 use crate::cli::{ShowArgs, ShowSubcommand};
 use crate::output;
 
+#[spec(implements = "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#command-summary")]
 pub fn run(ctx: &output::Context, args: ShowArgs, offline: bool) -> Result<()> {
     match args.command {
         ShowSubcommand::ConfigurationPreview(sub) => configuration_preview::run(ctx, sub),

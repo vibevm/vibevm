@@ -3,6 +3,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-059#commands");
 
+use specmark::spec;
 use std::path::{Path, PathBuf};
 
 use anyhow::{Context, Result, bail};
@@ -233,6 +234,7 @@ pub(crate) fn install_reference(
     }
 }
 
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-059#commands")]
 pub(crate) fn install_with_selected(
     ctx: &output::Context,
     args: InstallArgs,
@@ -466,6 +468,7 @@ pub(crate) fn apply_extras(
     );
 }
 
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-059#commands")]
 pub fn update(
     ctx: &output::Context,
     args: UpdateArgs,
@@ -523,6 +526,7 @@ pub fn update(
 
 /// One application update with the flags of `args` (PROP-065
 /// `#update-and-rollback`): requirements resolve through the same registry.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-059#commands")]
 pub(crate) fn update_one(
     ctx: &output::Context,
     args: &UpdateArgs,

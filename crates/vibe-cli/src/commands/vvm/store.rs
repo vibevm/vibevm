@@ -180,6 +180,7 @@ impl VersionStore {
     }
 
     /// Write the inventory atomically (tmp + rename).
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-019#layout")]
     pub fn save_state(&self, state: &State) -> Result<(), StoreError> {
         let dir = self.data_dir();
         self.guard_mutation_path(&dir)?;

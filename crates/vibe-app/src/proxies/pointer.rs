@@ -6,6 +6,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-059#proxy");
 
+use specmark::spec;
 use std::fs;
 use std::path::{Path, PathBuf};
 
@@ -26,6 +27,7 @@ struct Pointer {
 /// A pointer to another home that still has an index is refused: one
 /// install root store serves one home. A pointer to a home that is gone is
 /// replaced; anything that is not a pointer is refused and left alone.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-059#proxy")]
 pub(crate) fn ensure(settings: &SettingsRoot) -> Result<(), AppError> {
     let Some(path) = settings.home_pointer_path() else {
         return Ok(());

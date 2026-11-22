@@ -9,6 +9,7 @@ mod kind;
 
 pub use kind::PackageKind;
 
+use specmark::spec;
 use std::fmt;
 use std::str::FromStr;
 
@@ -47,6 +48,9 @@ pub struct Group(String);
 impl Group {
     /// Parse and validate a group string. Surrounding whitespace is trimmed;
     /// the stored form is the trimmed string.
+    #[spec(
+        implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#GROUP-GRAMMAR"
+    )]
     pub fn parse(input: &str) -> Result<Self> {
         let trimmed = input.trim();
         if trimmed.is_empty() {
@@ -308,6 +312,7 @@ pub enum VersionSpec {
 }
 
 impl VersionSpec {
+    #[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#pkgref")]
     pub fn parse(input: &str) -> Result<Self> {
         let trimmed = input.trim();
         if trimmed.is_empty() {
@@ -335,6 +340,7 @@ impl VersionSpec {
     /// set that only [`crate::channel::lower_channel`] can compute, so a
     /// caller that reaches this with a channel has skipped the lowering
     /// and must get a refusal rather than a plausible answer.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#pkgref")]
     pub fn matches(&self, version: &semver::Version) -> bool {
         match self {
             VersionSpec::Latest => true,
@@ -360,6 +366,7 @@ impl VersionSpec {
     /// assert!(!VersionSpec::Latest.is_exact_pin());
     /// assert!(!VersionSpec::parse("lts").unwrap().is_exact_pin());
     /// ```
+    #[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#pkgref")]
     pub fn is_exact_pin(&self) -> bool {
         let VersionSpec::Req(req) = self else {
             return false;
@@ -433,6 +440,9 @@ pub struct PackageRef {
 impl PackageRef {
     /// Construct a `PackageRef` from already-typed parts. `name` is
     /// re-validated as kebab-case.
+    #[spec(
+        implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#PKGREF-GRAMMAR"
+    )]
     pub fn new(
         kind: Option<PackageKind>,
         group: Option<Group>,
@@ -448,6 +458,9 @@ impl PackageRef {
         })
     }
 
+    #[spec(
+        implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#PKGREF-GRAMMAR"
+    )]
     pub fn parse(input: &str) -> Result<Self> {
         let trimmed = input.trim();
         if trimmed.is_empty() {
@@ -492,6 +505,9 @@ impl PackageRef {
     /// an unresolved short ref (no group) it is the bare `<name>`. The
     /// `kind` prefix is never part of it — `kind` is metadata, not identity.
     /// Useful as a map key once refs are qualified.
+    #[spec(
+        implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#IDENTITY-TUPLE"
+    )]
     pub fn qualified_name(&self) -> String {
         match &self.group {
             Some(group) => format!("{group}/{}", self.name),

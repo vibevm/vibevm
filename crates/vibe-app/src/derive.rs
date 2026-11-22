@@ -6,6 +6,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-059#desktop-entries");
 
+use specmark::spec;
 use std::collections::BTreeSet;
 use std::ffi::OsStr;
 use std::fs;
@@ -33,6 +34,7 @@ use crate::desktop::{DesktopFile, exec_words};
 /// assert_eq!(launchers[0].executable, "$app_bin/edit");
 /// assert_eq!(launchers[0].args, ["{files}"]);
 /// ```
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-059#desktop-entries")]
 pub fn derive_launchers(
     app_root: &Path,
     patterns: &[String],
@@ -66,6 +68,7 @@ fn stem(path: &Path) -> String {
 
 /// The launcher one parsed entry describes, or `None` when it is not a
 /// shown `Application` with a `Name` and an `Exec`.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-059#desktop-entries")]
 pub(crate) fn entry_launcher(
     id: &str,
     file: &DesktopFile,
@@ -253,6 +256,7 @@ fn icon_of(value: &str, app_root: Option<&Path>) -> Option<IconDecl> {
 /// assert_eq!(set.svg.as_deref(), Some("$app_root/share/icons/hicolor/scalable/apps/edit.svg"));
 /// assert!(vibe_app::hicolor_icon_set("other", dir.path()).is_none());
 /// ```
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-059#desktop-entries")]
 pub fn hicolor(name: &str, app_root: &Path) -> Option<IconSet> {
     let theme = "share/icons/hicolor";
     let mut set = IconSet::default();
@@ -397,6 +401,7 @@ fn normalise(mut launcher: LauncherDecl) -> Result<LauncherDecl, String> {
 /// assert!(text.contains("[[installer_options.launchers]]"));
 /// assert!(text.contains("kind = \"tui\""));
 /// ```
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-059#desktop-entries")]
 pub fn import_desktop(files: &[PathBuf], app_root: Option<&Path>) -> Result<String, String> {
     #[derive(serde::Serialize)]
     struct Rows {

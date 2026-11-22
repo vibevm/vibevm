@@ -1,7 +1,9 @@
 //! Consume the exact selected owner; metadata is not permission to follow a live origin.
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-073#LOCKED-SOURCE");
 use super::*;
+use specmark::spec;
 impl MultiRegistryResolver {
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-073#LOCKED-SOURCE-LAW")]
     pub(crate) fn fetch_retained_registry(
         &self,
         resolution: &MultiResolution,

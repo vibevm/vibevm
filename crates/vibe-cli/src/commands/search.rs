@@ -20,6 +20,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#root");
 
+use specmark::spec;
 use std::collections::{BTreeMap, BTreeSet, HashMap};
 use std::path::Path;
 
@@ -65,6 +66,7 @@ pub struct SearchEnv {
     pub cache_dir: Option<String>,
 }
 
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#root")]
 pub fn run(ctx: &output::Context, args: SearchArgs, env: SearchEnv) -> Result<()> {
     let progress = ctx.progress();
     let preparation = progress.task("Preparing registry search");

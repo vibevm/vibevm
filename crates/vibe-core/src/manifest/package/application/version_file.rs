@@ -45,6 +45,7 @@ impl KeyedSeparator {
     /// use vibe_core::manifest::KeyedSeparator;
     /// assert_eq!(KeyedSeparator::Equals.spelling(), "equals");
     /// ```
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-075#VERSION-FILE-KEYED")]
     pub fn spelling(self) -> &'static str {
         match self {
             Self::Equals => "equals",
@@ -54,6 +55,7 @@ impl KeyedSeparator {
     }
 
     /// The character a line's key and its values are separated by.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-075#VERSION-FILE-KEYED")]
     pub fn character(self) -> char {
         match self {
             Self::Equals => '=',
@@ -69,6 +71,7 @@ impl KeyedSeparator {
     /// use vibe_core::manifest::KeyedSeparator;
     /// assert_eq!(KeyedSeparator::Colon.written(), ": ");
     /// ```
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-075#VERSION-FILE-KEYED")]
     pub fn written(self) -> &'static str {
         match self {
             Self::Equals => "=",
@@ -104,6 +107,7 @@ impl KeyedComment {
     /// use vibe_core::manifest::KeyedComment;
     /// assert_eq!(KeyedComment::default().spelling(), "hash");
     /// ```
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-075#VERSION-FILE-KEYED")]
     pub fn spelling(self) -> &'static str {
         match self {
             Self::Hash => "hash",
@@ -113,6 +117,7 @@ impl KeyedComment {
     }
 
     /// The character a comment starts with, for a format that has them.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-075#VERSION-FILE-KEYED")]
     pub fn character(self) -> Option<char> {
         match self {
             Self::Hash => Some('#'),
@@ -145,6 +150,7 @@ impl KeyedExtra {
     /// use vibe_core::manifest::KeyedExtra;
     /// assert_eq!(KeyedExtra::First.spelling(), "first");
     /// ```
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-075#VERSION-FILE-KEYED")]
     pub fn spelling(self) -> &'static str {
         match self {
             Self::Refuse => "refuse",
@@ -390,6 +396,7 @@ impl VersionFileDecl {
     /// assert_eq!(row.format(), "tool-versions");
     /// assert_eq!(row.key(), Some("nodejs"));
     /// ```
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-075#VERSION-FILE-FORMATS")]
     pub fn tool_versions(key: impl Into<String>) -> Self {
         Self::Keyed {
             names: vec![TOOL_VERSIONS_FILE.to_owned()],
@@ -400,6 +407,7 @@ impl VersionFileDecl {
 
     /// The stable `format` spelling of this row — the short one for a row
     /// `format = "tool-versions"` would author.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-075#VERSION-FILE-FORMATS")]
     pub fn format(&self) -> &'static str {
         match self {
             Self::Plain { .. } => "plain",
@@ -415,6 +423,7 @@ impl VersionFileDecl {
     /// assert!(VersionFileDecl::tool_versions("nodejs").is_tool_versions());
     /// assert!(!VersionFileDecl::Plain { names: vec![".nvmrc".into()] }.is_tool_versions());
     /// ```
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-075#VERSION-FILE-FORMATS")]
     pub fn is_tool_versions(&self) -> bool {
         match self {
             Self::Plain { .. } => false,
@@ -423,6 +432,7 @@ impl VersionFileDecl {
     }
 
     /// The file names this row looks for, in search order.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-075#VERSION-FILE-FORMATS")]
     pub fn names(&self) -> Vec<&str> {
         match self {
             Self::Plain { names } | Self::Keyed { names, .. } => {
@@ -432,6 +442,7 @@ impl VersionFileDecl {
     }
 
     /// The package's key in a keyed file, for a row of that format.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-075#VERSION-FILE-FORMATS")]
     pub fn key(&self) -> Option<&str> {
         match self {
             Self::Plain { .. } => None,
@@ -441,6 +452,7 @@ impl VersionFileDecl {
 
     /// The line syntax of a keyed row — the one thing a reader and the
     /// writer need beyond the key.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-075#VERSION-FILE-FORMATS")]
     pub fn syntax(&self) -> Option<KeyedSyntax> {
         match self {
             Self::Plain { .. } => None,

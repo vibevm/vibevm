@@ -28,6 +28,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-076#SYS-CONTINUATION-CACHEABLE");
 
+use specmark::spec;
 use std::path::Path;
 
 use vibe_core::manifest::TargetOs;
@@ -104,6 +105,7 @@ pub struct PreparedRequest {
 /// and feeds exactly one sentence, the host mismatch. Letting one stand in
 /// for the other is how the generator's operating system would start
 /// deciding gates.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-076#SYS-CONTINUATION-CACHEABLE")]
 pub fn prepare_request(
     request: &CheckRequest<'_>,
     answer: &PromptCheck,

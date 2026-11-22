@@ -507,6 +507,7 @@ pub(crate) fn registered_family(
 /// A slot measurement reaches here when the prerequisite install failed inside
 /// a phase verb; its rows become lifecycle rows exactly as they always did,
 /// because this command's document is the one a hosting agent parses.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#ENGINE-ALGORITHM")]
 pub(crate) fn lifecycle_family(
     measurement: vibe_orchestrator::failure::Measurement,
 ) -> compile_trace::RegisteredReportDraft {

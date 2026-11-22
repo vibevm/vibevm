@@ -39,6 +39,7 @@ pub enum ParameterType {
 }
 
 impl ParameterType {
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-065#parameters")]
     pub fn as_str(self) -> &'static str {
         match self {
             Self::String => "string",
@@ -126,6 +127,7 @@ impl ParameterDecl {
     /// let secret = ParameterDecl { secret: true, ..flag };
     /// assert!(!secret.canonical("SYN_SECRET_INPUT").unwrap_err().contains("SYN_SECRET_INPUT"));
     /// ```
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-065#parameters")]
     pub fn canonical(&self, raw: &str) -> Result<String, String> {
         if raw.chars().any(char::is_control) {
             return Err("the value contains control characters".into());

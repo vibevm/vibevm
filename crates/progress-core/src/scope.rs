@@ -17,6 +17,7 @@ specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#conf
 
 use anyhow::{Context, Result};
 use serde::Deserialize;
+use specmark::spec;
 use std::path::Path;
 
 mod enumerate;
@@ -172,6 +173,7 @@ impl ScopeConfig {
 /// `progress.toml` is read as a silent legacy spelling for the transition
 /// (PROP-043 ##CONFIG-FILE — the observed tree is a facts-layer concern);
 /// when both exist the facts spelling wins.
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#CONFIG-FILE")]
 pub fn load_config(root: &Path) -> Result<ScopeConfig> {
     let mut path = root.join("facts.toml");
     if !path.exists() {

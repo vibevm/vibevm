@@ -6,6 +6,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#index-ext");
 
+use specmark::spec;
 use std::sync::Arc;
 
 use axum::Json;
@@ -104,6 +105,7 @@ fn package_kind(pkg: &crate::types::PackageEntry) -> Option<PackageKind> {
     usable_versions(pkg).next().map(|v| v.kind.clone())
 }
 
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#index-ext")]
 pub async fn list_or_search(
     State(state): State<Arc<AppState>>,
     Query(q): Query<ListSearchQuery>,
@@ -193,6 +195,7 @@ pub async fn list_or_search(
     Ok(Json(body).into_response())
 }
 
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#index-ext")]
 pub async fn package_versions(
     State(state): State<Arc<AppState>>,
     Path((group_str, name)): Path<(String, String)>,
@@ -228,6 +231,7 @@ pub struct PackageVersionsResponse {
     pub unavailable: Vec<Unavailable>,
 }
 
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#index-ext")]
 pub async fn single_version(
     State(state): State<Arc<AppState>>,
     Path((group_str, name, version_str)): Path<(String, String, String)>,
@@ -279,6 +283,7 @@ pub struct UpsertResponse {
     pub created: bool,
 }
 
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#index-ext")]
 pub async fn upsert(
     State(state): State<Arc<AppState>>,
     headers: HeaderMap,
@@ -355,6 +360,7 @@ pub struct DeleteResponse {
     pub removed: bool,
 }
 
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#index-ext")]
 pub async fn delete_version(
     State(state): State<Arc<AppState>>,
     headers: HeaderMap,
@@ -394,6 +400,7 @@ pub async fn delete_version(
     }))
 }
 
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#index-ext")]
 pub async fn delete_package(
     State(state): State<Arc<AppState>>,
     headers: HeaderMap,

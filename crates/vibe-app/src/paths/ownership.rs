@@ -13,6 +13,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-059#path-directories");
 
+use specmark::spec;
 use std::collections::BTreeMap;
 use std::fs;
 use std::io::Read;
@@ -141,6 +142,7 @@ impl Inventory {
         slots
     }
 
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-059#path-directories")]
     pub(crate) fn save(&self) -> Result<(), AppError> {
         let file = File {
             schema: INVENTORY_SCHEMA,

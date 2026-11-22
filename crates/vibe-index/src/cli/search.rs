@@ -2,6 +2,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#root");
 
+use specmark::spec;
 use std::path::PathBuf;
 
 use clap::Parser;
@@ -57,6 +58,7 @@ struct HitRow {
     unavailable: Vec<Unavailable>,
 }
 
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#CLI-SURFACE")]
 pub fn run(args: Args) -> Result<()> {
     let index = Index::load_from(&args.data_dir)?;
     let kind_filter = match &args.kind {

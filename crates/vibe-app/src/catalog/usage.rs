@@ -65,6 +65,7 @@ impl Usage {
     /// Read the usage facts; an absent or unreadable file is no facts at
     /// all. A count is not truth anything depends on, so a damaged file
     /// starts over instead of refusing every listing and every start.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-059#launcher-catalog")]
     pub fn load(settings: &SettingsRoot) -> Result<Self, StateError> {
         let path = settings.usage_path();
         match fs::read(&path) {
@@ -83,6 +84,7 @@ impl Usage {
 
     /// Replace the facts without a revision of their own, for a change that
     /// bumps once for several files.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-059#launcher-catalog")]
     pub(crate) fn write(&self, settings: &SettingsRoot) -> Result<(), StateError> {
         let path = settings.usage_path();
         let mut bytes = serde_json::to_vec_pretty(self).map_err(|error| StateError::Index {

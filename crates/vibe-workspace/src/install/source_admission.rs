@@ -2,6 +2,7 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-ADMISSION-BOUNDARY");
 use super::ResolvedDep;
 use crate::{Workspace, WorkspaceError};
+use specmark::spec;
 use std::path::Path;
 use vibe_core::manifest::{Manifest, SpecFormat};
 use vibe_spec::source_policy::{PackageSourceMode, observe_package_policy};
@@ -24,6 +25,7 @@ fn refused(root: &Path, reason: impl std::fmt::Display) -> WorkspaceError {
 /// assert!(validate_declared_source_operation(&m,std::path::Path::new("source"),SpecFormat::Mixed,false).is_ok());
 /// assert!(validate_declared_source_operation(&m,std::path::Path::new("source"),SpecFormat::Xml,false).is_ok());
 /// ```
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-ADMISSION-BOUNDARY")]
 pub fn validate_declared_source_operation(
     manifest: &Manifest,
     root: &Path,
@@ -53,6 +55,7 @@ pub fn validate_declared_source_operation(
 /// vibe_workspace::install::validate_source_admission(ws,&[],vibe_core::manifest::SpecFormat::Mixed)?;
 /// # Ok(()) }
 /// ```
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-ADMISSION-BOUNDARY")]
 pub fn validate_source_admission(
     workspace: &Workspace,
     resolution: &[ResolvedDep],

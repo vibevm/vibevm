@@ -50,6 +50,7 @@ pub(crate) struct RuntimePlanSidecar {
 
 /// Build exact per-node presets from one supplied resolution, retaining only
 /// the selected node's execution sidecar for later phase dispatch.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#ENGINE-ALGORITHM")]
 pub(crate) fn prepare_owner_runtime_inputs(
     selected: &Path,
     workspace: &Workspace,
@@ -122,6 +123,7 @@ pub(crate) fn prepare_owner_runtime_inputs(
 
 /// Construct the lifecycle ritual from the selected retained owner runtime.
 /// No lock, manifest, slot or registry is read here.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#ENGINE-ALGORITHM")]
 pub(crate) fn plan_default_from_runtime(
     epoch: &OwnerRuntimeEpoch,
     sidecar: &RuntimePlanSidecar,
@@ -174,6 +176,7 @@ pub(crate) fn plan_default_from_runtime(
 /// manifests. That is the point of a post-install epoch: those are the
 /// artifacts the install just wrote, and reading them is how the world it
 /// produced is collected at all.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#ENGINE-ALGORITHM")]
 pub fn plan_default_prepared(
     selected_project_root: &Path,
     workspace: &Workspace,
@@ -245,6 +248,7 @@ pub(crate) fn plan_default(path: &Path, phases: &[Phase]) -> Result<RitualPlan> 
 /// # Ok(())
 /// # }
 /// ```
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#ENGINE-ALGORITHM")]
 pub fn plan_clean_prepared(selected: &Path, workspace: &Workspace) -> Result<RitualPlan> {
     let loaded = load_registry_prepared(selected, workspace, WorldLoadMode::PreClean)?;
     let native_candidates = vibe_lifecycle::native::enabled_native_candidates(&loaded.registry);

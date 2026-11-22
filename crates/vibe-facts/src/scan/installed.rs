@@ -4,6 +4,7 @@ specmark::scope!(
     r = 1
 );
 use super::*;
+use specmark::spec;
 use vibe_core::manifest::SourceInterpretation;
 use vibe_spec::{FileResolver, ResolveError};
 
@@ -11,6 +12,7 @@ use vibe_spec::{FileResolver, ResolveError};
 /// addresses and witness labels; witness hashes describe materialized bytes,
 /// never an inferred original-file digest. Record/read failures remain errors;
 /// invalid native syntax retains the complete captured document witnesses.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-QUERY-READ-LAW")]
 pub fn observe_installed_source(
     resolver: &FileResolver,
     group: &str,

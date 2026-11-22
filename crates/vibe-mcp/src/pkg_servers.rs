@@ -10,6 +10,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-027#registration");
 
+use specmark::spec;
 use std::path::Path;
 
 use serde_json::{Map, Value as JsonValue};
@@ -32,6 +33,7 @@ pub const MANAGED_KEY: &str = "vibevm";
 /// ));
 /// assert_eq!(p.to_string_lossy(), r"C:\proj\vibedeps\mcp-x\0.1.0\target\release\x.exe");
 /// ```
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-027#REG-COMMAND-PATH")]
 pub fn verbatim_free(path: &Path) -> std::path::PathBuf {
     let s = path.to_string_lossy();
     match s.strip_prefix(r"\\?\") {
@@ -52,6 +54,7 @@ pub fn verbatim_free(path: &Path) -> std::path::PathBuf {
 /// );
 /// assert_eq!(args, ["--path", "C:/proj"]);
 /// ```
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-027#ARGS-CLOSED-SET")]
 pub fn substituted_args(decl_args: &[String], project_root: &Path) -> Vec<String> {
     let root = verbatim_free(project_root).to_string_lossy().into_owned();
     decl_args
@@ -78,6 +81,7 @@ pub fn substituted_args(decl_args: &[String], project_root: &Path) -> Vec<String
 /// assert!(v["command"].as_str().unwrap().ends_with("d.exe"));
 /// assert_eq!(v["args"][0], "--path");
 /// ```
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-027#REG-COMMAND-PATH")]
 pub fn entry_payload(agent: Agent, command: &str, args: &[String]) -> ConfigPayload {
     match agent {
         Agent::ClaudeCode
@@ -117,6 +121,7 @@ pub fn entry_payload(agent: Agent, command: &str, args: &[String]) -> ConfigPayl
 /// Render one package-declared Streamable HTTP endpoint in the native MCP
 /// configuration shape of the selected agent. The URL is package metadata;
 /// authentication remains owned by the client and its user.
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-027#REG-REMOTE-URL")]
 pub fn remote_entry_payload(agent: Agent, url: &str) -> anyhow::Result<ConfigPayload> {
     Ok(match agent {
         Agent::Hermes => ConfigPayload::Yaml(serde_json::json!({"url":url})),
@@ -154,6 +159,7 @@ pub fn remote_entry_payload(agent: Agent, url: &str) -> anyhow::Result<ConfigPay
 /// assert_eq!(vibe_mcp::pkg_servers::managed_entries(&doc), ["rust-ai-native"]);
 /// assert!(vibe_mcp::pkg_servers::managed_entries(&serde_json::json!({})).is_empty());
 /// ```
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-027#REG-MANAGED-SIDECAR")]
 pub fn managed_entries(doc: &JsonValue) -> Vec<String> {
     doc.get(MANAGED_KEY)
         .and_then(|v| v.get("managed"))
@@ -176,6 +182,7 @@ pub fn managed_entries(doc: &JsonValue) -> Vec<String> {
 /// vibe_mcp::pkg_servers::mark_managed(&mut doc, "rust-ai-native").unwrap();
 /// assert_eq!(vibe_mcp::pkg_servers::managed_entries(&doc), ["rust-ai-native"]);
 /// ```
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-027#REG-MANAGED-SIDECAR")]
 pub fn mark_managed(doc: &mut JsonValue, name: &str) -> anyhow::Result<()> {
     let obj = doc
         .as_object_mut()
@@ -221,6 +228,7 @@ pub fn mark_managed(doc: &mut JsonValue, name: &str) -> anyhow::Result<()> {
 /// vibe_mcp::pkg_servers::unmark_managed(&mut doc, "b");
 /// assert!(doc.get("vibevm").is_none());
 /// ```
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-027#REG-MANAGED-SIDECAR")]
 pub fn unmark_managed(doc: &mut JsonValue, name: &str) {
     let Some(obj) = doc.as_object_mut() else {
         return;

@@ -29,6 +29,7 @@ mod set;
 mod tui;
 mod ui;
 
+use specmark::spec;
 use std::path::{Path, PathBuf};
 
 use anyhow::{Context, Result, bail};
@@ -38,6 +39,7 @@ use vibe_settings::schema::Schema;
 use crate::cli::{PrefsArgs, PrefsSubcommand};
 use crate::output;
 
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-040#prefs-command")]
 pub fn run(ctx: &output::Context, args: PrefsArgs) -> Result<()> {
     match args.command {
         PrefsSubcommand::Get(a) => get::run(ctx, a),

@@ -7,6 +7,7 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-065#modify");
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-065#outdated");
 
+use specmark::spec;
 use std::path::{Path, PathBuf};
 
 use anyhow::Result;
@@ -31,6 +32,7 @@ pub(crate) struct ModifyArgs<'a> {
 
 /// `vibe app modify PKG`: the same version, another choice (PROP-065
 /// `#modify`); anything not named keeps its recorded value.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-065#modify")]
 pub(crate) fn modify(
     ctx: &output::Context,
     home: &SettingsRoot,
@@ -172,6 +174,7 @@ pub(crate) fn autoremove(
 /// `vibe update -g --all`: every current installation whose registries
 /// offer a newer version, except held ones (PROP-065
 /// `#update-and-rollback`), one ordinary update each.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-065#update-and-rollback")]
 pub(crate) fn update_all(
     ctx: &output::Context,
     mut args: UpdateArgs,

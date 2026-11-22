@@ -258,6 +258,7 @@ codes!(VERSIONS, VersionsError [] {
 /// let codes = vibe_app::error_codes();
 /// assert!(codes.iter().any(|row| row.code == "need_unmet"));
 /// ```
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-065#error-codes")]
 pub fn error_codes() -> Vec<ErrorCode> {
     [
         CONFIGURATION,

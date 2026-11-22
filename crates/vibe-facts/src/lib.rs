@@ -59,6 +59,7 @@ impl FactStatus {
     }
 
     /// Parse through progress-core's closed vocabularies.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-046#TRI-STATE")]
     pub fn parse(value: &str) -> Result<Self, RegistryError> {
         let Some((stage, state)) = value.split_once('/') else {
             return Err(RegistryError::InvalidStatus {
@@ -171,6 +172,7 @@ pub struct FactEntry {
 
 impl FactEntry {
     /// Construct an entry and derive its origin from the address coordinate.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-046#REGISTRY-KEY")]
     pub fn for_host(
         address: impl Into<String>,
         host_package: &str,
@@ -199,6 +201,7 @@ impl FactEntry {
         package_from_address(&self.address)
     }
 
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-046#REGISTRY-KEY")]
     pub fn validate(&self) -> Result<(), RegistryError> {
         let address_package = package_from_address(&self.address)?;
         match (&self.origin, &self.package) {
@@ -257,6 +260,7 @@ impl FactEntry {
 /// .unwrap();
 /// assert_eq!(vibe_facts::host_package(dir.path()).unwrap(), "org.x/b");
 /// ```
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-046#model")]
 pub fn host_package(project_root: &Path) -> Result<String, RegistryError> {
     // Role-blind (PROP-024 ##MANIFEST-ROLES-ARE-EQUIPOTENT): a package-rooted
     // dev checkout keeps its adoption registry exactly as a project does.
@@ -294,6 +298,7 @@ pub fn host_package(project_root: &Path) -> Result<String, RegistryError> {
 /// );
 /// assert!(package_from_address("spec://org.vibevm.core/vibevm#root").is_err());
 /// ```
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-046#REGISTRY-KEY")]
 pub fn package_from_address(address: &str) -> Result<String, RegistryError> {
     let Some(rest) = address.strip_prefix("spec://") else {
         return Err(invalid_address(

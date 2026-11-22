@@ -25,6 +25,7 @@ pub(crate) use upgrade::{CapturedImage, before_publication, for_publication};
 /// let name = vibe_app::proxy_file_name("tool");
 /// assert_eq!(name, if cfg!(windows) { "tool.exe" } else { "tool" });
 /// ```
+#[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-059#proxy")]
 pub fn proxy_file_name(command: &str) -> String {
     if cfg!(windows) {
         format!("{command}.exe")
@@ -86,6 +87,7 @@ pub fn sync(
 /// vibe_app::sync_proxies_locked(&home, &BTreeSet::new(), &BTreeSet::new(),
 ///     &temp.path().join("unused"), &lock).unwrap();
 /// ```
+#[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-059#proxy")]
 pub fn sync_locked(
     settings: &SettingsRoot,
     previous: &BTreeSet<String>,
@@ -130,6 +132,7 @@ pub fn sync_locked(
 }
 
 /// Reconcile names using the same captured bytes admitted before publication.
+#[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-059#proxy")]
 pub(crate) fn sync_captured(
     settings: &SettingsRoot,
     dir: &Path,

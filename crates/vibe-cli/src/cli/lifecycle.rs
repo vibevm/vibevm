@@ -2,6 +2,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#CHAIN-GENERAL");
 
+use specmark::spec;
 use std::path::PathBuf;
 
 use super::InstallArgs;
@@ -88,6 +89,7 @@ pub struct LifecycleArgs {
 impl LifecycleArgs {
     /// Build the one existing install implementation's argument shape without
     /// admitting pkgrefs or any manifest-mutating install-only flag.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#CHAIN-GENERAL")]
     pub(crate) fn install_args(&self) -> InstallArgs {
         InstallArgs {
             ordinary_answers: None,

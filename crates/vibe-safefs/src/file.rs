@@ -191,6 +191,7 @@ fn injected_post_publication_failure(_name: &str) -> Option<anyhow::Error> {
     None
 }
 
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-056#SEC-NO-FOLLOW")]
 pub(crate) fn cap_options() -> cap_std::fs::OpenOptions {
     let mut options = cap_std::fs::OpenOptions::new();
     options.follow(FollowSymlinks::No);

@@ -1,8 +1,10 @@
 //! Finite bindings chosen by the existing planner, before child execution starts.
 use super::*;
 use crate::PlannedDependency;
+use specmark::spec;
 use vibe_core::manifest::RequirementScope;
 
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-069#APP-CONFIGURATION-CONTINUATION")]
 pub(crate) fn resolve_binding(
     ctx: &super::super::OperationContext<'_>,
     index: &Index,
@@ -154,6 +156,7 @@ fn declared_commands(
         })
 }
 
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-069#APP-CONFIGURATION-CONTINUATION")]
 pub(crate) fn link_child(
     settings: &SettingsRoot,
     parent: &w::ApplicationPendingTarget,
@@ -190,6 +193,7 @@ pub(crate) fn link_child(
     state.save(&work(settings, &package))
 }
 
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-069#APP-CONFIGURATION-CONTINUATION")]
 pub(crate) fn ack_child(
     settings: &SettingsRoot,
     parent: &w::ApplicationPendingTarget,
@@ -258,6 +262,7 @@ pub(crate) fn ack_child(
     state.save(&work(settings, &package))
 }
 
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-069#APP-CONFIGURATION-CONTINUATION")]
 pub(crate) fn bound_child(
     ctx: &super::super::OperationContext<'_>,
     parent: &w::ApplicationPendingTarget,

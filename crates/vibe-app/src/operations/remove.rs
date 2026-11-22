@@ -60,6 +60,7 @@ pub struct Removal {
 /// runtime dependents first — then list (or with `autoremove` remove) the
 /// auto installations nothing requires any more. `plan_only` changes
 /// nothing and reports the plan.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-059#commands")]
 pub fn uninstall(
     ctx: &OperationContext<'_>,
     spelling: &str,
@@ -125,6 +126,7 @@ pub fn uninstall(
 /// Remove every auto installation nothing requires any more and every kept
 /// previous installation (`PROP-065#uninstall-tree`,
 /// `#update-and-rollback`); a manual installation is never removed.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-065#uninstall-tree")]
 pub fn autoremove(ctx: &OperationContext<'_>, plan_only: bool) -> Result<Removal, AppError> {
     let held = ctx.settings.lock()?;
     let lock = &held;
@@ -154,6 +156,7 @@ pub fn autoremove(ctx: &OperationContext<'_>, plan_only: bool) -> Result<Removal
 /// coordinate has a lock row. A kept previous installation stays, and so
 /// does whatever a staying installation requires at runtime; dependents
 /// are removed before what they require.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-059#project-scope")]
 pub fn remove_unrecorded(
     ctx: &OperationContext<'_>,
     recorded: &dyn Fn(&PackageCoordinate) -> bool,
@@ -427,6 +430,7 @@ pub(crate) fn rollback_env(
 
 /// Run the authored removal in order, each script teed into the run record
 /// and observed as one task; the first failure stops it.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-059#commands")]
 pub(crate) fn undo_authored(
     ctx: &OperationContext<'_>,
     installation: &Installation,

@@ -1,6 +1,7 @@
 //! Named ordinary sections; authored declarations are not byte observations.
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-EXPORT-SELECTOR");
 use serde::{Deserialize, Serialize};
+use specmark::spec;
 
 /// One strict authored export, resolved only against selected captured CommonMark.
 /// ```
@@ -17,6 +18,7 @@ pub struct SourceExport {
     headings: Vec<String>,
 }
 impl SourceExport {
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-EXPORT-SELECTOR")]
     pub fn new(name: String, file: String, headings: Vec<String>) -> Result<Self, String> {
         let bytes = name.as_bytes();
         if !bytes.first().is_some_and(u8::is_ascii_alphabetic)

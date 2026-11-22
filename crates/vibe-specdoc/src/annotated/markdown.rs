@@ -6,6 +6,7 @@ specmark::scope!(
 use crate::md_out::positions::{Bounds, Output, TextSite};
 use crate::xml_annotations::{RegionRole, SemanticLayout};
 use crate::{Error, Result, SemanticPosition};
+use specmark::spec;
 
 /// Whether a generated comment belongs in scalar text or at a Markdown block gap.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -46,6 +47,9 @@ impl AnnotatedMarkdown {
 /// assert_eq!(comments[0].byte_offset, 1);
 /// # Ok::<(), vibe_specdoc::Error>(())
 /// ```
+#[spec(
+    implements = "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-GENERATED-XML-PROJECTION"
+)]
 pub fn project_annotated_xml_to_markdown(xml: &str) -> Result<AnnotatedMarkdown> {
     let (document, events, layout) = crate::xml_in::parse_observed_mapped(xml)?;
     if events.is_empty() {

@@ -12,6 +12,7 @@ specmark::scope!(
     "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#failure-discriminator"
 );
 
+use specmark::spec;
 use std::fmt;
 
 use vibe_core::Group;
@@ -64,6 +65,9 @@ impl GitOperation {
     /// The fetch errand for `reference`: a `v<semver>` tag is the
     /// version it names, anything else stays a ref — an operator who
     /// declared `branch = "main"` must not read back "version `main`".
+    #[spec(
+        implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#failure-discriminator"
+    )]
     pub fn fetch_package(group: &Group, name: &str, reference: &str) -> Self {
         let package = Self::identity(group, name);
         match version_of(reference) {
@@ -75,6 +79,9 @@ impl GitOperation {
         }
     }
 
+    #[spec(
+        implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#failure-discriminator"
+    )]
     pub fn read_file(group: &Group, name: &str, reference: &str, path: &str) -> Self {
         GitOperation::ReadFile {
             package: Self::identity(group, name),
@@ -90,6 +97,9 @@ impl GitOperation {
     }
 
     /// The package this errand is about, when it is about one.
+    #[spec(
+        implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#failure-discriminator"
+    )]
     pub fn package(&self) -> Option<String> {
         match self {
             GitOperation::ListVersions { package }
@@ -101,6 +111,9 @@ impl GitOperation {
     }
 
     /// The version this errand is about, when it names one.
+    #[spec(
+        implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#failure-discriminator"
+    )]
     pub fn version(&self) -> Option<&str> {
         match self {
             GitOperation::FetchVersion { version, .. } => Some(version),

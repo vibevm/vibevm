@@ -4,6 +4,7 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-069#LEGACY-PACKAGE-COMPATIBILITY");
 
 use super::{FeatureError, FeatureExpansion, FeatureValue};
+use specmark::spec;
 use std::collections::{BTreeMap, BTreeSet};
 use vibe_core::configuration::{
     Cardinality, ClosureGroup, DefinitionError, EvaluationError, FeatureBase, FeatureInput,
@@ -35,6 +36,9 @@ pub(super) struct CompiledFeatures {
 }
 
 impl CompiledFeatures {
+    #[spec(
+        implements = "spec://org.vibevm.core/vibevm/common/PROP-069#LEGACY-PACKAGE-COMPATIBILITY"
+    )]
     pub fn new(table: &FeaturesTable) -> Result<Self, DefinitionFailures> {
         let mut nodes = Vec::new();
         let mut effects = BTreeMap::new();

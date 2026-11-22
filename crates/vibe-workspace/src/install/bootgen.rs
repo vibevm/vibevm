@@ -95,6 +95,7 @@ pub fn regenerate_boot_from_with_spec_format(
 }
 
 /// Traced regeneration; the command owner retains the borrowed run.
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#install")]
 pub fn regenerate_boot_from_traced(
     workspace: &Workspace,
     resolution: &[ResolvedDep],
@@ -119,6 +120,7 @@ pub struct BootRegeneration {
 }
 
 /// Lower every owner once, regenerate, and return the retained runtime set.
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#install")]
 pub fn regenerate_boot_from_traced_prepared(
     workspace: &Workspace,
     resolution: &[ResolvedDep],
@@ -342,6 +344,7 @@ pub fn regenerate_boot_with_spec_format(
 /// [`regenerate_boot_with_spec_format`] under one borrowed trace run — the
 /// sibling the ready-install / scoped-update / reinstall paths hand their
 /// already-open recorder to.
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#install")]
 pub fn regenerate_boot_traced(
     workspace: &Workspace,
     spec_format: SpecFormat,

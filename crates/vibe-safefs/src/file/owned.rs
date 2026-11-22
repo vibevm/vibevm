@@ -62,6 +62,9 @@ impl OwnedFileReceipt {
     /// Compare an independently observed current name with the known after-image.
     /// This observation is not a kernel compare-and-swap: a final mutation
     /// window against uncooperative writers remains.
+    #[specmark::spec(
+        implements = "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#APPLY-FILE-UNDO"
+    )]
     pub fn matches_snapshot(&self, current: &StableFileSnapshot) -> bool {
         self.matches_state(
             current.identity,
@@ -156,6 +159,9 @@ impl Project {
     /// # Ok(())
     /// # }
     /// ```
+    #[specmark::spec(
+        implements = "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#APPLY-FILE-UNDO"
+    )]
     pub fn write_atomic_owned_in_with_mode(
         &self,
         directory: &Pinned,

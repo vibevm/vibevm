@@ -20,6 +20,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#install-workflow-in-detail");
 
+use specmark::spec;
 use std::collections::BTreeSet;
 use std::path::Path;
 
@@ -171,6 +172,7 @@ impl RegistryPackageSource {
     }
 
     /// Compose the shared resolver with the surface's qualifier.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#install-workflow-in-detail")]
     pub fn new(resolver: InstallResolver, qualifier: Box<dyn PackageQualifier>) -> Self {
         Self {
             resolver,

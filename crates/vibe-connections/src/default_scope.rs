@@ -1,6 +1,7 @@
 //! Default-scope preview over one incumbent reference-index snapshot.
 use super::*;
 use sha2::{Digest, Sha256};
+use specmark::spec;
 use vibe_secrets::{ReferenceBinding, ReferenceSelection};
 
 #[derive(Debug, Clone, Copy, Serialize, PartialEq, Eq)]
@@ -37,6 +38,7 @@ pub struct DefaultScopePreview {
     authorized_token: String,
 }
 impl Store {
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-000#TS-KEYRING-CONSUMER")]
     pub fn default_scope_preview(
         &self,
         target: &SecretId,

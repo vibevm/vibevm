@@ -6,6 +6,7 @@
 //! Ctrl-Break and a Ctrl-C nobody can answer stop at once.
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-073#OPERATION-EFFECTS-LAW");
 use crate::cli::{Command, RegistrySubcommand};
+use specmark::spec;
 use std::io::IsTerminal;
 use std::{path::PathBuf, sync::Arc};
 use vibe_core::cancellation::CancellationToken;
@@ -84,6 +85,7 @@ impl StopInput {
     }
 }
 
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-073#OPERATION-EFFECTS-LAW")]
 pub(crate) fn attach(
     ctx: &crate::output::Context,
     stop: Option<PathBuf>,

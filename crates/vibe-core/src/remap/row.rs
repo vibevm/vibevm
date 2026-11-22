@@ -59,6 +59,7 @@ pub enum RemapKey {
 impl RemapKey {
     /// The precedence rank of this key kind: `sha256` 3, `package` 2,
     /// `registry` 1, `prefix` 0 (`PROP-066#precedence`).
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-066#precedence")]
     pub fn specificity(&self) -> u8 {
         match self {
             RemapKey::Sha256(_) => 3,
@@ -69,6 +70,7 @@ impl RemapKey {
     }
 
     /// The key's TOML field name, as `remap list` prints it.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-066#row")]
     pub fn kind(&self) -> &'static str {
         match self {
             RemapKey::Sha256(_) => "sha256",
@@ -80,6 +82,7 @@ impl RemapKey {
 
     /// The matched value — the hex digest, the pkgref, the registry name
     /// or the URL prefix.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-066#row")]
     pub fn what(&self) -> &str {
         match self {
             RemapKey::Sha256(value)
@@ -122,6 +125,7 @@ pub enum RemapTarget {
 impl RemapTarget {
     /// The target as a human and a `--json` document show it; `deny` for
     /// the refusal.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-066#row")]
     pub fn display(&self) -> String {
         match self {
             RemapTarget::Url(url) => url.clone(),
@@ -200,6 +204,7 @@ impl Provenance {
         self
     }
     /// Build a provenance from its three parts.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-066#row")]
     pub fn new(layer: Layer, source: impl Into<String>, index: usize) -> Self {
         Provenance {
             publication: crate::RoutePublication::Local,
@@ -291,6 +296,7 @@ pub enum PathLookup {
 impl RemapRow {
     /// The flat TOML form of this row, without its provenance — the shape
     /// `[[remap]]` is written in, and the half of a row that round-trips.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-066#row")]
     pub fn to_decl(&self) -> RowDecl {
         let mut decl = RowDecl {
             scope: self.scope.clone(),
@@ -455,6 +461,7 @@ pub enum UnmatchedPolicy {
 impl UnmatchedPolicy {
     /// The stricter of two policies — the rule for combining layers
     /// (`PROP-066#policy`).
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-066#policy")]
     pub fn strictest(self, other: UnmatchedPolicy) -> UnmatchedPolicy {
         match (self, other) {
             (UnmatchedPolicy::Deny, _) | (_, UnmatchedPolicy::Deny) => UnmatchedPolicy::Deny,

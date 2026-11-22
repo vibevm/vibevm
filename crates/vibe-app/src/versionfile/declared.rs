@@ -43,6 +43,7 @@ impl Declared {
     /// Read the sidecar; an absent or unreadable document is an empty set,
     /// because a missing declaration degrades to "this slot has no version
     /// file" and never fails a prompt (PROP-075 `#ACTIVATION-HOOK`).
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-075#VERSION-FILE-FORMATS")]
     pub fn load(settings: &SettingsRoot) -> Self {
         let file = path(settings);
         let Ok(bytes) = fs::read(&file) else {
@@ -73,6 +74,7 @@ impl Declared {
 
     /// Write the sidecar, or remove it when nothing declares a version file,
     /// so a home that never had one keeps no empty document.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-075#VERSION-FILE-FORMATS")]
     pub fn save(&self, settings: &SettingsRoot) -> Result<(), StateError> {
         let file = path(settings);
         if self.installations.is_empty() {
@@ -111,6 +113,7 @@ impl Declared {
     /// installation that declares them: one slot has one file-name set, and
     /// two providers of the same slot that disagree are merged in key order
     /// with the first declaration of a name winning.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-075#VERSION-FILE-FORMATS")]
     pub fn for_slot(&self, slot: &str) -> Vec<VersionFileDecl> {
         let mut rows: Vec<VersionFileDecl> = Vec::new();
         for (declared_slot, declared) in self.installations.values() {
@@ -127,6 +130,7 @@ impl Declared {
     }
 
     /// Every slot that declares at least one version file.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-075#VERSION-FILE-FORMATS")]
     pub fn slots(&self) -> Vec<String> {
         let mut slots: Vec<String> = self
             .installations
@@ -142,6 +146,7 @@ impl Declared {
     /// Every file name any installed application declares, deduplicated, in
     /// the order the declarations give them. This is the fixed list the
     /// prompt hook's builtin walk tests (PROP-075 `#ACTIVATION-HOOK`).
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-075#ACTIVATION-HOOK")]
     pub fn names(&self) -> Vec<String> {
         let mut names: Vec<String> = Vec::new();
         for (_, rows) in self.installations.values() {
@@ -159,6 +164,7 @@ impl Declared {
     /// A short, stable fingerprint of the whole declared set, so the
     /// resolution cache and the hook's managed block can tell that the
     /// declared set changed without storing it twice.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-075#VERSION-FILE-FORMATS")]
     pub fn fingerprint(&self) -> String {
         use sha2::{Digest, Sha256};
         let mut hasher = Sha256::new();

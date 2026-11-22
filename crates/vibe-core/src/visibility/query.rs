@@ -10,6 +10,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-050#verification");
 
+use specmark::spec;
 use std::path::Path;
 
 use crate::manifest::{AccessLevel, LockedPackage, Lockfile, Manifest, OverrideTarget};
@@ -75,6 +76,7 @@ pub struct InstalledWorld {
 /// assert_eq!(world.root_id, "demo");
 /// assert!(world.unread.is_empty());
 /// ```
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-050#verification")]
 pub fn load_installed_world(project_root: &Path) -> Result<InstalledWorld, String> {
     let manifest_path = project_root.join(Manifest::FILENAME);
     let root_manifest = Manifest::read(&manifest_path)
@@ -302,6 +304,7 @@ pub enum BlockReason {
 ///     other => panic!("expected Absent, got {other:?}"),
 /// }
 /// ```
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-050#VIBE-WHY")]
 pub fn why(world: &InstalledWorld, target: &str) -> WhyVerdict {
     let analysis = analyze(&world.graph, &world.root_id);
     if target == world.root_id {
@@ -520,6 +523,7 @@ pub struct FriendsReport {
 /// assert_eq!(report.rejected, ["demo"]);
 /// assert!(friends(&world, "org.nope/ghost").is_none());
 /// ```
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-050#verification")]
 pub fn friends(world: &InstalledWorld, target: &str) -> Option<FriendsReport> {
     let declaration = world.graph.nodes.get(target)?;
     let circle = declaration.allow_friends.clone();

@@ -1,3 +1,4 @@
+use specmark::spec;
 use std::path::Path;
 
 use vibe_spec::{
@@ -19,6 +20,7 @@ pub(crate) struct BackendReadContext<'a> {
     pub sources: Option<&'a DeclaredBootSources>,
 }
 
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#BOOTSTRAP-ORDER")]
 pub(crate) fn compile_backend_owner_managed<P: OwnerNativeCompileProvider>(
     boot: &EffectiveBoot,
     workspace_root: &Path,

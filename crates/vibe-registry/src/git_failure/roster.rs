@@ -14,6 +14,7 @@ specmark::scope!(
     "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#failure-discriminator"
 );
 
+use specmark::spec;
 use vibe_core::manifest::{HostingSelector, RegistrySection, RegistryType};
 
 /// One registry as the failure names it: its alias, a one-word label for
@@ -72,6 +73,9 @@ impl RegistryRoster {
     ///     "allowed registries: corp (monorepo), vibespecs (github)"
     /// );
     /// ```
+    #[spec(
+        implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#failure-discriminator"
+    )]
     pub fn from_rows(rows: &[RegistrySection]) -> Self {
         RegistryRoster {
             rows: rows
@@ -84,6 +88,9 @@ impl RegistryRoster {
 
     /// `allowed registries: corp (monorepo), vibespecs (github)` — or
     /// `None` when nothing was declared to this registry instance.
+    #[spec(
+        implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#failure-discriminator"
+    )]
     pub fn allowed_line(&self) -> Option<String> {
         if self.rows.is_empty() {
             return None;

@@ -138,6 +138,9 @@ fn run_pre_slot_lifecycle(
 /// mode, after the caller has made the install durable. The opaque plan owns
 /// the exact eligible dependency subset and its workspace; this seam accepts
 /// neither separately.
+#[spec(
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-020#MODERN-SLOT-EXECUTION"
+)]
 pub fn run_post_install_slot_lifecycle(
     plan: PostInstallPlan,
     lifecycle: SlotLifecycleMode<'_>,

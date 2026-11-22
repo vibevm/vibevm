@@ -92,6 +92,7 @@ pub enum SourcePolicyError {
 
 impl SourcePolicyError {
     /// Stable code for command/host diagnostics; consumers never parse Display.
+    #[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-073#SOURCE-POLICY")]
     pub fn code(&self) -> &'static str {
         match self {
             Self::DuplicateRegistry { .. } => "source_policy_duplicate_registry",

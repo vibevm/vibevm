@@ -6,10 +6,12 @@
 //! manifest supplies package declarations, controls and boot content.
 
 use super::*;
+use specmark::spec;
 
 /// Read the command's durable world exactly once and project its named slots.
 /// Missing lock is the explicit empty durable epoch. Every present malformed
 /// or non-regular lock and every missing/disagreeing named slot refuses.
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#install")]
 pub(crate) fn read_durable_resolution(
     workspace_root: &Path,
 ) -> Result<Vec<ResolvedDep>, WorkspaceError> {

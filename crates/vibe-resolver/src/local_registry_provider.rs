@@ -23,6 +23,7 @@ pub struct LocalRegistryDepProvider<'a> {
 
 impl<'a> LocalRegistryDepProvider<'a> {
     /// Retain explicit source mode and authoritative held owner at composition.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#solver")]
     pub fn with_source_context(
         registry: &'a LocalRegistry,
         source_kind: vibe_registry::source_candidates::LocalCandidateKind,
@@ -39,6 +40,7 @@ impl<'a> LocalRegistryDepProvider<'a> {
             .filter(|owner| owner.has_locked_package(group, name))
     }
 
+    #[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#solver")]
     pub fn new(registry: &'a LocalRegistry) -> Self {
         LocalRegistryDepProvider {
             registry,

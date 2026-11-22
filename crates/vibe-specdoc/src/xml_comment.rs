@@ -7,6 +7,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-045#STATIC-FOLLOWS-THE-TARGET");
 
+use specmark::spec;
 use std::fmt;
 
 const COMMENT_OPEN: &str = "<!--";
@@ -16,6 +17,7 @@ const C1_PREFIX: &str = " vibe:c1 ";
 
 /// Frame one supplied generated payload as a complete canonical c1 comment.
 /// This does not recognize or reinterpret authored text as provenance.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-045#STATIC-FOLLOWS-THE-TARGET")]
 pub fn frame_generated_xml_comment(payload: &str) -> String {
     format!(
         "{COMMENT_OPEN}{C1_PREFIX}{} {COMMENT_CLOSE}",
@@ -97,6 +99,7 @@ impl std::error::Error for XmlCommentCodecError {}
 /// it literally would create `--`, or when it is the final scalar. XML 1.0
 /// illegal scalars are escaped bytewise as uppercase UTF-8 `%HH`; every other
 /// scalar, including `&`, `<`, `>`, and non-ASCII Unicode, stays readable.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-045#STATIC-FOLLOWS-THE-TARGET")]
 pub fn encode_generated_xml_comment(payload: &str) -> String {
     let mut encoded = String::with_capacity(payload.len());
     let mut chars = payload.char_indices().peekable();
@@ -164,6 +167,7 @@ pub fn decode_generated_xml_comment_payload(encoded: &str) -> Result<String, Xml
 /// A complete non-c1 comment is legacy/authored input and returns `Ok(None)`.
 /// Anything in the reserved `vibe:c` namespace is strict: decode performs one
 /// percent pass, validates UTF-8, then requires exact canonical re-encoding.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-045#STATIC-FOLLOWS-THE-TARGET")]
 pub fn decode_generated_xml_comment(comment: &str) -> Result<Option<String>, XmlCommentCodecError> {
     let Some(interior) = comment
         .strip_prefix(COMMENT_OPEN)

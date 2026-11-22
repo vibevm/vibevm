@@ -38,6 +38,7 @@ use vibe_core::manifest::NamingConvention;
 use vibe_wire::generated::doc_site_config::DocSiteConfig;
 
 use crate::error::{DocError, Result};
+use specmark::spec;
 
 /// The schema number a file written today carries, and the only one this
 /// build reads.
@@ -98,6 +99,7 @@ impl Registry {
     /// Everything that authenticates comes out at its own default,
     /// because the site has nothing to authenticate with: `auth = none`
     /// is public read, which is exactly what a documentation site does.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-057#SITE-TWO-SOURCES")]
     pub fn as_section(&self) -> vibe_core::manifest::RegistrySection {
         vibe_core::manifest::RegistrySection {
             name: self.name.clone(),
@@ -146,6 +148,7 @@ pub enum Theme {
 
 impl Theme {
     /// The word a configuration spells.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-057#SITE-TWO-SOURCES")]
     pub fn as_str(self) -> &'static str {
         match self {
             Theme::System => "system",
@@ -215,6 +218,7 @@ impl Site {
     /// let site = vibe_doc::site::Site::read(std::path::Path::new("site.toml")).unwrap();
     /// assert!(site.base.starts_with('/') && site.base.ends_with('/'));
     /// ```
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-057#SITE-TWO-SOURCES")]
     pub fn read(path: &Path) -> Result<Site> {
         let text = std::fs::read_to_string(path).map_err(|e| DocError::io("reading", path, e))?;
         let parsed: DocSiteConfig = toml::from_str(&text).map_err(|e| DocError::Site {
@@ -228,6 +232,7 @@ impl Site {
     /// Separate from [`Site::read`] so a test states a configuration
     /// rather than writing one to disk, and so the one place that knows
     /// what an absent member means is reachable without a file.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-057#SITE-TWO-SOURCES")]
     pub fn resolve(path: &Path, parsed: DocSiteConfig) -> Result<Site> {
         if parsed.schema != SCHEMA_VERSION {
             return Err(DocError::Site {
@@ -376,6 +381,7 @@ impl Site {
     /// renamed yesterday must not stop today's render. Saying it out
     /// loud in the run is what keeps the list from quietly featuring
     /// nothing.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-057#SITE-TWO-SOURCES")]
     pub fn featured_absent<'a>(&'a self, published: &BTreeSet<String>) -> Vec<&'a str> {
         self.featured
             .iter()
@@ -393,6 +399,7 @@ impl Site {
     /// Printing what was RESOLVED says so in the first line of the run,
     /// and says it more usefully than a refusal would, because it also
     /// shows the values nobody wrote down.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-057#SITE-TWO-SOURCES")]
     pub fn render(&self) -> String {
         let mut out = String::new();
         out.push_str(&format!("site: {}\n", self.path.display()));

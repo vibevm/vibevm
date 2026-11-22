@@ -2,6 +2,7 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-EXPORT-RESOLUTION");
 use super::{DeclaredDocumentObservation, DeclaredSourceDisposition};
 use crate::SourceFileWitness;
+use specmark::spec;
 use vibe_core::manifest::{PackageMeta, SelectedSource, SourceInterpretation};
 use vibe_specdoc::commonmark::{HeadingSelectionError, SectionSelection};
 
@@ -37,6 +38,7 @@ pub enum DeclaredExportError {
 /// assert_eq!(selected.export_name, "intro");
 /// assert!(selected.selection.raw().contains("@fact:WORD"));
 /// ```
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-EXPORT-RESOLUTION")]
 pub fn resolve_declared_export<'a>(
     package: &PackageMeta,
     name: &str,

@@ -11,6 +11,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-075#TEMPLATE-CACHE");
 
+use specmark::spec;
 use std::time::Duration;
 
 use vibe_core::remap::{Artifact, ArtifactKind};
@@ -47,6 +48,7 @@ impl Document {
     /// assert_eq!(Document::VersionList.kind(), ArtifactKind::TemplateIndex);
     /// assert_eq!(Document::Digests.kind(), ArtifactKind::TemplateDigest);
     /// ```
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-075#TEMPLATE-CACHE")]
     pub fn kind(self) -> ArtifactKind {
         match self {
             Document::VersionList => ArtifactKind::TemplateIndex,
@@ -62,6 +64,7 @@ impl Document {
     /// assert_eq!(Document::VersionList.label(), "version list");
     /// assert_eq!(Document::Digests.label(), "digest document");
     /// ```
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-075#TEMPLATE-CACHE")]
     pub fn label(self) -> &'static str {
         match self {
             Document::VersionList => "version list",
@@ -192,6 +195,7 @@ impl TemplateTransport for HttpTransport {
 /// The declared URL after the Locator has had its say. A refusal is
 /// `remap_denied`, never a silent fall-through to the origin: a closed
 /// network that denies a host means it.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-075#TEMPLATE-CACHE")]
 pub fn choose_url(document: Document, package: &str, url: &str) -> Result<String, TemplateError> {
     let locator = vibe_core::remap::active();
     if locator.is_empty() {

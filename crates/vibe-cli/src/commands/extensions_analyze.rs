@@ -21,6 +21,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#OBS-REGISTRY");
 
+use specmark::spec;
 use std::sync::{Arc, Mutex};
 
 use anyhow::{Context, Result, bail};
@@ -65,6 +66,7 @@ impl CompileObserver for Collector {
     }
 }
 
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#OBS-LANE-ANALYZER")]
 pub fn run(ctx: &output::Context, args: AnalyzeArgs) -> Result<()> {
     let selected = observed(ctx, "Discovering extension analysis workspace", || {
         Workspace::discover_selected(&args.path).context("discovering the workspace")

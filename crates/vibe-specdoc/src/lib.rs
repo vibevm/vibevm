@@ -149,6 +149,7 @@ pub use xml_out::to_xml;
 /// different canonical bytes.
 pub const CONVERTER_RECIPE: &str = "specdoc/4";
 
+use specmark::spec;
 use std::fmt;
 
 /// A parse or emit failure. Every dialect violation carries the 1-based
@@ -163,6 +164,7 @@ pub struct Error {
 
 impl Error {
     /// A positioned error.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-045#root")]
     pub fn at(line: usize, message: impl Into<String>) -> Error {
         Error {
             line,

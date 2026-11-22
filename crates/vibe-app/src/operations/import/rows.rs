@@ -1,6 +1,7 @@
 //! A cohort row owns only its exact execution attempt, never a package slot forever.
 use super::*;
 use crate::{ResolvedPackage, SettingsRoot};
+use specmark::spec;
 use vibe_core::manifest::InstallerOptionDecl;
 
 pub(super) fn admit(
@@ -95,6 +96,7 @@ pub(super) fn bound(
     }
     Ok(Some(op.target.clone()))
 }
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-069#APP-CONFIGURATION-CONTINUATION")]
 pub(crate) fn link_child(
     settings: &SettingsRoot,
     parent: &w::ApplicationImportTarget,

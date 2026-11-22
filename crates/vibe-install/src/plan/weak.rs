@@ -3,6 +3,7 @@
 //! read. Pure over the finished closure; it resolves nothing of its own.
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-077#PROJECT-RECOMMENDS");
 
+use specmark::spec;
 use std::collections::BTreeMap;
 
 use vibe_core::Group;
@@ -38,6 +39,7 @@ impl RecommendationOutcome {
     ///
     /// assert_eq!(RecommendationOutcome::Satisfied.as_str(), "satisfied");
     /// ```
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-077#PROJECT-RECOMMENDS-REPORT")]
     pub fn as_str(self) -> &'static str {
         match self {
             RecommendationOutcome::Installed => "installed",

@@ -194,6 +194,7 @@ impl GroupPattern {
     ///
     /// assert!(GroupPattern::parse("org.vibevm.*").unwrap().matches("org.vibevm.node"));
     /// ```
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-065#ordinary-trust")]
     pub fn matches(&self, group: &str) -> bool {
         if group == self.root {
             return true;

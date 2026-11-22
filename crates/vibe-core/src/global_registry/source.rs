@@ -2,6 +2,7 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-073#LOCKED-SOURCE");
 use super::{GlobalRegistryConfig, GlobalRegistryError};
 use crate::manifest::SourcePolicyDecl;
+use specmark::spec;
 use std::{
     io::Read,
     path::{Path, PathBuf},
@@ -55,6 +56,7 @@ impl GlobalRegistrySource {
     /// [`Self::deferred`] with the applied site profile layered beneath the
     /// file (`PROP-019#site-profile`), read on the same demand. A site that
     /// declares registries replaces `missing`'s built-in registries.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-073#LOCKED-SOURCE")]
     pub fn deferred_with_site(
         path: Option<PathBuf>,
         site: Option<PathBuf>,
@@ -68,6 +70,7 @@ impl GlobalRegistrySource {
             gate: Mutex::new(()),
         }))
     }
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-073#LOCKED-SOURCE")]
     pub fn known(&self) -> Option<&GlobalRegistryConfig> {
         match self.0.as_ref() {
             Input::Ready(value) => Some(value),
@@ -100,6 +103,7 @@ impl GlobalRegistrySource {
     }
     /// Decode only policy, so malformed unused URL/auth rows cannot block contact
     /// to an independently selected locked source. Malformed TOML still refuses.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-073#LOCKED-SOURCE")]
     pub fn policy(&self) -> Result<SourcePolicyDecl, GlobalRegistryError> {
         let Input::File { path, missing, .. } = self.0.as_ref() else {
             return Ok(self
@@ -143,6 +147,7 @@ impl GlobalRegistrySource {
             .map(|site| site.profile.registry_layer()))
     }
     /// Full catalog decoding is a distinct new-source/index demand.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-073#LOCKED-SOURCE")]
     pub fn catalog(&self) -> Result<GlobalRegistryConfig, GlobalRegistryError> {
         match self.0.as_ref() {
             Input::Ready(value) => Ok(value.clone()),

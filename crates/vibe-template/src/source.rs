@@ -7,6 +7,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-075#TEMPLATE-SOURCE-KINDS");
 
+use specmark::spec;
 use std::collections::{BTreeMap, BTreeSet};
 
 use serde::Deserialize;
@@ -171,6 +172,7 @@ impl VersionRecord {
 /// assert_eq!(skipped.len(), 1);
 /// # Ok::<(), vibe_template::RenderError>(())
 /// ```
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-075#TEMPLATE-VERSIONS")]
 pub fn version_records(
     section: &TemplateSection,
     document: Option<&str>,
@@ -254,6 +256,7 @@ pub fn version_records(
 /// assert!(!section.has_sizes());
 /// # Ok::<(), vibe_template::RenderError>(())
 /// ```
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-075#TEMPLATE-DOCUMENT-READING")]
 pub fn template_section(template_toml: &str) -> Result<TemplateSection, RenderError> {
     #[derive(Deserialize)]
     struct OnlyTemplate {
@@ -323,6 +326,7 @@ impl DigestTable {
     /// assert!(table.get("absent").is_none());
     /// # Ok::<(), vibe_template::RenderError>(())
     /// ```
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-075#TEMPLATE-DIGEST-SOURCE")]
     pub fn parse_sha256sums(text: &str) -> Result<Self, RenderError> {
         let mut entries: BTreeMap<String, DigestEntry> = BTreeMap::new();
         for line in text.lines() {
@@ -354,6 +358,7 @@ impl DigestTable {
     }
 
     /// A JSON checksum manifest, read through the declared source.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-075#TEMPLATE-DIGEST-SOURCE")]
     pub fn parse(section: &TemplateSection, text: &str) -> Result<Self, RenderError> {
         match &section.digests {
             // A template that declares no digest source has no digest

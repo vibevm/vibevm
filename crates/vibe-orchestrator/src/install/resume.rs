@@ -103,6 +103,7 @@ pub enum ResumeOutcome {
     Failed(MeasuredFailure),
 }
 
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#REF-AGENT-RESUME")]
 pub fn resume_slot_continuation(
     observer: &dyn InstallObserver,
     agent: &std::sync::Arc<dyn AgentBackend>,
@@ -314,6 +315,7 @@ fn capture(
 /// the current pass while the resume then reports "nothing was owed"), and it
 /// must not run on `Nothing` or on an ordinary `Err` — those paths still owe
 /// their rows to the caller's own failure fallback, which takes them itself.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#REF-AGENT-RESUME")]
 pub fn own_resume(
     resume: impl FnOnce() -> Result<ResumeOutcome>,
     take_current: impl FnOnce() -> Vec<vibe_install::SlotLifecycleReport>,

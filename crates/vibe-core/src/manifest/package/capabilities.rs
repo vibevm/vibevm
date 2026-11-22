@@ -7,6 +7,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#git-source");
 
+use specmark::spec;
 use std::collections::BTreeMap;
 
 use serde::{Deserialize, Serialize};
@@ -140,6 +141,7 @@ impl Requires {
         self.registry_pins.get(&link_key(group, name))
     }
 
+    #[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#git-source")]
     pub fn is_empty(&self) -> bool {
         self.registry_pins.is_empty()
             && self.packages.is_empty()
@@ -161,6 +163,9 @@ impl Requires {
     /// `var_packages`. The group is `Option` only because a `packages`
     /// entry's `PackageRef` carries an optional group — a well-formed
     /// `[requires]` always qualifies it.
+    #[spec(
+        implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#CAP-REQUIRES-PACKAGES"
+    )]
     pub fn iter_pkgrefs(&self) -> impl Iterator<Item = (Option<&Group>, &str)> {
         self.packages
             .iter()

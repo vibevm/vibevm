@@ -72,6 +72,7 @@ impl SafeTomlParseError {
     /// `source` does not hold as a table (see [`FieldPath::from_toml_keys`]).
     ///
     /// [`FieldPath::from_toml_keys`]: crate::manifest::FieldPath
+    #[spec(implements = "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#manifest-schema")]
     pub fn field(&self, source: &str) -> Option<crate::manifest::FieldPath> {
         let keys = self
             .message
@@ -311,6 +312,7 @@ impl From<crate::manifest::FieldError> for Error {
 impl Error {
     /// The manifest field a refusal is about, when the validator that
     /// refused knew it.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#manifest-schema")]
     pub fn manifest_field(&self) -> Option<&crate::manifest::FieldPath> {
         match self {
             Error::InvalidManifestField { field, .. } => Some(field),

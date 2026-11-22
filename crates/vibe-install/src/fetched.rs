@@ -5,6 +5,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#install-workflow-in-detail");
 
+use specmark::spec;
 use std::path::Path;
 
 use vibe_core::PackageRef;
@@ -99,6 +100,7 @@ pub(crate) fn tailor_feature_request(
 
 /// The same conditional context before payload acquisition. Only admitted
 /// package manifests supply capabilities; no cache directory is required.
+#[spec(implements = "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#install-workflow-in-detail")]
 pub(crate) fn build_activation_context_from_manifests<'a>(
     manifests: impl IntoIterator<Item = &'a Manifest>,
     project_root: &Path,

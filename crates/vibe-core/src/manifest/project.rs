@@ -101,6 +101,7 @@ pub enum SpecFormat {
 
 impl SpecFormat {
     /// Stable wire spelling used by the derived-slot manifest.
+    #[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-045#SETTING")]
     pub const fn as_str(self) -> &'static str {
         match self {
             SpecFormat::Mixed => "mixed",
@@ -294,6 +295,9 @@ impl AuthKind {
         matches!(self, AuthKind::None)
     }
 
+    #[specmark::spec(
+        implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#AUTH-REGIMES"
+    )]
     pub fn as_str(self) -> &'static str {
         match self {
             AuthKind::None => "none",
@@ -319,6 +323,9 @@ impl RegistrySection {
 /// ```
 /// assert_eq!(vibe_core::manifest::registry_token_env_name("https://example.invalid/org", None).as_deref(), Some("VIBEVM_REGISTRY_TOKEN_EXAMPLE_INVALID"));
 /// ```
+#[specmark::spec(
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#TOKEN-ENV-DEFAULTING"
+)]
 pub fn registry_token_env_name(source: &str, explicit: Option<&str>) -> Option<String> {
     if let Some(explicit) = explicit {
         return Some(explicit.to_owned());
@@ -413,6 +420,9 @@ impl NamingConvention {
     /// `Fqdn` uses `group` and is infallible — every group-native registry
     /// uses it. The legacy `kind-*` conventions use `kind`, which a kindless
     /// pkgref does not carry; calling them with `kind = None` is an error.
+    #[specmark::spec(
+        implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#REG-FIELD-NAMING"
+    )]
     pub fn repo_name(
         &self,
         kind: Option<crate::package_ref::PackageKind>,

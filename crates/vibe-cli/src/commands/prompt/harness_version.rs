@@ -29,6 +29,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-076#SYS-SOFT-LAUNCH");
 
+use specmark::spec;
 use std::path::Path;
 use std::process::Command;
 
@@ -99,6 +100,7 @@ pub(crate) struct GateRequest<'a> {
 /// The reason names the installed version, the verified one, why the
 /// difference matters and the exact table a user who has checked it
 /// themselves writes.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-076#SYS-SOFT-LAUNCH")]
 pub(crate) fn gate(
     kind: HarnessKind,
     launcher: Option<&Launcher>,

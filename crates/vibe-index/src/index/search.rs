@@ -34,6 +34,7 @@ pub fn search(index: &Index, query: &str, kind_filter: Option<PackageKind>) -> V
 }
 
 /// Find every package whose latest version `provides` the named capability.
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#BY-CAP")]
 pub fn lookup_capability<'a>(index: &'a Index, capability: &str) -> Vec<&'a VersionEntry> {
     let cap_norm = capability.trim();
     let mut out = Vec::new();
@@ -74,6 +75,7 @@ fn capability_matches(advertised: &str, query: &str) -> bool {
     advertised_left == query_left
 }
 
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#BY-PURL")]
 pub fn lookup_purl<'a>(index: &'a Index, purl: &str) -> Vec<&'a VersionEntry> {
     let mut out = Vec::new();
     let q = purl.trim();

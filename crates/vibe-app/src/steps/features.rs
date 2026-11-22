@@ -45,6 +45,7 @@ pub enum ImpliedRule {
 }
 
 impl ImpliedRule {
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-065#feature-tree")]
     pub fn as_str(self) -> &'static str {
         match self {
             Self::Parent => "parent",

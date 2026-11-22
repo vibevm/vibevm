@@ -18,6 +18,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-076#SYS-REQUEST-ENVELOPE");
 
+use specmark::spec;
 use std::path::Path;
 
 use anyhow::{Context, Result};
@@ -46,6 +47,7 @@ pub(crate) struct Request<'a> {
     pub(crate) usage: Option<&'a Path>,
 }
 
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-076#SYS-REQUEST-ENVELOPE")]
 pub(crate) fn run(ctx: &output::Context, selected: &Selected, request: Request<'_>) -> Result<()> {
     let target = request
         .session_target

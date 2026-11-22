@@ -4,6 +4,7 @@ specmark::scope!(
 );
 
 use sha2::{Digest, Sha256};
+use specmark::spec;
 use vibe_wire::generated::migration::e1::application_journal::ApplicationJournal;
 
 fn framed(parts: &[&[u8]]) -> String {
@@ -19,6 +20,9 @@ pub fn raw_sha256(bytes: &[u8]) -> String {
     format!("{:x}", Sha256::digest(bytes))
 }
 
+#[spec(
+    implements = "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-APPLICATION-WIRE"
+)]
 pub fn operation_storage_key(project_binding: &str, operation_id: &str) -> String {
     framed(&[
         b"vibe-manifest-migration-operation-r1",
@@ -28,6 +32,9 @@ pub fn operation_storage_key(project_binding: &str, operation_id: &str) -> Strin
 }
 
 /// Phase deliberately excluded: checkpoint updates cannot rewrite intent.
+#[spec(
+    implements = "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-APPLICATION-WIRE"
+)]
 pub fn intent_identity(journal: &ApplicationJournal) -> String {
     let mode = journal
         .unix_mode
@@ -62,6 +69,9 @@ pub enum StageAction {
 }
 
 /// Deterministic reserved spelling is not stage ownership evidence.
+#[spec(
+    implements = "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-APPLICATION-WIRE"
+)]
 pub fn transaction_stage_name(intent_id: &str, action: StageAction) -> String {
     let action = match action {
         StageAction::Apply => "apply",

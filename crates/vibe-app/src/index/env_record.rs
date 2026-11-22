@@ -15,6 +15,7 @@ pub enum EnvOp {
 
 impl EnvOp {
     /// The stable spelling (`set`, `unset`, `path_prepend`).
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-065#env-step")]
     pub fn as_str(self) -> &'static str {
         match self {
             Self::Set => "set",

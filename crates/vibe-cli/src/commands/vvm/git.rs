@@ -38,6 +38,7 @@ pub(crate) enum GitError {
 
 /// Run `git <args>` in `dir`, returning trimmed stdout. A non-zero exit is
 /// an error carrying git's stderr.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-019#build")]
 pub(crate) fn run(dir: &Path, args: &[&str]) -> Result<String, GitError> {
     let mut command = Command::new("git");
     // PROP-068 `#proxy-git`: the configured route, before the subcommand.

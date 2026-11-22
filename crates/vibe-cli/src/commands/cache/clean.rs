@@ -15,6 +15,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#command-summary");
 
+use specmark::spec;
 use std::time::{Duration, SystemTime};
 
 use anyhow::{Context, Result, anyhow, bail};
@@ -24,6 +25,7 @@ use crate::cli::CacheCleanArgs;
 use crate::exit_code::InstallError;
 use crate::output;
 
+#[spec(implements = "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#command-summary")]
 pub(crate) fn run(ctx: &output::Context, args: CacheCleanArgs) -> Result<()> {
     // The EXPLICIT-RECLAIM guard: without a target the command refuses.
     // This is the deliberate friction — a bare `vibe cache clean` must

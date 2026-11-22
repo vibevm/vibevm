@@ -1,6 +1,7 @@
 //! A direct source's selected route and objects survive metadata selection.
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-073#NATIVE-ROUTES");
 use super::*;
+use specmark::spec;
 use std::sync::Mutex;
 use vibe_core::manifest::SourceKind;
 use vibe_wire::generated::shared::{SourceEvidence, SourceSelectionKind};
@@ -204,6 +205,7 @@ impl MultiRegistryResolver {
             native: native.map(|source| Mutex::new(Some(source))),
         }))
     }
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-073#NATIVE-ROUTES-LAW")]
     pub(crate) fn acquire_direct_source(
         &self,
         resolution: &MultiResolution,

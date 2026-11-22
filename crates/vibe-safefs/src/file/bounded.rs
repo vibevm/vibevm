@@ -14,6 +14,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-056#SEC-NO-FOLLOW");
 
+use specmark::spec;
 use std::io::{Read, Seek, SeekFrom};
 use std::path::Path;
 
@@ -156,6 +157,9 @@ impl Project {
     /// # Ok(())
     /// # }
     /// ```
+    #[spec(
+        implements = "spec://org.vibevm.core/vibevm/common/PROP-056#NONBLOCKING-REGULAR-ADMISSION"
+    )]
     pub fn read_file_bounded_in(
         &self,
         directory: &Pinned,
@@ -283,6 +287,7 @@ fn snapshot_limit(cap: usize) -> Result<usize> {
 /// One held observation law for ordinary snapshots and already-authorized
 /// deterministic stages. Public reads still validate authored relative paths
 /// before reaching this internal single-component seam.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-056#NONBLOCKING-REGULAR-ADMISSION")]
 pub(crate) fn read_held_snapshot_bounded(
     file: &mut std::fs::File,
     holder: &Pinned,
@@ -400,6 +405,7 @@ fn bounded_pass(
 /// gone, occupied by a link/reparse point, shared as a hard link, a
 /// directory, or a different regular single-link file. There is deliberately
 /// no retry and no cache: a caller that wants certainty re-reads.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-056#NONBLOCKING-REGULAR-ADMISSION")]
 pub(crate) fn ensure_still_final_name(
     holder: &Pinned,
     name: &str,

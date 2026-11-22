@@ -2,6 +2,7 @@
 //! project lives under Vibe's settings root, so its manifest, lockfile and
 //! slots are independent of whichever directory invoked `vibe install -g`.
 
+use specmark::spec;
 use std::fs::{self, OpenOptions};
 use std::io::{self, Write};
 use std::path::{Path, PathBuf};
@@ -41,6 +42,7 @@ pub(crate) fn user_project_root() -> Result<PathBuf> {
     Ok(settings.join("mcp").join("user-project"))
 }
 
+#[spec(implements = "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#install-workflow-in-detail")]
 pub(crate) fn run(
     ctx: &output::Context,
     mut args: InstallArgs,
@@ -84,6 +86,7 @@ pub(crate) fn run(
 /// an explicit root even when its previous manifest declaration was exact:
 /// it resolves the new selection and writes a fresh exact pin, while leaving
 /// every other user MCP root at its existing version.
+#[spec(implements = "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#install-workflow-in-detail")]
 pub(crate) fn update(
     ctx: &output::Context,
     args: UpdateArgs,

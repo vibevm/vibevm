@@ -27,6 +27,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-019#companion-tools");
 
+use specmark::spec;
 use std::fs;
 use std::io::Read;
 use std::path::{Component, Path, PathBuf};
@@ -143,6 +144,7 @@ pub(crate) fn beside_candidates(pin: &PxPin, asset: &PinnedAsset, dir: &Path) ->
 /// The px archive beside a hand-unpacked release, when one of the two
 /// places holds it. Reads nothing and writes nothing: the question a
 /// `--dry-run` asks.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-019#companion-tools")]
 pub(crate) fn archive_beside(pin: &PxPin, asset: &PinnedAsset, dir: &Path) -> Option<PathBuf> {
     beside_candidates(pin, asset, dir)
         .into_iter()

@@ -22,6 +22,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-076#SYS-OPERATIONS-SURFACE");
 
+use specmark::spec;
 use std::path::PathBuf;
 
 use vibe_core::layout;
@@ -53,6 +54,9 @@ pub enum PromptBuild {
 
 impl PromptBuild {
     /// The artifacts, for the two verdicts that have any.
+    #[spec(
+        implements = "spec://org.vibevm.core/vibevm/common/PROP-076#SYS-OPERATIONS-PATH-AND-FLAGS"
+    )]
     pub fn paths(&self) -> Option<&PromptPaths> {
         match self {
             PromptBuild::OptedOut | PromptBuild::Removed => None,
@@ -61,6 +65,9 @@ impl PromptBuild {
     }
 
     /// The verdict's own word, as the summary line spells it.
+    #[spec(
+        implements = "spec://org.vibevm.core/vibevm/common/PROP-076#SYS-OPERATIONS-PATH-AND-FLAGS"
+    )]
     pub fn as_str(&self) -> &'static str {
         match self {
             PromptBuild::OptedOut => "opted out",
@@ -86,6 +93,7 @@ pub struct PromptPaths {
 }
 
 /// Build one node's system-prompt artifacts.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-076#SYS-OPERATIONS-SURFACE")]
 pub fn build_node_prompt(
     workspace: &crate::Workspace,
     node_rel: &str,

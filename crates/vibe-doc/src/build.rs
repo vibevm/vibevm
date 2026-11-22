@@ -70,6 +70,7 @@ pub enum Format {
 
 impl Format {
     /// The word a flag spells.
+    #[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-057#PIPE-LIBRARY")]
     pub fn as_str(self) -> &'static str {
         match self {
             Format::Html => "html",
@@ -79,6 +80,7 @@ impl Format {
     }
 
     /// Parse a flag's value.
+    #[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-057#PIPE-LIBRARY")]
     pub fn parse(text: &str) -> Option<Format> {
         match text {
             "html" => Some(Format::Html),
@@ -143,6 +145,7 @@ impl Built {
     /// The gap census closes the summary line, beside the pages the pivot
     /// refused, because the two answer one question between them: what
     /// this build could not read, and what it read and could not fill.
+    #[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-057#PIPE-LIBRARY")]
     pub fn render(&self) -> String {
         let mut out = String::new();
         for page in &self.unreadable {
@@ -170,6 +173,7 @@ impl Built {
 ///
 /// This is the one walk. A caller that needs the pages AND the content —
 /// every caller — gets both from here rather than reading the tree twice.
+#[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-057#PIPE-LIBRARY")]
 pub fn content(
     package_dir: &Path,
     sources: &SpecSources,
@@ -243,6 +247,7 @@ fn content_for_set(
 /// alone would resolve against whatever page used it first. The XML
 /// projection needs none of it: it keeps `<example ref="…"/>` by its own
 /// contract.
+#[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-057#PIPE-NUMBERING")]
 pub fn render_page(page: &Page, content: &Content, format: Format) -> String {
     let expanded = expand_derived(&page.doc, content);
     let numbering = number_blocks(&expanded);
@@ -257,6 +262,7 @@ pub fn render_page(page: &Page, content: &Content, format: Format) -> String {
 /// (`##SITE-MOUNT`, `##SITE-TRAILING-SLASH`): the HTML lives in a
 /// directory that ends in a slash, and the projections lie beside it as
 /// files.
+#[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-057#SITE-TRAILING-SLASH")]
 pub fn page_path(prefix: &str, page_rel: &str, format: Format) -> String {
     let stem = pages::document_of(page_rel);
     match format {
@@ -490,6 +496,7 @@ pub fn write(built: &Built, out_dir: &Path) -> Result<()> {
 
 /// Reconcile a complete build into an owned output tree, writing only new or
 /// changed files and removing outputs the new build no longer declares.
+#[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-057#PIPE-LIBRARY")]
 pub fn write_reconciled(built: &Built, out_dir: &Path) -> Result<WriteReport> {
     let desired = built
         .files
@@ -543,6 +550,7 @@ pub fn write_reconciled(built: &Built, out_dir: &Path) -> Result<WriteReport> {
 /// (`##LOC-OFFICIAL-TRANSLATION`). Naming that coordinate in the refusal
 /// is the whole value of the flag — a silent build of the wrong language
 /// is a site page in a language nobody asked for.
+#[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-057#LOC-LANGUAGE-FIELD")]
 pub fn expect_language(package_dir: &Path, lang: &str) -> Result<()> {
     let path = package_dir.join("vibe.toml");
     let text = std::fs::read_to_string(&path).map_err(|e| DocError::io("reading", &path, e))?;

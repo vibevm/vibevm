@@ -21,6 +21,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-075#TEMPLATE-CACHE");
 
+use specmark::spec;
 use std::path::{Path, PathBuf};
 use std::time::Duration;
 
@@ -62,6 +63,7 @@ pub struct CachedVersionList {
 impl CachedVersionList {
     /// Build an envelope around freshly fetched bytes, stamped with
     /// `now` as a UNIX epoch in seconds.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-075#TEMPLATE-CACHE")]
     pub fn of(source_url: &str, document: String, now: u64) -> Self {
         CachedVersionList {
             source_url: source_url.to_string(),
@@ -87,6 +89,7 @@ impl CachedVersionList {
     /// // Zero TTL means «always refetch».
     /// assert!(fresh.is_stale(Duration::ZERO, now));
     /// ```
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-075#TEMPLATE-CACHE")]
     pub fn is_stale(&self, ttl: Duration, now: u64) -> bool {
         if ttl.is_zero() {
             return true;
@@ -132,6 +135,7 @@ pub struct TemplateCache {
 
 impl TemplateCache {
     /// The cache of `<group>/<name>` under a `…/cache/templates` root.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-075#TEMPLATE-CACHE")]
     pub fn at(templates_root: &Path, group: &Group, name: &str) -> Self {
         TemplateCache {
             root: templates_root.join(group.as_str()).join(name),
@@ -166,6 +170,7 @@ impl TemplateCache {
     }
 
     /// The cached template document, or `None` when none was cached.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-075#TEMPLATE-CACHE")]
     pub fn read_declaration(&self) -> Result<Option<String>, TemplateError> {
         let path = self.declaration_path();
         match std::fs::read_to_string(&path) {
@@ -179,6 +184,7 @@ impl TemplateCache {
     /// the revision on disk changed. Unlike a digest document this is not
     /// write-once: a template can be fixed without touching a produced
     /// version, and the cache must then hold the fix.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-075#TEMPLATE-CACHE")]
     pub fn write_declaration(&self, document: &str) -> Result<(), TemplateError> {
         let path = self.declaration_path();
         if self.read_declaration()?.as_deref() == Some(document) {
@@ -194,6 +200,7 @@ impl TemplateCache {
     }
 
     /// The cached version list, or `None` when nothing is cached.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-075#TEMPLATE-CACHE")]
     pub fn read_version_list(&self) -> Result<Option<CachedVersionList>, TemplateError> {
         let path = self.version_list_path();
         let bytes = match std::fs::read(&path) {
@@ -209,6 +216,7 @@ impl TemplateCache {
     }
 
     /// Write the version-list envelope, creating the directory.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-075#TEMPLATE-CACHE")]
     pub fn write_version_list(&self, envelope: &CachedVersionList) -> Result<(), TemplateError> {
         let path = self.version_list_path();
         self.ensure_dir(self.root.as_path())?;
@@ -220,6 +228,7 @@ impl TemplateCache {
     }
 
     /// One version's cached digest document, or `None`.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-075#TEMPLATE-CACHE")]
     pub fn read_digest_document(
         &self,
         version: &semver::Version,
@@ -236,6 +245,7 @@ impl TemplateCache {
     /// already-cached document is never overwritten, because a released
     /// version's checksums are immutable and a difference is the alarm,
     /// not an update.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-075#TEMPLATE-CACHE")]
     pub fn write_digest_document(
         &self,
         version: &semver::Version,
@@ -251,6 +261,7 @@ impl TemplateCache {
 
     /// The refusal for an offline miss, naming the package, the exact
     /// path and the command that would fill it.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-075#TEMPLATE-CACHE")]
     pub fn missing(&self, what: &str, path: PathBuf) -> TemplateError {
         TemplateError::CacheMissing {
             package: self.package.clone(),

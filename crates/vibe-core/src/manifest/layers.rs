@@ -1,6 +1,7 @@
 //! Explicit authored layer grants and relations; prose never grants authority.
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-074#OVERRIDE-ADDITIVE");
 use serde::{Deserialize, Serialize};
+use specmark::spec;
 use std::collections::BTreeSet;
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
@@ -90,6 +91,7 @@ pub enum LayerName {
     Override,
 }
 impl LayersSection {
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-074#LAYER-EXPLICIT-RELATIONS")]
     pub fn validate(&self) -> Result<(), String> {
         if self.schema != 1 {
             return Err("[layers] requires schema = 1".into());

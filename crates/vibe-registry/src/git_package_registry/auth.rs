@@ -5,6 +5,7 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#registry-auth");
 
 use super::*;
+use specmark::spec;
 
 impl GitPerPackageRegistry {
     /// Open selected catalog credentials without reading a token for an undemanded source.
@@ -68,6 +69,9 @@ impl GitPerPackageRegistry {
 
     /// Check the selected route before demand-capturing its immutable token.
     /// This does not grant a marker or redirect a different credential ceiling.
+    #[spec(
+        implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#registry-auth"
+    )]
     pub(crate) fn selected_credentialed_url(&self, source: &str) -> Result<String, RegistryError> {
         // Incumbent package/redirect constructors retain their captured-token behavior.
         if self.deferred_token.is_none() {
@@ -212,6 +216,7 @@ impl GitPerPackageRegistry {
 /// not log the returned string outside the spawned-process boundary;
 /// modern git auto-redacts passwords from its own stderr (≥ 2.31)
 /// as a second line of defence.
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#registry-auth")]
 pub fn inject_token(plain_url: &str, token: Option<&str>) -> String {
     let Some(token) = token else {
         return plain_url.to_string();

@@ -4,6 +4,7 @@
 //! scratch directory and consumed (removed) by its reader. Plugin stdout and
 //! stderr never share this channel.
 
+use specmark::spec;
 use std::io::{ErrorKind, Read, Write};
 use std::path::{Path, PathBuf};
 
@@ -54,6 +55,7 @@ impl Direction {
 /// assert!(parse_session("00112233445566778899aabbccddeeff").is_ok());
 /// assert!(parse_session("not-hex").is_err());
 /// ```
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-073#NATIVE-STOP-LAW")]
 pub fn parse_session(hex: &str) -> Result<[u8; SESSION_BYTES], String> {
     let bytes = hex.as_bytes();
     if bytes.len() != SESSION_BYTES * 2 {
@@ -84,6 +86,7 @@ fn frame_path(dir: &Path, direction: Direction, sequence: u64) -> PathBuf {
 }
 
 /// Publish one frame atomically; the reader never observes a partial file.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-073#NATIVE-STOP-LAW")]
 pub fn publish(
     dir: &Path,
     direction: Direction,
@@ -123,6 +126,7 @@ pub fn publish(
 }
 
 /// Consume the frame for `sequence` when it has been published.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-073#NATIVE-STOP-LAW")]
 pub fn take(
     dir: &Path,
     direction: Direction,

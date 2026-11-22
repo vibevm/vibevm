@@ -98,6 +98,9 @@ impl Project {
     }
 
     /// The same finite observation under a previously admitted directory.
+    #[specmark::spec(
+        implements = "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#URI-OBSERVED-SOURCE-READ"
+    )]
     pub fn read_source_observation_in(
         &self,
         directory: &Pinned,

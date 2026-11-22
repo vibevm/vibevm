@@ -7,6 +7,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-065#resume");
 
+use specmark::spec;
 use std::path::Path;
 
 use vibe_core::manifest::StepPhase;
@@ -29,6 +30,7 @@ pub(crate) struct StartPoint {
 }
 
 /// Load and check the kept state for `start`, or begin a fresh one.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-065#resume")]
 pub(crate) fn start_point(
     plan: &Plan,
     work: &Path,

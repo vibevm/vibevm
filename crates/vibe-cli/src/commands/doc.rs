@@ -23,6 +23,7 @@ pub use env::DocEnv;
 #[cfg(test)]
 use env::self_coordinate;
 use env::{preferred_language, settings_home, spec_sources};
+use specmark::spec;
 
 use std::collections::BTreeMap;
 use std::path::{Path, PathBuf};
@@ -50,6 +51,7 @@ use crate::cli::{
 use crate::output;
 
 /// Run `vibe doc …`.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-057#PIPE-LIBRARY")]
 pub fn run(ctx: &output::Context, args: DocArgs, env: DocEnv) -> Result<()> {
     match args.command {
         DocCommand::Build(build) => run_build(build, env),

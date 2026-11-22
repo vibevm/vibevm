@@ -11,6 +11,7 @@ use std::collections::BTreeMap;
 /// ```
 /// assert_eq!(vibe_core::manifest::step_env_name("VIBE_PARAM_", "install-dir"), "VIBE_PARAM_INSTALL_DIR");
 /// ```
+#[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-069#APP-ENV-IDENTITY")]
 pub fn step_env_name(prefix: &str, id: &str) -> String {
     let tail: String = id
         .chars()
@@ -56,6 +57,7 @@ impl StepEnvironment {
     /// let error = StepEnvironment::Feature.validate(["a-b", "a.b"]).unwrap_err();
     /// assert!(matches!(error, StepEnvironmentError::Collision { index: 1, .. }));
     /// ```
+    #[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-069#APP-ENV-IDENTITY")]
     pub fn validate<'a>(
         self,
         ids: impl IntoIterator<Item = &'a str>,
@@ -156,6 +158,7 @@ impl InstallerOptionDecl {
     /// option.validate_step_environment(&FieldPath::root())?;
     /// # Ok::<(), Box<dyn std::error::Error>>(())
     /// ```
+    #[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-069#APP-ENV-IDENTITY")]
     pub fn validate_step_environment(&self, at: &FieldPath) -> Result<(), FieldError> {
         if !steps_of(self)
             .iter()

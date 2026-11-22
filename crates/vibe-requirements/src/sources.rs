@@ -3,6 +3,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#FACT-QUERY-CONTRACT");
 
+use specmark::spec;
 use std::collections::BTreeMap;
 use std::path::PathBuf;
 
@@ -101,6 +102,7 @@ pub(crate) fn checked_adoption_entries(count: u64) -> Result<u32, QueryError> {
 /// coordinate occurring under both kinds — or twice in the lock — is a
 /// typed invariant error: the wire keys base sources by package alone
 /// and must recover one kind.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#FACT-QUERY-CONTRACT")]
 pub(crate) fn enumerate(
     workspace_root: &std::path::Path,
     selected: &SelectedWorkspace,
@@ -232,6 +234,7 @@ pub(crate) fn adoption_entries_for(registry: &Registry, package: &str) -> u64 {
 /// walk could not read are a typed loss, not a query abort); the
 /// orphaned/unavailable slot rulings are decided by the caller from the
 /// enumeration before this is called.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#FACT-QUERY-CONTRACT")]
 pub(crate) fn observe(
     coord: &SourceCoord,
     workspace_root: &std::path::Path,
@@ -337,6 +340,7 @@ pub(crate) fn observe(
 /// here is `orphaned` when adoption entries survive it (the positive
 /// count is the more informative observation, and the reason names both
 /// facts), `unavailable` otherwise.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#FACT-QUERY-CONTRACT")]
 pub(crate) fn orphan_or_unavailable(
     coord: &SourceCoord,
     registry: &Registry,

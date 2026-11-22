@@ -185,6 +185,7 @@ pub struct VendorSummary {
 ///
 /// `refresh_package` is mirror-aware, so vendoring against an unreachable
 /// primary still works as long as some `[[mirror]]` URL is reachable.
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#mirror")]
 pub fn vendor_packages(
     resolver: &MultiRegistryResolver,
     lockfile: &Lockfile,
@@ -336,6 +337,7 @@ pub fn vendor_packages(
 ///     "file:///abs/path/to/vendor",
 /// );
 /// ```
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#mirror")]
 pub fn file_url_for_dir(dir: &Path) -> String {
     let mut s = dir.to_string_lossy().replace('\\', "/");
     // Strip Windows UNC `\\?\` prefix that may survive `canonicalize`.

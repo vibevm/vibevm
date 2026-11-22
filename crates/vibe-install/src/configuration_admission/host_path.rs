@@ -1,6 +1,7 @@
 //! Install-only metadata readiness; history never stores a host-ready assertion.
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-069#PARAMETERS-ARE-VALUES");
 use super::*;
+use specmark::spec;
 use vibe_core::manifest::PackageConfiguration;
 
 pub(crate) fn unsupported() -> Error {
@@ -81,6 +82,7 @@ pub(super) fn observe(root: &Path, lexical: &str) -> Result<PathCheck> {
     }
 }
 
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-069#PARAMETERS-ARE-VALUES")]
 pub(crate) fn capture<'a>(
     workspace: &Workspace,
     selected: &Path,
@@ -156,6 +158,7 @@ pub(crate) fn check_locked_sources(lock: &vibe_core::manifest::Lockfile) -> Resu
 
 /// The existing Fresh install owner has the actual root and selected world.
 /// This is not a general admission bypass for update/reinstall or arbitrary IO.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-069#PARAMETERS-ARE-VALUES")]
 pub fn resolved_for_install(
     workspace: &Workspace,
     selected: &Path,
@@ -194,6 +197,7 @@ pub fn resolved_for_install(
     resolved_checked(workspace, selected, manifest, packages)
 }
 
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-069#PARAMETERS-ARE-VALUES")]
 pub(crate) fn resolved_checked(
     workspace: &Workspace,
     selected: &Path,

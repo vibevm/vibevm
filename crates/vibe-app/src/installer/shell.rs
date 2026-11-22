@@ -2,6 +2,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-059#installer-separation");
 
+use specmark::spec;
 use std::path::Path;
 use std::process::Command;
 
@@ -28,6 +29,7 @@ pub fn interpreter_name(interpreter: ShellInterpreter) -> &'static str {
 
 /// Build the child for one authored command: `/bin/sh -c` on POSIX hosts,
 /// `cmd.exe /D /S /C` or `powershell.exe -Command` on Windows.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-059#installer-separation")]
 pub fn command(
     interpreter: Option<ShellInterpreter>,
     script: &str,

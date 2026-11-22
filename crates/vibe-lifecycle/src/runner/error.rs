@@ -117,6 +117,7 @@ pub enum LifecycleRunError {
 
 impl LifecycleRunError {
     #[must_use]
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#FAILURE-BY-PHASE")]
     pub fn is_durable_soft_post(&self) -> bool {
         match self {
             Self::FailedTransition { source, .. } => source.is_durable_soft_post(),
@@ -127,6 +128,7 @@ impl LifecycleRunError {
     /// The typed agent refusal, whether it came from the credential-free
     /// preparation or from the dispatched paid half.
     #[must_use]
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#FAILURE-BY-PHASE")]
     pub fn agent_error(&self) -> Option<&AgentError> {
         if let Self::AgentPreparation { source, .. } = self {
             return Some(source.as_ref());
@@ -141,6 +143,7 @@ impl LifecycleRunError {
     }
 
     #[must_use]
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#FAILURE-BY-PHASE")]
     pub fn dispatch_error(&self) -> Option<&DispatchError> {
         match self {
             Self::Dispatch(error) => Some(error),
@@ -154,6 +157,7 @@ impl LifecycleRunError {
     }
 
     #[must_use]
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#FAILURE-BY-PHASE")]
     pub fn failed_transition(&self) -> Option<&FailedExecutionTransition> {
         match self {
             Self::FailedTransition { transition, .. } => Some(transition.as_ref()),

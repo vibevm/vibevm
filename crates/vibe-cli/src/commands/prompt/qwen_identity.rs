@@ -95,6 +95,7 @@ pub(crate) struct Composed {
 /// answer beside the point; then what the user asked for that the carrier
 /// would contradict; then which session shape this is; and only then the
 /// machine — the package, the Node, the helper and its proof.
+#[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-076#SYS-QWEN")]
 pub(crate) fn carrier(request: &Request<'_>) -> Result<Composed, Undeliverable> {
     let Request {
         settings,

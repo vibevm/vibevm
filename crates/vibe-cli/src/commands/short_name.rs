@@ -37,6 +37,7 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#short-name");
 
 use anyhow::{Result, bail};
+use specmark::spec;
 use vibe_core::manifest::Lockfile;
 use vibe_core::{Group, PackageRef};
 use vibe_registry::short_name::AliasCandidate;
@@ -216,6 +217,7 @@ fn render_not_issued(name: &str, refusal: &NotIssued) -> String {
 ///
 /// An unresolvable or ambiguous short name fails the command — the
 /// resolver never guesses (PROP-008 §2.7).
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#short-name")]
 pub fn qualify(
     resolver: &InstallResolver,
     pkgref: &PackageRef,
@@ -276,6 +278,7 @@ pub fn qualify(
 ///   package simply is not there).
 /// - Two locked groups under one name → the same PROP-008 §2.7 collision
 ///   [`qualify`] reports.
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#short-name")]
 pub fn qualify_locked(pkgref: &PackageRef, lockfile: &Lockfile) -> Result<PackageRef> {
     if pkgref.is_qualified() {
         return Ok(pkgref.clone());

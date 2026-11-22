@@ -71,6 +71,7 @@ pub struct MigrationPlan {
 
 impl MigrationPlan {
     /// The ids an attended offer preselects.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-075#MIGRATION")]
     pub fn preselected(&self) -> Vec<String> {
         self.entries
             .iter()
@@ -88,6 +89,7 @@ impl MigrationPlan {
     /// entries an attended offer would preselect, or `--all` when the
     /// package marks none of them `default` (naming no entry at all would
     /// print a command that runs nothing).
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-075#MIGRATION")]
     pub fn offer_command(&self, resume: bool) -> String {
         let preselected = self.preselected();
         if preselected.is_empty() {
@@ -105,6 +107,7 @@ impl MigrationPlan {
     }
 
     /// The exact command that runs `only` over this pair.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-075#MIGRATION")]
     pub fn command(&self, only: &[String], resume: bool) -> String {
         let mut text = format!(
             "vibe app migrate {} {} {}",
@@ -215,6 +218,7 @@ fn previous_in_slot(
 }
 
 /// One installation of `slot` by version or by whole key.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-075#MIGRATION")]
 pub(crate) fn installation_in_slot<'a>(
     index: &'a Index,
     slot: &str,

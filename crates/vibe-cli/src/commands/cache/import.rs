@@ -16,11 +16,13 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-066#transport");
 
 use anyhow::Result;
+use specmark::spec;
 
 use crate::cli::CacheImportArgs;
 use crate::commands::remap::bundle;
 use crate::output;
 
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-066#transport")]
 pub(crate) fn run(ctx: &output::Context, args: CacheImportArgs) -> Result<()> {
     let dir = args.dir.canonicalize().unwrap_or_else(|_| args.dir.clone());
     let document = bundle::read_manifest(&dir)?;

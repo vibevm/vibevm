@@ -44,6 +44,9 @@ struct PreparedData {
 pub struct PreparedInstalledSource(Arc<PreparedData>);
 
 impl PreparedInstalledSource {
+    #[specmark::spec(
+        implements = "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-INSTALLED-READ-LAW"
+    )]
     pub fn from_host_checked(
         slot_relative: String,
         expectation: InstalledSourceExpectation,
@@ -148,6 +151,9 @@ impl BoundInstalledSources {
 
 impl FileResolver {
     /// Attach data to an existing complete selected world, preserving legacy peers.
+    #[specmark::spec(
+        implements = "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-INSTALLED-READ-LAW"
+    )]
     pub fn with_installed_source_bindings(
         mut self,
         workspace: Arc<Project>,
@@ -423,6 +429,9 @@ impl DeclaredRead {
 }
 
 /// Pure native projection by declared materialized media, independent of suffix.
+#[specmark::spec(
+    implements = "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-DECLARED-MATERIALIZATION-LAW"
+)]
 pub fn project_declared_native(
     bytes: &[u8],
     media: &str,

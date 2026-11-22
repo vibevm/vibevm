@@ -1,5 +1,6 @@
 //! One-shot, all-memory preparation of the exact Collect replay closure.
 
+use specmark::spec;
 use std::collections::{BTreeMap, BTreeSet};
 use std::path::{Path, PathBuf};
 use std::sync::Arc;
@@ -327,6 +328,7 @@ mod source_binding_fault;
 #[cfg(test)]
 pub(crate) use source_binding_fault::drop_source_binding_for_test;
 
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#install")]
 pub(crate) fn prepare_boot_replay<F: CompilerNativeReplayFactory>(
     replay: BootReplaySet,
     epoch: &OwnerRuntimeEpoch,

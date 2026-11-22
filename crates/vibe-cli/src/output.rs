@@ -6,6 +6,7 @@ specmark::scope!("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#output-format");
 
 use serde::Serialize;
 use serde_json::Value;
+use specmark::spec;
 use std::sync::Arc;
 use vibe_core::progress::Progress;
 use vibe_core::progress::transfer::Transfers;
@@ -285,6 +286,7 @@ pub struct Context {
 }
 
 impl Context {
+    #[spec(implements = "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#output-format")]
     pub fn from_flags(
         quiet: bool,
         json: bool,

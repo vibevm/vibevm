@@ -24,6 +24,7 @@ use crate::storage::Storage;
 /// let index = vibe_app::Index::default();
 /// assert!(vibe_app::reserved_commands(&index).is_empty());
 /// ```
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-059#alternatives")]
 pub fn reserved_commands(index: &Index) -> BTreeMap<String, String> {
     let mut reserved = BTreeMap::new();
     for record in index
@@ -101,6 +102,7 @@ pub struct DefaultChange {
 /// let error = vibe_app::set_default(&settings, "tool", "org.example/a@1.0.0", exposure);
 /// assert!(error.unwrap_err().to_string().contains("no installed provider"));
 /// ```
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-059#alternatives")]
 pub fn set_default(
     settings: &SettingsRoot,
     slot: &str,
@@ -169,6 +171,7 @@ pub fn set_default(
 /// let error = vibe_app::set_slot_off(&settings, "tool", true, exposure);
 /// assert_eq!(error.unwrap_err().code(), "unknown_slot");
 /// ```
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-059#slot-off")]
 pub fn set_slot_off(
     settings: &SettingsRoot,
     slot: &str,
@@ -213,6 +216,7 @@ pub fn set_slot_off(
 /// The `vibe-app-alternatives/1` listing of one slot: providers with their
 /// status, the default, and which providers offer each command. Hidden
 /// installations have no place among the alternatives.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-059#alternatives")]
 pub fn listing(
     settings: &SettingsRoot,
     slot: &str,

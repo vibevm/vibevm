@@ -47,6 +47,7 @@ pub(crate) const PROJECT_REQUIRED: &str = "project_required";
 /// assert_eq!(expand_template("$project_root", &vars).unwrap_err(), "project_required");
 /// assert!(expand_template("$home", &vars).is_err());
 /// ```
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-059#launcher-paths")]
 pub fn expand_template(template: &str, vars: &TemplateVars) -> Result<String, String> {
     let mut result = String::new();
     let mut chars = template.chars().peekable();
@@ -97,6 +98,7 @@ pub fn expand_template(template: &str, vars: &TemplateVars) -> Result<String, St
 
 /// The `app_root` of an installation, derived now: an owned root from its
 /// library and directory, an external root as recorded.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-059#launcher-paths")]
 pub fn app_root(installation: &Installation, storage: &Storage) -> Result<PathBuf, String> {
     match &installation.location {
         Location::External { app_root } => Ok(app_root.clone()),
@@ -144,6 +146,7 @@ pub struct ResolvedLauncher {
 
 /// Resolve one launcher; `Err("project_required")` marks a point that needs
 /// a project while the others stay runnable.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-059#launcher-paths")]
 pub fn resolve(launcher: &LauncherDecl, vars: &TemplateVars) -> Result<ResolvedLauncher, String> {
     let root = canonical(&vars.app_root, "app_root", true)?;
     let vars = TemplateVars {
@@ -294,6 +297,7 @@ pub struct LaunchRequest<'a> {
 }
 
 /// Run one launch point with an argument array and return its exit status.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-059#launcher-operations")]
 pub fn run(
     installation: &Installation,
     storage: &Storage,
@@ -388,6 +392,7 @@ fn with_operands(args: &[String], extra: &[OsString]) -> Vec<OsString> {
 }
 
 /// The native exit status; a POSIX signal maps to `128 + signal`.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-059#launcher-operations")]
 pub fn exit_code(status: ExitStatus) -> i32 {
     if let Some(code) = status.code() {
         return code;

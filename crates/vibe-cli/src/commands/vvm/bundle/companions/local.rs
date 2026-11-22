@@ -11,6 +11,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-019#companion-tools");
 
+use specmark::spec;
 use std::fs;
 use std::path::Path;
 
@@ -35,6 +36,7 @@ use crate::commands::vvm::store::VersionStore;
 /// the asset's own name when it is spelled `px-<version>-<target>.<ext>`,
 /// else `custom`, so a default px and an operator's own can live side by
 /// side.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-019#COMPANION-TOOLS-ANY-PX")]
 pub(crate) fn install_local(
     store: &VersionStore,
     pin: &PxPin,

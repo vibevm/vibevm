@@ -13,6 +13,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-068#proxy-system");
 
+use specmark::spec;
 use std::sync::{Arc, RwLock};
 
 use super::{
@@ -194,6 +195,7 @@ type Step = Option<SystemProxy>;
 /// assert!(error.contains("GNOME") && error.contains("KDE"), "{error}");
 /// assert!(error.contains("environment https_proxy") && error.contains("fix:"), "{error}");
 /// ```
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-068#proxy-system")]
 pub fn resolve_unix_with(source: &dyn UnixProxySource) -> Result<SystemProxy, SystemProxyError> {
     let mut checked: Vec<String> = Vec::new();
     // Each desktop is read only if the one before it answered nothing:
@@ -254,6 +256,7 @@ pub fn resolve_unix_with(source: &dyn UnixProxySource) -> Result<SystemProxy, Sy
 /// assert_eq!(resolved.bypass.as_deref(), Some("*.corp.example"));
 /// assert_eq!(resolved.origin, SystemProxyOrigin::MacNetworkSettings);
 /// ```
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-068#proxy-system")]
 pub fn resolve_mac_with(source: &dyn UnixProxySource) -> Result<SystemProxy, SystemProxyError> {
     let mut checked: Vec<String> = Vec::new();
     match source.scutil_proxies() {

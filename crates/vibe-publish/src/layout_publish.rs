@@ -18,6 +18,7 @@
 //! `replace`. Identity is the package's content hash, so build output and
 //! `.git` never make two copies differ.
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#registry-type");
+use specmark::spec;
 use std::path::{Path, PathBuf};
 use vibe_core::PackageKind;
 use vibe_core::cancellation::CancellationToken;
@@ -176,6 +177,9 @@ pub enum LayoutAction {
 }
 
 impl LayoutAction {
+    #[spec(
+        implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#registry-type"
+    )]
     pub const fn as_str(self) -> &'static str {
         match self {
             LayoutAction::Created => "created",
@@ -221,6 +225,9 @@ pub struct BatchOutcome {
 
 impl BatchOutcome {
     /// Whether the batch changed (or would change) anything.
+    #[spec(
+        implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#registry-type"
+    )]
     pub fn changed(&self) -> bool {
         self.index_refreshed
             || self.facts_recorded > 0
@@ -275,6 +282,9 @@ pub struct LayoutPublishOutcome {
 /// .unwrap();
 /// println!("{} {}", outcome.package_path, outcome.action.as_str());
 /// ```
+#[spec(
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#REGISTRY-TYPE-PUBLISH"
+)]
 pub fn publish(
     config: &LayoutPublishConfig,
     cancellation: &CancellationToken,
@@ -324,6 +334,9 @@ pub fn publish(
 /// Publish a batch of versions (and journal facts) into one layout
 /// registry: one commit and one push for a monorepo, one index refresh for
 /// a localdir.
+#[spec(
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#REGISTRY-TYPE-PUBLISH"
+)]
 pub fn publish_batch(
     config: &BatchConfig,
     cancellation: &CancellationToken,
@@ -378,6 +391,7 @@ impl TargetTree {
 }
 
 /// Read the tree a batch into `target` would start from.
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#registry-type")]
 pub fn read_target(target: &LayoutTarget) -> Result<TargetTree, PublishError> {
     match target {
         LayoutTarget::Localdir { root } => Ok(TargetTree {

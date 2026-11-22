@@ -25,6 +25,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-075#TEMPLATE-IN-A-REPO");
 
+use specmark::spec;
 use std::collections::BTreeSet;
 
 use vibe_core::manifest::Manifest;
@@ -45,6 +46,7 @@ impl GitPerPackageRegistry {
     /// the ordinary case for every package; also `Ok(None)` when this
     /// registry has no index at all, because a tag list cannot tell a
     /// revision from a version and this path will not guess.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-075#TEMPLATE-DISCOVERY")]
     pub fn active_template(
         &self,
         group: &Group,
@@ -104,6 +106,7 @@ impl GitPerPackageRegistry {
     /// or there is no template to lower it against — and an unlowered
     /// channel then matches nothing, which is the refusal
     /// `#CHANNEL-SYNTAX` prescribes rather than a silent miss.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-075#TEMPLATE-IN-A-REPO")]
     pub(crate) fn lower_through_template(
         &self,
         pkgref: &PackageRef,
@@ -222,6 +225,7 @@ impl GitPerPackageRegistry {
     /// registry publishes this version concretely
     /// (`#TEMPLATE-CONCRETE-WINS`: the template is then not rendered for
     /// it at all) or there is no template.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-075#TEMPLATE-IN-A-REPO")]
     pub(crate) fn materialise_from_template(
         &self,
         group: &Group,
@@ -289,6 +293,7 @@ impl GitPerPackageRegistry {
     /// provenance the lock keeps is therefore the template record the
     /// layer noted while rendering, which is what `#TEMPLATE-LOCK-RECORD`
     /// says binds — the rendered hash, not a commit.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-075#TEMPLATE-LOCK-RECORD")]
     pub(crate) fn fetch_materialised(
         &self,
         resolved: &ResolvedPackage,

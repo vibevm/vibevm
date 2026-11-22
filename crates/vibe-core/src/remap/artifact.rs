@@ -10,6 +10,7 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-066#locator");
 
 use serde::Serialize;
+use specmark::spec;
 
 use super::row::{Provenance, RemapKey, RemapScope, RemapTarget, UnmatchedPolicy};
 
@@ -62,6 +63,7 @@ pub enum ArtifactKind {
 
 impl ArtifactKind {
     /// The kebab-case name every human view and `--json` document prints.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-066#locator")]
     pub fn label(self) -> &'static str {
         match self {
             ArtifactKind::RegistryClone => "registry-clone",
@@ -108,6 +110,7 @@ pub struct Artifact {
 
 impl Artifact {
     /// An artifact of this kind with nothing else declared yet.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-066#locator")]
     pub fn new(kind: ArtifactKind) -> Self {
         Artifact {
             kind,
@@ -188,6 +191,7 @@ pub struct Candidate {
 
 impl Candidate {
     /// Publication scope belongs to the selected row, not a URL coincidence.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-066#locator")]
     pub fn publication_scope(&self) -> crate::RoutePublication {
         self.row
             .as_ref()

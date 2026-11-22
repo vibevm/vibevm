@@ -11,6 +11,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-068#proxy-tool");
 
+use specmark::spec;
 use std::process::Command;
 
 use anyhow::{Result, anyhow, bail};
@@ -223,6 +224,7 @@ fn parse_env(raw: &str) -> Result<(String, String)> {
 /// operations start it, run the command through it, and answer with the
 /// command's exit code. px is stopped when the command exits, by the same
 /// supervisor (Unix) or job object (Windows) that ends it when vibe does.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-068#proxy-tool")]
 pub fn run_exec(
     ctx: &output::Context,
     args: &ToolPxExecArgs,
@@ -305,6 +307,7 @@ pub fn run_exec(
 
 /// `vibe tool px serve [--port N]`: px in the foreground until Ctrl-C,
 /// for a tool vibe cannot start itself (an editor, a long-lived shell).
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-068#proxy-tool")]
 pub fn run_serve(
     ctx: &output::Context,
     _args: &ToolPxServeArgs,

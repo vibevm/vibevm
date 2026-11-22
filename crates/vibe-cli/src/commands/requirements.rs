@@ -26,6 +26,7 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#FACT-QUERY-CONTRACT");
 
 use anyhow::{Context as _, Result};
+use specmark::spec;
 use vibe_wire::generated::lifecycle_state::LifecycleState;
 use vibe_wire::generated::requirements_report::RequirementsReport;
 
@@ -33,6 +34,7 @@ use crate::cli::RequirementsArgs;
 use crate::output::Context;
 
 /// Answer one requirements query over the selected project and render it.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#FACT-QUERY-CONTRACT")]
 pub fn run(ctx: &Context, args: RequirementsArgs) -> Result<()> {
     // The grammar decides FIRST. An unacceptable question — a bare-id
     // prefix, a zero or an over-cap limit — is refused by the wire

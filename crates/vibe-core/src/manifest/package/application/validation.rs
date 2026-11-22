@@ -2,6 +2,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-059#declaration");
 
+use specmark::spec;
 use std::collections::BTreeSet;
 use std::path::{Component, Path};
 
@@ -14,6 +15,7 @@ use super::*;
 
 impl InstallerOptionDecl {
     /// Validate one option; `at` is its address, `installer_options[i]`.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-059#installer-options")]
     pub(crate) fn validate(&self, at: &FieldPath, template: bool) -> Result<(), FieldError> {
         let refuse = |name: &str, message: String| FieldError::new(at.field(name), message);
         if !is_portable_token(&self.id) {
@@ -262,6 +264,7 @@ impl ApplicationDecl {
 
 impl InstallerMethod {
     /// Validate the shorthand method; `at` is `installer_options[i].installation`.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-059#installer-separation")]
     pub(crate) fn validate(&self, at: &FieldPath, template: bool) -> Result<(), FieldError> {
         let table = "[installer_options.installation]";
         let site = Site::new(table, at.clone()).templated(template);

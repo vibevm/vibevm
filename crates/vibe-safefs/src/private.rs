@@ -88,6 +88,7 @@ impl Pinned {
     /// Reports only this invocation's successful private mkdir, after held-child
     /// admission. Existing children and a lost creation race report false.
     /// The caller still owns parent admission and durable genesis validation.
+    #[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-000#TS-USER-KEYRING")]
     pub fn private_child_recording(
         &self,
         name: &str,
@@ -181,6 +182,7 @@ impl Pinned {
     }
 
     /// Lock directly under the verified private root, never creating `.vibe`.
+    #[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-000#TS-USER-KEYRING")]
     pub fn private_lock(&self, name: &str) -> Result<LockGuard> {
         self.verify_user_private()?;
         crate::ensure_safe_component(name)?;

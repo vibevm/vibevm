@@ -7,6 +7,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-059#launcher-runtime");
 
+use specmark::spec;
 use std::collections::BTreeMap;
 
 /// What one entry says, gathered from a catalog row.
@@ -92,6 +93,7 @@ fn exec_argument(argument: &str) -> String {
 /// The `.desktop` file of one launcher. `X-Vibe-Key` is the marker that
 /// makes the file vibe's, so a removal never deletes a file someone else
 /// wrote under the same name.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-059#launcher-runtime")]
 pub(crate) fn desktop_entry(entry: &EntryText) -> String {
     let mut text = String::from("[Desktop Entry]\nType=Application\nVersion=1.5\n");
     let mut line = |key: &str, value: &str| text.push_str(&format!("{key}={value}\n"));
@@ -236,6 +238,7 @@ fn windows_argument(argument: &str) -> String {
 /// The PowerShell script that saves one `.lnk` through `WScript.Shell`, the
 /// same COM object the shortcut dialogs of Windows use; the tree carries no
 /// `.lnk` writer of its own.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-059#launcher-runtime")]
 pub(crate) fn shortcut_script(
     entry: &EntryText,
     lnk: &str,

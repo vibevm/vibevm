@@ -54,6 +54,7 @@ use super::launchers;
 mod route;
 use route::{admit_route_kind, route_child};
 
+#[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-076#SYS-SOFT-LAUNCH")]
 pub(crate) fn run(ctx: &output::Context, argv: Vec<String>) -> Result<()> {
     let mut argv = argv.into_iter();
     let Some(name) = argv.next() else {

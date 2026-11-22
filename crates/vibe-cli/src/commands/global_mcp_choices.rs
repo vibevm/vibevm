@@ -4,6 +4,7 @@ specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-027#regist
 
 use anyhow::{Result, bail};
 use console::{Key, Term};
+use specmark::spec;
 
 use crate::output::sanitize_progress_text;
 
@@ -146,6 +147,9 @@ pub(crate) fn choose(
     )
 }
 
+#[spec(
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-027#REG-GLOBAL-AGENT-SELECTION"
+)]
 pub(crate) fn choose_with_initial(
     title: &str,
     group_label: &str,

@@ -64,6 +64,7 @@ pub enum MigrationSide {
 
 impl MigrationSide {
     /// The stable spelling (`export`, `import`), which is also the TOML key.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-075#MIGRATION-DECLARATION")]
     pub fn as_str(self) -> &'static str {
         match self {
             Self::Export => "export",
@@ -74,6 +75,7 @@ impl MigrationSide {
 
 impl MigrationDecl {
     /// The declaration of one side.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-075#MIGRATION-DECLARATION")]
     pub fn step(&self, side: MigrationSide) -> &StepDecl {
         match side {
             MigrationSide::Export => &self.export,
@@ -82,6 +84,7 @@ impl MigrationDecl {
     }
 
     /// Both sides in the order they run.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-075#MIGRATION-DECLARATION")]
     pub fn sides(&self) -> [(MigrationSide, &StepDecl); 2] {
         [
             (MigrationSide::Export, &self.export),

@@ -12,6 +12,7 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#registry-model");
 
 use super::*;
+use specmark::spec;
 
 /// What [`MultiRegistryResolver::refresh_cached_clones`] did for one
 /// registry: the clones it brought to the newest release tag, the ones it
@@ -51,6 +52,9 @@ impl MultiRegistryResolver {
     /// is a fact about the cache and not a failure of the refresh. Any
     /// other error — network, auth — stops the walk, as the lockfile
     /// form does, so a half-refreshed home is never reported as done.
+    #[spec(
+        implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#registry-model"
+    )]
     pub fn refresh_cached_clones(&self) -> Result<Vec<RegistryRefresh>, RegistryError> {
         let mut out = Vec::new();
         for reg in self.registries()? {

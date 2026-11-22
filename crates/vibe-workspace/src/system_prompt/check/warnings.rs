@@ -8,6 +8,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-076#SYS-READ-ONLY-CHECK");
 
+use specmark::spec;
 use vibe_core::layout;
 use vibe_core::manifest::{HostChoice, TargetOs};
 
@@ -54,6 +55,7 @@ use super::{CheckRequest, PromptCheck, read_owned};
 /// assert!(warning.contains("linux") && warning.contains("macos"));
 /// assert!(warning.contains("rather than refused"));
 /// ```
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-076#SYS-HOST-AND-TARGET")]
 pub fn host_mismatch_warning(host: HostChoice, session_os: Option<TargetOs>) -> Option<String> {
     let declared = host.fixed()?;
     let session = session_os?;
@@ -74,6 +76,7 @@ pub fn host_mismatch_warning(host: HostChoice, session_os: Option<TargetOs>) -> 
 /// wrong — a lane whose bodies have drifted is *expected*, because `vibe
 /// agent` recomposes it at launch — so folding any of them into `stale`
 /// would make the one assertion the band model rests on fail.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-076#SYS-READ-ONLY-CHECK")]
 pub fn prompt_warnings(
     request: &CheckRequest<'_>,
     answer: &PromptCheck,

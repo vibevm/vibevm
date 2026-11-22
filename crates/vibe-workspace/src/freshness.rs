@@ -32,6 +32,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-011#skip-resolution");
 
+use specmark::spec;
 use std::collections::HashSet;
 
 use vibe_core::manifest::{Lockfile, SourceKind};
@@ -66,6 +67,9 @@ impl Freshness {
 /// Decide whether `lockfile` is a fresh resolution of `workspace` — the
 /// PROP-011 §2.2 freshness check. Pure over the in-memory inputs plus
 /// dependency-slot presence on disk; runs no depsolver and no network.
+#[spec(
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-011#FRESHNESS-CHECK"
+)]
 pub fn check(workspace: &Workspace, lockfile: &Lockfile) -> Freshness {
     let configuration = configuration_freshness(workspace, lockfile);
     if !configuration.is_fresh() {
@@ -238,6 +242,7 @@ fn stale(reason: String) -> Freshness {
 /// production default, and neither brought the method; the walk stays,
 /// and preference inside the solve would be resolvo's `sort_candidates`
 /// (PROP-017 §3).
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-011#HOLD-THE-LOCK")]
 pub fn hold_pins(declared_roots: &[PackageRef], lockfile: &Lockfile) -> Vec<PackageRef> {
     declared_roots
         .iter()

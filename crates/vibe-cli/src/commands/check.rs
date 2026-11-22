@@ -18,6 +18,7 @@ use crate::cli::CheckArgs;
 use crate::output;
 use crate::output::language::{Block, Glyph, LabelValue, Line, Meta, Role, join_meta, paint};
 
+#[specmark::spec(implements = "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#linter")]
 pub fn run(ctx: &output::Context, args: CheckArgs) -> Result<()> {
     let locate = ctx.progress().task("Locating project checks");
     let selected = if args.global {

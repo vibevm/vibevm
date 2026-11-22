@@ -5,6 +5,7 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-075#TEMPLATE-SOURCE-
 
 use crate::manifest::package::application::credential_free_https;
 use crate::manifest::{FieldError, FieldPath};
+use specmark::spec;
 
 use super::{ChannelRule, DigestSource, TemplateSection, VersionSource};
 
@@ -23,6 +24,7 @@ pub const CHANNEL_NAME_RULE: &str = "a channel name is a lowercase letter follow
 /// assert!(!channel_name_is_valid("lts/jod/extra"));
 /// assert!(!channel_name_is_valid("22"));
 /// ```
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-075#CHANNEL-SYNTAX")]
 pub fn channel_name_is_valid(name: &str) -> bool {
     let mut parts = name.split('/');
     let first = parts.next().unwrap_or_default();

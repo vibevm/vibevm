@@ -1,6 +1,7 @@
 //! Explicit non-delivery attachment to one already-READY native conversation.
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-076#HERMES-READY-PLACEMENT");
 use anyhow::{Context, Result, bail};
+use specmark::spec;
 use std::path::Path;
 use std::process::Command;
 use vibe_app::Interrupt;
@@ -11,6 +12,7 @@ pub(crate) struct Request {
 }
 
 /// Consume only an explicit Vibe selector before the native argument delimiter.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-076#SYS-HERMES-PI-NATIVE")]
 pub(crate) fn parse(args: &[String]) -> Result<Option<Request>> {
     let before = args
         .iter()
@@ -66,6 +68,7 @@ pub(crate) fn parse(args: &[String]) -> Result<Option<Request>> {
     }))
 }
 
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-076#SYS-HERMES-PI-NATIVE")]
 pub(crate) fn run(settings: &Path, program: &Path, request: Request) -> Result<i32> {
     let runtime = super::hermes_runtime::discover(program)?;
     super::hermes_runtime::admit_ready(&runtime.root)?;

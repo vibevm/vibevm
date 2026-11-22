@@ -8,6 +8,7 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#REF-AGENT-RESUME");
 
 use anyhow::{Context, Result};
+use specmark::spec;
 use vibe_core::manifest::{Lockfile, Manifest};
 use vibe_workspace::Workspace;
 use vibe_workspace::install::ResolvedDep;
@@ -24,6 +25,7 @@ use vibe_workspace::vibedeps;
 /// # Ok(())
 /// # }
 /// ```
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#REF-AGENT-RESUME")]
 pub fn provisional_world(
     workspace: &Workspace,
     lockfile: &Lockfile,

@@ -1,9 +1,11 @@
 //! Pure exact gate-input transition; source/operation authority stays with caller.
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-069#RECONFIGURATION");
 use super::*;
+use specmark::spec;
 impl PackageConfiguration {
     /// Only one explicit independent gate changes; both old/new histories must
     /// independently reconstruct from the same definition and declarations.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-069#RECONFIGURATION")]
     pub fn is_guarded_gate_transition(&self, next: &Self) -> bool {
         if self.consumers.len() != 1
             || next.consumers.len() != 1

@@ -21,6 +21,7 @@ use crate::cli::ShellArgs;
 use crate::commands::app::{global, home, session};
 use crate::output;
 
+#[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-059#shell-command")]
 pub fn run(ctx: &output::Context, args: ShellArgs) -> Result<()> {
     if ctx.is_json() || ctx.is_unattended() {
         bail!("vibe shell requires an interactive terminal; --json and --unattended are refused");

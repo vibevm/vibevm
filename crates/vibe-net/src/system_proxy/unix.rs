@@ -62,6 +62,7 @@ pub enum HostKind {
 
 impl HostKind {
     /// This host's kind, or the one [`KIND_ENV`] names.
+    #[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-068#proxy-system")]
     pub fn current() -> Self {
         match std::env::var(KIND_ENV)
             .unwrap_or_default()

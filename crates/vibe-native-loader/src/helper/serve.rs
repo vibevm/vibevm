@@ -1,5 +1,6 @@
 //! The helper-process side: raw ABI-1 operations on images it re-validates.
 
+use specmark::spec;
 use std::path::Path;
 use std::sync::Arc;
 use std::sync::atomic::{AtomicBool, Ordering};
@@ -28,6 +29,7 @@ const IDLE_MAX: Duration = Duration::from_millis(20);
 /// let refused = vibe_native_loader::helper::serve(scratch.path(), "short");
 /// assert!(refused.is_err());
 /// ```
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-073#NATIVE-STOP-LAW")]
 pub fn serve(scratch: &Path, session: &str) -> Result<(), String> {
     let orphaned = Arc::new(AtomicBool::new(false));
     let watch = Arc::clone(&orphaned);
@@ -43,6 +45,7 @@ pub fn serve(scratch: &Path, session: &str) -> Result<(), String> {
 
 /// The session loop of [`serve`] with an explicit liveness flag: it returns
 /// once `closed` is set and no request is pending.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-073#NATIVE-STOP-LAW")]
 pub fn serve_until(scratch: &Path, session: &str, closed: &AtomicBool) -> Result<(), String> {
     let session = frame::parse_session(session)?;
     if !scratch.is_absolute() || !scratch.is_dir() {

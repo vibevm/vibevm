@@ -41,6 +41,7 @@ pub(crate) mod review;
 mod scoped;
 mod whole;
 
+use specmark::spec;
 use std::path::PathBuf;
 
 use anyhow::Result;
@@ -57,6 +58,7 @@ pub(crate) use draft::UpdateIdentity;
 
 use prepare::PreparedUpdate;
 
+#[spec(implements = "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#command-summary")]
 pub fn run(
     ctx: &output::Context,
     args: UpdateArgs,

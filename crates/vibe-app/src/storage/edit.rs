@@ -5,6 +5,7 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-059#storage-libraries");
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-059#availability");
 
+use specmark::spec;
 use std::collections::BTreeSet;
 use std::fs;
 use std::path::{Path, PathBuf};
@@ -30,6 +31,7 @@ use crate::settings::{SettingsRoot, io};
 /// assert!(usb.join(vibe_app::LIBRARY_MARKER).is_file());
 /// assert!(vibe_app::storage_add(&settings, &usb, Some("again")).is_err());
 /// ```
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-059#storage-libraries")]
 pub fn add(settings: &SettingsRoot, path: &Path, id: Option<&str>) -> Result<Library, AppError> {
     let _lock = settings.lock()?;
     let storage = Storage::load(settings)?;
@@ -82,6 +84,7 @@ pub fn add(settings: &SettingsRoot, path: &Path, id: Option<&str>) -> Result<Lib
 /// assert_eq!(vibe_app::storage_attach(&settings, &disk).unwrap().id, "disk");
 /// assert!(vibe_app::storage_attach(&settings, &disk).is_err(), "already configured");
 /// ```
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-059#storage-libraries")]
 pub fn attach(settings: &SettingsRoot, path: &Path) -> Result<Library, AppError> {
     let _lock = settings.lock()?;
     let storage = Storage::load(settings)?;
@@ -118,6 +121,7 @@ pub fn attach(settings: &SettingsRoot, path: &Path) -> Result<Library, AppError>
 /// assert!(usb.join(vibe_app::LIBRARY_MARKER).is_file(), "files stay");
 /// assert!(vibe_app::storage_detach(&settings, vibe_app::DEFAULT_LIBRARY).is_err());
 /// ```
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-059#storage-libraries")]
 pub fn detach(settings: &SettingsRoot, id: &str) -> Result<Library, AppError> {
     if id == DEFAULT_LIBRARY {
         return Err(StorageError::DetachDefault.into());
@@ -147,6 +151,7 @@ pub fn detach(settings: &SettingsRoot, id: &str) -> Result<Library, AppError> {
 /// assert_eq!(listing.libraries[0].id, vibe_app::DEFAULT_LIBRARY);
 /// assert!(listing.libraries[0].default);
 /// ```
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-059#storage-libraries")]
 pub fn listing(settings: &SettingsRoot) -> Result<wire::ApplicationStorageList, AppError> {
     let index = Index::load(settings)?;
     let storage = Storage::load(settings)?;

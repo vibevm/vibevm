@@ -148,6 +148,7 @@ fn query(
 /// Read one raw `HKCU\Environment` value; `None` when it is absent. The
 /// registry API never expands `%VAR%`, so a `REG_EXPAND_SZ` PATH comes back
 /// exactly as stored.
+#[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-019#path")]
 pub(crate) fn get_user_var_raw(name: &str) -> Result<Option<RawUserVar>> {
     let Some(key) = Key::open(KEY_QUERY_VALUE)? else {
         return Ok(None);

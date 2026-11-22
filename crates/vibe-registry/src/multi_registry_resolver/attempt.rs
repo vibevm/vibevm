@@ -7,6 +7,8 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#registry-model");
 
+use specmark::spec;
+
 /// One row in the aggregated "tried these registries" report surfaced via
 /// [`crate::RegistryError::PackageNotFoundEverywhere`]. Captured per-registry
 /// during the walk in `MultiRegistryResolver::resolve`; carried through the
@@ -41,6 +43,9 @@ pub enum WalkAttemptStatus {
 }
 
 impl WalkAttemptStatus {
+    #[spec(
+        implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#REGISTRY-WALK-SEMANTICS"
+    )]
     pub fn as_label(&self) -> &'static str {
         match self {
             WalkAttemptStatus::NotFound => "not found",

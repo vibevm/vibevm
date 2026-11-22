@@ -1,5 +1,6 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-050#model");
 
+use specmark::spec;
 use std::collections::{BTreeMap, BTreeSet};
 
 use crate::manifest::{AccessLevel, OverrideEntry, OverrideTarget};
@@ -96,6 +97,7 @@ impl NodeDecl {
     /// };
     /// assert_eq!(node.grants().into_iter().collect::<Vec<_>>(), ["org.x/a"]);
     /// ```
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-050#GRANTS-DEFINITION")]
     pub fn grants(&self) -> BTreeSet<NodeId> {
         let mut grants: BTreeSet<NodeId> = self
             .edges

@@ -3,11 +3,13 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-073#OPERATION-EFFECT
 
 use crate::{cli::InstallArgs, output};
 use anyhow::{Context as _, Result};
+use specmark::spec;
 use std::path::PathBuf;
 use vibe_core::{GlobalRegistryConfig, PackageRef, manifest::Lockfile, user_config::UserConfig};
 use vibe_orchestrator::ports::InstallManifestMutation;
 use vibe_wire::generated::install::e2::plan::{InstallPlan, PlanEntry};
 
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-073#OPERATION-EFFECTS")]
 pub(crate) fn run(
     ctx: &output::Context,
     args: InstallArgs,
@@ -24,6 +26,7 @@ pub(crate) fn run(
         None,
     )
 }
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-073#OPERATION-EFFECTS")]
 pub(crate) fn run_selected(
     ctx: &output::Context,
     args: InstallArgs,

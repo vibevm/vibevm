@@ -1,6 +1,7 @@
 //! Submitted inputs enter one existing plan; private payload proofs authorize
 //! exactly that plan's ordinary lock publication, never the generic writer.
 use crate::{Error, Fetched, PlannedInstall, error::Result};
+use specmark::spec;
 use std::{
     collections::BTreeMap,
     path::{Path, PathBuf},
@@ -23,6 +24,7 @@ fn invalid(reason: impl Into<String>) -> Error {
     .into()
 }
 
+#[spec(implements = "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#install-workflow-in-detail")]
 pub(crate) fn check_root(root: &Path, manifest: &Manifest, input: &SubmittedInput) -> Result<()> {
     let project = vibe_safefs::Project::open(root).map_err(|e| invalid(e.to_string()))?;
     let captured = project
@@ -69,6 +71,7 @@ fn payloads(fetched: &[Fetched]) -> Result<Vec<vibe_registry::local_preview::Ver
         .collect()
 }
 impl VerifiedSubmission {
+    #[spec(implements = "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#install-workflow-in-detail")]
     pub(crate) fn mint(planned: &mut PlannedInstall, input: SubmittedInput) -> Result<Self> {
         check_root(&planned.project_root, &planned.manifest, &input)?;
         let key = input.requirement.qualified_name();
@@ -207,6 +210,7 @@ impl VerifiedSubmission {
 }
 
 /// Source-free replay verifies every actual full store payload, never a sidecar.
+#[spec(implements = "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#install-workflow-in-detail")]
 pub fn verify_submitted_replay(root: &Path, manifest: &Manifest, lock: &Lockfile) -> Result<()> {
     if !lock
         .configurations

@@ -31,6 +31,9 @@ impl std::fmt::Debug for SshConfigSelection {
     }
 }
 impl SshConfigSelection {
+    #[specmark::spec(
+        implements = "spec://org.vibevm.core/vibevm/common/PROP-073#SSH-CONFIG-CAPTURE-LAW"
+    )]
     pub fn new(
         executable: PathBuf,
         home: PathBuf,
@@ -55,6 +58,9 @@ impl SshConfigSelection {
         })
     }
     /// Select an alternate ordinary user configuration without changing HOME.
+    #[specmark::spec(
+        implements = "spec://org.vibevm.core/vibevm/common/PROP-073#SSH-CONFIG-CAPTURE-LAW"
+    )]
     pub fn with_user_config(mut self, path: PathBuf) -> Result<Self, GitError> {
         if !path.is_absolute() {
             return Err(unsupported("SSH config path must be absolute"));
@@ -64,6 +70,9 @@ impl SshConfigSelection {
     }
     /// Supply a captured expansion/agent value; it is data, never a child loader,
     /// shell startup, executable selection or inherited command override.
+    #[specmark::spec(
+        implements = "spec://org.vibevm.core/vibevm/common/PROP-073#SSH-CONFIG-CAPTURE-LAW"
+    )]
     pub fn with_environment(mut self, key: &str, value: String) -> Result<Self, GitError> {
         if key.is_empty()
             || !key.bytes().all(|b| b.is_ascii_alphanumeric() || b == b'_')
@@ -77,6 +86,9 @@ impl SshConfigSelection {
     /// The agent the selected client uses when `SSH_AUTH_SOCK` is unset:
     /// the Windows OpenSSH client's `\\.\pipe\openssh-ssh-agent`. Without
     /// one, an unset `SSH_AUTH_SOCK` selects no agent.
+    #[specmark::spec(
+        implements = "spec://org.vibevm.core/vibevm/common/PROP-073#SSH-CONFIG-CAPTURE-LAW"
+    )]
     pub fn with_default_agent(mut self, endpoint: PathBuf) -> Result<Self, GitError> {
         if !endpoint.is_absolute() && !platform::named_pipe(&endpoint) {
             return Err(unsupported("SSH default agent endpoint must be absolute"));
@@ -84,6 +96,9 @@ impl SshConfigSelection {
         self.default_agent = Some(endpoint);
         Ok(self)
     }
+    #[specmark::spec(
+        implements = "spec://org.vibevm.core/vibevm/common/PROP-073#SSH-CONFIG-CAPTURE-LAW"
+    )]
     pub fn with_acquisition_root(mut self, root: PathBuf) -> Result<Self, GitError> {
         if !root.is_absolute() {
             return Err(unsupported("SSH acquisition root must be absolute"));

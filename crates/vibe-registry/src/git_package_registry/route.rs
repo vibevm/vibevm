@@ -1,6 +1,7 @@
 //! Retained registry candidate identity; this is not transport authority.
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-073#NATIVE-ROUTES");
 use super::*;
+use specmark::spec;
 
 /// Address and report origin travel together through the existing candidate chain.
 #[derive(Clone)]
@@ -106,6 +107,7 @@ impl RegistryRoute {
         }));
         self
     }
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-073#NATIVE-ROUTES-LAW")]
     pub(crate) fn acquire_captured(
         &self,
         resolution: &crate::MultiResolution,
@@ -283,6 +285,7 @@ impl GitPerPackageRegistry {
     }
     /// Select an explicit URL/ref using this registry's existing immutable
     /// credential binding and captured token, never a marker-named environment.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-073#NATIVE-ROUTES-LAW")]
     pub(crate) fn configured_redirect(
         &self,
         group: &Group,
@@ -326,6 +329,7 @@ impl GitPerPackageRegistry {
 }
 
 impl GitPerPackageRegistry {
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-073#NATIVE-ROUTES-LAW")]
     pub(crate) fn fetch_dep_manifest_observed(
         &self,
         resolved: &ResolvedPackage,

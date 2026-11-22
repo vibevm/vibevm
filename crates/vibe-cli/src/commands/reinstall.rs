@@ -305,6 +305,7 @@ pub(super) fn effective_rederive_format(manifest: &Manifest) -> Result<SpecForma
     ))
 }
 
+#[specmark::spec(implements = "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#cli-surface")]
 pub fn run(
     ctx: &output::Context,
     args: ReinstallArgs,

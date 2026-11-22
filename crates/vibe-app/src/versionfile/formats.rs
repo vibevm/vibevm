@@ -14,6 +14,7 @@ use vibe_core::manifest::{KeyedExtra, KeyedSeparator, KeyedSyntax};
 
 /// The channel grammar of PROP-075 `#CHANNEL-SYNTAX`: `[a-z][a-z0-9.-]*`,
 /// optionally one `/` and a second such segment.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-075#CHANNEL-SYNTAX")]
 pub fn is_channel_name(text: &str) -> bool {
     // One grammar, in one place: the manifest layer's own, which
     // `[[template.channel]]` validation and `VersionSpec::parse` both
@@ -48,6 +49,7 @@ impl VersionRequest {
     /// (PROP-075 `#CHANNEL-SYNTAX`). A single leading `v` is tolerated
     /// before the requirement, because `v22.23.4` is the spelling upstreams
     /// and `.nvmrc` files actually carry.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-075#CHANNEL-SYNTAX")]
     pub fn parse(text: &str) -> Result<Self, String> {
         let authored = text.trim().to_owned();
         if authored.is_empty() {
@@ -86,6 +88,7 @@ impl VersionRequest {
     }
 
     /// The channel this request names, if any.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-075#CHANNEL-SYNTAX")]
     pub fn channel(&self) -> Option<&str> {
         match &self.kind {
             RequestKind::Channel(name) => Some(name),
@@ -131,6 +134,7 @@ impl VersionRequest {
     ///     ">=20, <23"
     /// );
     /// ```
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-075#VERSION-FILE-VALUE")]
     pub fn parse_in_version_file(text: &str) -> Result<Self, String> {
         let authored = text.trim().to_owned();
         if authored.is_empty() {
@@ -146,6 +150,7 @@ impl VersionRequest {
     }
 
     /// The version requirement this request names, if any.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-075#VERSION-FILE-FORMATS")]
     pub fn spec(&self) -> Option<&VersionSpec> {
         match &self.kind {
             RequestKind::Spec(spec) => Some(spec),
@@ -158,6 +163,7 @@ impl VersionRequest {
     /// channel name. This is what lets a surface that resolves a version
     /// **file** hand the answer to one that takes a requirement without
     /// either side re-deciding what the file meant.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-075#VERSION-FILE-FORMATS")]
     pub fn spelling(&self) -> String {
         match &self.kind {
             RequestKind::Spec(spec) => spec.to_string(),
@@ -210,6 +216,7 @@ fn req(spelling: &str) -> Option<VersionSpec> {
 /// The content of a `plain` version file: its first non-empty, non-comment
 /// line, trimmed, with a `#` comment and a CR tolerated. `None` for a file
 /// that holds nothing but blanks and comments.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-075#VERSION-FILE-FORMATS")]
 pub fn plain_line(text: &str) -> Option<&str> {
     text.lines()
         .map(|line| line.strip_suffix('\r').unwrap_or(line))
@@ -265,6 +272,7 @@ impl KeyedLine<'_> {
 /// line whose key is another slot's is not here and is **not** a fault:
 /// another key in a shared file is not a defect
 /// (PROP-075 `#VERSION-FILE-KEYED`).
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-075#VERSION-FILE-KEYED")]
 pub fn keyed_lines<'a>(text: &'a str, key: &str, syntax: KeyedSyntax) -> Vec<KeyedLine<'a>> {
     text.lines()
         .enumerate()
@@ -319,6 +327,7 @@ fn split_keyed<'a>(
 /// `extra = "refuse"` says a second value is. A key line with no value at
 /// all is not a selection; `Ok(None)` then, so the upward search keeps
 /// walking rather than failing a prompt (PROP-075 `#VERSION-FILE-KEYED`).
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-075#VERSION-FILE-KEYED")]
 pub fn keyed(text: &str, key: &str, syntax: KeyedSyntax) -> Result<Option<KeyedSelection>, String> {
     for found in keyed_lines(text, key, syntax) {
         let versions = found.versions();

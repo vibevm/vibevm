@@ -5,6 +5,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-050#verification");
 
+use specmark::spec;
 use std::path::PathBuf;
 
 use anyhow::Result;
@@ -29,6 +30,7 @@ pub struct WhyArgs {
 /// verdict for one coordinate. The exit code stays zero for every verdict
 /// — a blocked or unknown coordinate is the answer, not a failure; only
 /// input/world-read errors take the ordinary `Result` error path.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-050#VIBE-WHY")]
 pub fn run(_ctx: &output::Context, args: WhyArgs) -> Result<()> {
     let root = super::resolve_project_root(&args.path)?;
     let world = load_installed_world(&root).map_err(anyhow::Error::msg)?;

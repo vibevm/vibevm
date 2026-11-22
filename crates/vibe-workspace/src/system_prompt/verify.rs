@@ -34,6 +34,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-076#SYS-NO-RECURSION");
 
+use specmark::spec;
 use std::ops::Range;
 
 use crate::WorkspaceError;
@@ -102,6 +103,7 @@ impl ImportInertness {
     }
 
     /// Add one segment body's sites to the census.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-076#SYS-IMPORT-INERTNESS")]
     pub fn add(&mut self, segment: &str, body: &str) {
         let mut fenced = false;
         for (index, line) in body.lines().enumerate() {
@@ -179,6 +181,7 @@ impl ImportInertness {
 /// truncation and duplication rules read a segment boundary that is not
 /// one — so it is a refusal naming the segment and the line, in both
 /// artifacts (`#SYS-LANE-MARKERS`).
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-076#SYS-LANE-MARKERS")]
 pub fn refuse_marker_shaped_lines(segment: &str, body: &str) -> Result<(), WorkspaceError> {
     for (index, line) in body.lines().enumerate() {
         if parse_marker_line(line).is_some() {
@@ -204,6 +207,7 @@ pub fn refuse_marker_shaped_lines(segment: &str, body: &str) -> Result<(), Works
 /// survived". Over the generated ranges only: no `@`-initial line, so the
 /// one piece of prose the composer authored can never be an import
 /// directive.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-076#SYS-NO-RECURSION")]
 pub fn verify_no_recursion(text: &str, generated: &[Range<usize>]) -> Result<(), WorkspaceError> {
     refuse_managed_block_markers(text)?;
     let mut offset = 0usize;
@@ -239,6 +243,7 @@ pub fn verify_no_recursion(text: &str, generated: &[Range<usize>]) -> Result<(),
 /// replaces the block with fixed text, and the agent lane never carries one
 /// at all. `locate_block` matches exactly a standalone marker line, so the
 /// same test the writer uses is the test the composer applies.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-076#SYS-NO-RECURSION")]
 pub fn refuse_managed_block_markers(text: &str) -> Result<(), WorkspaceError> {
     for (index, line) in text.split_inclusive('\n').enumerate() {
         let trimmed = line.strip_suffix('\n').unwrap_or(line).trim();

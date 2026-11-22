@@ -4,6 +4,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-065#plan");
 
+use specmark::spec;
 use vibe_core::manifest::{RequirementScope, StepPhase};
 use vibe_wire::generated::application_plan as wire;
 
@@ -30,6 +31,7 @@ fn recommendation_to_wire(line: &Recommendation) -> wire::Recommendation {
 
 impl Plan {
     /// The `vibe-app-plan/1` document; secret parameter values are omitted.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-065#plan")]
     pub fn to_wire(&self) -> Result<wire::ApplicationPlan, crate::AppError> {
         if self.configuration.is_some() {
             return Err(crate::ResolveError::ConfigurationUnsupported {

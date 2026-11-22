@@ -6,6 +6,7 @@
 //! `--registry` wins, then the embedded registry if it carries the
 //! package (PROP-030 `#precedence`), then the configured registries.
 
+use specmark::spec;
 use std::path::{Path, PathBuf};
 
 use anyhow::{Context, Result};
@@ -54,6 +55,7 @@ pub(crate) fn source_operation_for_project(
 /// [`resolve_package_newest`]: `vibe artifacts where` exists to say where
 /// a payload belongs, and under `drop-only` that is precisely the payload
 /// the drop does not have yet.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-059#commands")]
 pub(crate) fn resolve_package_with_operation(
     settings: &SettingsRoot,
     registry: Option<&Path>,

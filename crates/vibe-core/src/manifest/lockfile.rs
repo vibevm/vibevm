@@ -516,6 +516,9 @@ pub struct LockedPackage {
 impl Lockfile {
     pub const FILENAME: &'static str = "vibe.lock";
 
+    #[specmark::spec(
+        implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#lockfile"
+    )]
     pub fn empty(generated_by: impl Into<String>, generated_at: impl Into<String>) -> Self {
         Lockfile {
             meta: LockfileMeta {
@@ -548,6 +551,9 @@ impl Lockfile {
     }
 
     /// Remove an installed package; returns the removed entry if present.
+    #[specmark::spec(
+        implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#lockfile"
+    )]
     pub fn remove(&mut self, group: &Group, name: &str) -> Option<LockedPackage> {
         let idx = self
             .packages
@@ -561,6 +567,9 @@ impl Lockfile {
 impl LockedPackage {
     /// Produce a `PackageRef` pinned to this exact installed version —
     /// fully qualified, carrying the package's `group` and `kind`.
+    #[specmark::spec(
+        implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#lockfile"
+    )]
     pub fn as_package_ref(&self) -> Result<PackageRef> {
         // The `=` pin built structurally rather than via a string
         // round-trip: `VersionReq::parse("={version}")` rejects

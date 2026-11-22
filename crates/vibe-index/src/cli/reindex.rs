@@ -13,6 +13,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#root");
 
+use specmark::spec;
 use std::path::PathBuf;
 
 use chrono::{DateTime, Utc};
@@ -108,6 +109,7 @@ pub struct Args {
     pub json: bool,
 }
 
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#TWO-REINDEX-MODES")]
 pub fn run(args: Args) -> Result<()> {
     if let Some(org) = args.from_gitverse.as_deref() {
         return emit_gitverse_stub(org, &args);
@@ -188,6 +190,7 @@ pub fn run(args: Args) -> Result<()> {
 /// clone dir, and option assembly live in one place. Returns the
 /// scanner plus the tempdir guard (when a scratch clone dir was
 /// created) the caller must hold alive for the scan's duration.
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#SRC-FROM-GITHUB")]
 pub(crate) fn build_github_scanner(
     token_file: Option<&std::path::Path>,
     api_base: &str,
@@ -242,6 +245,7 @@ pub(crate) struct Plan {
 /// The shared reindex core: fold the journal, scan, append the run's
 /// facts, re-project, persist the catalog + checkpoint, emit the
 /// summary. Both `reindex` and `rescan-org` reduce to this.
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#reindex")]
 pub(crate) fn run_plan(plan: Plan) -> Result<()> {
     // F2-1 — the clock enters here, once per command: the same `at`
     // stamps the scanner's `indexed_at`, every journal record this

@@ -59,6 +59,9 @@ impl DisabledRegistry {
     ///     "registry vibespecs (github.com) skipped: excluded by site policy"
     /// );
     /// ```
+    #[specmark::spec(
+        implements = "spec://org.vibevm.core/vibevm/common/PROP-073#EXCLUDED-REGISTRY-ENUMERATION-LAW"
+    )]
     pub fn skip_note(&self) -> String {
         match &self.host {
             Some(host) => format!(
@@ -78,6 +81,9 @@ impl DisabledRegistry {
 /// Whether this declared registry is disabled by the effective policy, and if
 /// so by which exclusion. Pure observation of the declared URL — no catalog is
 /// opened, no index probed, no host resolved.
+#[specmark::spec(
+    implements = "spec://org.vibevm.core/vibevm/common/PROP-073#EXCLUDED-REGISTRY-ENUMERATION-LAW"
+)]
 pub fn disabled_registry(
     policy: &EffectiveSourcePolicy,
     row: &RegistrySection,

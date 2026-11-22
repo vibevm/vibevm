@@ -2,6 +2,7 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-069#SURFACE-PARITY");
 use crate::{cli::ShowConfigurationPreviewArgs, output};
 use anyhow::{Result, anyhow, bail};
+use specmark::spec;
 use vibe_package_source::configuration_preview::{MAX_INPUT_BYTES, configuration_preview};
 use vibe_wire::generated::ordinary_configuration_preview_request::{
     Input, OrdinaryConfigurationPreviewRequest,
@@ -88,6 +89,7 @@ fn interactive(root: &std::path::Path, package: String, isolated: bool) -> Resul
     Ok(())
 }
 
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-069#SURFACE-PARITY")]
 pub(crate) fn collect_answers(
     description:&vibe_wire::generated::ordinary_configuration_preview_result::OrdinaryConfigurationPreviewResult,
 ) -> Result<Input> {

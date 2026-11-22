@@ -11,6 +11,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#root");
 
+use specmark::spec;
 use std::collections::BTreeMap;
 use std::path::{Path, PathBuf};
 
@@ -80,6 +81,7 @@ pub fn scan_org_dir(org_dir: &Path, opts: &FromClonesOptions) -> Result<ScanRepo
 /// `Some`, repos whose HEAD commit AND tag list match the recorded
 /// snapshot are skipped — the reindex driver carries forward their
 /// existing index entries unchanged. PROP-005 §2.8 incremental.
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#INC-CLONES")]
 pub fn scan_org_dir_with_filter(
     org_dir: &Path,
     opts: &FromClonesOptions,

@@ -237,6 +237,7 @@ fn submitted_shape(
 }
 
 /// Exact public integer/preset vertical, not permission for arbitrary profiles.
+#[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-069#ORIGINAL-INTENT")]
 pub fn integer_profile_shape(definition: &ConfigurationDecl) -> bool {
     use super::{ConfigurationFeatureVisibility, ConfigurationGroupDecl};
     if definition.parameters.len() != 1

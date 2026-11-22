@@ -146,6 +146,7 @@ impl SystemPromptSection {
     /// assert_eq!(raised.codex_doc_max_bytes(), 262_144);
     /// # Ok::<(), toml::de::Error>(())
     /// ```
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-076#SYS-CODEX-DECLARED-BUDGET")]
     pub fn codex_doc_max_bytes(&self) -> usize {
         self.harness
             .codex
@@ -197,6 +198,7 @@ impl EntrypointFile {
     /// use vibe_core::manifest::EntrypointFile;
     /// assert_eq!(EntrypointFile::DEFAULT.as_str(), "AGENTS.md");
     /// ```
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-076#SYS-ENTRYPOINT-ONE")]
     pub fn as_str(self) -> &'static str {
         match self {
             EntrypointFile::Claude => "CLAUDE.md",
@@ -252,6 +254,7 @@ impl EntrypointChoice {
     /// The selected file, or `None` when the node declared no entrypoint
     /// segment. The default resolves to [`EntrypointFile::DEFAULT`], so a
     /// caller never has to re-derive the default spelling.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-076#SYS-ENTRYPOINT-ONE")]
     pub fn file(&self) -> Option<EntrypointFile> {
         match self {
             EntrypointChoice::Default => Some(EntrypointFile::DEFAULT),
@@ -304,6 +307,7 @@ impl HostChoice {
     }
 
     /// The pinned OS, or `None` for a portable prefix.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-076#SYS-HOST-AND-TARGET")]
     pub fn fixed(&self) -> Option<TargetOs> {
         match self {
             HostChoice::Portable => None,
@@ -312,6 +316,7 @@ impl HostChoice {
     }
 
     /// The declared spelling: `"portable"` or the OS name.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-076#SYS-HOST-AND-TARGET")]
     pub fn as_str(&self) -> &'static str {
         match self {
             HostChoice::Portable => PORTABLE,
@@ -368,6 +373,7 @@ impl TargetSelection {
 
     /// Whether `os` is one of the product's targets. An absent selection
     /// includes every OS, so this is the one question a `target:` gate asks.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-076#SYS-HOST-AND-TARGET")]
     pub fn includes(&self, os: TargetOs) -> bool {
         match self {
             TargetSelection::AllPlatforms => true,
@@ -376,6 +382,7 @@ impl TargetSelection {
     }
 
     /// The selected systems, in the author's order; every OS when absent.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-076#SYS-HOST-AND-TARGET")]
     pub fn platforms(&self) -> Vec<TargetOs> {
         match self {
             TargetSelection::AllPlatforms => ALL_TARGET_OS.to_vec(),

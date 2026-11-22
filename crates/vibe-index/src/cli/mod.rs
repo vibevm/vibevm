@@ -9,6 +9,7 @@ use clap::{CommandFactory, Parser, Subcommand, ValueEnum};
 
 use crate::error::{Error, Result};
 use crate::lock::ServerLock;
+use specmark::spec;
 
 pub mod add;
 pub mod alias;
@@ -93,6 +94,9 @@ pub enum LogLevel {
 impl LogLevel {
     /// The `EnvFilter` directive this dial stands for — the exact string
     /// written into `VIBE_LOG` before the subscriber reads it.
+    #[spec(
+        implements = "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#THE-LOG-DIAL-AND-THE-VARIABLE-ARE-ONE-LEVER"
+    )]
     pub fn as_filter(self) -> &'static str {
         match self {
             LogLevel::Off => "off",
@@ -109,6 +113,9 @@ impl LogLevel {
     /// closed vocabulary. Trimmed, case-insensitive: the same
     /// tolerance the flag has. Returns `None` for anything outside
     /// the set; the ladder's callers turn that into a loud refusal.
+    #[spec(
+        implements = "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#THE-LOG-DIAL-AND-THE-VARIABLE-ARE-ONE-LEVER"
+    )]
     pub fn parse_member(raw: &str) -> Option<LogLevel> {
         match raw.trim().to_ascii_lowercase().as_str() {
             "off" => Some(LogLevel::Off),
@@ -230,6 +237,7 @@ impl Command {
     /// ladder's file rung lives inside it (`<data-dir>/state/config.toml`),
     /// which is why `main` asks for this between parsing and resolving
     /// anything.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#CLI-SURFACE")]
     pub fn data_dir(&self) -> Option<&std::path::Path> {
         match self {
             Command::Init(a) => Some(&a.data_dir),
@@ -262,6 +270,7 @@ impl Command {
 /// member, installs the tracing subscriber, then hands `cli.command`
 /// plus the global `--log-level` flag here — the flag is the ladder's
 /// top rung, and the `config` verb shows it as the value's source.
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#CLI-SURFACE")]
 pub fn dispatch(command: Command, log_level: Option<LogLevel>) -> Result<()> {
     match command {
         Command::Init(args) => init::run(args),

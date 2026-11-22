@@ -78,6 +78,7 @@ pub enum StepPhase {
 }
 
 impl StepPhase {
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-065#steps")]
     pub fn as_str(self) -> &'static str {
         match self {
             Self::Prepare => "prepare",
@@ -293,6 +294,7 @@ pub enum StepKind {
 
 impl StepKind {
     /// The stable `kind` spelling.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-065#kinds")]
     pub fn name(&self) -> &'static str {
         match self {
             Self::Env { .. } => "env",
@@ -307,6 +309,7 @@ impl StepKind {
     }
 
     /// Whether a prepare step of this kind can write `$VIBE_OUT`.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-065#kinds")]
     pub fn writes_out(&self) -> bool {
         matches!(
             self,
@@ -366,6 +369,7 @@ pub struct StepDecl {
 
 impl StepDecl {
     /// A prepare step of `kind` with no conditions, needs or flags.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-065#steps")]
     pub fn new(id: &str, title: &str, kind: StepKind) -> Self {
         Self {
             id: id.into(),
@@ -424,6 +428,7 @@ impl ResultDecl {
     }
 
     /// The external `app_root` template, if any.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-065#result")]
     pub fn external_root(&self) -> Option<&str> {
         match self {
             Self::Owned(_) => None,

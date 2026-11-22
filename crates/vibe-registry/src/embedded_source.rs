@@ -117,6 +117,9 @@ pub fn lock_embedded_sources(
     lock_embedded_sources_with(declarations, false)
 }
 
+#[specmark::spec(
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-021#DECLARED-SOURCE-AUTH"
+)]
 pub fn lock_embedded_sources_with(
     declarations: &[EmbeddedSourceDecl],
     offline: bool,
@@ -156,6 +159,9 @@ pub fn cache_embedded_source(
     cache_embedded_source_with(declaration, false)
 }
 
+#[specmark::spec(
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-021#DECLARED-SOURCE-CACHE"
+)]
 pub fn cache_embedded_source_with(
     declaration: &EmbeddedSourceDecl,
     offline: bool,
@@ -174,6 +180,9 @@ pub fn cache_locked_embedded_source(
     cache_locked_embedded_source_with(locked, false)
 }
 
+#[specmark::spec(
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-021#DECLARED-SOURCE-CACHE"
+)]
 pub fn cache_locked_embedded_source_with(
     locked: &LockedEmbeddedSource,
     offline: bool,

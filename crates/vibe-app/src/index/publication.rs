@@ -2,6 +2,7 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-059#proxy-index-upgrade");
 use super::*;
 use crate::MutationLock;
+use specmark::spec;
 impl Index {
     /// Atomically save the inventory while taking this home's mutation lock.
     /// Callers already holding the lock use [`Self::save_locked`] instead.
@@ -37,6 +38,7 @@ impl Index {
         self.publish_locked(settings, event, lock, None)
     }
 
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-059#proxy-index-upgrade")]
     pub(crate) fn publish_locked(
         &self,
         settings: &SettingsRoot,

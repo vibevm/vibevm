@@ -19,6 +19,7 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-057#SITE-TWO-SOURCES
 pub mod prepare;
 pub mod web;
 
+use specmark::spec;
 use std::path::{Path, PathBuf};
 
 use anyhow::{Context, Result};
@@ -35,6 +36,7 @@ use crate::cli::DocBuildSiteArgs;
 const TREES_DIR: &str = "trees";
 
 /// Run `vibe doc build-site`.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-057#SITE-TWO-SOURCES")]
 pub fn run(args: DocBuildSiteArgs, env: DocEnv) -> Result<()> {
     let site = observe::phase(
         &env.progress,

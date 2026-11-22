@@ -8,6 +8,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#short-name");
 
+use specmark::spec;
 use std::fs;
 
 use vibe_core::Group;
@@ -31,6 +32,9 @@ impl LocalRegistry {
     /// offered. A row whose spelling the tree also publishes is kept —
     /// since the owner's 2026-11-12 ruling that is the ordinary case,
     /// `node → org.vibevm.node/node`.
+    #[spec(
+        implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#REGISTRY-OWNED-ALIASES"
+    )]
     pub fn indexed_name_lookup(&self, name: &str) -> Result<NameLookup, RegistryError> {
         use vibe_core::layout_registry::{IndexState, index_dir, index_state};
         #[derive(serde::Deserialize)]

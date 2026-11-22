@@ -3,6 +3,7 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-076#SYS-READ-ONLY-CHECK");
 
 use anyhow::{Result, bail};
+use specmark::spec;
 use vibe_wire::generated::prompt_check as wire;
 use vibe_workspace::system_prompt::{
     ArtifactFacts, CheckVerdict, PromptCheck, check_node_prompt, prompt_warnings,
@@ -15,6 +16,7 @@ use super::Selected;
 /// The protocol tag `vibe-prompt-check/1`.
 pub(crate) const PROTOCOL: &str = "vibe-prompt-check/1";
 
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-076#SYS-READ-ONLY-CHECK")]
 pub(crate) fn run(
     ctx: &output::Context,
     selected: &Selected,

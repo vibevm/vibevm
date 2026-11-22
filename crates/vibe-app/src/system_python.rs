@@ -1,5 +1,6 @@
 //! Typed system interpreter observation and pure selected-option admission.
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-065#system-python");
+use specmark::spec;
 use std::path::PathBuf;
 
 use serde::{Deserialize, Serialize};
@@ -50,6 +51,7 @@ pub struct SystemPythonObservation {
 pub type SystemPythonProbe<'a> = &'a dyn Fn() -> Result<SystemPythonObservation, String>;
 
 impl SystemPythonObservation {
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-065#system-python")]
     pub fn admit(&self, required: &SystemPythonDecl) -> Result<(), String> {
         if !self.executable.is_absolute()
             || !self.prefix.is_absolute()

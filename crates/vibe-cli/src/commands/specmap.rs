@@ -18,6 +18,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#command-summary");
 
+use specmark::spec;
 use std::path::{Path, PathBuf};
 
 use anyhow::{Context, Result};
@@ -194,6 +195,7 @@ fn verb_key(v: &EdgeVerb) -> u8 {
 }
 
 /// Run `vibe specmap`: generate (or skip) and report in the active output mode.
+#[spec(implements = "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#command-summary")]
 pub fn run(ctx: &output::Context, args: SpecmapArgs) -> Result<()> {
     match generate(&args.path)? {
         Outcome::Written {

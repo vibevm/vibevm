@@ -19,6 +19,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#install");
 
+use specmark::spec;
 use std::collections::{BTreeMap, HashSet};
 use std::path::PathBuf;
 
@@ -63,6 +64,7 @@ pub(crate) struct NodeGeneration {
 }
 
 /// Take one node's generation up to the compile boundary, writing nothing.
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#install")]
 pub(crate) fn node_generation(
     workspace: &Workspace,
     node_rel: &str,

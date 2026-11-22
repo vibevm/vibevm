@@ -26,6 +26,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#short-name");
 
+use specmark::spec;
 use vibe_core::Group;
 
 /// The package a registry's alias points at — qualified, never versioned.
@@ -51,6 +52,7 @@ pub struct NameLookup {
 }
 
 impl NameLookup {
+    #[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#short-name")]
     pub fn of_groups(groups: Vec<Group>) -> Self {
         NameLookup {
             groups,
@@ -83,6 +85,9 @@ impl AliasCandidate {
     /// `org.vibevm.qwen/qwen-code (alias in registry vibespecs)` — the
     /// one spelling used in the provenance line, the collision list and
     /// the refusal alike.
+    #[spec(
+        implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#REGISTRY-OWNED-ALIASES"
+    )]
     pub fn provenance(&self) -> String {
         match self.registries.as_slice() {
             [] => self.target.to_string(),
@@ -114,6 +119,9 @@ impl ShortNameCandidates {
     /// are built independently, because they no longer compete: a
     /// package bearing the spelling neither displaces an issued one nor
     /// is displaced by it.
+    #[spec(
+        implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#ISSUED-NAMES-ONLY"
+    )]
     pub fn gather(answers: impl IntoIterator<Item = (String, NameLookup)>) -> Self {
         let mut named: Vec<Group> = Vec::new();
         let mut aliases: Vec<AliasCandidate> = Vec::new();

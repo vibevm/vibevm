@@ -1,6 +1,7 @@
 //! Pure lowering of auth declarations for an already selected source address.
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#registry-auth");
 use crate::RegistryError;
+use specmark::spec;
 use vibe_core::manifest::{AuthKind, RegistrySection};
 
 /// The caller chooses source authority before requesting credential policy.
@@ -42,6 +43,9 @@ impl ResolvedRegistryAuth {
 /// }).unwrap();
 /// assert_eq!(value.kind, AuthKind::Ssh);
 /// ```
+#[spec(
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#AUTH-DECLARATION-PRESENCE"
+)]
 pub fn resolve_registry_auth(
     input: RegistryAuthInput<'_>,
 ) -> Result<ResolvedRegistryAuth, RegistryError> {
@@ -106,6 +110,9 @@ pub(crate) fn declaration_error(label: &str, source: &str, reason: &str) -> Regi
 }
 
 /// Syntax classification only: SSH aliases are allowed here, not resolved or trusted.
+#[spec(
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#ROW-AUTH-SSH-WHAT-VIBEVM-DOES"
+)]
 pub(crate) fn ssh_source(source: &str) -> Result<bool, &'static str> {
     let raw = source.strip_prefix("git+").unwrap_or(source);
     if raw.is_empty() || raw.chars().any(char::is_control) {

@@ -176,6 +176,7 @@ pub(crate) fn choose_mirror(
 /// Resolve a selector against a local clone to a concrete version id +
 /// commit (PROP-019 §2.3). A clone exposes branches as
 /// `refs/remotes/origin/*`.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-019#STEP-RESOLVE")]
 pub(crate) fn resolve_in_clone(
     repo: &Path,
     selector: &model::Selector,
@@ -283,6 +284,7 @@ pub(crate) struct CloneOutcome {
 /// selector against it, check out the commit, and return it as the build
 /// source (PROP-019 §2.7, §2.16). The clone is updated incrementally
 /// (`git fetch`), never re-cloned — a full rebuild can take hours.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-019#MANAGED-INCREMENTAL")]
 pub(crate) fn prepare_from_mirror(
     store: &VersionStore,
     mirror: &str,

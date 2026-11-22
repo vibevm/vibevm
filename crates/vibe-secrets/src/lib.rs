@@ -100,6 +100,7 @@ pub enum Error {
 /// ```
 pub struct ProtectedValue(Vec<u8>);
 impl ProtectedValue {
+    #[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-000#TS-USER-KEYRING")]
     pub fn new(bytes: Vec<u8>) -> Result<Self, Error> {
         if bytes.len() > VALUE_LIMIT {
             return Err(Error::Invalid);
@@ -207,6 +208,7 @@ pub struct Store {
 }
 impl Store {
     /// Select exactly `<effective user settings>/secrets`; no fallback or discovery.
+    #[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-000#TS-USER-KEYRING")]
     pub fn at_settings(settings: &Path) -> Result<Self, Error> {
         if !settings.is_absolute() {
             return Err(Error::Invalid);
@@ -277,6 +279,7 @@ impl Store {
     }
 
     /// Read-only metadata snapshot; never creates a root, lock or last-used file.
+    #[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-000#TS-USER-KEYRING")]
     pub fn list(&self) -> Result<BTreeMap<SecretId, ItemMetadata>, Error> {
         let Some((project, root)) = self.open(false)? else {
             return Ok(BTreeMap::new());
@@ -286,6 +289,7 @@ impl Store {
     pub fn details(&self, id: &SecretId) -> Result<ItemMetadata, Error> {
         self.list()?.remove(id).ok_or(Error::NotFound)
     }
+    #[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-000#TS-USER-KEYRING")]
     pub fn create(
         &self,
         kind: &str,
@@ -340,6 +344,7 @@ impl Store {
         )?;
         Ok(id)
     }
+    #[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-000#TS-USER-KEYRING")]
     pub fn rotate(
         &self,
         id: &SecretId,

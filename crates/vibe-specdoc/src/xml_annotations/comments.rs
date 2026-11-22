@@ -7,6 +7,7 @@ specmark::scope!(
 );
 
 use quick_xml::{Reader, events::Event};
+use specmark::spec;
 
 /// One actual XML comment in a possibly multi-document generated tape.
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -46,6 +47,9 @@ impl std::error::Error for XmlCommentScanError {}
 /// assert_eq!(&xml[comments[0].start..comments[0].end],"<!-- actual -->");
 /// assert_eq!(comments[0].depth,1);
 /// ```
+#[spec(
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#XML-COMMENT-TOKEN-INVENTORY"
+)]
 pub fn xml_comment_spans(
     xml: &str,
 ) -> impl Iterator<Item = Result<XmlCommentSpan, XmlCommentScanError>> + '_ {

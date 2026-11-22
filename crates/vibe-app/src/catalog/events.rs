@@ -52,6 +52,7 @@ pub struct HomeEvent {
 }
 
 impl HomeEvent {
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-059#launcher-runtime")]
     pub fn new(kind: EventKind) -> Self {
         Self {
             kind,
@@ -60,6 +61,7 @@ impl HomeEvent {
         }
     }
 
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-059#launcher-runtime")]
     pub fn about(kind: EventKind, key: impl Into<String>) -> Self {
         Self {
             key: Some(key.into()),
@@ -67,6 +69,7 @@ impl HomeEvent {
         }
     }
 
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-059#launcher-runtime")]
     pub fn with_pid(self, pid: u64) -> Self {
         Self {
             pid: Some(pid),
@@ -168,6 +171,7 @@ pub struct EventTail {
 
 impl EventTail {
     /// A reader that sees only what is appended from now on.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-059#launcher-runtime")]
     pub fn at_end(settings: &SettingsRoot) -> Self {
         let path = settings.events_path();
         Self {
@@ -178,6 +182,7 @@ impl EventTail {
 
     /// Every whole line appended since the last read. After a rotation the
     /// rest of the old file comes first, then the new one from its start.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-059#launcher-runtime")]
     pub fn read(&mut self, settings: &SettingsRoot) -> Vec<ApplicationEvent> {
         let path = settings.events_path();
         let first = first_line(&path);

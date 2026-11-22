@@ -5,6 +5,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-065#uninstall-tree");
 
+use specmark::spec;
 use std::collections::BTreeSet;
 
 use vibe_core::manifest::{RequirementScope, StepPhase};
@@ -138,6 +139,7 @@ pub(crate) fn autoremove_order(index: &Index) -> Vec<(String, Reason)> {
 /// (`finish` steps before `prepare` steps, each last step first: a shell
 /// step's uninstall, an env step's rollback), then proxies and
 /// alternatives, then the owned payload, then the index record.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-065#uninstall-tree")]
 pub(crate) fn plan_entry(
     index: &Index,
     storage: &Storage,
@@ -222,6 +224,7 @@ pub(crate) enum Undo<'a> {
 /// recorded uninstall first, then `finish` steps, then `prepare` steps,
 /// each last step first. Env entries of a step no longer listed are
 /// rolled back before the steps.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-065#uninstall-tree")]
 pub(crate) fn authored_removal(record: &Installation) -> Vec<Undo<'_>> {
     let mut items = Vec::new();
     if record.commands.has_uninstall() {

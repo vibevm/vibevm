@@ -17,6 +17,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-057#OBS-SURFACE-SNAPSHOTS");
 
+use specmark::spec;
 use std::path::{Path, PathBuf};
 
 use anyhow::{Result, bail};
@@ -33,6 +34,7 @@ use crate::cli::{DocDiffArgs, DocSurfaceArgs, ProgressCommonArgs};
 const NOW: &str = "now";
 
 /// `vibe doc surface --record <version>`.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-057#OBS-SURFACE-SNAPSHOTS")]
 pub fn run_surface(args: DocSurfaceArgs, env: DocEnv) -> Result<()> {
     let surface_env = surface_env(&env, args.binary.clone(), args.timeout);
     let obligations = obligations(&env.cwd, &env.progress)?;
@@ -62,6 +64,7 @@ pub fn run_surface(args: DocSurfaceArgs, env: DocEnv) -> Result<()> {
 }
 
 /// `vibe doc diff <old> <new>`.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-057#OBS-SURFACE-SNAPSHOTS")]
 pub fn run_diff(args: DocDiffArgs, env: DocEnv) -> Result<()> {
     let old = observe::phase(
         &env.progress,

@@ -5,6 +5,9 @@ use vibe_workspace::freshness::Freshness;
 /// Project the exact roots admitted by the existing source-free Fresh owner.
 /// No inventory, solver or acquisition is constructed.
 #[allow(clippy::too_many_arguments)]
+#[specmark::spec(
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-011#skip-resolution"
+)]
 pub fn project_fresh_node_roots(
     project_root: &Path,
     manifest: &Manifest,

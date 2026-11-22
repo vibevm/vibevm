@@ -128,6 +128,7 @@ fn fail(class: FailureClass, detail: impl Into<String>) -> Failure {
 }
 
 /// `scheme://host[:port]/path` — what a hop is displayed as.
+#[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-068#dl")]
 pub fn display_url(url: &url::Url) -> String {
     let mut shown = url.clone();
     let _ = shown.set_username("");
@@ -139,6 +140,7 @@ pub fn display_url(url: &url::Url) -> String {
 
 /// Walk `url` over `session`'s route. `admit` is the operation's source
 /// policy, asked before every hop; its `Err` is the refusal text.
+#[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-068#dl")]
 pub fn probe(
     session: &Arc<NetworkSession>,
     url: &url::Url,
@@ -229,6 +231,7 @@ pub struct PxCheck {
 
 /// Run the px steps when the route uses px; `None` otherwise. px is
 /// started through the session, so the operation reaps it.
+#[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-068#dl")]
 pub fn px_checks(
     session: &NetworkSession,
     target: &url::Url,

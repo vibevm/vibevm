@@ -23,6 +23,7 @@ pub enum Platform {
 
 impl Platform {
     /// The platform this process runs on.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#H-SCRIPT")]
     pub fn current() -> Self {
         if cfg!(windows) {
             Platform::Windows

@@ -6,6 +6,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-059#portable-set");
 
+use specmark::spec;
 use vibe_wire::generated::apps_manifest as wire;
 
 use crate::catalog::{
@@ -81,6 +82,7 @@ pub(super) fn export_into(layer: &UserLaunchers, set: &mut wire::AppsManifest) {
 /// let layer = vibe_app::UserLaunchers::load(&settings).unwrap();
 /// assert!(layer.collection("Writing").unwrap().launchers.is_empty());
 /// ```
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-059#portable-set")]
 pub fn restore_arrangement(
     settings: &SettingsRoot,
     set: &wire::AppsManifest,
@@ -101,6 +103,7 @@ pub(crate) fn restore_locked(
 }
 
 /// Apply only arrangement data; no synthetic portable document is needed.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-059#portable-set")]
 pub(crate) fn restore_parts(
     settings: &SettingsRoot,
     collections: &[wire::Collection],

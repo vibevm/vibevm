@@ -2,6 +2,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-022#hardlink");
 
+use specmark::spec;
 use std::fs::{self, File, OpenOptions, Permissions};
 use std::io::{self, Write};
 use std::path::{Path, PathBuf};
@@ -30,6 +31,7 @@ struct OpenedFile {
 /// against the slot record, synced, and atomically persisted. Private files
 /// are left alone, which makes this idempotent between pre- and post-install
 /// hooks even when the pre hook deliberately rewrote recorded payload.
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-022#HARDLINK-MODE")]
 pub(crate) fn detach_recorded_hardlinks(slot: &Path) -> Result<(), WorkspaceError> {
     validate_real_directory(slot)?;
     let record = read_slot_record(slot)

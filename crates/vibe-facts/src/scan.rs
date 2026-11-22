@@ -27,6 +27,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-046#laws");
 
+use specmark::spec;
 use std::collections::BTreeMap;
 use std::fmt;
 use std::fs;
@@ -108,6 +109,7 @@ pub struct AdoptionRow {
 /// assert!(address_prefix("org.example", "RULE.md").is_err());
 /// assert!(address_prefix("org.example/Demo", "RULE.md").is_err());
 /// ```
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-046#REGISTRY-KEY")]
 pub fn address_prefix(
     package_coordinate: &str,
     document_rel: &str,
@@ -170,6 +172,7 @@ impl SourceFileWitness {
     /// Witness raw bytes already read — the one-read construction. The
     /// digest spelling matches the crate's other content hashes
     /// ([`crate::overlay_file_hash`]).
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-046#laws")]
     pub fn of(path: impl Into<String>, raw: &[u8]) -> Self {
         let digest = Sha256::digest(raw);
         Self {
@@ -230,6 +233,7 @@ pub enum AuthoredSourceObservation {
 /// [`AuthoredSourceObservation::Invalid`] variant, never an [`Err`]: a
 /// malformed present source is named in its own observation, not turned
 /// into a lifecycle failure.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-046#laws")]
 pub fn observe_authored_source(
     source_root: &Path,
     package_coordinate: &str,
@@ -382,6 +386,7 @@ pub fn observe_authored_source(
 /// A thin wrapper over [`observe_authored_source`]: an invalid source
 /// converts back to the typed [`RegistryError::SpecParse`] this API has
 /// always returned, so the A1 CLI behavior is unchanged.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-046#laws")]
 pub fn scan_authored_facts(
     source_root: &Path,
     package_coordinate: &str,
@@ -486,6 +491,7 @@ fn is_plain_file(path: &Path) -> bool {
 /// let rows = join_adoption(&Registry::default(), "org.example/pkg", SourceKind::Host, &authored).unwrap();
 /// assert_eq!(rows[0].adoption, AdoptionObservation::NotApplicable);
 /// ```
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-046#laws")]
 pub fn join_adoption(
     registry: &Registry,
     package_coordinate: &str,

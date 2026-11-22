@@ -1,6 +1,7 @@
 //! One operation's deferred source policy and concrete transport inputs.
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-073#SOURCE-POLICY");
 use crate::{SourceStorage, transport::TransportInputs};
+use specmark::spec;
 use std::{
     path::PathBuf,
     sync::{Arc, Mutex, OnceLock},
@@ -166,6 +167,7 @@ impl SourceOperation {
     pub fn source_choice_mode(&self) -> SourceChoiceMode {
         self.policy.source_choice_mode()
     }
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-073#HTTP-ADMISSION-LAW")]
     pub fn http_client(&self, timeout: Duration) -> OperationHttpClient {
         OperationHttpClient {
             operation: self.clone(),

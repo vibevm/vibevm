@@ -45,6 +45,7 @@ impl GitNetwork {
     }
 
     /// Apply to a command (before its subcommand arguments).
+    #[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-068#proxy-git")]
     pub fn apply(&self, command: &mut std::process::Command) {
         for value in &self.config {
             command.arg("-c").arg(value);
@@ -87,6 +88,7 @@ impl GitNetwork {
 ///     assert!(revocation_config(RevocationCheck::Off, None).is_empty());
 /// }
 /// ```
+#[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-068#proxy-revocation")]
 pub fn revocation_config(revocation: RevocationCheck, git: Option<&Path>) -> Vec<String> {
     if !cfg!(windows) {
         return Vec::new();
@@ -137,6 +139,7 @@ fn best_effort_supported(git: Option<&Path>) -> bool {
 /// assert!(!version_takes_best_effort("git version 2.47.1.msysgit.0"));
 /// assert!(!version_takes_best_effort("nonsense"));
 /// ```
+#[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-068#proxy-revocation")]
 pub fn version_takes_best_effort(line: &str) -> bool {
     let line = line.trim();
     if !line.contains(".windows.") {
@@ -181,6 +184,7 @@ pub fn version_takes_best_effort(line: &str) -> bool {
 ///     vec!["http.sslCAInfo=/etc/bundle.pem".to_owned()]
 /// );
 /// ```
+#[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-068#proxy-git")]
 pub fn bundle_config(bundle: &Path, windows: bool) -> Vec<String> {
     let mut config = vec![format!("http.sslCAInfo={}", bundle.display())];
     if windows {
@@ -210,6 +214,7 @@ pub fn for_remote(session: &NetworkSession, remote: &str) -> Result<GitNetwork, 
 
 /// [`for_remote`], naming the git executable about to run so that
 /// `[proxy] revocation = "best-effort"` can ask whether it takes the word.
+#[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-068#proxy-git")]
 pub fn for_remote_with(
     session: &NetworkSession,
     remote: &str,
@@ -263,6 +268,7 @@ pub fn current_for_remote(remote: &str) -> Result<GitNetwork, NetError> {
 /// it contacts is a URL among `args`, or the named remote of a `fetch` /
 /// `pull` / `push` / `ls-remote`, read from the repository's own config
 /// with `binary`. A local-only call gets nothing and never starts px.
+#[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-068#proxy-git")]
 pub fn for_args(
     session: &NetworkSession,
     binary: &std::path::Path,
@@ -293,6 +299,7 @@ pub fn for_args(
 /// route cannot be served (a px that failed, an unreadable `ca_file`), the
 /// child is pointed at an unresolvable proxy instead of going direct, and
 /// the cause is logged; the operation reports it once (`PROP-068#proxy-px`).
+#[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-068#proxy-git")]
 pub fn apply_for_args(
     command: &mut std::process::Command,
     binary: &std::path::Path,

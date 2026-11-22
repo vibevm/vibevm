@@ -3,6 +3,7 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#git-source");
 
 use serde::{Deserialize, Serialize};
+use specmark::spec;
 
 use crate::error::{Error, Result};
 use crate::package_ref::{Group, PackageName};
@@ -76,6 +77,9 @@ impl WhenCondition {
     /// question — the generator resolves it against the declared selection
     /// instead, and asking the host would be exactly the confusion the two
     /// spellings exist to prevent.
+    #[spec(
+        implements = "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#SCHEMA-BOOT-SNIPPET"
+    )]
     pub fn matches_current_os(&self) -> bool {
         match self {
             WhenCondition::Os(os) => TargetOs::current() == Some(*os),
@@ -84,6 +88,7 @@ impl WhenCondition {
     }
 
     /// The package identity named by an install-time predicate.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-049#INSTALLED-PREDICATE")]
     pub fn installed_identity(&self) -> Option<(&Group, &str)> {
         match self {
             WhenCondition::Installed { group, name } => Some((group, name.as_str())),
@@ -93,6 +98,9 @@ impl WhenCondition {
 
     /// The operating system a **session** gate names — the axis an `os:`
     /// condition has always been about.
+    #[spec(
+        implements = "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#SCHEMA-BOOT-SNIPPET"
+    )]
     pub fn session_os(&self) -> Option<TargetOs> {
         match self {
             WhenCondition::Os(os) => Some(*os),
@@ -102,6 +110,7 @@ impl WhenCondition {
 
     /// The operating system a **product** gate names — the axis a `target:`
     /// condition is about.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-076#SYS-HOST-AND-TARGET")]
     pub fn target_os(&self) -> Option<TargetOs> {
         match self {
             WhenCondition::Target(os) => Some(*os),

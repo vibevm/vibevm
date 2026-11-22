@@ -2,6 +2,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#FACT-QUERY-CONTRACT");
 
+use specmark::spec;
 use std::path::PathBuf;
 
 use vibe_wire::behaviour::requirements_report::{REQUIREMENTS_EPOCH, validate, validate_query};
@@ -50,6 +51,7 @@ impl Default for RequirementsQuery {
 
 impl RequirementsQuery {
     /// Build and validate the effective query in one step.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#FACT-QUERY-CONTRACT")]
     pub fn try_new(
         address_prefix: Option<&str>,
         limit: u32,
@@ -116,6 +118,7 @@ pub struct QueryContext {
 /// ([`text::render`]) or serialise what comes back. The assembled
 /// report is validated through the P1 relational validator before it is
 /// returned.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#FACT-QUERY-CONTRACT")]
 pub fn query(
     query: &RequirementsQuery,
     context: &QueryContext,

@@ -7,6 +7,8 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-075#TEMPLATE-VARIABLE-GRAMMAR");
 
+use specmark::spec;
+
 /// One piece of a scanned string: text as written, or a variable.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub(crate) enum Piece {
@@ -55,6 +57,7 @@ impl Var {
 /// Scan one string value. `nested` is set while scanning the argument of a
 /// digest variable, where a second digest variable is refused — that is the
 /// "one level of nesting" rule.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-075#TEMPLATE-VARIABLE-GRAMMAR")]
 pub(crate) fn scan(text: &str, nested: bool) -> Result<Vec<Piece>, String> {
     let bytes = text.as_bytes();
     let mut pieces: Vec<Piece> = Vec::new();

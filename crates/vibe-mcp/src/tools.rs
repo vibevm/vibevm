@@ -69,6 +69,7 @@ pub trait McpTool {
 
 /// The built-in tool set — the one registration point (PROP-015 §2.2).
 /// A new tool is a new cell added here, not an edit to the dispatcher.
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#tools")]
 pub fn default_tools() -> Vec<Box<dyn McpTool>> {
     vec![
         Box::new(PlanManifestMigrationMcpTool),

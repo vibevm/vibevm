@@ -2,6 +2,7 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-069#DESCRIBE-EVALUATE-PLAN");
 use anyhow::{Result, anyhow, bail};
 use sha2::{Digest, Sha256};
+use specmark::spec;
 use std::collections::BTreeMap;
 use vibe_core::{PackageRef, VersionSpec, manifest::Manifest};
 use vibe_safefs::{FileIdentity, Pinned, Project, StableFileSnapshot};
@@ -109,6 +110,7 @@ impl PreparedRetirementSource {
     pub fn frozen_tree(&self) -> &std::path::Path {
         self.frozen.path()
     }
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-069#DESCRIBE-EVALUATE-PLAN")]
     pub fn recheck(&self) -> Result<()> {
         let current = capture(&self.source, &[])?;
         if current != self.snapshot {
@@ -125,6 +127,7 @@ impl PreparedRetirementSource {
 /// request-owned arbitrary tree. Freeze exactly the bytes checked against the
 /// old lock; the workspace remains independent of registry hash machinery.
 impl crate::LocalRegistry {
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-069#DESCRIBE-EVALUATE-PLAN")]
     pub fn prepare_exact_retirement_source(
         &self,
         old: &vibe_core::manifest::LockedPackage,
@@ -224,6 +227,7 @@ fn hash_snapshot(snapshot: &Snapshot) -> String {
 /// Two complete bounded observations must agree, including child identities.
 /// This is observed source evidence, not supplier authentication or a promise
 /// of atomicity against an unrestricted hostile same-user process.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-069#DESCRIBE-EVALUATE-PLAN")]
 pub fn observe_local_preview(
     project: &Project,
     registry_components: &[&str],
@@ -423,6 +427,7 @@ pub struct VerifiedPayload {
 }
 impl VerifiedPayload {
     /// Manifest bytes from the same full payload observation, not a second read.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-069#DESCRIBE-EVALUATE-PLAN")]
     pub fn manifest_bytes(&self) -> Result<&[u8]> {
         self.snapshot
             .files
@@ -430,6 +435,7 @@ impl VerifiedPayload {
             .map(|file| file.bytes.as_slice())
             .ok_or_else(|| anyhow!("verified payload manifest missing"))
     }
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-069#DESCRIBE-EVALUATE-PLAN")]
     pub fn recheck(&self) -> Result<()> {
         let rebound = Project::open(self.project.root_path())?;
         if rebound.root_identity()? != self.project.root_identity()? {
@@ -444,6 +450,7 @@ impl VerifiedPayload {
 }
 /// Verify actual local endpoint bytes using the registry's canonical URL parser.
 /// The returned proof retains the no-follow observation for a pre-publication recheck.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-069#DESCRIBE-EVALUATE-PLAN")]
 pub fn verify_local_payload_url(source: &str, expected: &str) -> Result<VerifiedPayload> {
     if !source.starts_with("file://") {
         bail!("local payload proof requires a plain file source");
@@ -453,6 +460,7 @@ pub fn verify_local_payload_url(source: &str, expected: &str) -> Result<Verified
 }
 
 /// Compare versioned local endpoints without treating a changed registry as renewal.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-069#DESCRIBE-EVALUATE-PLAN")]
 pub fn same_local_version_owner(before: &str, after: &str) -> Result<bool> {
     if !before.starts_with("file://") || !after.starts_with("file://") {
         return Ok(false);
@@ -463,6 +471,7 @@ pub fn same_local_version_owner(before: &str, after: &str) -> Result<bool> {
 }
 
 /// Verify a first-slice legacy-hash payload without fetching or trusting metadata.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-069#DESCRIBE-EVALUATE-PLAN")]
 pub fn verify_pinned_payload(path: &std::path::Path, expected: &str) -> Result<VerifiedPayload> {
     if !expected.starts_with("sha256:") {
         bail!("submitted payload requires admitted legacy recipe");

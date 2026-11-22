@@ -1,6 +1,7 @@
 //! Exact-endpoint OpenSSH capability. No ambient SSH configuration is interpreted.
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-073#NATIVE-SSH");
 use super::*;
+use specmark::spec;
 use std::process::Command;
 
 /// Explicit SSH authentication input. Agent state remains owned by that agent;
@@ -43,6 +44,7 @@ impl SshProfile {
     /// capture/migrate the old ~/.ssh/config meaning. N2 still rechecks Git's
     /// captured effective origin and original source witnesses.
     /// Paths identify caller-trusted programs/services, not authenticated binaries.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-073#NATIVE-SSH-LAW")]
     pub fn explicit_direct(
         executable: PathBuf,
         host: String,

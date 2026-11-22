@@ -66,6 +66,7 @@ pub use router::{
 /// (PROP-076 `#SYS-PROSPECTIVE-ENTRYPOINT`). One function answers both
 /// callers on purpose — a second renderer would drift from this one, and a
 /// test asserts the write leaves exactly what this returns.
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-012#create")]
 pub(crate) fn project_managed_block(
     existing: Option<&str>,
     facts: &RouterFacts,

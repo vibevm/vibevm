@@ -4,6 +4,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-068#limit");
 
+use specmark::spec;
 use std::sync::{Arc, Mutex};
 use std::time::{Duration, Instant};
 
@@ -36,6 +37,7 @@ struct Bucket {
 
 impl TransferLimit {
     /// A limit of `bytes_per_second`; zero is no limit.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-068#limit")]
     pub fn new(bytes_per_second: u64) -> Option<Self> {
         (bytes_per_second > 0).then(|| Self {
             bytes_per_second,
@@ -52,6 +54,7 @@ impl TransferLimit {
     /// Read `"5 MB/s"`, `"500 KB"`, `"2MiB/s"` or a bare byte count;
     /// decimal units are powers of 1000, `KiB`/`MiB`/`GiB` of 1024, and
     /// `"0"` is no limit.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-068#limit")]
     pub fn parse(text: &str) -> Result<Option<Self>, String> {
         let trimmed = text.trim();
         let figure = trimmed.strip_suffix("/s").unwrap_or(trimmed).trim();
@@ -80,6 +83,7 @@ impl TransferLimit {
     }
 
     /// The `[transfer]` table of the user-level config; no key is no limit.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-068#limit")]
     pub fn from_config(config: &TransferConfig) -> Result<Option<Self>, String> {
         match config.limit.as_deref() {
             None => Ok(None),

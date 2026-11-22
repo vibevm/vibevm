@@ -6,6 +6,7 @@
 //! project home; `update` and `uninstall` outside a project act on the user
 //! home's applications (PROP-059 `#project-scope`).
 
+use specmark::spec;
 use std::path::PathBuf;
 
 use anyhow::{Context, Result, bail};
@@ -32,6 +33,7 @@ fn refuse_version_file_write(args: &InstallArgs, what: &str) -> Result<()> {
     Ok(())
 }
 
+#[spec(implements = "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#cli-surface")]
 pub(crate) fn run_install(
     ctx: &output::Context,
     mut args: InstallArgs,
@@ -220,6 +222,7 @@ fn pin_project_remaps(
     Ok(())
 }
 
+#[spec(implements = "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#cli-surface")]
 pub(crate) fn run_uninstall(
     ctx: &output::Context,
     args: UninstallArgs,
@@ -293,6 +296,7 @@ pub(crate) fn run_uninstall(
     }
 }
 
+#[spec(implements = "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#cli-surface")]
 pub(crate) fn run_update(
     ctx: &output::Context,
     args: UpdateArgs,

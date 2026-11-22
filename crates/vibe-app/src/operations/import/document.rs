@@ -1,5 +1,6 @@
 //! Exact old/new finite cohort worlds behind a small explicit inspection view.
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-CONTINUATION");
+use specmark::spec;
 use vibe_wire::generated::{
     application::{e3::import_work as full, e3::legacy_import_work as old},
     shared as w,
@@ -70,6 +71,7 @@ impl ImportWork {
                 .is_some_and(|d| super::receipts::owns(d, row, child))
     }
     /// A terminal Refused attempt may be retired and retried, never reused as success.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-CONTINUATION")]
     pub(crate) fn released_refusal(
         &self,
         state: &crate::steps::StepsFile,

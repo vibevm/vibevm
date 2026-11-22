@@ -2,6 +2,7 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-073#NATIVE-PREPARATION");
 use super::{GitError, GitPreparedRevision};
 use reqwest::Url;
+use specmark::spec;
 use std::{
     collections::HashMap,
     path::{Path, PathBuf},
@@ -45,6 +46,7 @@ pub struct GitInstallation {
 }
 impl GitInstallation {
     /// Capture explicitly trusted executable and builtin-helper locations.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-073#NATIVE-PREPARATION-LAW")]
     pub fn trusted(executable: PathBuf, helpers: PathBuf) -> Result<Self, GitError> {
         if !executable.is_absolute() || !helpers.is_absolute() || !executable.is_file() {
             return Err(unsupported(
@@ -148,6 +150,7 @@ impl NativeGitAdmission {
     /// submodules.
     /// Native execution requires Git 2.53 or newer; the bounded recipe is
     /// integration-tested with 2.53.0, independently of legacy Git support.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-073#NATIVE-PREPARATION-LAW")]
     pub fn direct_https(
         binding: Arc<crate::HttpAdmission>,
         installation: GitInstallation,
@@ -176,6 +179,7 @@ impl NativeGitAdmission {
     }
     /// Replace the exact SSH grant set. Duplicate endpoint grants refuse even
     /// when their keys differ; implicit-user/SCP ambiguity refuses at capture.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-073#NATIVE-SSH-LAW")]
     pub fn with_ssh_profiles(mut self, profiles: Vec<SshProfile>) -> Result<Self, GitError> {
         for (index, profile) in profiles.iter().enumerate() {
             if profiles[..index]
@@ -281,6 +285,7 @@ fn full_oid(s: &str) -> bool {
 ///     Some(("c".repeat(40), "c".repeat(40))),
 /// );
 /// ```
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-073#NATIVE-PREPARATION-LAW")]
 pub fn advertised_tip(refs: &str, reference: &str) -> Option<(String, String)> {
     if full_oid(reference) {
         return Some((reference.to_owned(), reference.to_owned()));
@@ -375,6 +380,7 @@ impl NativeSource {
     pub(crate) fn revision(&self) -> &GitPreparedRevision {
         &self.revision
     }
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-073#NATIVE-PREPARATION-LAW")]
     pub(crate) fn bind(self, destination: &Path) -> Result<GitPreparedRevision, GitError> {
         if !destination.is_absolute() {
             return Err(unsupported("native destination must be absolute"));

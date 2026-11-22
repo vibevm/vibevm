@@ -15,6 +15,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-001#registry-trait");
 
+use specmark::spec;
 use std::fs;
 use std::path::{Path, PathBuf};
 use std::sync::Arc;
@@ -76,6 +77,9 @@ impl GitMonorepoRegistry {
     /// Implicit freshness policy: if the cache is younger than
     /// [`DEFAULT_FRESHNESS_SECS`], no network call is made. Otherwise
     /// the backend does a `git fetch` + `git reset --hard origin/<ref>`.
+    #[spec(
+        implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-001#registry-trait"
+    )]
     pub fn open(url: &str, refname: &str) -> Result<Self, RegistryError> {
         let cache_root = default_cache_root()?;
         Self::open_with(
@@ -104,6 +108,9 @@ impl GitMonorepoRegistry {
     /// clone tries `url` first, then each candidate in order. The cache is
     /// keyed by the canonical `url`, so a mirror-made clone is the same
     /// cache entry.
+    #[spec(
+        implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-001#registry-trait"
+    )]
     pub fn open_routes(
         url: &str,
         candidates: &[String],
@@ -173,6 +180,9 @@ impl GitMonorepoRegistry {
     /// objects and its verified tree copied into a snapshot directory that
     /// lives as long as this value. Candidates are tried in order, as for
     /// [`Self::open_routes`].
+    #[spec(
+        implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-001#registry-trait"
+    )]
     pub fn open_native(
         url: &str,
         candidates: &[String],
@@ -222,6 +232,9 @@ impl GitMonorepoRegistry {
 
     /// Force a `git fetch` + reset regardless of freshness. Invoked by
     /// `vibe registry sync`.
+    #[spec(
+        implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-001#registry-trait"
+    )]
     pub fn sync(&self) -> Result<(), RegistryError> {
         tracing::info!(target: "vibe_registry", url = %self.url, "forcing registry sync");
         if let Some((cache_root, candidates)) = &self.native_refresh {
@@ -266,6 +279,9 @@ impl GitMonorepoRegistry {
     }
 
     /// The commit the clone (or snapshot) holds.
+    #[spec(
+        implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-001#registry-trait"
+    )]
     pub fn head_commit(&self) -> Result<Option<String>, RegistryError> {
         if let Some(commit) = &self.snapshot_commit {
             return Ok(Some(commit.clone()));
@@ -492,6 +508,7 @@ pub fn parse_monorepo_source_url(source_url: &str) -> Option<(&str, &str)> {
 /// Preserves the original transport in the scheme prefix. The fragment
 /// is keyed by `(group, name)` identity — the group-native shape after
 /// PROP-008.
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-001#registry-trait")]
 pub fn source_uri_for_git(url: &str, group: &Group, name: &str, version: &str) -> String {
     let transport = detect_transport(url);
     format!(

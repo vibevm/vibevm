@@ -66,6 +66,7 @@ pub(crate) struct Facts {
 
 impl Facts {
     /// Read what can be read; `None` when the bytes are not a certificate.
+    #[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-068#proxy-trust")]
     pub(crate) fn parse(der: &[u8]) -> Option<Self> {
         let (_, certificate, _) = item(der)?;
         let (_, tbs, _) = item(certificate)?;

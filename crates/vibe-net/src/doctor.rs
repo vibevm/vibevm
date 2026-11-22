@@ -21,6 +21,7 @@ pub enum Status {
 }
 
 impl Status {
+    #[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-068#proxy-doctor")]
     pub fn as_str(self) -> &'static str {
         match self {
             Status::Ok => "ok",
@@ -47,6 +48,7 @@ pub struct Check {
 }
 
 impl Check {
+    #[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-068#proxy-doctor")]
     pub fn ok(step: &'static str, detail: impl Into<String>) -> Self {
         Self {
             step,
@@ -55,6 +57,7 @@ impl Check {
             fix: None,
         }
     }
+    #[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-068#proxy-doctor")]
     pub fn skip(step: &'static str, detail: impl Into<String>) -> Self {
         Self {
             step,
@@ -63,6 +66,7 @@ impl Check {
             fix: None,
         }
     }
+    #[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-068#proxy-doctor")]
     pub fn fail(step: &'static str, detail: impl Into<String>, fix: impl Into<String>) -> Self {
         Self {
             step,
@@ -89,6 +93,7 @@ const FIX_REVOCATION: &str = "the certificate's revocation state could not be ch
 
 /// Diagnose the route to `target` (an `https://` URL) in order. Stops after
 /// the first failed step: what follows cannot be judged without it.
+#[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-068#proxy-doctor")]
 pub fn diagnose(session: &Arc<NetworkSession>, target: &url::Url, timeout: Duration) -> Vec<Check> {
     let mut checks = Vec::new();
     let route = session.route();
@@ -353,6 +358,7 @@ fn tls(session: &Arc<NetworkSession>, target: &url::Url, timeout: Duration) -> C
 /// assert!(fix.contains("`[proxy] revocation = \"best-effort\"`"), "{fix}");
 /// assert_eq!(vibe_net::doctor::cause_of("CRYPT_E_REVOCATION_OFFLINE (0x80092013)", false).0, "revocation");
 /// ```
+#[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-068#proxy-doctor")]
 pub fn cause_of(chain: &str, timed_out: bool) -> (&'static str, &'static str) {
     let lower = chain.to_ascii_lowercase();
     // Judged before the trust causes: schannel reports a revocation
@@ -410,6 +416,7 @@ fn classify(error: &reqwest::Error) -> Check {
 /// Whether the PAC file the route names can be fetched (directly — a PAC
 /// URL must be reachable without the proxy it configures) or read, and
 /// looks like one. `None` when the route has no PAC.
+#[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-068#proxy-doctor")]
 pub fn pac_check(session: &Arc<NetworkSession>, timeout: Duration) -> Option<Check> {
     use vibe_core::user_config::PacSource;
     let settings = session.route().px()?;

@@ -1,8 +1,10 @@
 //! Lifecycle mutations reuse the ordinary metadata planner for exact root witnesses.
 use super::*;
+use specmark::spec;
 /// Refresh derived authority after a durable lifecycle mutation using the
 /// ordinary metadata planner and an operation-owned, locked source.
 #[allow(clippy::too_many_arguments)]
+#[spec(implements = "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#install-workflow-in-detail")]
 pub fn refresh_from_source(
     workspace: &vibe_workspace::Workspace,
     root: &std::path::Path,

@@ -13,6 +13,7 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-076#SYS-HARNESS-EXECUTABLE");
 
 use anyhow::{Result, bail};
+use specmark::spec;
 use vibe_app::{AgentsConfig, AppError};
 use vibe_core::manifest::HarnessDelivery;
 use vibe_wire::generated::prompt_flags as wire;
@@ -29,6 +30,7 @@ use super::Selected;
 /// The protocol tag `vibe-prompt-flags/1`.
 pub(crate) const PROTOCOL: &str = "vibe-prompt-flags/1";
 
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-076#SYS-HARNESS-EXECUTABLE")]
 pub(crate) fn run(ctx: &output::Context, selected: &Selected, harness: &str) -> Result<()> {
     let (kind, launcher) = resolve_kind(selected, harness)?;
     // **No launch arguments, because there is no launch.** A kind whose

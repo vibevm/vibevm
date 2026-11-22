@@ -6,6 +6,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#TRANSFORM-PLAN-IDENTITY");
 
+use specmark::spec;
 use std::collections::BTreeMap;
 use std::ffi::OsStr;
 
@@ -79,6 +80,7 @@ impl NativeHandlerIdentity {
         }
     }
 
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#TRANSFORM-PLAN-IDENTITY")]
     pub(crate) fn from_handler(
         handler: &ExtensionHandler,
     ) -> Result<Option<Self>, CompilerNativeImplementationDigestError> {

@@ -2,6 +2,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-051#convert-source");
 
+use specmark::spec;
 use std::path::PathBuf;
 
 use anyhow::{Context, Result, bail};
@@ -193,6 +194,7 @@ pub(crate) fn machine_entry(args: &RefactorArgs) -> Option<std::process::ExitCod
 }
 
 /// Run one refactoring-family command.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-051#convert-source")]
 pub fn run(ctx: &output::Context, args: RefactorArgs) -> Result<()> {
     match args.command {
         RefactorCommand::PlanMigration(_) | RefactorCommand::MigrationOperation(_) => {

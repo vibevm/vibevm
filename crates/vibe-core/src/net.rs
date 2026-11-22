@@ -154,6 +154,7 @@ impl Default for ProxyRoute {
 
 impl ProxyRoute {
     /// No proxy and no extra trust: the behaviour without `[proxy]`.
+    #[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-068#proxy")]
     pub fn direct() -> Self {
         Self {
             mode: Mode::Direct,
@@ -169,6 +170,7 @@ impl ProxyRoute {
     }
 
     /// The route an effective `[proxy]` table describes.
+    #[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-068#proxy")]
     pub fn from_config(cfg: &ProxyConfig) -> Result<Self, ProxyRouteError> {
         if let Some((key, reason, fix)) = cfg.problem() {
             return Err(ProxyRouteError::Invalid { key, reason, fix });
@@ -236,6 +238,7 @@ impl ProxyRoute {
     }
 
     /// This route with the layer that chose its PAC location recorded.
+    #[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-068#proxy")]
     pub fn with_pac_origin(mut self, origin: ModeOrigin) -> Self {
         if let Mode::Px(settings) = &mut self.mode {
             settings.pac_origin = origin;
@@ -265,6 +268,7 @@ impl ProxyRoute {
     /// assert_eq!(off.mode_name(), "direct");
     /// assert!(off.px().is_none());
     /// ```
+    #[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-068#proxy")]
     pub fn without_px(mut self) -> Self {
         if matches!(self.mode, Mode::Px(_)) {
             self.mode = match self.explicit.clone() {
@@ -282,6 +286,7 @@ impl ProxyRoute {
     }
 
     /// Whether the route needs a vibe-managed px.
+    #[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-068#proxy-px")]
     pub fn px(&self) -> Option<&PxSettings> {
         match &self.mode {
             Mode::Px(settings) => Some(settings),
@@ -290,6 +295,7 @@ impl ProxyRoute {
     }
 
     /// The configured mode name (`direct`, `explicit`, `px`).
+    #[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-068#proxy")]
     pub fn mode_name(&self) -> &'static str {
         match self.mode {
             Mode::Direct => "direct",
@@ -373,6 +379,7 @@ impl ProxyRoute {
     /// assert!(http.is_none());
     /// assert!(ProxyRoute::direct().explicit_urls().is_none());
     /// ```
+    #[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-068#proxy")]
     pub fn explicit_urls(&self) -> Option<(Option<&url::Url>, Option<&url::Url>)> {
         match &self.mode {
             Mode::Explicit { https, http } => Some((https.as_ref(), http.as_ref())),
@@ -390,6 +397,7 @@ impl ProxyRoute {
     /// let route = ProxyRoute::from_config(&cfg).unwrap().with_px_port(3129);
     /// assert_eq!(route.px().unwrap().port, Some(3129));
     /// ```
+    #[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-068#proxy-px")]
     pub fn with_px_port(mut self, port: u16) -> Self {
         if let Mode::Px(settings) = &mut self.mode {
             settings.port = Some(port);
@@ -408,6 +416,7 @@ impl ProxyRoute {
     }
 
     /// Where a request to `url` goes; `None` is a direct connection.
+    #[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-068#proxy")]
     pub fn choice_for(&self, url: &url::Url) -> Option<ProxyChoice<'_>> {
         let host = url.host_str()?;
         if self.bypass.matches(host) {
@@ -425,6 +434,7 @@ impl ProxyRoute {
     /// The printable proxy a request to `raw` goes through — scheme, host
     /// and port, never a credential — or `px` for the managed px; `None`
     /// for a direct connection or a URL that is not HTTP(S).
+    #[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-068#proxy")]
     pub fn label_for(&self, raw: &str) -> Option<String> {
         let url = url::Url::parse(raw).ok()?;
         match self.choice_for(&url)? {
@@ -440,6 +450,7 @@ impl ProxyRoute {
 /// let url = url::Url::parse("http://u:p@proxy.example.corp:8080/x?y").unwrap();
 /// assert_eq!(vibe_core::net::printable(&url), "http://proxy.example.corp:8080");
 /// ```
+#[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-068#proxy")]
 pub fn printable(proxy: &url::Url) -> String {
     format!(
         "{}://{}{}",
@@ -461,6 +472,7 @@ pub fn install_route(route: ProxyRoute) -> bool {
 }
 
 /// The installed route; a process that installed none routes directly.
+#[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-068#proxy")]
 pub fn route() -> &'static ProxyRoute {
     static DIRECT: OnceLock<ProxyRoute> = OnceLock::new();
     INSTALLED

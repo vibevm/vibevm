@@ -184,6 +184,7 @@ impl PreparedImport {
     }
     /// Record a source/selection refusal discovered before any row execution.
     /// Execution dispositions and attempt identities belong to the cohort owner.
+    #[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-059#portable-set")]
     pub fn note_refusal(&mut self, key: String, code: String, message: String) {
         self.state.results.push(w::ApplicationPendingImportResult {
             key,
@@ -249,6 +250,7 @@ pub fn import_row(row: &w::ApplicationPendingImportRow) -> wire::Application {
     }
 }
 
+#[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-059#portable-set")]
 pub(crate) fn arrangement(
     state: &w::ApplicationPendingImport,
 ) -> (Vec<wire::Collection>, Vec<wire::Pin>, Vec<wire::Launcher>) {

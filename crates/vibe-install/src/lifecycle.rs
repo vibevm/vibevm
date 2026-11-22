@@ -2,6 +2,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#H-SCRIPT");
 
+use specmark::spec;
 use std::path::PathBuf;
 use std::sync::{Arc, Mutex};
 
@@ -138,6 +139,7 @@ impl InstallSlotLifecycle {
     /// parking after the first was satisfied then has no target set to name:
     /// the moment the last delegated row flips to `ok` the continuation is
     /// correctly dropped, and only the staged set can put it back.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#REF-AGENT-RESUME")]
     pub fn stage_resumed_targets(&self, targets: &[ResolvedDep]) -> Result<()> {
         let records = targets
             .iter()
@@ -155,6 +157,7 @@ impl InstallSlotLifecycle {
     }
 
     /// Whether a slot-scoped park is still live in this run's state.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#REF-AGENT-RESUME")]
     pub fn owes_slot_work(&self) -> bool {
         self.run
             .lock()
@@ -163,6 +166,7 @@ impl InstallSlotLifecycle {
     }
 
     /// The slot run reached its end with nothing owed.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#REF-AGENT-RESUME")]
     pub fn clear_continuation(&self) -> std::result::Result<(), String> {
         self.run
             .lock()
@@ -172,6 +176,7 @@ impl InstallSlotLifecycle {
     }
 
     /// What the materialise pass had really changed when the seam stopped.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#H-SCRIPT")]
     pub fn progress(&self) -> InstallProgress {
         self.progress
             .lock()
@@ -202,6 +207,7 @@ impl InstallSlotLifecycle {
         }
     }
 
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#H-SCRIPT")]
     pub fn take_reports(&self) -> Result<Vec<SlotLifecycleReport>> {
         let mut reports = self
             .reports

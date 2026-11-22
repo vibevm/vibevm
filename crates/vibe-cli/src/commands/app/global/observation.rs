@@ -8,6 +8,7 @@
 //! them, because the composition boundary is here and not in `vibe-app`.
 
 use anyhow::{Context, Result};
+use specmark::spec;
 use vibe_app::{Interrupt, UserEnvironment};
 use vibe_core::progress::Progress;
 
@@ -51,6 +52,7 @@ pub(crate) struct Observation<'d> {
 
 impl<'d> Observation<'d> {
     /// `mutating` operations catch Ctrl-C / SIGTERM (PROP-065 `#cancellation`).
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-059#commands")]
     pub(crate) fn new(
         ctx: &output::Context,
         mutating: bool,

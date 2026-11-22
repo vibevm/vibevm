@@ -24,6 +24,9 @@ impl InspectionLimits {
     /// let limits = InspectionLimits { max_depth: Some(8), ..InspectionLimits::unlimited() };
     /// assert_eq!(limits.max_input_bytes, None);
     /// ```
+    #[specmark::spec(
+        implements = "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-DATA-INSPECTION"
+    )]
     pub const fn unlimited() -> Self {
         Self {
             max_input_bytes: None,

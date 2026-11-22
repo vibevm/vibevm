@@ -78,6 +78,7 @@ pub struct ServerContext {
 }
 
 impl ServerContext {
+    #[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#server")]
     pub fn new(project_root: impl Into<PathBuf>) -> Self {
         let store_root = vibe_core::settings::settings_dir()
             .map(|home| home.join("cache"))
@@ -96,6 +97,7 @@ impl ServerContext {
     /// A context whose store root is the caller's — the test seam for
     /// the lazy-pull readers: a temp root keeps a test off the
     /// operator's real `~/.vibe/cache/`.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#server")]
     pub fn with_store_root(
         project_root: impl Into<PathBuf>,
         store_root: impl Into<PathBuf>,
@@ -136,6 +138,7 @@ impl ServerContext {
     /// assert!(ctx.project_root.ends_with("project"));
     /// ```
     #[must_use]
+    #[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#server")]
     pub fn with_lifecycle_execution(
         self,
         policy: InstallPolicy,
@@ -161,6 +164,7 @@ impl ServerContext {
     /// assert!(ctx.project_root.ends_with("project"));
     /// ```
     #[must_use]
+    #[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#server")]
     pub fn with_default_registry_isolation(self, isolated: bool) -> Self {
         ServerContext {
             default_registry_isolated: isolated,
@@ -172,6 +176,9 @@ impl ServerContext {
     /// empty lockfile if `vibe.lock` does not exist yet — callers
     /// surface the empty-state through their normal output rather
     /// than aborting with `Lockfile not found`.
+    #[spec(
+        implements = "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#SERVER-FRESH-LOCKFILE"
+    )]
     pub fn load_lockfile(&self) -> Result<Lockfile, vibe_core::Error> {
         let path = self.project_root.join(Lockfile::FILENAME);
         if !path.exists() {

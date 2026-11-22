@@ -56,6 +56,7 @@ impl Purpose {
         Self::Other,
     ];
 
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-068#purpose")]
     pub fn as_str(self) -> &'static str {
         match self {
             Self::PackageSource => "package-source",
@@ -166,6 +167,7 @@ impl TransferRecord {
     /// assert_eq!(record.url, "https://git.example/org/repo.git");
     /// assert_eq!(record.precision, Precision::Reported);
     /// ```
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-068#git")]
     pub fn git(purpose: Purpose, remote: &str, destination: Destination) -> Self {
         Self {
             precision: Precision::Reported,
@@ -199,6 +201,7 @@ impl TransferRecord {
         }
     }
 
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-068#transfer")]
     pub fn package(self, key: impl Into<String>) -> Self {
         Self {
             package: Some(key.into()),
@@ -206,6 +209,7 @@ impl TransferRecord {
         }
     }
 
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-068#transfer")]
     pub fn step(self, id: impl Into<String>) -> Self {
         Self {
             step: Some(id.into()),
@@ -214,6 +218,7 @@ impl TransferRecord {
     }
 
     /// The run the command belongs to; the pid when there is none.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-068#transfer")]
     pub fn batch(self, batch: impl Into<String>) -> Self {
         Self {
             batch: batch.into(),
@@ -226,6 +231,7 @@ impl TransferRecord {
     }
 
     /// The URL the manifest named, when a remap row fetched another.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-068#redaction")]
     pub fn remapped_from(self, declared: &str) -> Self {
         Self {
             remapped_from: Some(safe_url(declared)),
@@ -234,6 +240,7 @@ impl TransferRecord {
     }
 
     /// The command line that resumes the command if it is interrupted.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-068#pause")]
     pub fn resume(self, line: impl Into<String>) -> Self {
         Self {
             resume: Some(line.into()),
@@ -271,6 +278,7 @@ impl TransferRecord {
 /// );
 /// assert_eq!(safe_url("not a url"), "remote endpoint");
 /// ```
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-068#redaction")]
 pub fn safe_url(raw: &str) -> String {
     let Ok(mut url) = url::Url::parse(raw) else {
         return "remote endpoint".to_owned();
@@ -294,6 +302,7 @@ pub fn safe_url(raw: &str) -> String {
 /// assert_eq!(safe_remote("git@git.example:org/repo.git"), "git.example:org/repo.git");
 /// assert_eq!(safe_remote("/srv/repo.git"), "/srv/repo.git");
 /// ```
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-068#redaction")]
 pub fn safe_remote(raw: &str) -> String {
     let raw = raw.strip_prefix("git+").unwrap_or(raw);
     // A one-letter scheme is a Windows drive (`C:/repo`), not a URL.

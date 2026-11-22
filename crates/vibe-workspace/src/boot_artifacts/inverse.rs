@@ -21,6 +21,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#install-workflow-in-detail");
 
+use specmark::spec;
 use std::fs;
 use std::io::Write as _;
 use std::path::{Path, PathBuf};
@@ -60,6 +61,7 @@ impl BootImages {
     /// Record the generated files under each node directory in `nodes` (its
     /// boot lane and agent instruction files) and each package unit boot
     /// directory in `units`, before a regeneration writes any of them.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#install-workflow-in-detail")]
     pub(crate) fn capture(
         nodes: impl IntoIterator<Item = PathBuf>,
         units: impl IntoIterator<Item = PathBuf>,

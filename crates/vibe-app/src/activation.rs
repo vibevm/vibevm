@@ -47,6 +47,7 @@ pub enum Source {
 
 impl Source {
     /// The stable spelling of this source.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-075#VERSION-FILE-FORMATS")]
     pub fn as_str(self) -> &'static str {
         match self {
             Self::Flag => "flag",
@@ -78,6 +79,7 @@ pub enum State {
 }
 
 impl State {
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-075#VERSION-FILE-FORMATS")]
     pub fn as_str(self) -> &'static str {
         match self {
             Self::Selected => "selected",
@@ -531,6 +533,7 @@ fn install_command(index: &Index, slot: &str, requested: &str) -> Option<String>
 /// default, or `Off` when the slot is off. Used by `vibe app exec SLOT` and
 /// by the activation report of a slot a version file named and nothing
 /// selected.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-075#VERSION-FILE-FORMATS")]
 pub fn slot_default(index: &Index, slot: &str) -> SlotSelection {
     let mut selection = SlotSelection {
         slot: slot.to_owned(),

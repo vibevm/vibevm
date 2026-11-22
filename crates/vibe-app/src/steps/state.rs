@@ -123,6 +123,7 @@ impl StepsFile {
         })
     }
     /// Read the kept state; `None` when the work directory has none.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-065#execution")]
     pub fn load(work: &Path) -> Result<Option<Self>, AppError> {
         let file = path(work);
         let bytes = match fs::read(&file) {
@@ -220,6 +221,7 @@ impl StepsFile {
     }
 
     /// Replace `steps.json` atomically.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-065#execution")]
     pub fn save(&self, work: &Path) -> Result<(), AppError> {
         let mut bytes = serde_json::to_vec_pretty(&self.to_wire())
             .map_err(|error| mismatch(work, error.to_string()))?;
@@ -311,6 +313,7 @@ impl StepsFile {
         }
     }
 
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-065#execution")]
     pub fn from_wire(document: wire::StepsFile) -> Self {
         Self {
             source_evidence: Default::default(),

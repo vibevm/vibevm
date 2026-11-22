@@ -23,6 +23,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#identity");
 
+use specmark::spec;
 use std::path::PathBuf;
 
 use chrono::Utc;
@@ -56,6 +57,7 @@ pub struct Args {
     pub superseded_by: Option<String>,
 }
 
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#identity")]
 pub fn run(args: Args) -> Result<()> {
     // F2-1 — the clock enters here, once per command: the same `at`
     // stamps the fact and the written catalog, so the two records born

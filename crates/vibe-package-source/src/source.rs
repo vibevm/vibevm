@@ -6,6 +6,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#install-workflow-in-detail");
 
+use specmark::spec;
 use std::collections::BTreeSet;
 use std::path::Path;
 
@@ -87,6 +88,7 @@ pub enum InstallResolver {
 
 impl InstallResolver {
     /// Freeze an independently verified old local source for checked retirement.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#install-workflow-in-detail")]
     pub fn prepare_exact_retirement_source(
         &self,
         old: &vibe_core::manifest::LockedPackage,
@@ -118,6 +120,7 @@ impl InstallResolver {
 
     /// The selected local owner retains its source-tree execution semantics.
     /// None means this route uses ordinary immutable acquisition instead.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#install-workflow-in-detail")]
     pub fn retained_local_tree(
         &self,
         candidate: &vibe_registry::source_candidates::RetainedSourceCandidate,

@@ -1,5 +1,6 @@
 //! Existing payload copying and removal honor the operation cancellation token.
 use super::*;
+use specmark::spec;
 
 pub(super) fn copy_dir(src: &Path, dst: &Path) -> Result<(), PublishError> {
     copy_dir_controlled(
@@ -8,6 +9,7 @@ pub(super) fn copy_dir(src: &Path, dst: &Path) -> Result<(), PublishError> {
         &vibe_core::cancellation::CancellationToken::default(),
     )
 }
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#publish")]
 pub(crate) fn copy_dir_controlled(
     src: &Path,
     dst: &Path,

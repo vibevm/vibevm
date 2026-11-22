@@ -4,6 +4,7 @@ specmark::scope!(
     r = 1
 );
 use super::*;
+use specmark::spec;
 /// Retained original-source observation from pure declared derivation preflight.
 /// This is finite predictable-error admission, not a publication transaction.
 pub struct DeclaredDerivationPreflight {
@@ -18,6 +19,7 @@ impl DeclaredDerivationPreflight {
 
 /// Check prospective adoption through the materializer's existing converter,
 /// selection and collision preparation without publishing any output.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-FACT-COMMANDS")]
 pub fn preflight_declared_derivation(
     content_src: &Path,
     manifest: &vibe_core::manifest::Manifest,

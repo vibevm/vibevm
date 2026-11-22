@@ -4,6 +4,7 @@ use super::super::ir::{
 };
 use super::super::pass::PassName;
 use super::framing::{self, CommentSyntax};
+use specmark::spec;
 
 pub(crate) struct StaticMarkdownBackend {
     id: BackendId,
@@ -117,6 +118,7 @@ pub(crate) fn render_calls() -> usize {
 /// spelling the backend writes and the analyzer's attribution accounting
 /// counts, so a contribution's content bytes and the backend's rendering
 /// of it cannot drift apart.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#IR-REFACTOR")]
 pub(crate) fn flatten_markdown(chunks: &[LaneChunk]) -> String {
     let mut output = String::new();
     for chunk in chunks {

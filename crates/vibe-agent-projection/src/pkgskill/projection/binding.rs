@@ -51,6 +51,7 @@ pub struct ProjectSkillBinding {
 }
 
 impl ProjectSkillBinding {
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#PHASE-PACKAGE")]
     pub fn identity(&self) -> String {
         format!(
             "{PROJECT_SKILL_PREFIX}{}/{}",
@@ -59,6 +60,7 @@ impl ProjectSkillBinding {
         )
     }
 
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#PHASE-PACKAGE")]
     pub fn artifact_id(&self, agent: Agent) -> String {
         format!(
             "{}#skill:{}:{}",
@@ -76,6 +78,7 @@ pub fn collect_project_skill_bindings(project_root: &Path) -> Result<Vec<Project
 
 /// Lower exactly the authenticated selected host plus reachable lock-ordered
 /// providers retained by the lifecycle world loader.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#PHASE-PACKAGE")]
 pub fn lower_project_skill_bindings(
     project_root: &Path,
     providers: Vec<ProjectSkillProviderInput>,

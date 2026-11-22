@@ -35,6 +35,9 @@ pub enum DirectiveKind {
 
 impl DirectiveKind {
     /// The directive keyword, `#`-prefixed.
+    #[specmark::spec(
+        implements = "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#DIRECTIVE-SHAPE"
+    )]
     pub fn keyword(self) -> &'static str {
         match self {
             DirectiveKind::Embed => "#embed",
@@ -88,6 +91,9 @@ pub struct Directives {
 impl Directives {
     /// Scan a document for directives and in-place uses. Infallible: malformed
     /// directives land in [`errors`](Self::errors), not a `Result`.
+    #[specmark::spec(
+        implements = "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#DIRECTIVE-SHAPE"
+    )]
     pub fn parse(source: &str) -> Self {
         let lines: Vec<String> = source.lines().map(String::from).collect();
         let fenced = fence_mask(&lines);

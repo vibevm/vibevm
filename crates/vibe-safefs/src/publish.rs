@@ -49,6 +49,9 @@ impl PublishError {
     /// distinguish the stages, keeping both facts it could not re-derive: how
     /// far the publication got, and which directories it created.
     #[must_use]
+    #[spec(
+        implements = "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#APPLY-FILE-UNDO"
+    )]
     pub fn into_report(self) -> anyhow::Error {
         let created = self.created_display();
         let stage = match self.stage {
@@ -85,6 +88,9 @@ impl PublishError {
 
     /// The created directories as forward-slashed display paths.
     #[must_use]
+    #[spec(
+        implements = "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#APPLY-FILE-UNDO"
+    )]
     pub fn created_display(&self) -> Vec<String> {
         self.created_directories
             .iter()

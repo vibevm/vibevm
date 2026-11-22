@@ -47,6 +47,9 @@ pub enum EndpointObservation {
 /// assert_eq!(host.hosting, Some("github"));
 /// assert_eq!(observe_endpoint("git@my-alias:repo"), EndpointObservation::Opaque);
 /// ```
+#[specmark::spec(
+    implements = "spec://org.vibevm.core/vibevm/common/PROP-073#HOSTING-OBSERVATION-LAW"
+)]
 pub fn observe_endpoint(raw: &str) -> EndpointObservation {
     let raw = raw.strip_prefix("git+").unwrap_or(raw);
     if raw.is_empty() || raw.chars().any(char::is_control) {

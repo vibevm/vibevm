@@ -92,6 +92,7 @@ impl LockProvenance {
 
     /// Read the sidecar beside `lockfile_path`; a missing file is an empty
     /// record, because the sidecar is provenance and never a prerequisite.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-066#provenance")]
     pub fn read_beside(lockfile_path: &Path) -> Result<Self> {
         let path = provenance_path(lockfile_path);
         if !path.exists() {
@@ -105,6 +106,7 @@ impl LockProvenance {
     /// let record=vibe_core::lock_provenance::LockProvenance::parse_str("# no recorded rows").unwrap();
     /// assert!(record.is_empty());
     /// ```
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-066#provenance")]
     pub fn parse_str(text: &str) -> Result<Self> {
         toml::from_str(text).map_err(|_| Error::InvalidLockfile {
             reason:
@@ -121,6 +123,7 @@ impl LockProvenance {
     /// let provenance = vibe_core::lock_provenance::LockProvenance::default();
     /// assert_eq!(provenance.render_with_comments(Some("# prior record")).unwrap(), None);
     /// ```
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-066#provenance")]
     pub fn render_with_comments(&self, previous: Option<&str>) -> Result<Option<String>> {
         if self.is_empty() {
             return Ok(None);

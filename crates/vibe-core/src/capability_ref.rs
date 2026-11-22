@@ -25,6 +25,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#capability");
 
+use specmark::spec;
 use std::fmt;
 use std::str::FromStr;
 
@@ -172,6 +173,9 @@ pub struct CapabilityRef {
 }
 
 impl CapabilityRef {
+    #[spec(
+        implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#CAPABILITY-VOCABULARY"
+    )]
     pub fn new(
         namespace: impl Into<String>,
         name: impl Into<String>,
@@ -194,6 +198,9 @@ impl CapabilityRef {
         })
     }
 
+    #[spec(
+        implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#CAPABILITY-VOCABULARY"
+    )]
     pub fn parse(input: &str) -> Result<Self> {
         let trimmed = input.trim();
         if trimmed.is_empty() {

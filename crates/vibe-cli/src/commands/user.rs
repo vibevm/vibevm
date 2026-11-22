@@ -13,6 +13,7 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-074#USER-PROJECT-ROOT-REPORT");
 
 use anyhow::Result;
+use specmark::spec;
 use vibe_core::cancellation::CancellationToken;
 use vibe_core::settings::settings_dir;
 use vibe_core::user_project::{
@@ -39,6 +40,7 @@ type WireProtocol = vibe_wire::generated::user_project_report::UserProjectReport
 type WireCommand = vibe_wire::generated::user_project_report::Command;
 
 /// Dispatch one verb with the invocation's cancellation token.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-074#USER-PROJECT-ROOT-REPORT")]
 pub(crate) fn run(
     ctx: &output::Context,
     command: UserCommand,

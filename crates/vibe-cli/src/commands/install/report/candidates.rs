@@ -8,6 +8,7 @@ use vibe_wire::generated::install::e2::plan::{
     CandidateDecision, CandidateFailure, CandidateObservation, SourceCandidate,
 };
 
+#[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-073#SOURCE-POLICY")]
 pub(crate) fn candidate_rows(rows: &[SourceCandidateObservation]) -> Vec<SourceCandidate> {
     rows.iter()
         .map(|row| {

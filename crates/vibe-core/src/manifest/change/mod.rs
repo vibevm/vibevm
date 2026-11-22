@@ -74,6 +74,9 @@ pub(crate) fn invalid(
 #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord)]
 pub struct ChangeId(String);
 impl ChangeId {
+    #[specmark::spec(
+        implements = "spec://org.vibevm.core/vibevm/common/PROP-071#CHANGE-AUTHORED-GRAMMAR"
+    )]
     pub fn parse(text: &str) -> Result<Self, ChangeError> {
         let valid = text.strip_prefix("chg-").map_or_else(
             || {
@@ -124,6 +127,9 @@ pub struct ChangeContext {
     spec_root: PathBuf,
 }
 impl ChangeContext {
+    #[specmark::spec(
+        implements = "spec://org.vibevm.core/vibevm/common/PROP-071#CHANGE-AUTHORED-GRAMMAR"
+    )]
     pub fn for_node(
         manifest: &Manifest,
         selected_node: &str,
@@ -177,6 +183,9 @@ impl ChangeContext {
     pub fn directory(&self, id: &ChangeId) -> PathBuf {
         self.spec_root.join(CHANGES_DIR).join(id.as_str())
     }
+    #[specmark::spec(
+        implements = "spec://org.vibevm.core/vibevm/common/PROP-071#CHANGE-AUTHORED-GRAMMAR"
+    )]
     pub fn document_address(&self, id: &ChangeId, relative: &str) -> Result<String, ChangeError> {
         declarant_path(Path::new(relative)).map_err(|_| {
             invalid(

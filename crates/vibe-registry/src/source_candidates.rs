@@ -2,6 +2,7 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-073#SOURCE-POLICY");
 use crate::{MultiResolution, RegistryError};
 use sha2::{Digest, Sha256};
+use specmark::spec;
 use std::sync::Arc;
 use vibe_core::{
     Group,
@@ -60,6 +61,7 @@ impl RetainedSourceCandidate {
     }
     /// Observe content only at an already-retained ordinary local registry route.
     /// This is operator-selected source evidence, not supplier authentication.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-073#SOURCE-POLICY")]
     pub fn observe_local_content_pin(&self) -> Result<vibe_core::ContentHash, RegistryError> {
         let resolution = &self.0.resolution;
         if resolution.locked.is_some()
@@ -86,6 +88,7 @@ impl RetainedSourceCandidate {
 
     /// Exact local retained route/content agreement for a narrowly admitted
     /// operation transition. This observes no alternate source and grants no write.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-073#LOCKED-SOURCE-LAW")]
     pub fn matches_locked_local_content(
         &self,
         row: &vibe_core::manifest::LockedPackage,
@@ -169,6 +172,7 @@ impl RetainedSourceCandidate {
     /// Compare an already policy-admitted observation with the original route.
     /// A held binding includes its content pin whereas discovery has none; this
     /// comparison does not grant eligibility or waive the pin during acquisition.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-073#SOURCE-POLICY")]
     pub fn same_selected_source(&self, other: &Self) -> bool {
         if self.group() != other.group()
             || self.name() != other.name()
@@ -200,6 +204,7 @@ impl RetainedSourceCandidate {
 
     /// Retain the personal owner's locked-source verification law after
     /// acquisition through an independently retained original route.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-073#LOCKED-SOURCE-LAW")]
     pub fn verify_continued_acquisition(
         &self,
         acquired: crate::PackageAcquisition,
@@ -224,6 +229,7 @@ impl RetainedSourceCandidate {
         }
     }
 
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-073#SOURCE-POLICY")]
     pub(crate) fn captured(
         owner: &Arc<()>,
         binding: CanonicalSourceBinding,
@@ -391,6 +397,7 @@ pub enum CandidateInventoryScope {
 impl SourceCandidateInventory {
     /// Existing source owners supply the unchanged version domain and exact
     /// precedence winner per version. Preference only admits same-version alternatives.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-073#SOURCE-POLICY-LAW")]
     pub fn qualify_defaults(
         &mut self,
         domain: &std::collections::BTreeSet<semver::Version>,

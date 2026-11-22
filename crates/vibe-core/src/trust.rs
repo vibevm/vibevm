@@ -74,6 +74,7 @@ impl TrustLayer {
     /// ```
     /// assert_eq!(vibe_core::trust::TrustLayer::Site.as_str(), "site");
     /// ```
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-065#ordinary-trust")]
     pub fn as_str(self) -> &'static str {
         match self {
             TrustLayer::Base => "base",
@@ -122,6 +123,7 @@ impl TrustLists {
     /// let lists = TrustLists::new(&["org.example".to_string()], &[]);
     /// assert_eq!(lists.trusted_groups, ["org.example"]);
     /// ```
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-065#ordinary-trust")]
     pub fn new(trusted: &[String], untrusted: &[String]) -> Self {
         Self {
             trusted_groups: trusted.to_vec(),
@@ -295,6 +297,7 @@ impl TrustPolicy {
     /// ```
     /// assert!(vibe_core::trust::TrustPolicy::base().trusts("org.vibevm.node"));
     /// ```
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-065#ordinary-trust")]
     pub fn base() -> Self {
         Self {
             trusted: BASE_TRUSTED_GROUPS
@@ -357,6 +360,7 @@ impl TrustPolicy {
     /// assert!(policy.trusts("org.example"));
     /// assert!(!policy.trusts("org.vibevm"));
     /// ```
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-065#ordinary-trust")]
     pub fn trusting<S: AsRef<str>>(
         written: impl IntoIterator<Item = S>,
     ) -> Result<Self, TrustError> {
@@ -386,6 +390,7 @@ impl TrustPolicy {
     /// assert!(policy.trusts("org.example"));
     /// assert_eq!(policy.trusted()[0].layer(), TrustLayer::Run);
     /// ```
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-065#ordinary-trust")]
     pub fn allow_for_this_run(&mut self, group: &Group) {
         self.trusted.push(TrustEntry {
             pattern: GroupPattern::exact(group),
@@ -456,6 +461,7 @@ impl TrustPolicy {
     /// let deny = &policy.untrusted()[0];
     /// assert_eq!(policy.overridden_by(deny), [TrustLayer::Base]);
     /// ```
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-065#ordinary-trust")]
     pub fn overridden_by(&self, deny: &TrustEntry) -> Vec<TrustLayer> {
         let mut layers: Vec<TrustLayer> = self
             .trusted

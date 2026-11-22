@@ -41,6 +41,7 @@ use crate::numbering::{expand_derived, number_blocks};
 use crate::pages::PageSet;
 
 pub use catalogue::catalogue;
+use specmark::spec;
 
 /// The token budget of `llms-small.txt` — a corpus meant to fit beside a
 /// task in a small context window.
@@ -75,6 +76,7 @@ impl Tier {
     pub const ALL: &'static [Tier] = &[Tier::Index, Tier::Small, Tier::Medium, Tier::Full];
 
     /// The file name this tier is published under.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-057#SEO-LLMS-FILES")]
     pub fn file_name(self) -> &'static str {
         match self {
             Tier::Index => "llms.txt",
@@ -86,6 +88,7 @@ impl Tier {
 
     /// The tier's token budget, or `None` when it carries the corpus
     /// whole.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-057#SEO-LLMS-FILES")]
     pub fn budget(self) -> Option<usize> {
         match self {
             Tier::Small => Some(SMALL_TOKEN_BUDGET),
@@ -103,6 +106,7 @@ impl Tier {
 /// and the `.xml` projection carry, which is the whole point — a human
 /// quoting `p12` from the web and an agent quoting `p12` from this file
 /// quote one place (`##READER-NUMBERED-BLOCKS`, R-26).
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-057#SEO-LLMS-FILES")]
 pub fn bodies(set: &PageSet, content: &Content) -> BTreeMap<String, String> {
     set.pages
         .iter()
@@ -125,6 +129,7 @@ pub fn bodies(set: &PageSet, content: &Content) -> BTreeMap<String, String> {
 /// site's route table, not to a package's manifest, so a caller serving a
 /// translation passes the base it serves from and the links come out
 /// right without this library learning to route.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-057#SEO-LLMS-FILES")]
 pub fn render(
     tier: Tier,
     manifest: &DocManifest,
@@ -138,6 +143,7 @@ pub fn render(
 }
 
 /// Render every tier, ready to be written out beside one another.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-057#SEO-LLMS-FILES")]
 pub fn tiers(
     manifest: &DocManifest,
     bodies: &BTreeMap<String, String>,
@@ -150,6 +156,7 @@ pub fn tiers(
 }
 
 /// `llms.txt` — the card, then one line per page.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-057#SEO-LLMS-FILES")]
 pub fn index(manifest: &DocManifest, base: &str) -> String {
     let mut out = head(manifest, base);
     let (for_agents, rest): (Vec<&DocPage>, Vec<&DocPage>) = manifest
@@ -295,6 +302,7 @@ fn subjects(manifest: &DocManifest) -> String {
 
 /// The star `##DISC-THREE-SIGNALS` puts on what a subject confirmed, and
 /// nothing where it did not.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-057#DISC-THREE-SIGNALS")]
 pub fn star(status: &DocumentationStatus) -> &'static str {
     match status {
         DocumentationStatus::Primary | DocumentationStatus::Official => "★ ",
@@ -304,6 +312,7 @@ pub fn star(status: &DocumentationStatus) -> &'static str {
 
 /// The caption beside the star — the second of the three signals that
 /// must agree (`##DISC-THREE-SIGNALS`).
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-057#DISC-THREE-SIGNALS")]
 pub fn status_word(status: &DocumentationStatus) -> &'static str {
     match status {
         DocumentationStatus::Primary => "primary",
@@ -313,6 +322,7 @@ pub fn status_word(status: &DocumentationStatus) -> &'static str {
 }
 
 /// The audiences of a page or a package, spelled for a reader.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-057#SEO-LLMS-FILES")]
 pub fn audience_list(audiences: &[Audience]) -> String {
     audiences
         .iter()
@@ -327,6 +337,7 @@ pub fn audience_list(audiences: &[Audience]) -> String {
 }
 
 /// The package's own page on the site.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-057#SITE-MOUNT")]
 pub fn package_link(manifest: &DocManifest, base: &str) -> String {
     format!(
         "{base}{}/{}/{}/",
@@ -337,6 +348,7 @@ pub fn package_link(manifest: &DocManifest, base: &str) -> String {
 /// One page's address on the site — the deterministic map of
 /// `##SITE-MOUNT`, which needs no index and so can live in a pure
 /// function. The trailing slash is the norm's (`##SITE-TRAILING-SLASH`).
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-057#SITE-MOUNT")]
 pub fn page_link(manifest: &DocManifest, page_path: &str, base: &str) -> String {
     format!(
         "{base}{}/{}/{}/{}/",
@@ -349,6 +361,7 @@ pub fn page_link(manifest: &DocManifest, page_path: &str, base: &str) -> String 
 
 /// One page's `spec://` address — what the «for agent» button copies and
 /// what a citation to this manual is written as.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-057#READER-FOR-AGENT")]
 pub fn page_address(manifest: &DocManifest, page_path: &str) -> String {
     format!(
         "spec://{}/{}@{}/{}",

@@ -2,6 +2,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#lockfile");
 
+use specmark::spec;
 use std::path::PathBuf;
 
 use serde::{Deserialize, Serialize};
@@ -67,6 +68,7 @@ pub struct LockedEmbeddedSource {
 impl LockedEmbeddedSource {
     /// Whether this portable lock row authenticates exactly one authored
     /// declaration. Cache paths are deliberately absent from both sides.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#lockfile")]
     pub fn matches_declaration(&self, declaration: &crate::manifest::EmbeddedSourceDecl) -> bool {
         self.name == declaration.name
             && self.source_url.as_str() == declaration.url

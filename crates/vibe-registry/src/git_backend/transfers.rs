@@ -10,6 +10,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-068#git");
 
+use specmark::spec;
 use std::cell::RefCell;
 
 use vibe_core::progress::Progress;
@@ -47,6 +48,7 @@ pub(crate) fn current() -> Scope {
 /// assert_eq!(answer, 42);
 /// task.finish();
 /// ```
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-068#git")]
 pub fn observed<T>(
     progress: Option<&Progress>,
     package: Option<&str>,
@@ -129,6 +131,7 @@ pub fn observe_by_default(progress: Progress) {
 /// let control=vibe_registry::git_backend::transfers::invocation_control();
 /// let _=control.checkpoint();
 /// ```
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-068#git")]
 pub fn invocation_control() -> vibe_core::cancellation::CancellationToken {
     current()
         .progress

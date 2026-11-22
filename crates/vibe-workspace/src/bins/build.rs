@@ -107,6 +107,7 @@ impl CargoBuildRunner for ControlledCargoBuildRunner<'_> {
 
 /// Same authorized build owner, with an owned child group/job and truthful
 /// uncertainty about Cargo/build-script writes outside the install receipt.
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-025#BUILD-CONSENT")]
 pub fn build_binary_authorized_controlled(
     bin: &DeclaredBinary,
     authorization: BuildAuthorization,

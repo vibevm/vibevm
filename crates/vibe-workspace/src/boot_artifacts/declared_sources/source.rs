@@ -6,6 +6,7 @@ specmark::scope!(
 use super::*;
 use crate::boot::EffectiveBoot;
 use sha2::{Digest, Sha256};
+use specmark::spec;
 use vibe_spec::{
     Authority, FsSectionSource, ResolvedSource, ResolvedSourceMetadata, SectionSource,
 };
@@ -38,6 +39,7 @@ impl BootSectionSource {
                 .any(|value| value.path == context.root.join(&entry.path))
         })
     }
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-INSTALLED-READ")]
     pub(crate) fn new(
         root: &Path,
         self_coord: &SelfCoordinate,

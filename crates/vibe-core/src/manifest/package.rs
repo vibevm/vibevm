@@ -169,6 +169,7 @@ pub enum Authorship {
 
 impl Authorship {
     /// The word a manifest spells.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-057#CARD-AUTHORSHIP")]
     pub fn as_str(self) -> &'static str {
         match self {
             Authorship::Human => "human",
@@ -180,6 +181,7 @@ impl Authorship {
 
 impl PackageMeta {
     /// Produce a `PackageRef` pinning this package to its exact version.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#package-identity")]
     pub fn as_package_ref(&self) -> Result<PackageRef> {
         // Structural `=` pin — `VersionReq::parse("={version}")` rejects
         // build metadata, which never participates in pinning anyway.
@@ -246,6 +248,9 @@ impl PublishPosture {
 
     /// `true` iff this node should be published into the registry with the
     /// given local name.
+    #[spec(
+        implements = "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#PUBLISH-POSTURE"
+    )]
     pub fn includes(&self, registry_name: &str) -> bool {
         match self {
             PublishPosture::All(all) => *all,
@@ -489,6 +494,9 @@ pub enum TargetOs {
 
 impl TargetOs {
     /// The canonical lowercase name — a `std::env::consts::OS` value.
+    #[spec(
+        implements = "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#SCHEMA-BOOT-SNIPPET"
+    )]
     pub fn as_str(self) -> &'static str {
         match self {
             TargetOs::Windows => "windows",
@@ -499,6 +507,9 @@ impl TargetOs {
 
     /// The operating system this process runs on, when vibevm recognises
     /// it — `None` on a platform outside the supported set.
+    #[spec(
+        implements = "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#SCHEMA-BOOT-SNIPPET"
+    )]
     pub fn current() -> Option<Self> {
         match std::env::consts::OS {
             "windows" => Some(TargetOs::Windows),

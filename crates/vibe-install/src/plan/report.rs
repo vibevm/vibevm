@@ -71,6 +71,9 @@ impl PlannedInstall {
     /// # Ok(())
     /// # }
     /// ```
+    #[specmark::spec(
+        implements = "spec://org.vibevm.core/vibevm/common/PROP-073#SOURCE-EVIDENCE-PROJECT-EVENTS"
+    )]
     pub fn admission_rows(
         &self,
     ) -> crate::error::Result<(

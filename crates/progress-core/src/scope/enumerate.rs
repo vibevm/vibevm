@@ -10,6 +10,7 @@ specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#conf
 
 use super::{DEFAULT_EXCLUDE_FILES, DEFAULT_EXCLUDES, ScopeConfig};
 use anyhow::{Context, Result};
+use specmark::spec;
 use std::path::{Path, PathBuf};
 
 /// What the config-side `exclude` globs did to one enumeration.
@@ -45,6 +46,7 @@ pub fn observed_files(root: &Path, cfg: &ScopeConfig) -> Result<Vec<PathBuf>> {
 /// assert!(includes_path(Path::new("/project"), Path::new("docs/absent.payload"), &cfg).unwrap());
 /// assert!(!includes_path(Path::new("/project"), Path::new("docs/nested/a.payload"), &cfg).unwrap());
 /// ```
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#INCLUDE-STYLE")]
 pub fn includes_path(root: &Path, relative: &Path, cfg: &ScopeConfig) -> Result<bool> {
     let options = glob::MatchOptions {
         require_literal_separator: true,
@@ -73,6 +75,7 @@ pub fn includes_path(root: &Path, relative: &Path, cfg: &ScopeConfig) -> Result<
 /// The order is fixed: expand the include globs → drop [`DEFAULT_EXCLUDES`]
 /// by path component → drop [`DEFAULT_EXCLUDE_FILES`] by file name → drop
 /// the config `exclude` by glob.
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#CONFIG-EXCLUDE")]
 pub fn observed_files_reported(
     root: &Path,
     cfg: &ScopeConfig,

@@ -33,6 +33,9 @@ fn req_with_op(op: semver::Op, version: &semver::Version) -> semver::VersionReq 
 /// Build a `<group>/<name>@=<exact-version>` pkgref for fetching the
 /// version the solver chose, regardless of how the user originally
 /// constrained the package.
+#[specmark::spec(
+    implements = "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#install-workflow-in-detail"
+)]
 pub fn exact_pinned_pkgref(node: &ResolvedNode) -> PackageRef {
     PackageRef {
         kind: None,
@@ -54,6 +57,9 @@ pub fn exact_pinned_pkgref(node: &ResolvedNode) -> PackageRef {
 /// 3. An explicit constraint (`@^0.1`, `@=0.2.0`, `@~0.3.1`,
 ///    `@>=0.2, <1.0`, …) → preserved verbatim. The user already
 ///    declared their intent; we don't second-guess.
+#[specmark::spec(
+    implements = "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#install-workflow-in-detail"
+)]
 pub fn finalize_pkgref_for_manifest(
     cli_pkgref: &PackageRef,
     resolved_version: &semver::Version,
@@ -79,6 +85,9 @@ pub fn finalize_pkgref_for_manifest(
 /// the list). Existing entries for the same `(group, name)` are
 /// overwritten by the new pkgref so a constraint change in
 /// `vibe install` updates the recorded root constraint.
+#[specmark::spec(
+    implements = "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#install-workflow-in-detail"
+)]
 pub fn merge_root_dependencies(lockfile: &mut Lockfile, roots: &[PackageRef]) {
     for r in roots {
         let pos = lockfile
@@ -108,6 +117,9 @@ pub(crate) fn replace_root_dependencies(lockfile: &mut Lockfile, roots: &[Packag
 /// Preserves existing git/path source declarations. For a registry requirement,
 /// only its selected-node version variable is replaced by the explicit value;
 /// leaving that variable would overwrite the new value during serialization.
+#[specmark::spec(
+    implements = "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#install-workflow-in-detail"
+)]
 pub fn merge_manifest_requires(manifest: &mut Manifest, roots: &[PackageRef]) -> bool {
     let mut changed = false;
     for r in roots {
@@ -261,6 +273,9 @@ pub(crate) fn workspace_root_snapshot(
 /// is the manifest-mutation discipline the CLI used to own inline; the
 /// CLI now translates the `--git*` flags into the [`GitPackageDep`] and
 /// hands it here.
+#[specmark::spec(
+    implements = "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#install-workflow-in-detail"
+)]
 pub fn record_git_source(manifest: &mut Manifest, dep: GitPackageDep) {
     // Drop any prior registry-resolved entry for the same pkgref.
     manifest
@@ -281,6 +296,9 @@ pub fn record_git_source(manifest: &mut Manifest, dep: GitPackageDep) {
 /// `vibedeps/` slot — deterministic from `(kind, name, version)` — so
 /// `files_written` stays empty and the `NN-` `boot_snippet` filename
 /// is retired.
+#[specmark::spec(
+    implements = "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#install-workflow-in-detail"
+)]
 pub(crate) fn locked_package_from_fetched(
     f: &Fetched,
     resolved: &ResolvedDep,

@@ -34,6 +34,9 @@ use specmark::spec;
 /// Sanitise a registry name into the env-var suffix shape (uppercase
 /// ASCII alphanumeric + underscore). Mirrors the `<HOST>` munging
 /// that `host_env_var` does for `VIBEVM_PUBLISH_TOKEN_<HOST>`.
+#[spec(
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#THE-HOOKS-TWO-SETTINGS-ARE-KEYED-BY-REGISTRY-NOT-BY-HOST"
+)]
 pub fn registry_env_suffix(registry: &str) -> String {
     let mut out = String::with_capacity(registry.len());
     for c in registry.chars() {
@@ -46,6 +49,9 @@ pub fn registry_env_suffix(registry: &str) -> String {
     out
 }
 
+#[spec(
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#THE-HOOKS-TWO-SETTINGS-ARE-KEYED-BY-REGISTRY-NOT-BY-HOST"
+)]
 pub fn index_url_for(registry: &str) -> Option<String> {
     let suffix = registry_env_suffix(registry);
     if suffix.is_empty() {
@@ -54,6 +60,9 @@ pub fn index_url_for(registry: &str) -> Option<String> {
     std::env::var(format!("VIBEVM_INDEX_URL_{suffix}")).ok()
 }
 
+#[spec(
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#THE-HOOKS-TWO-SETTINGS-ARE-KEYED-BY-REGISTRY-NOT-BY-HOST"
+)]
 pub fn index_token_for(registry: &str) -> Option<String> {
     let suffix = registry_env_suffix(registry);
     if suffix.is_empty() {
@@ -129,6 +138,9 @@ impl HookConfig {
     /// Resolve hook config from env vars for `registry`. Returns
     /// `None` when either URL or token is missing — the hook stays
     /// dormant in that case.
+    #[spec(
+        implements = "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#THE-HOOKS-TWO-SETTINGS-ARE-KEYED-BY-REGISTRY-NOT-BY-HOST"
+    )]
     pub fn from_env(registry: &str) -> Option<Self> {
         let url = index_url_for(registry)?;
         let token = index_token_for(registry)?;
@@ -155,6 +167,9 @@ pub struct HookReport {
 }
 
 impl HookReport {
+    #[spec(
+        implements = "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#INT-PUBLISH-HOOK"
+    )]
     pub fn dormant() -> Self {
         HookReport {
             command: "registry:publish:index-hook",
@@ -168,6 +183,7 @@ impl HookReport {
 
 /// Build the JSON payload the index server expects (matches
 /// `vibe-index::types::VersionEntry`'s serde shape).
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#INT-PUBLISH-HOOK")]
 pub fn build_payload(
     outcome: &PublishOutcome,
     manifest: &Manifest,
@@ -325,6 +341,7 @@ pub fn build_payload(
 
 /// POST `payload` to `<config.index_url>/v1/packages` with bearer
 /// auth. Returns the index server's status code on success.
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#INT-PUBLISH-HOOK")]
 pub fn post_to_index(config: &HookConfig, payload: &serde_json::Value) -> Result<u16, HookError> {
     let client = vibe_net::http::route(
         reqwest::blocking::Client::builder().timeout(config.timeout),
@@ -355,6 +372,7 @@ pub fn post_to_index(config: &HookConfig, payload: &serde_json::Value) -> Result
 /// posts. Errors are converted to warnings + a `HookReport` with
 /// `error: Some(...)`. Caller decides whether to surface the report
 /// to the operator (e.g. via JSON envelope).
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#INT-PUBLISH-HOOK")]
 pub fn fire(outcome: &PublishOutcome, source_dir: &Path, registry: &str) -> HookReport {
     let Some(config) = HookConfig::from_env(registry) else {
         return HookReport::dormant();

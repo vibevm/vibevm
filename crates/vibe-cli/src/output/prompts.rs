@@ -10,6 +10,7 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-065#display");
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-067#question");
 
+use specmark::spec;
 use std::sync::atomic::{AtomicBool, Ordering};
 
 use console::style as styled;
@@ -44,6 +45,7 @@ pub(crate) fn prompt_theme() -> ColorfulTheme {
 /// vocabularies without a terminal. Every style is a role of the display
 /// language (PROP-067 `#palette`), so a question and a finished step carry
 /// the very same marks.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-065#display")]
 pub(crate) fn themed(set: GlyphSet) -> ColorfulTheme {
     let prompt = PromptGlyphs::in_set(set);
     let role = role_style;

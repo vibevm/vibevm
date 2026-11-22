@@ -3,6 +3,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-066#drops");
 
+use specmark::spec;
 use std::fs;
 use std::path::Path;
 
@@ -91,6 +92,7 @@ pub(crate) fn declared_origin_refused(
 
 /// [`copy_from_drop`] for an input whose file name is already known — the
 /// author-side `drop = "packages"` input names it directly.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-066#drops")]
 pub(crate) fn copy_from_drop_named(
     drop: &Path,
     package: Option<&str>,

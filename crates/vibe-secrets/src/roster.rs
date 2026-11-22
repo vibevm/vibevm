@@ -1,6 +1,7 @@
 //! Durable reference protocol. A v2 empty roster is genesis evidence, not a
 //! statement about the current binary's compiled consumer count.
 use super::*;
+use specmark::spec;
 
 pub(super) fn validate_format(index: &Index) -> Result<(), Error> {
     match (index.schema, index.reference_protocol, &index.participants) {
@@ -77,6 +78,7 @@ impl ReferenceGuard for Guard {
 impl Store {
     /// Read the same coordinated consumer roster used by removal. This grants
     /// no removal authority: the mutator acquires and validates a new guard.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-000#TS-USER-KEYRING")]
     pub fn references(&self, id: &SecretId) -> Result<Vec<String>, Error> {
         let inventory = Inventory(self);
         let guard = inventory.acquire()?;

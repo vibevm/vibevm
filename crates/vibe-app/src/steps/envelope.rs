@@ -8,6 +8,7 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-064#envelope");
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-064#answer");
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-064#record");
 
+use specmark::spec;
 use std::fs;
 use std::path::{Path, PathBuf};
 
@@ -84,6 +85,7 @@ impl Envelope {
     }
 
     /// Write `prompt.md` and `context.json`; returns the context text.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-064#envelope")]
     pub fn write(&self, prompt: &str, context: &hook::AgentHook) -> Result<String, AgentError> {
         fs::create_dir_all(&self.run).map_err(|error| io("creating", &self.run, error))?;
         fs::write(&self.prompt, prompt).map_err(|error| io("writing", &self.prompt, error))?;
@@ -100,6 +102,7 @@ impl Envelope {
     }
 
     /// Remove an answer left by an earlier attempt before a new one.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-064#answer")]
     pub fn clear_answer(&self) -> Result<(), AgentError> {
         match fs::remove_file(&self.result) {
             Err(error) if error.kind() != std::io::ErrorKind::NotFound => {
@@ -127,6 +130,7 @@ impl Envelope {
 
     /// Copy the envelope, transcript and answer into the run record's step
     /// directory, so they survive the work directory; best effort.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-064#record")]
     pub fn keep(&self, record_step: &Path) {
         if fs::create_dir_all(record_step).is_err() {
             return;
@@ -157,6 +161,7 @@ pub(crate) struct ContextFacts<'a> {
 }
 
 /// The `vibe-agent-hook/1` document of one run.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-064#envelope")]
 pub(crate) fn context(envelope: &Envelope, facts: &ContextFacts<'_>) -> hook::AgentHook {
     let text = |path: &Path| path.to_string_lossy().into_owned();
     hook::AgentHook {
@@ -199,6 +204,7 @@ pub(crate) fn context(envelope: &Envelope, facts: &ContextFacts<'_>) -> hook::Ag
 
 /// Write the parked task `<outbox>/<step>.md` for the hosting agent
 /// (`PROP-064#parking`, `PROP-054#AGENT-HANDSHAKE`).
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-064#parking")]
 pub(crate) fn park(
     outbox: &Path,
     step: &str,

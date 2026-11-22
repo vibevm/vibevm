@@ -8,11 +8,13 @@ use crate::{
     output,
 };
 use anyhow::{Result, bail};
+use specmark::spec;
 use vibe_core::cancellation::CancellationToken;
 use vibe_secrets::{Expected, SecretId};
 fn parse_id(raw: String) -> Result<SecretId> {
     Ok(SecretId::try_from(raw)?)
 }
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-000#TS-KEYRING-CONSUMER")]
 pub fn run(ctx: &output::Context, args: AiArgs, cancel: &CancellationToken) -> Result<()> {
     let settings = super::secrets::admitted_settings()?;
     let store = vibe_connections::Store::at_settings(&settings)?;

@@ -2,6 +2,7 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-073#MANAGED-ACTIVATION");
 
 use anyhow::{Context, Result, bail};
+use specmark::spec;
 use std::path::Path;
 use std::process::{Command, Stdio};
 use vibe_safefs::Project;
@@ -9,6 +10,7 @@ use vibe_safefs::Project;
 const CONFIG_CAP: usize = 64 * 1024 * 1024;
 
 /// Read an owned key or render its desired projection without touching live config.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-073#MANAGED-ACTIVATION")]
 pub(crate) fn project_yaml(
     settings: &Path,
     program: &Path,
@@ -107,6 +109,7 @@ pub(crate) fn project_yaml(
 }
 
 /// Resolve the native process/profile home without reading model credentials.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-073#MANAGED-ACTIVATION")]
 pub(crate) fn profile_home(program: &Path) -> Result<std::path::PathBuf> {
     let runtime = super::hermes_runtime::discover(program)?;
     let temporary = tempfile::Builder::new()

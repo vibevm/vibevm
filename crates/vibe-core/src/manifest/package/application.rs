@@ -138,6 +138,7 @@ pub enum InstallerMethod {
 
 impl InstallerMethod {
     /// The stable `installation.type` spelling of this method.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-059#installer-separation")]
     pub fn kind(&self) -> &'static str {
         match self {
             Self::Shell { .. } => "shell",
@@ -151,6 +152,7 @@ impl InstallerMethod {
 
     /// Owned methods place their payload in a library directory vibe controls;
     /// external methods only register the `app_root` an installer produced.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-059#installer-separation")]
     pub fn is_owned(&self) -> bool {
         matches!(
             self,

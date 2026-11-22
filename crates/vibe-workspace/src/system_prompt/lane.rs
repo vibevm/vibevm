@@ -30,6 +30,7 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-076#SYS-AGENT-LANE");
 
 use crate::WorkspaceError;
+use specmark::spec;
 
 use super::compose_error;
 use super::markers::{
@@ -79,6 +80,7 @@ pub struct ComposedLane {
 impl ComposedLane {
     /// The delivered hash of one path, which is what the managed block's
     /// expected-`STATIC` value must equal (`#SYS-LANE-MARKERS`).
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-076#SYS-LANE-MARKERS")]
     pub fn hash_of(&self, path: &str) -> Option<&str> {
         self.segments
             .iter()
@@ -99,6 +101,7 @@ impl ComposedLane {
 /// [`verify_lane_markers`] over its own output, so the artifact it returns
 /// is one `vibe prompt check` has already accepted: every begin has its end,
 /// pairs are unique, and each hash matches its own bytes.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-076#SYS-AGENT-LANE")]
 pub fn compose_agent_lane(
     node_id: &str,
     sources: &[LaneSource<'_>],

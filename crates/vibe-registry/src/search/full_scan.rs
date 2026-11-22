@@ -112,6 +112,7 @@ pub struct FullScanHit {
 /// // A non-GitHub host has no org to walk — the caller falls through.
 /// assert_eq!(detect_github_org("https://gitverse.ru/vibevm/vibevm"), None);
 /// ```
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#registry-model")]
 pub fn detect_github_org(url: &str) -> Option<String> {
     let parsed = reqwest::Url::parse(url).ok()?;
     if parsed.host_str() != Some("github.com") {
@@ -129,6 +130,7 @@ pub fn detect_github_org(url: &str) -> Option<String> {
 /// fetches each `vibe.toml`, scores against the supplied
 /// query tokens. Returns a flat list of hits sorted by score (desc)
 /// then `(kind, name)` lex.
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#registry-model")]
 pub fn full_scan_github_org(
     org: &str,
     api_base: &str,
@@ -150,6 +152,7 @@ pub fn full_scan_github_org(
 }
 
 /// Shared bound scan: initial GET, pagination and manifest reads retain one admission.
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#registry-model")]
 pub fn full_scan_github_org_with_admission(
     org: &str,
     api_base: &str,
@@ -233,6 +236,7 @@ fn full_scan_with_client(
 
 /// Lift the `next` URL out of a GitHub `Link:` header. Returns `None`
 /// when there is no `rel="next"` entry.
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#registry-model")]
 pub fn parse_next_link(link_header: &str) -> Option<String> {
     for part in link_header.split(',') {
         let trimmed = part.trim();

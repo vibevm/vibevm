@@ -8,6 +8,7 @@ specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#g
 use crate::error::{Error, Result};
 use crate::manifest::project::AuthKind;
 use crate::package_ref::{Group, PackageKind, VersionSpec};
+use specmark::spec;
 
 use super::capabilities::link_key;
 use super::wire::{InlinePackageDepWire, VersionFieldWire};
@@ -74,6 +75,7 @@ impl GitRefKind {
         }
     }
 
+    #[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#git-source")]
     pub fn label(&self) -> &'static str {
         match self {
             Self::Tag(_) => "tag",

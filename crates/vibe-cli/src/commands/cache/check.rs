@@ -25,6 +25,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#command-summary");
 
+use specmark::spec;
 use std::path::{Path, PathBuf};
 
 use anyhow::{Context, Result, bail};
@@ -102,6 +103,7 @@ fn recorded_matches(recorded: &str, computed: &str) -> bool {
     recorded == computed
 }
 
+#[spec(implements = "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#command-summary")]
 pub(crate) fn run(ctx: &output::Context, args: CacheCheckArgs, root_offline: bool) -> Result<()> {
     let root = vibe_registry::store_root().context("resolving the machine store root")?;
     let mut verdicts = sweep(ctx, &root)?;

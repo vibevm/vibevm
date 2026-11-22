@@ -16,6 +16,7 @@ specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#http
 
 use semver::Version;
 use sha2::{Digest, Sha256};
+use specmark::spec;
 use vibe_core::Group;
 use vibe_wire::generated::index::e1::repomd::RepomdFileEntry;
 
@@ -62,6 +63,7 @@ impl IndexClient {
     /// well (see [`IndexClient::by_name_is_current`]): the selector then
     /// enumerates the package's tags, so a cache that still serves an
     /// older copy cannot make it choose an older version.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#BY-NAME")]
     pub fn list_version_entries(
         &self,
         group: &Group,
@@ -122,6 +124,7 @@ impl IndexClient {
     /// short-name resolution already fetches, so offering short
     /// spellings costs a resolving client no extra round trip — which
     /// is the constraint the whole `by-name` layout exists to satisfy.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#BY-NAME")]
     pub fn name_lookup(&self, name: &str) -> Result<NameLookup, IndexError> {
         let url = format!("{}/by-name/{}.json", self.file_base, name);
         let client = self.file_client().map_err(|e| IndexError::Http {
@@ -165,6 +168,7 @@ impl IndexClient {
     /// trusted as before. So is the case where the manifest cannot be
     /// read for ordinary transport/format reasons. A contact refusal remains
     /// a typed error, including when replayed from this invocation's cache.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#BY-NAME")]
     pub fn by_name_is_current(&self, name: &str, body: &[u8]) -> Result<bool, IndexError> {
         let Some(repomd) = self
             .repomd
@@ -219,6 +223,9 @@ impl IndexClient {
     /// which carries the table across and whose own merge rule decides
     /// what to do with each row; a RESOLVING client never fetches this
     /// — it reads the alias off the `by-name` file it already gets.
+    #[spec(
+        implements = "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#LAYOUT-REGISTRY-ALIAS-TABLE"
+    )]
     pub fn alias_table(&self) -> Result<Vec<(String, AliasTarget)>, IndexError> {
         let url = format!("{}/aliases.toml", self.file_base);
         let client = self.file_client().map_err(|e| IndexError::Http {

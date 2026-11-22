@@ -14,6 +14,7 @@ use crate::{
 use anyhow::{Result, bail};
 use std::path::Path;
 
+#[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-073#MANAGED-ACTIVATION")]
 pub(crate) fn effective_binding(
     root: &Path,
     mut binding: ProjectSkillBinding,
@@ -46,6 +47,7 @@ pub(crate) fn effective_binding(
     Ok(binding)
 }
 
+#[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-073#MANAGED-ACTIVATION")]
 pub(crate) fn project_status(
     root: &Path,
     binding: &ProjectSkillBinding,
@@ -507,6 +509,7 @@ pub(crate) fn project_intent(
 ) -> Result<()> {
     project_group_intent(root, provider, skill, &[agent], intent, retain)
 }
+#[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-073#MANAGED-ACTIVATION")]
 pub(crate) fn project_group_intent(
     root: &Path,
     provider: &str,

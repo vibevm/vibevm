@@ -1,6 +1,7 @@
 //! Fixed metadata readers preserve selected configuration meaning without execution.
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-073#NATIVE-MATERIALISATION");
 use super::*;
+use specmark::spec;
 mod probe;
 use std::collections::BTreeMap;
 use std::ffi::OsString;
@@ -23,6 +24,7 @@ impl std::fmt::Debug for NativeConfigSelection {
 impl NativeConfigSelection {
     /// Select an explicit invocation directory and home. Git itself discovers
     /// its compiled system paths and the ordinary global/XDG defaults.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-073#NATIVE-MATERIALISATION-LAW")]
     pub fn new(cwd: PathBuf, home: PathBuf) -> Result<Self, GitError> {
         if !cwd.is_absolute() || !cwd.is_dir() || !home.is_absolute() {
             return Err(unsupported(
@@ -36,6 +38,7 @@ impl NativeConfigSelection {
     }
     /// Set one captured Git configuration-selection input. Executable,
     /// transport, tracing, loader and pager environment is never accepted.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-073#NATIVE-MATERIALISATION-LAW")]
     pub fn with_variable(mut self, key: &str, value: OsString) -> Result<Self, GitError> {
         if !selection_key(key) {
             return Err(unsupported("unsupported configuration-selection variable"));

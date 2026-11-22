@@ -12,6 +12,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-068#journal");
 
+use specmark::spec;
 use std::fs::{self, File, OpenOptions};
 use std::io::{self, Write};
 use std::path::{Path, PathBuf};
@@ -96,6 +97,7 @@ pub struct TransferEntry {
 
 impl TransferEntry {
     /// The entry of a transfer that has only begun.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-068#journal")]
     pub fn active(record: TransferRecord) -> Self {
         Self {
             record,
@@ -198,6 +200,7 @@ pub struct TransferJournal {
 
 impl TransferJournal {
     /// The journal of the settings root `settings` (`<settings>/transfers`).
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-068#journal")]
     pub fn new(settings: &Path) -> Self {
         Self {
             root: settings.join("transfers"),
@@ -223,6 +226,7 @@ impl TransferJournal {
     }
 
     /// The change counter of the active set; 0 before anything changed.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-068#journal")]
     pub fn revision(&self) -> u64 {
         fs::read_to_string(self.root.join("revision"))
             .ok()
@@ -236,6 +240,7 @@ impl TransferJournal {
     }
 
     /// A transfer began: its active file appears and the revision moves.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-068#journal")]
     pub(crate) fn opened(&self, entry: &TransferEntry) {
         let _guard = self.lock.lock();
         if fs::create_dir_all(self.active_dir()).is_ok() {
@@ -257,6 +262,7 @@ impl TransferJournal {
 
     /// A transfer ended: its history line is appended **before** its active
     /// file goes, so a reader that sees the file gone finds the line.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-068#journal")]
     pub(crate) fn ended(&self, entry: &TransferEntry) {
         let _guard = self.lock.lock();
         self.append(entry);
@@ -302,6 +308,7 @@ impl TransferJournal {
     }
 
     /// Every active file as written, unordered liveness aside.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-068#journal")]
     pub fn active(&self) -> Vec<TransferEntry> {
         let Ok(entries) = fs::read_dir(self.active_dir()) else {
             return Vec::new();
@@ -319,6 +326,7 @@ impl TransferJournal {
     /// The active transfers whose process is alive; an active file whose
     /// process is gone becomes an `interrupted` history entry
     /// (`PROP-068#journal`), with the command's resume line.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-068#journal")]
     pub fn sweep(&self, alive: &dyn Fn(u32) -> bool) -> Vec<TransferEntry> {
         let (live, dead): (Vec<_>, Vec<_>) = self
             .active()
@@ -354,6 +362,7 @@ impl TransferJournal {
     }
 
     /// The history, oldest first; a damaged line is skipped.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-068#journal")]
     pub fn history(&self) -> Vec<TransferEntry> {
         fs::read(self.history_path())
             .map(|bytes| {
@@ -367,6 +376,7 @@ impl TransferJournal {
     }
 
     /// Empty the history; answers how many entries it held.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-068#journal")]
     pub fn clear_history(&self) -> io::Result<usize> {
         let _guard = self.lock.lock();
         let count = self.history().len();

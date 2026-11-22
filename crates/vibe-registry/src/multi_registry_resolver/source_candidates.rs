@@ -2,6 +2,7 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-073#SOURCE-POLICY");
 use super::*;
 use crate::source_candidates::*;
+use specmark::spec;
 use vibe_core::manifest::{CanonicalSourceBinding as Binding, RegistryPin, SourcePolicyError};
 
 impl MultiRegistryResolver {
@@ -50,6 +51,7 @@ impl MultiRegistryResolver {
     }
 
     /// Capture member identities only from this operation's actual fresh local registry.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-073#SOURCE-POLICY")]
     pub fn capture_subskill_source(
         &self,
         candidate: &RetainedSourceCandidate,
@@ -94,6 +96,7 @@ impl MultiRegistryResolver {
     }
 
     /// Consume only this owner's retained route; never solve a URL/version again.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-073#SOURCE-POLICY")]
     pub fn fetch_candidate_for_install(
         &self,
         candidate: &RetainedSourceCandidate,

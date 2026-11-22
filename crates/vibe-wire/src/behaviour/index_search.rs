@@ -22,6 +22,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#types");
 
+use specmark::spec;
 use std::collections::BTreeSet;
 
 use semver::Version;
@@ -60,6 +61,7 @@ pub struct PackageHit {
 /// assert_eq!(tokenise("The Write-Ahead LOG"), ["write", "ahead", "log"]);
 /// assert!(tokenise("a of the").is_empty());
 /// ```
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#TEXT-INDEX")]
 pub fn tokenise(text: &str) -> Vec<String> {
     let mut out = Vec::new();
     let mut buf = String::new();
@@ -88,6 +90,7 @@ fn push_if_keepable(out: &mut Vec<String>, tok: String) {
 
 /// The tokens a record is found by: its name, description, keywords,
 /// the capabilities it advertises and the PURL it describes.
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#TEXT-INDEX")]
 pub fn entry_tokens(entry: &VersionEntry) -> Vec<String> {
     let mut text = String::new();
     text.push_str(&entry.name);
@@ -146,6 +149,7 @@ pub fn entry_tokens(entry: &VersionEntry) -> Vec<String> {
 /// assert_eq!(hits[0].score, 2);
 /// assert_eq!(hits[0].matched_tokens, ["log", "wal"]);
 /// ```
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#TEXT-INDEX")]
 pub fn search_packages<'a, P, V>(
     packages: P,
     query: &str,
@@ -202,6 +206,7 @@ fn score_package(
 
 /// Order hits the way every answering surface presents them: score
 /// descending, then the `(group, name)` identity ascending.
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#TEXT-INDEX")]
 pub fn rank(hits: &mut [PackageHit]) {
     hits.sort_by(|a, b| {
         b.score

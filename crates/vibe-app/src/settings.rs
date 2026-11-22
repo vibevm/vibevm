@@ -76,6 +76,7 @@ pub const PROJECT_HOME: [&str; 2] = ["vibevm", "vibeopt"];
 pub const HOME_POINTER: &str = "vibe-app-home.toml";
 
 impl SettingsRoot {
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-059#index")]
     pub fn new(root: &Path) -> Self {
         Self {
             root: root.to_path_buf(),
@@ -225,6 +226,7 @@ impl SettingsRoot {
 
     /// Where every reserved command has its PATH proxy: `<store>/bin` of
     /// the install root the applications follow, else `<settings>/opt/bin`.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-059#proxy")]
     pub fn proxy_dir(&self) -> PathBuf {
         match &self.install {
             Some(store) => store.join("bin"),
@@ -243,6 +245,7 @@ impl SettingsRoot {
     /// `<store>/paths` of the install root the applications follow, else
     /// `<settings>/opt/paths` — the sibling of [`Self::proxy_dir`], so the
     /// two PATH surfaces live under one root (`PROP-059#path-directories`).
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-059#path-directories")]
     pub fn path_links_dir(&self) -> PathBuf {
         match &self.install {
             Some(store) => store.join("paths"),
@@ -352,6 +355,7 @@ impl SettingsRoot {
 
     /// [`Self::lock`] with an explicit retry window; the tests pass zero to
     /// show the fork window refusing without the retry.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-059#index")]
     pub(crate) fn lock_within(&self, window: Duration) -> Result<MutationLock, StateError> {
         let dir = self.applications_dir();
         fs::create_dir_all(&dir).map_err(|source| io("creating", &dir, source))?;
@@ -413,6 +417,7 @@ pub(crate) fn io(action: &'static str, path: &Path, source: std::io::Error) -> S
 }
 
 /// Replace `path` atomically: write a sibling, flush it, rename it over.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-059#principle")]
 pub(crate) fn write_atomic(path: &Path, bytes: &[u8]) -> Result<(), StateError> {
     let parent = path.parent().unwrap_or(Path::new("."));
     fs::create_dir_all(parent).map_err(|source| io("creating", parent, source))?;

@@ -1,6 +1,7 @@
 //! Demand construction of the existing ShellGit backend, never a second resolver.
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-073#LOCKED-SOURCE");
 use super::*;
+use specmark::spec;
 use std::sync::{Arc, Mutex, OnceLock};
 use vibe_core::manifest::AuthKind;
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -62,6 +63,7 @@ impl std::fmt::Debug for DeferredShellGit {
     }
 }
 impl DeferredShellGit {
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-073#LOCKED-SOURCE")]
     pub fn new(factory: Arc<dyn ShellGitFactory>) -> Self {
         Self {
             state: Arc::new(State {

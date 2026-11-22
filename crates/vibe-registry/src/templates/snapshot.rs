@@ -29,6 +29,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-075#MIRROR-SNAPSHOT-LAYOUT");
 
+use specmark::spec;
 use std::path::{Path, PathBuf};
 
 use serde::{Deserialize, Serialize};
@@ -56,6 +57,7 @@ pub const SCHEMA: u32 = 1;
 /// );
 /// # Ok::<(), Box<dyn std::error::Error>>(())
 /// ```
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-075#MIRROR-SNAPSHOT-LAYOUT")]
 pub fn relative_dir(group: &Group, name: &str) -> String {
     format!(
         "{}/{SNAPSHOT_SUBDIR}/{group}/{name}",
@@ -134,6 +136,7 @@ pub struct SnapshotVersion {
 
 impl SnapshotRecord {
     /// A fresh record for `package`, with `first` and `last` both `now`.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-075#MIRROR-SNAPSHOT-LAYOUT")]
     pub fn new(
         package: String,
         revision: String,
@@ -170,6 +173,7 @@ impl SnapshotRecord {
     /// A re-run adds versions and leaves existing ones untouched; a
     /// caller that *replaces* a row has already compared its
     /// `digest_sha256` and raised the alarm if it moved.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-075#MIRROR-SNAPSHOT-LAYOUT")]
     pub fn merge(&mut self, rows: Vec<SnapshotVersion>) {
         for row in rows {
             self.versions.retain(|old| old.version != row.version);
@@ -181,6 +185,7 @@ impl SnapshotRecord {
         });
     }
 
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-075#MIRROR-SNAPSHOT-LAYOUT")]
     pub fn render(&self) -> Result<String, TemplateError> {
         let body = toml::to_string(self).map_err(|error| TemplateError::Declaration {
             package: self.source.package.clone(),
@@ -212,6 +217,7 @@ impl Snapshot {
     /// fall back to its own cache and the network, which is a degraded
     /// answer, while a refusal would make the whole registry unusable for
     /// every package — including the ones with no template at all.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-075#MIRROR-TEMPLATE-SNAPSHOT")]
     pub fn read(
         registry_root: &Path,
         group: &Group,
@@ -269,6 +275,7 @@ impl Snapshot {
     /// the evidence the alarm of `#TEMPLATE-LOCK-RECORD` exists to raise.
     ///
     /// Returns how many files it placed.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-075#MIRROR-TEMPLATE-SNAPSHOT")]
     pub fn prime(&self, cache: &TemplateCache) -> Result<usize, TemplateError> {
         let mut placed = 0usize;
         if let (None, Some(envelope)) = (cache.read_version_list()?, self.version_list()?) {
@@ -314,6 +321,7 @@ impl Snapshot {
     }
 
     /// The snapshot's `versions.json`, in the client cache's own envelope.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-075#MIRROR-SNAPSHOT-LAYOUT")]
     pub fn version_list(&self) -> Result<Option<CachedVersionList>, TemplateError> {
         let path = self.dir.join("versions.json");
         let text = match std::fs::read_to_string(&path) {
@@ -365,6 +373,7 @@ impl Snapshot {
 /// left verbatim: there is nothing to filter, and refusing here would
 /// refuse a source shape the renderer itself rejects with a better
 /// message.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-075#MIRROR-TEMPLATE-SNAPSHOT")]
 pub fn filtered_version_list(
     upstream: &CachedVersionList,
     select: &str,

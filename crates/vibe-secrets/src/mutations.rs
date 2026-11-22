@@ -1,5 +1,6 @@
 //! Metadata mutations share the immutable-value owner's lock and publication.
 use super::*;
+use specmark::spec;
 
 /// One metadata-only snapshot: tokens and rows are observed together.
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -85,6 +86,7 @@ impl Store {
     }
 
     /// Kind and value identity remain immutable. A token-valid no-op does not write.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-000#TS-USER-KEYRING")]
     pub fn edit_label(
         &self,
         id: &SecretId,
@@ -112,6 +114,7 @@ impl Store {
     }
 
     /// Logical deletion only; immutable private paths stay reserved, not erased.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-000#TS-USER-KEYRING")]
     pub(crate) fn remove(
         &self,
         id: &SecretId,

@@ -1,6 +1,7 @@
 //! Existing source dispatch helpers; retained selection remains in one owner.
 specmark::scope!("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#install-workflow-in-detail");
 use super::*;
+use specmark::spec;
 use vibe_registry::short_name::{NameLookup, ShortNameCandidates};
 
 impl InstallResolver {
@@ -222,6 +223,7 @@ impl InstallResolver {
     /// An explicit local-directory registry answers from its own
     /// `_index/`, which is where a hand-built registry's alias table
     /// lives too.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#install-workflow-in-detail")]
     pub fn short_name_candidates(&self, name: &str) -> Result<ShortNameCandidates> {
         let mut answers: Vec<(String, NameLookup)> = Vec::new();
         let mut gathered = |registry: String, lookup: NameLookup| answers.push((registry, lookup));
@@ -266,6 +268,7 @@ impl InstallResolver {
     /// configuration, so a registry the effective source policy
     /// excluded is already absent here rather than being filtered out
     /// again by a second rule that could drift from the first.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#install-workflow-in-detail")]
     pub fn consulted_registries(&self) -> Vec<String> {
         let declared = |multi: &vibe_registry::MultiRegistryResolver| -> Vec<String> {
             multi

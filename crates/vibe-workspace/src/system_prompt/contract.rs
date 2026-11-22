@@ -29,6 +29,7 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-076#SYS-TRANSPORT-CONTRACT");
 
 use crate::{WorkspaceError, layout_paths};
+use specmark::spec;
 
 use super::{InputRole, compose_error};
 
@@ -78,6 +79,7 @@ fn role_label(role: InputRole) -> &'static str {
 /// assert!(!text.lines().any(|line| line.trim_start().starts_with('@')));
 /// # Ok::<(), vibe_workspace::WorkspaceError>(())
 /// ```
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-076#SYS-TRANSPORT-CONTRACT")]
 pub fn render_contract(
     recipe: u32,
     supplied: &[SuppliedSource<'_>],

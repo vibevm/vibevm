@@ -79,6 +79,7 @@ struct Sinks {
 }
 
 impl Transfers {
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-068#transfer")]
     pub fn new(
         journal: Option<TransferJournal>,
         limit: Option<TransferLimit>,
@@ -92,6 +93,7 @@ impl Transfers {
         }))
     }
 
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-068#pause")]
     pub fn with_cancellation(&self, cancellation: crate::cancellation::CancellationToken) -> Self {
         Self(Arc::new(Sinks {
             journal: self.0.journal.clone(),
@@ -113,6 +115,7 @@ impl Transfers {
     }
 
     /// Begin `record` with this invocation's journal, limit and verb.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-068#transfer")]
     pub fn begin(&self, record: TransferRecord, task: Option<&ProgressTask>) -> Transfer {
         self.begin_beneath(
             record,
@@ -124,6 +127,7 @@ impl Transfers {
     /// Begin `record`, dated from `began`, as a child of whatever task
     /// `progress` was handed out by — the form for a reader that holds the
     /// observation's handle rather than its task.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-068#transfer")]
     pub fn begin_beneath(
         &self,
         mut record: TransferRecord,
@@ -152,6 +156,7 @@ impl Transfers {
 /// Begin `record` through whatever the task carries: the invocation's
 /// [`Transfers`] when the composition root attached them, the progress
 /// stream alone otherwise.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-068#transfer")]
 pub fn begin(record: TransferRecord, task: Option<&ProgressTask>) -> Transfer {
     match task.and_then(ProgressTask::transfers) {
         Some(transfers) => transfers.clone().begin(record, task),
@@ -182,6 +187,7 @@ pub fn begin(record: TransferRecord, task: Option<&ProgressTask>) -> Transfer {
 /// let entry = &fallback.journal().unwrap().history()[0];
 /// assert_eq!((entry.bytes, entry.written, entry.record.command.as_str()), (2048, Some(4096), "cache add"));
 /// ```
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-068#transfer")]
 pub fn begin_beneath(
     record: TransferRecord,
     progress: Option<&Progress>,
@@ -214,6 +220,7 @@ pub struct Transfer {
 impl Transfer {
     /// Begin `record`: a child task of `task` whose start carries the
     /// record, a first sample at zero bytes, and its active file.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-068#transfer")]
     pub fn begin(
         record: TransferRecord,
         task: Option<&ProgressTask>,
@@ -281,6 +288,7 @@ impl Transfer {
     }
 
     /// Wrap `inner`: every byte read through it is counted and limited.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-068#sampling")]
     pub fn reader<R: Read>(self, inner: R) -> TransferReader<R> {
         TransferReader {
             transfer: self,
@@ -309,6 +317,7 @@ impl Transfer {
     /// line (`#git`) — and, once it knows it, the total. Every report is a
     /// sample: git already reports at its own cadence, and smoothing it
     /// would show a figure git never said.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-068#git")]
     pub fn reported(&mut self, bytes: u64, total: Option<u64>) {
         let grew = bytes > self.bytes;
         let learned = total.is_some() && total != self.record.total;
@@ -372,6 +381,7 @@ impl Transfer {
     }
 
     /// The transfer stopped on `message`.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-068#transfer")]
     pub fn fail(mut self, message: impl Into<String>) {
         let stopped = self
             .task
@@ -471,6 +481,7 @@ impl<R> TransferReader<R> {
     /// io.sync_all().unwrap();
     /// io.finish();
     /// ```
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-068#disk-writes")]
     pub fn with_disk_writer<W: io::Write>(mut self, writer: W) -> TransferIo<R, W> {
         let writes = DiskWrites::new();
         self.transfer.disk_writes = Some(writes.clone());

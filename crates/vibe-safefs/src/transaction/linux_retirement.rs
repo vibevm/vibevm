@@ -7,6 +7,7 @@ impl Pinned {
     /// destination entry. Linux only; no ordinary-rename fallback. Source
     /// identity is checked before/after, not atomically bound to renameat2
     /// against an arbitrary hostile same-user source replacement.
+    #[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-056#SEC-NO-FOLLOW")]
     pub fn retire_directory_noreplace_to(
         &self,
         destination: &Pinned,

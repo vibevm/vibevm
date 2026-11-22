@@ -1,7 +1,9 @@
 //! Source-admitted preparation and publication of one transformed slot.
 use super::*;
+use specmark::spec;
 
 #[allow(clippy::too_many_arguments)]
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-045#materialisation")]
 pub(crate) fn materialise_with_spec_format_report(
     workspace_root: &Path,
     group: &Group,

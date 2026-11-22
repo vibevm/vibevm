@@ -65,6 +65,7 @@ impl ExternalStore {
     /// Open/create an external store with the disjointness proof ordered
     /// before the first creation.  This is the transaction entry point:
     /// failure cannot leave even an empty store directory inside the project.
+    #[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-056#EXTERNAL-JOURNAL")]
     pub fn open_or_create_disjoint(path: &Path, project: &Project) -> Result<Self> {
         let (anchor, components) = absolute_parts(path)?;
         if components.is_empty() {
@@ -193,6 +194,7 @@ impl ExternalStore {
     }
 
     /// Atomic durable file publication below the explicit store capability.
+    #[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-056#SEC-NO-FOLLOW")]
     pub fn write_durable(
         &self,
         relative: &str,

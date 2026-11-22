@@ -535,6 +535,7 @@ pub enum AppError {
 impl AppError {
     /// `not_installed` for `package` in `home`, naming the home searched and,
     /// for a project home, pointing at `-g` (`PROP-059#project-scope`).
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-059#project-scope")]
     pub fn not_installed(home: &crate::settings::SettingsRoot, package: impl Into<String>) -> Self {
         Self::NotInstalled {
             package: package.into(),

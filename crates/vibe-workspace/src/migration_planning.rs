@@ -87,6 +87,9 @@ fn preflight(code: Code, field: &str, reason: &str) -> PlanError {
 /// let error = vibe_workspace::migration_planning::input_read_error();
 /// assert_eq!(serde_json::to_value(error).unwrap()["error"]["code"], "input_read");
 /// ```
+#[specmark::spec(
+    implements = "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-TRANSPORT"
+)]
 pub fn input_read_error() -> PlanError {
     preflight(
         Code::InputRead,
@@ -100,6 +103,9 @@ pub fn input_read_error() -> PlanError {
 /// use vibe_workspace::migration_planning::{plan_migration_json, MigrationPlanningResponse};
 /// assert!(matches!(plan_migration_json("{"), MigrationPlanningResponse::Preflight(_)));
 /// ```
+#[specmark::spec(
+    implements = "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-TRANSPORT"
+)]
 pub fn plan_migration_json(text: &str) -> MigrationPlanningResponse {
     match serde_json::from_str::<Value>(text) {
         Ok(value) => plan_migration_value(value),
@@ -116,6 +122,9 @@ pub fn plan_migration_json(text: &str) -> MigrationPlanningResponse {
 /// use vibe_workspace::migration_planning::{plan_migration_value, MigrationPlanningResponse};
 /// assert!(matches!(plan_migration_value(serde_json::Value::Null), MigrationPlanningResponse::Preflight(_)));
 /// ```
+#[specmark::spec(
+    implements = "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-TRANSPORT"
+)]
 pub fn plan_migration_value(value: Value) -> MigrationPlanningResponse {
     match decode_migration_request(value) {
         Ok(request) => plan_migration_request(request),
@@ -131,6 +140,9 @@ pub fn plan_migration_value(value: Value) -> MigrationPlanningResponse {
 /// assert!(decode_migration_request(value).unwrap().recipe.is_none());
 /// assert!(decode_migration_request(serde_json::json!({"schema":1,"source_text":"","recipe":null})).is_err());
 /// ```
+#[specmark::spec(
+    implements = "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-TRANSPORT"
+)]
 pub fn decode_migration_request(value: Value) -> Result<PlanRequest, PlanError> {
     let object = value
         .as_object()

@@ -1,6 +1,10 @@
 //! Top-level source selection remains in the existing cell registry.
 use super::*;
+use specmark::spec;
 /// Select one top-level metadata token through the existing provider composition.
+#[spec(
+    implements = "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#configuration-sources-in-precedence-order"
+)]
 pub(crate) fn select_top_level_cell(
     resource: ProviderResource<'_>,
     reference: &vibe_core::PackageRef,
@@ -50,6 +54,9 @@ pub(crate) fn select_top_level_cell(
 
 /// Admission is minted by the execution owner's real policy inventory; matching
 /// identity alone never creates eligibility. The solver still checks pins/locks.
+#[spec(
+    implements = "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#configuration-sources-in-precedence-order"
+)]
 pub(crate) fn readmit_top_level_cell(
     source: &crate::InstallResolver,
     original: &vibe_registry::source_candidates::RetainedSourceCandidate,

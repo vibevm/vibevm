@@ -23,6 +23,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-066#locator");
 
+use specmark::spec;
 use vibe_core::manifest::{MirrorSection, RegistrySection};
 use vibe_core::remap::{
     Artifact, ArtifactKind, Layer, RemapTarget, Resolution, rows_from_registry_tables,
@@ -41,6 +42,7 @@ pub(crate) fn clone_chain(
         .map(|routes| routes.into_iter().map(|route| route.url).collect())
 }
 
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-066#locator")]
 pub(crate) fn clone_chain_scoped(
     registry: &RegistrySection,
     mirrors: &[MirrorSection],

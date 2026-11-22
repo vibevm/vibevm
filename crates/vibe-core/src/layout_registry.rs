@@ -84,6 +84,9 @@ impl LayoutVersion {
 /// README) and `v…` entries that are not a semver are not versions and are
 /// left out, as are hidden siblings a `localdir` publish leaves while it
 /// runs (`.v1.0.0.incoming-…`).
+#[specmark::spec(
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#LAYOUT-INDEX-PROJECTION"
+)]
 pub fn version_dirs(root: &Path) -> io::Result<Vec<LayoutVersion>> {
     let mut out = Vec::new();
     for group_dir in sorted_dirs(root)? {
@@ -116,6 +119,9 @@ pub fn version_dirs(root: &Path) -> io::Result<Vec<LayoutVersion>> {
 
 /// `sha256:<hex>` over the journal shards (name and bytes, in name order);
 /// the digest of an absent journal is the digest of nothing.
+#[specmark::spec(
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#LAYOUT-INDEX-PROJECTION"
+)]
 pub fn journal_digest(root: &Path) -> io::Result<String> {
     let dir = journal_dir(root);
     let mut shards: Vec<PathBuf> = match fs::read_dir(&dir) {
@@ -150,6 +156,9 @@ pub fn journal_digest(root: &Path) -> io::Result<String> {
 /// the feature asks that of its old clients — and what they then do is
 /// recompute the projection in memory, which is correct, aliases and all
 /// (they simply do not see them).
+#[specmark::spec(
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#LAYOUT-INDEX-PROJECTION"
+)]
 pub fn alias_digest(root: &Path) -> io::Result<Option<String>> {
     #[derive(serde::Deserialize)]
     struct Rows {
@@ -182,6 +191,9 @@ pub fn alias_digest(root: &Path) -> io::Result<Option<String>> {
 /// The listing text for `versions`, `journal` and the alias table: the
 /// header, the journal digest, the alias digest when there is a table,
 /// then one version path per line.
+#[specmark::spec(
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#LAYOUT-INDEX-PROJECTION"
+)]
 pub fn render_listing(versions: &[LayoutVersion], journal: &str, aliases: Option<&str>) -> String {
     let mut text = format!("{LISTING_HEADER}\n# journal {journal}\n");
     if let Some(aliases) = aliases {
@@ -195,6 +207,9 @@ pub fn render_listing(versions: &[LayoutVersion], journal: &str, aliases: Option
 }
 
 /// The listing of the registry as it is on disk now.
+#[specmark::spec(
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#LAYOUT-INDEX-PROJECTION"
+)]
 pub fn current_listing(root: &Path) -> io::Result<String> {
     Ok(render_listing(
         &version_dirs(root)?,
@@ -225,6 +240,9 @@ pub enum IndexState {
 }
 
 impl IndexState {
+    #[specmark::spec(
+        implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#LAYOUT-INDEX-READER"
+    )]
     pub const fn as_str(&self) -> &'static str {
         match self {
             IndexState::Current => "current",
@@ -242,6 +260,9 @@ impl IndexState {
 /// let root = tempfile::tempdir().unwrap();
 /// assert_eq!(index_state(root.path()).unwrap(), IndexState::Absent);
 /// ```
+#[specmark::spec(
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#LAYOUT-INDEX-READER"
+)]
 pub fn index_state(root: &Path) -> io::Result<IndexState> {
     let listing_path = index_dir(root).join(LISTING_FILE);
     let recorded = match fs::read_to_string(&listing_path) {

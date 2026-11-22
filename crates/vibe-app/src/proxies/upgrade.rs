@@ -2,6 +2,7 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-059#proxy-index-upgrade");
 use super::*;
 use crate::{Index, StateError};
+use specmark::spec;
 use std::io::Read;
 use std::process::{Command, Stdio};
 use std::time::{Duration, Instant};
@@ -194,6 +195,7 @@ pub(crate) fn for_publication(
 
 /// Raw first4 publication with extant owned readers requires an admitted image.
 /// Same4 metadata saves create no copies; all current copy creators check4.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-059#proxy-index-upgrade")]
 pub(crate) fn before_publication(
     settings: &SettingsRoot,
     next: &Index,

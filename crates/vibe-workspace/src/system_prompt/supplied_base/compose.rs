@@ -15,6 +15,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-076#SYS-SUPPLIED-BASE");
 
+use specmark::spec;
 use std::collections::BTreeMap;
 use std::path::{Path, PathBuf};
 
@@ -75,6 +76,7 @@ impl Provenance {
     /// upstream conditional — "astra if the id also says astra, else gpt" —
     /// by writing the narrower row first. No row matching is not an error:
     /// it is the default base, which is what the harness itself does.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-076#SYS-SUPPLIED-BASE")]
     pub fn select_for(&self, model_id: &str) -> Result<Chosen<'_>, BaseError> {
         if model_id.trim().is_empty() {
             return Err(BaseError::UnknownModel);
@@ -199,6 +201,7 @@ impl Provenance {
     /// No launch path may call this. `compose` is the launch's entry, and
     /// the two are one line apart so that reading either shows which is
     /// which.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-076#SYS-SUPPLIED-BASE")]
     pub fn compose_unverified(&self, dir: &Path, launch: &Launch<'_>) -> Result<String, BaseError> {
         let chosen = self.select_for(launch.model_id)?;
         let mut text = match (chosen.selected, chosen.mode) {
@@ -275,6 +278,7 @@ impl Provenance {
     /// another program; a document missing one of them is refused rather
     /// than defaulted, because a guessed key name is a launch whose agent
     /// silently does not exist.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-076#SYS-SUPPLIED-BASE")]
     pub fn carrier_document(&self, base: &str, lane: &Path) -> Result<CarrierDocument, BaseError> {
         let carrier = self
             .carrier

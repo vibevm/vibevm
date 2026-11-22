@@ -60,6 +60,9 @@ impl LocalRepository {
     }
     /// Refuse a share whose host source policy excludes; a disk path
     /// contacts nothing.
+    #[specmark::spec(
+        implements = "spec://org.vibevm.core/vibevm/common/PROP-073#NATIVE-PREPARATION-LAW"
+    )]
     pub fn admit(&self, binding: &crate::HttpAdmission) -> Result<(), GitError> {
         let Self::Share { host, .. } = self else {
             return Ok(());
@@ -87,6 +90,9 @@ pub fn local_repository(address: &str) -> Option<Result<LocalRepository, GitErro
 /// `\\?\UNC\` form, `file://server/...` or `file:////server/...` — which is
 /// [`LocalRepository::Share`]; elsewhere a `file:` url naming another
 /// machine is refused, as Git cannot reach it.
+#[specmark::spec(
+    implements = "spec://org.vibevm.core/vibevm/common/PROP-073#NATIVE-PREPARATION-LAW"
+)]
 pub fn local_repository_for(
     address: &str,
     windows: bool,

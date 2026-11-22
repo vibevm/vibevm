@@ -275,6 +275,7 @@ fn retry(mut op: impl FnMut() -> io::Result<()>) -> io::Result<()> {
 /// Place a distribution into a new instance dir by diff-copy: hardlink files
 /// unchanged versus `prev`, copy the rest, write the manifest, and publish
 /// atomically (PROP-019 §2.15).
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-019#STEP-PLACE")]
 pub(crate) fn place(
     store: &VersionStore,
     id: &VersionId,
@@ -396,6 +397,7 @@ pub(crate) fn place(
 /// instance. Verification/extraction belongs to the bundle consumer; this
 /// seam provides the same no-overwrite and transient-lock-safe rename as the
 /// source-build placer.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-019#STAGE-ATOMIC")]
 pub(crate) fn publish_staged_instance(
     store: &VersionStore,
     id: &VersionId,

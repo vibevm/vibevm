@@ -36,6 +36,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#registry-model");
 
+use specmark::spec;
 use std::fmt::Write as _;
 use std::fs;
 use std::path::{Path, PathBuf};
@@ -148,6 +149,9 @@ pub struct GitPerPackageRegistry {
 impl GitPerPackageRegistry {
     /// Open a registry against the default cache root and a fresh
     /// [`ShellGit`] backend.
+    #[spec(
+        implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#registry-model"
+    )]
     pub fn open(
         name: &str,
         org_url: &str,
@@ -168,6 +172,9 @@ impl GitPerPackageRegistry {
 
     /// Lower-level constructor for tests and callers that want to plug in a
     /// custom backend or cache root.
+    #[spec(
+        implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#registry-model"
+    )]
     pub fn open_with(
         name: &str,
         org_url: &str,
@@ -199,6 +206,9 @@ impl GitPerPackageRegistry {
     /// callers wanting authenticated registries reach for
     /// [`Self::open_with_auth`].
     #[allow(clippy::too_many_arguments)]
+    #[spec(
+        implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#registry-model"
+    )]
     pub fn open_with_mirrors(
         name: &str,
         org_url: &str,
@@ -233,6 +243,9 @@ impl GitPerPackageRegistry {
     /// `effective_token_value`, same downstream injection.
     #[doc(hidden)]
     #[allow(clippy::too_many_arguments)]
+    #[spec(
+        implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#registry-auth"
+    )]
     pub fn open_with_explicit_token(
         name: &str,
         org_url: &str,
@@ -303,6 +316,9 @@ impl GitPerPackageRegistry {
     /// - Other regimes (`None`, `CredentialHelper`, `Ssh`) read no
     ///   token; their `effective_token` is `None`.
     #[allow(clippy::too_many_arguments)]
+    #[spec(
+        implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#registry-auth"
+    )]
     pub fn open_with_auth(
         name: &str,
         org_url: &str,
@@ -389,6 +405,9 @@ impl GitPerPackageRegistry {
     /// - `name` is a synthetic local label such as
     ///   `"git-source-org.vibevm-internal"` — not a registry org name.
     #[allow(clippy::too_many_arguments)]
+    #[spec(
+        implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#registry-model"
+    )]
     pub fn open_single_package(
         synthetic_name: &str,
         repo_url: &str,
@@ -482,6 +501,9 @@ impl GitPerPackageRegistry {
     /// subdirectory is always `<group>.<name>`, regardless of registry
     /// naming (which may have produced a different *URL*-side name) — the
     /// cache is organised by `(group, name)` identity (PROP-008).
+    #[spec(
+        implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#registry-model"
+    )]
     pub fn package_clone_dir(&self, group: &Group, name: &str) -> PathBuf {
         let internal = format!("{group}.{name}");
         self.cache_dir()

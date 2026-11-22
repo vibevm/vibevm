@@ -10,6 +10,9 @@ impl Project {
 
     /// Atomically publish a file and report the host's parent-directory flush
     /// capability instead of silently discarding it.
+    #[specmark::spec(
+        implements = "spec://org.vibevm.core/vibevm/common/PROP-056#READABLE-DIRECTORY-SYNC"
+    )]
     pub fn write_atomic_durable(
         &self,
         relative: &str,
@@ -128,6 +131,9 @@ impl Pinned {
 
     /// The same handle-relative no-replace rename, retaining truthful
     /// namespace-persistence evidence for a surrounding WAL transaction.
+    #[specmark::spec(
+        implements = "spec://org.vibevm.core/vibevm/common/PROP-056#READABLE-DIRECTORY-SYNC"
+    )]
     pub fn rename_child_noreplace_to_durable(
         &self,
         destination: &Pinned,

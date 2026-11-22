@@ -13,6 +13,7 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-075#TEMPLATE-LOCK-RECORD");
 
 use serde::{Deserialize, Serialize};
+use specmark::spec;
 
 use super::{DIGESTLESS_TEMPLATE_SCHEMA_VERSION, Lockfile, TEMPLATE_SCHEMA_VERSION};
 use crate::error::Result;
@@ -22,6 +23,7 @@ impl Lockfile {
     /// an older reader's `deny_unknown_fields` would refuse the row
     /// outright, so a lock claiming an older epoch while carrying one is
     /// corruption, never legacy input (AV-FMT-002).
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-075#TEMPLATE-LOCK-RECORD")]
     pub(crate) fn validate_template_records(&self) -> Result<()> {
         if self.meta.schema_version < DIGESTLESS_TEMPLATE_SCHEMA_VERSION {
             // A template with no digest source has no
@@ -211,6 +213,7 @@ fn short(digest: &str) -> &str {
 /// assert_eq!(differing_digest_fields(before, after), vec!["sha256 = \"aa\" → \"bb\""]);
 /// assert!(differing_digest_fields(before, before).is_empty());
 /// ```
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-075#TEMPLATE-LOCK-RECORD")]
 pub fn differing_digest_fields(recorded: &str, computed: &str) -> Vec<String> {
     let digest_lines = |text: &str| -> Vec<(String, String)> {
         text.lines()

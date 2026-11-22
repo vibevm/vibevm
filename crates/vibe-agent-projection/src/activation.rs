@@ -48,6 +48,9 @@ pub struct BuiltinAdoption {
 
 impl BuiltinAdoption {
     /// Adopt byte-identical canonical content only.
+    #[specmark::spec(
+        implements = "spec://org.vibevm.core/vibevm/common/PROP-073#MANAGED-ACTIVATION"
+    )]
     pub fn explicit(command: &'static str) -> Self {
         Self {
             command,
@@ -56,6 +59,9 @@ impl BuiltinAdoption {
     }
 
     /// Adopt and, when stale, replace unreceipted builtin content.
+    #[specmark::spec(
+        implements = "spec://org.vibevm.core/vibevm/common/PROP-073#MANAGED-ACTIVATION"
+    )]
     pub fn forced(command: &'static str) -> Self {
         Self {
             command,
@@ -74,6 +80,9 @@ impl BuiltinAdoption {
     /// assert_eq!(forced.provenance(false), "vibe mcp install:explicit-adoption");
     /// assert_eq!(forced.provenance(true), "vibe mcp install:forced-adoption");
     /// ```
+    #[specmark::spec(
+        implements = "spec://org.vibevm.core/vibevm/common/PROP-073#MANAGED-ACTIVATION"
+    )]
     pub fn provenance(&self, replaced: bool) -> String {
         if self.force && replaced {
             format!("{}:forced-adoption", self.command)
@@ -83,6 +92,9 @@ impl BuiltinAdoption {
     }
 
     /// The durable intent recorded on the adopted receipt row.
+    #[specmark::spec(
+        implements = "spec://org.vibevm.core/vibevm/common/PROP-073#MANAGED-ACTIVATION"
+    )]
     pub fn intent(&self, replaced: bool) -> ActivationIntent {
         ActivationIntent {
             enabled: true,

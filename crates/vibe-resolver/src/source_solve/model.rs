@@ -3,6 +3,7 @@ specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#s
 use super::*;
 use resolvo::utils::{Pool, VersionSet};
 use resolvo::{NameId, Requirement, VersionSetId};
+use specmark::spec;
 use std::collections::{BTreeMap, BTreeSet, HashMap};
 use std::fmt;
 
@@ -64,6 +65,7 @@ pub(super) struct Model<'a> {
     pub root_constraints: Vec<VersionSetId>,
 }
 impl<'a> Model<'a> {
+    #[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#solver")]
     pub fn new(
         world: &'a Universe,
         edges: Vec<Edge>,

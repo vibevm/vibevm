@@ -7,6 +7,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-018#vibe-skill");
 
+use specmark::spec;
 use std::io::IsTerminal;
 use std::path::Path;
 
@@ -21,6 +22,7 @@ use vibe_core::machine_json_path;
 use crate::cli::{SkillArgs, SkillInstallArgs, SkillListArgs, SkillSubcommand, SkillUninstallArgs};
 use crate::output;
 
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-018#vibe-skill")]
 pub fn run(ctx: &output::Context, args: SkillArgs, offline: bool) -> Result<()> {
     match args.command {
         SkillSubcommand::Enable(sub) => activation::run(ctx, sub, Some(true), offline),

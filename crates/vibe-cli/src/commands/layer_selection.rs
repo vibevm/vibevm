@@ -1,4 +1,5 @@
 //! Shared optional-layer relation observation for transports and views.
+use specmark::spec;
 use std::path::Path;
 use vibe_core::manifest::LayerName;
 use vibe_workspace::layer_relations::{LayerInput, Resolution};
@@ -6,6 +7,7 @@ use vibe_workspace::layer_relations::{LayerInput, Resolution};
 pub(crate) fn relations(project: &Path) -> Resolution {
     relations_for_delivery(project, None)
 }
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-074#LAYER-EFFECTIVE-RELATIONS")]
 pub(crate) fn relations_for_delivery(
     project: &Path,
     delivered: Option<(bool, bool)>,

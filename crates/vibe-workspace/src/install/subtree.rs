@@ -4,6 +4,7 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#install");
 
 use super::*;
+use specmark::spec;
 
 /// What [`materialise_subtree_with_spec_format_and_slot_lifecycle`] placed —
 /// reporting plus one-shot post-install authority.
@@ -35,6 +36,7 @@ impl SubtreeOutcome {
 /// Every slot change is recorded in `rollback`, the caller's undo log that
 /// already holds its prune, so the caller can restore the previous tree when
 /// a later step fails or a stop is acknowledged before its lock is published.
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#install")]
 pub fn materialise_subtree_with_spec_format_and_slot_lifecycle(
     workspace_root: &Path,
     resolution: &[ResolvedDep],

@@ -1,5 +1,6 @@
 //! The `no_proxy` bypass list (`PROP-068#proxy`).
 
+use specmark::spec;
 use std::net::IpAddr;
 
 /// Hosts that connect directly instead of through the proxy: domain
@@ -44,6 +45,7 @@ enum Rule {
 
 impl Bypass {
     /// Parse a comma- or whitespace-separated list.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-068#proxy")]
     pub fn parse(list: &str) -> Self {
         let mut bypass = Bypass::default();
         for entry in list
@@ -91,6 +93,7 @@ impl Bypass {
 
     /// Whether `host` (a URL host: a name, an IPv4 address or an IPv6
     /// address with or without brackets) connects directly.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-068#proxy")]
     pub fn matches(&self, host: &str) -> bool {
         let host = host.trim_start_matches('[').trim_end_matches(']');
         let host = host.trim_end_matches('.').to_ascii_lowercase();

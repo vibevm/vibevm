@@ -9,6 +9,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#command-summary");
 
+use specmark::spec;
 use std::path::PathBuf;
 
 use clap::{CommandFactory, FromArgMatches, Parser, Subcommand};
@@ -285,6 +286,7 @@ pub struct Cli {
 
 impl Cli {
     /// Preserve clap's explicit-path provenance before routing changes a destination.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#command-summary")]
     pub(crate) fn parse_invocation() -> (Self, bool) {
         let args: Vec<_> = std::env::args_os().collect();
         // Clap normally quotes rejected tokens. The secrets surface must never

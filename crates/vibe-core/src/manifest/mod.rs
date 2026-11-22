@@ -145,6 +145,7 @@ pub use subskill::{
 };
 pub use target_when::{TargetApplicability, TargetWhen};
 
+use specmark::spec;
 use std::fs;
 use std::path::Path;
 
@@ -166,6 +167,9 @@ where
         .map_err(|source| Error::parse_toml(path.to_path_buf(), source, &text))
 }
 
+#[spec(
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#unified-manifest"
+)]
 pub(crate) fn write_toml<T, P>(path: P, value: &T) -> Result<()>
 where
     T: Serialize,
@@ -189,6 +193,9 @@ pub(crate) fn render_toml<T: Serialize>(value: &T, existing: Option<&str>) -> Re
 
 /// Copy decoration onto already serialized TOML; no validation, epoch selection
 /// or publication authority is granted by this pure helper.
+#[spec(
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#unified-manifest"
+)]
 pub fn decorate_toml(rendered: &str, existing: Option<&str>) -> String {
     match existing {
         Some(existing) => merge_preserving_comments(existing, rendered),

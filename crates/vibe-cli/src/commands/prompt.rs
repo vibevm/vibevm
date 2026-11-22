@@ -18,6 +18,7 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-076#SYS-OPERATIONS-SURFACE");
 
 use anyhow::Result;
+use specmark::spec;
 
 use crate::cli::{PromptArgs, PromptCommand};
 use crate::output;
@@ -80,6 +81,7 @@ pub(crate) fn reporting_the_prompt<T>(
     outcome
 }
 
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-076#SYS-OPERATIONS-SURFACE")]
 pub fn run(ctx: &output::Context, args: PromptArgs) -> Result<()> {
     match args.command {
         PromptCommand::Build { node, path } => build::run(ctx, &select(&path, node.as_deref())?),

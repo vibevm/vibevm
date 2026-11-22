@@ -6,6 +6,7 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-065#sizes");
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-066#drops");
 
+use specmark::spec;
 use std::path::Path;
 
 use vibe_core::manifest::{SourceInputDecl, StepDecl, StepKind};
@@ -105,6 +106,7 @@ pub(crate) fn input_local(
 
 /// Sum the declared sizes of what the running steps will fetch, and count
 /// the inputs a drop will serve instead.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-065#sizes")]
 pub(crate) fn downloads<'a>(
     running: impl Iterator<Item = &'a StepDecl>,
     settings: &SettingsRoot,

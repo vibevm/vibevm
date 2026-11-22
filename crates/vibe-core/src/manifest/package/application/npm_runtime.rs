@@ -3,6 +3,7 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-065#npm-runtime");
 
 use super::{InstallerOptionDecl, StepKind, steps_of};
 use serde::{Deserialize, Serialize};
+use specmark::spec;
 
 /// The `[installer_options.npm_runtime]` table: one exact npm package and
 /// version, the step input that carries its bytes, and the Node range it needs.
@@ -31,6 +32,7 @@ pub struct NpmRuntimeDecl {
 
 impl NpmRuntimeDecl {
     /// The first supported npm range subset is exactly `>=major.minor.patch`.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-065#npm-runtime")]
     pub fn minimum_node(&self) -> Result<semver::Version, String> {
         let raw = self
             .node_range
@@ -44,6 +46,7 @@ impl NpmRuntimeDecl {
         Ok(version)
     }
 
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-065#npm-runtime")]
     pub fn accepts_node(&self, version: &semver::Version) -> Result<bool, String> {
         Ok(
             version.pre.is_empty()
@@ -53,6 +56,7 @@ impl NpmRuntimeDecl {
     }
 
     /// Return only the digest already declared by the addressed source owner.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-065#npm-runtime")]
     pub fn input_digest(&self, option: &InstallerOptionDecl) -> Result<String, String> {
         let steps = steps_of(option);
         let step = steps
@@ -84,6 +88,7 @@ impl NpmRuntimeDecl {
     }
 
     /// Compare against package/package.json read from those same verified bytes.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-065#npm-runtime")]
     pub fn verify_package_json(&self, bytes: &[u8]) -> Result<(), String> {
         let metadata: serde_json::Value =
             serde_json::from_slice(bytes).map_err(|_| "npm package metadata is invalid JSON")?;

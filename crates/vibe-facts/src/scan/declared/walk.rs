@@ -6,6 +6,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-OBSERVATION-LAW");
 
+use specmark::spec;
 use std::collections::{BTreeMap, BTreeSet};
 
 use vibe_core::manifest::{PackageMeta, SourceSelector};
@@ -51,6 +52,7 @@ pub struct DeclaredTreeObservation<'a> {
 
 /// Exact declared paths for the current bounded reader; directory enumeration
 /// needs a separate captured census and is not guessed from supplied entries.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-OBSERVATION-LAW")]
 pub fn exact_declared_files(package: &PackageMeta) -> Result<Vec<String>, DeclaredWalkError> {
     if !package.has_explicit_source_policy() {
         return Err(DeclaredWalkError::UndeclaredPackage);
@@ -74,6 +76,7 @@ pub fn exact_declared_files(package: &PackageMeta) -> Result<Vec<String>, Declar
 /// Exact-file rows missing from the inventory become `Unavailable`; directory
 /// defaults classify supplied descendants but this function cannot invent a
 /// directory census the host did not provide.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-OBSERVATION-LAW")]
 pub fn observe_declared_source<'a>(
     package: &PackageMeta,
     captured: &[CapturedDeclaredDocument<'a>],

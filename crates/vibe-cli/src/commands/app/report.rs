@@ -6,6 +6,7 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-059#commands");
 
 use anyhow::Result;
+use specmark::spec;
 use vibe_app::{
     Change, ChangeVerb, Command as AppCommand, Outcome, RecommendationOutcome, Removal,
 };
@@ -29,6 +30,7 @@ const REPORT_PROTOCOL: &str = "vibe-application-command-report/2";
 /// The report of an install, update, uninstall or modify, with the version
 /// file `--write-version-file` wrote when one was asked for
 /// (PROP-075 `#VERSION-FILE-WRITE`).
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-059#commands")]
 pub(crate) fn render_written(
     ctx: &output::Context,
     outcome: &Outcome,
@@ -117,6 +119,7 @@ pub(crate) fn render(ctx: &output::Context, outcome: &Outcome) -> Result<()> {
 }
 
 /// The report of `expose`, `hide`, `mark`, `hold`, `unhold`, `rollback`.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-059#commands")]
 pub(crate) fn render_change(ctx: &output::Context, change: &Change) -> Result<()> {
     let command = match change.verb {
         ChangeVerb::Expose => ApplicationReportCommand::Expose,
@@ -151,6 +154,7 @@ pub(crate) fn render_change(ctx: &output::Context, change: &Change) -> Result<()
 
 /// A removal: the plan of `--plan-only`, the removed installations of
 /// `autoremove`, or the uninstall report of the named installation.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-059#commands")]
 pub(crate) fn render_removal(ctx: &output::Context, removal: &Removal) -> Result<()> {
     let report = &removal.report;
     if let (Some(outcome), false) = (&removal.outcome, report.plan_only) {
@@ -195,6 +199,7 @@ pub(crate) fn render_removal(ctx: &output::Context, removal: &Removal) -> Result
 }
 
 /// `vibe app outdated`: a table, or the `vibe-app-outdated/1` document.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-059#commands")]
 pub(crate) fn render_outdated(ctx: &output::Context, report: &ApplicationOutdated) -> Result<()> {
     if ctx.is_json() {
         return ctx.emit_json(report);

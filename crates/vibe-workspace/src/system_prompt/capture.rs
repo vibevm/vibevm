@@ -3,6 +3,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-076#SYS-CAPTURE-REUSE");
 
+use specmark::spec;
 use std::path::Path;
 
 use vibe_core::layout;
@@ -63,6 +64,7 @@ pub struct PrefixCapture<'a> {
 /// A publication path that already holds prepared sources calls
 /// [`capture_prefix_inputs`] with its own reader instead, so one generation
 /// never holds the workspace twice.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-076#SYS-CAPTURE-REUSE")]
 pub fn capture_node_prefix_inputs(
     workspace: &crate::Workspace,
     node_rel: &str,
@@ -118,6 +120,7 @@ pub fn capture_node_prefix_inputs(
 /// co-tenant document (`#SYS-REDIRECT-IN-PLACE`). Both `STATIC` spellings
 /// present propagates `resolve_static_path`'s refusal unchanged rather than
 /// picking a side (`#SYS-LANE-SPELLING`).
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-076#SYS-OPT-IN")]
 pub fn capture_prefix_inputs(
     request: PrefixCapture<'_>,
     reader: &dyn PrefixReader,

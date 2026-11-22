@@ -2,6 +2,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#PASS-FRONTEND");
 
+use specmark::spec;
 use std::collections::{BTreeMap, BTreeSet};
 use std::sync::Mutex;
 
@@ -224,6 +225,7 @@ impl<'invoke> FrontendSeats<'invoke> {
         Ok(())
     }
 
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#PASS-FRONTEND")]
     pub(crate) fn admit(&self, format: &str) -> Result<(), FrontendAdmissionError> {
         let Some(seat) = self.formats.get(format) else {
             return Err(FrontendAdmissionError {
@@ -264,6 +266,7 @@ impl<'invoke> FrontendSeats<'invoke> {
         Ok(())
     }
 
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#PASS-FRONTEND")]
     pub(crate) fn run(
         &self,
         pipeline: &CompilerPipeline<'_>,

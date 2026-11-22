@@ -1,6 +1,7 @@
 //! Observe required remap offers without adopting them or changing this run's Locator.
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-066#layers-packages");
 use super::*;
+use specmark::spec;
 use std::collections::BTreeSet;
 use vibe_resolver::{
     RootRequirement, SourceSolveRequest,
@@ -15,6 +16,7 @@ use vibe_wire::generated::install::e2::plan::{
 
 /// This uses the same remap source catalog as adoption (no embedded family),
 /// but explicit storage grants writes only below this operation's scratch.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-066#layers-packages")]
 pub(crate) fn preview_project_requirements(
     manifest: &Manifest,
     locked: &Lockfile,

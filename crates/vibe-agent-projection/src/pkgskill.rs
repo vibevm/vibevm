@@ -373,6 +373,7 @@ pub fn uninstall_package_skill_with_dirs(
     })
 }
 
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-018#vibe-skill")]
 pub(crate) fn validate_skill_frontmatter(
     skill_name: &str,
     source: &Path,

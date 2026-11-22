@@ -121,6 +121,9 @@ fn write(path: &Path, text: &str) -> Result<(), String> {
 
 /// Make `path` hold exactly one block of `markers` around `body`, leaving
 /// every byte outside that block as it was.
+#[specmark::spec(
+    implements = "spec://org.vibevm.world/managed-blocks/flows/managed-blocks/MANAGED-BLOCKS-PROTOCOL#root"
+)]
 pub fn ensure_block(markers: BlockMarkers, path: &Path, body: &str) -> Result<(), String> {
     let path = target(path);
     let current = read(&path)?.unwrap_or_default();
@@ -135,6 +138,9 @@ pub fn ensure_block(markers: BlockMarkers, path: &Path, body: &str) -> Result<()
 }
 
 /// Remove the block of `markers` from `path`, if it holds one.
+#[specmark::spec(
+    implements = "spec://org.vibevm.world/managed-blocks/flows/managed-blocks/MANAGED-BLOCKS-PROTOCOL#root"
+)]
 pub fn remove_block(markers: BlockMarkers, path: &Path) -> Result<(), String> {
     let path = target(path);
     let Some(current) = read(&path)? else {
@@ -147,6 +153,9 @@ pub fn remove_block(markers: BlockMarkers, path: &Path) -> Result<(), String> {
 }
 
 /// Whether `path` holds a block of `markers`.
+#[specmark::spec(
+    implements = "spec://org.vibevm.world/managed-blocks/flows/managed-blocks/MANAGED-BLOCKS-PROTOCOL#root"
+)]
 pub fn has_block(markers: BlockMarkers, path: &Path) -> bool {
     read(&target(path))
         .ok()

@@ -15,6 +15,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-057#OBS-MAINTENANCE-TOOLS");
 
+use specmark::spec;
 use std::path::PathBuf;
 
 use anyhow::Result;
@@ -35,6 +36,7 @@ const BACKLOG: &str = "BACKLOG.md";
 const JOURNAL: &str = "JOURNAL.md";
 
 /// `vibe doc todo`.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-057#OBS-MAINTENANCE-TOOLS")]
 pub fn run_todo(args: DocTodoArgs, env: DocEnv) -> Result<()> {
     let binary = args
         .binary

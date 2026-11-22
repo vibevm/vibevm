@@ -130,6 +130,7 @@ impl ToolOutput {
     /// for a JSON string value, pretty JSON for anything else — so a
     /// constructed `ToolOutput` renders byte-identically to the
     /// pre-seam `Ok(Value)` it replaced.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#tools")]
     pub fn ok(structured: impl Into<Value>) -> Self {
         let structured = structured.into();
         let text = deterministic_text(&structured);
@@ -161,6 +162,7 @@ impl ToolOutput {
     /// It is deliberately NOT a defaulting variant of [`Self::ok`]:
     /// the text is required, so a caller cannot construct this shape
     /// and then discover its text was silently derived.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#tools")]
     pub fn executed(structured: impl Into<Value>, text: impl Into<String>) -> Self {
         ToolOutput {
             structured: Some(structured.into()),
@@ -176,6 +178,7 @@ impl ToolOutput {
     /// fallback on purpose: a bare variant would let an executed
     /// failure render as pretty JSON and lose the actionable typed
     /// error chain the text channel exists to carry.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#tools")]
     pub fn executed_failure(structured: impl Into<Value>, text: impl Into<String>) -> Self {
         ToolOutput {
             structured: Some(structured.into()),
@@ -241,6 +244,7 @@ impl ToolOutput {
     /// Consume into the `(structured, text, is_error)` triple — the
     /// legacy compatibility path (absence becomes JSON null), so the structured [`Value`] moves into the
     /// rendered result instead of being cloned out.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#tools")]
     pub fn into_parts(self) -> (Value, String, bool) {
         (
             self.structured.unwrap_or(Value::Null),

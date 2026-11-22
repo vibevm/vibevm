@@ -6,6 +6,7 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-067#refusal");
 
 use super::language::{self, Glyph, Kind, Meta, Refusal, Role, Stream, paint};
 use super::{Context, Mode, structured};
+use specmark::spec;
 
 impl Context {
     fn draws(&self) -> bool {
@@ -134,6 +135,7 @@ impl Context {
     /// one — so a trace summary has nowhere else to go. Human mode draws the
     /// refusal block and JSON carries the member inside its root, so
     /// appending there would be the second copy each of them forbids.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-067#refusal")]
     pub fn error_with_suffix(&self, err: &anyhow::Error, suffix: Option<&str>) {
         if self.suppress_output {
             return;
@@ -281,6 +283,7 @@ impl Context {
 /// `snake_case:` lead word), the sentence before its `(violates …; fix: …)`
 /// tail as the headline, the spec address as `see`, the fix's commands as
 /// `fix`, and whatever the chain adds after the tail as `why`.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-067#refusal")]
 pub(crate) fn refusal_of(err: &anyhow::Error) -> Refusal {
     let message = format!("{err:#}");
     let mut code = structured::app_error(err).map(|error| error.code().to_owned());

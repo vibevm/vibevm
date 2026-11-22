@@ -91,6 +91,7 @@ pub use token::{Token, TokenSource, host_env_var, load_token, load_token_for_hos
 ///     "vibespecs",
 /// );
 /// ```
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#publish")]
 pub fn extract_org_segment(org_url: &str) -> Result<String, PublishError> {
     let url = org_url.trim().trim_end_matches('/');
     let url = url.strip_prefix("git+").unwrap_or(url);
@@ -338,6 +339,9 @@ pub enum PublishError {
 ///     "gitverse.ru",
 /// );
 /// ```
+#[spec(
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#PUB-ADAPTER-SELECTION"
+)]
 pub fn extract_host_segment(org_url: &str) -> Result<String, PublishError> {
     let url = org_url.trim().trim_end_matches('/');
     let url = url.strip_prefix("git+").unwrap_or(url);
@@ -388,6 +392,9 @@ pub fn extract_host_segment(org_url: &str) -> Result<String, PublishError> {
 /// assert_eq!(creator.host_name(), "github.com");
 /// assert_eq!(creator.expected_org(), Some("vibespecs"));
 /// ```
+#[spec(
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#PUB-ADAPTER-SELECTION"
+)]
 pub fn creator_for_url(
     org_url: &str,
     expected_org: impl Into<String>,

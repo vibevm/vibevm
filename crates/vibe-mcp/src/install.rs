@@ -221,6 +221,7 @@ fn install_skill_with(
 
 /// Compare an existing SKILL.md to the template: `created` (absent),
 /// `unchanged` (byte-identical), or `updated` (divergent).
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#skill")]
 pub fn decide_skill_action(path: &Path, body: &str) -> Result<&'static str> {
     if !path.exists() {
         return Ok("created");

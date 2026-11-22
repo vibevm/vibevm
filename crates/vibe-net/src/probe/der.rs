@@ -60,6 +60,7 @@ fn name_text(name: &[u8]) -> String {
 /// let summary = vibe_net::probe::summarize(b"not a certificate");
 /// assert_eq!(summary.subject, "<unreadable>");
 /// ```
+#[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-068#dl")]
 pub fn summarize(der: &[u8]) -> CertSummary {
     let unreadable = || CertSummary {
         subject: "<unreadable>".into(),

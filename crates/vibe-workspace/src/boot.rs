@@ -36,6 +36,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#effective-boot");
 
+use specmark::spec;
 use vibe_core::manifest::{BootCategory, LinkType, PackageFormat, WhenCondition};
 use vibe_core::{Group, PackageKind};
 
@@ -300,6 +301,7 @@ pub struct NodeBootInputs<'a> {
 /// Errors only on a [`WorkspaceError::BootDependencyCycle`] — a cycle in
 /// the dependency boot graph. A resolution from the depsolver is acyclic;
 /// the check guards the engine against a malformed input.
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#EFFECTIVE-BOOT")]
 pub fn compute_effective_boot(inputs: NodeBootInputs<'_>) -> Result<EffectiveBoot, WorkspaceError> {
     let order = topo_order(inputs.dependencies)?;
 

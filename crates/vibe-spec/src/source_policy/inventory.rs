@@ -4,6 +4,7 @@ specmark::scope!(
     r = 1
 );
 use super::*;
+use specmark::spec;
 use std::collections::{BTreeMap, BTreeSet};
 use vibe_core::manifest::{
     SelectedSource, SourceInterpretation, SourceSelector, select_source_rows,
@@ -420,6 +421,7 @@ impl PackagePolicyObservation {
         Ok(captured)
     }
     /// Recheck selected membership/parents and each captured original byte buffer.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-HOST-INVENTORY-LAW")]
     pub fn recheck_host_inventory(
         &self,
         captured: &CapturedHostInventory,

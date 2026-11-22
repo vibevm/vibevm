@@ -3,6 +3,7 @@ specmark::scope!(
     "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-APPLICATION-WIRE"
 );
 
+use specmark::spec;
 use vibe_safefs::{ExternalProjectLock, ExternalStore, FileIdentity, Pinned, StableFileSnapshot};
 use vibe_wire::generated::migration::e1::{
     application_journal::ApplicationJournal, operation_report::*,
@@ -21,6 +22,9 @@ pub(super) struct Target {
 }
 
 impl Target {
+    #[spec(
+        implements = "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-APPLICATION-WIRE"
+    )]
     pub fn open(grant: &OwnedManifestMigrationFile) -> Checked<Self> {
         let (parents, name) =
             vibe_safefs::split_relative(grant.target_relative()).map_err(|_| {
@@ -102,6 +106,9 @@ pub(super) struct Store {
 }
 
 impl Store {
+    #[spec(
+        implements = "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-APPLICATION-WIRE"
+    )]
     pub fn acquire(
         grant: &OwnedManifestMigrationFile,
         id: &str,
@@ -263,6 +270,9 @@ impl Store {
             })
     }
 
+    #[spec(
+        implements = "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-APPLICATION-WIRE"
+    )]
     pub fn load(
         &self,
         grant: &OwnedManifestMigrationFile,
@@ -362,6 +372,9 @@ impl Store {
         Ok(Some((journal, plan)))
     }
 
+    #[spec(
+        implements = "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-APPLICATION-WIRE"
+    )]
     pub fn retain_image(
         &self,
         bytes: &[u8],
@@ -472,6 +485,9 @@ impl Store {
         Ok(())
     }
 
+    #[spec(
+        implements = "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-APPLICATION-WIRE"
+    )]
     pub fn checkpoint(
         &self,
         journal: &ApplicationJournal,

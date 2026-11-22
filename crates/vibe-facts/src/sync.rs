@@ -45,6 +45,7 @@ impl SyncMismatch {
 
 /// Compare every present `origin = "spec"` record with its host marker.
 /// Completeness is deliberately not checked: absent registry records are valid.
+#[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-046#LAW-SYNC")]
 pub fn check(project_root: &Path, registry: &Registry) -> Result<Vec<SyncMismatch>, RegistryError> {
     let needed = needed_doc_paths(registry);
     if needed.is_empty() {

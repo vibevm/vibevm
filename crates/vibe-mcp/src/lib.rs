@@ -203,6 +203,7 @@ pub struct Server<T: Transport> {
 }
 
 impl<T: Transport> Server<T> {
+    #[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#server")]
     pub fn new(transport: T, context: ServerContext) -> Self {
         let mut s = Server {
             transport,
@@ -230,6 +231,7 @@ impl<T: Transport> Server<T> {
     /// Drive the request/response loop. Reads lines from the
     /// transport, dispatches each as a JSON-RPC message, writes the
     /// response back. Returns when the transport reports end-of-input.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#server")]
     pub fn run(&mut self) -> Result<(), ServerError> {
         while let Some(line) = self.transport.read_line()? {
             let line = line.trim();
@@ -399,6 +401,7 @@ pub enum ServerError {
 /// .unwrap();
 /// assert!(resp.contains("\"id\":1"));
 /// ```
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#server")]
 pub fn dispatch_one(context: ServerContext, request_line: &str) -> Result<String, ServerError> {
     let transport = MemoryTransport::with_input(request_line.to_string() + "\n");
     let mut server = Server::new(transport, context);

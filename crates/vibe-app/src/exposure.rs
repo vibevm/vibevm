@@ -51,6 +51,7 @@ impl Exposure {
 /// let error = vibe_app::expose_for_session(&settings, "org.example/gcc", &image).unwrap_err();
 /// assert_eq!(error.code(), "not_installed");
 /// ```
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-059#hidden-installations")]
 pub fn expose_for_session(
     settings: &SettingsRoot,
     spelling: &str,
@@ -64,6 +65,7 @@ pub fn expose_for_session(
 }
 
 /// The exposure of one installation record; writes its proxy directory.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-059#hidden-installations")]
 pub(crate) fn exposure_of(
     settings: &SettingsRoot,
     storage: &Storage,

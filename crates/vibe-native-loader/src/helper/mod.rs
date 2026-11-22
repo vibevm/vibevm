@@ -10,6 +10,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-073#NATIVE-STOP-LAW");
 
+use specmark::spec;
 use std::collections::HashMap;
 use std::path::{Path, PathBuf};
 use std::sync::{Arc, Mutex};
@@ -79,6 +80,7 @@ impl crate::NativeLoader {
     /// Admission is the same code as the in-process loader; every image must
     /// first be recorded with [`Self::expect_image`].
     #[must_use]
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-073#NATIVE-STOP-LAW")]
     pub fn with_helper(channel: Arc<dyn HelperChannel>) -> Self {
         Self::with_opener(Arc::new(RemoteOpener {
             channel,

@@ -51,6 +51,7 @@ impl LockedRemap {
     /// let row: vibe_core::manifest::LockedRemap = toml::from_str("package='org.example/policy'\nversion='1.0.0'\ncontent_hash='sha256:ab'").unwrap();
     /// assert!(matches!(row.locked_package(), Err(vibe_core::manifest::LockedRemapSourceError::MissingSource { .. })));
     /// ```
+    #[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-073#LOCKED-SOURCE")]
     pub fn locked_package(&self) -> std::result::Result<LockedPackage, LockedRemapSourceError> {
         let invalid = |reason| LockedRemapSourceError::InvalidSource {
             package: self.package.clone(),

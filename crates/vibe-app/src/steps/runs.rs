@@ -5,6 +5,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-065#runs");
 
+use specmark::spec;
 use std::fs;
 use std::path::{Path, PathBuf};
 
@@ -46,6 +47,7 @@ fn now() -> String {
 
 impl RunRecord {
     /// Create the record directory and write `run.json` and the plan.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-065#runs")]
     pub fn open(
         settings: &SettingsRoot,
         package: &PackageCoordinate,
@@ -168,6 +170,7 @@ impl Drop for RunRecord {
 /// assert_eq!(listing.protocol, "vibe-app-runs/1");
 /// assert!(listing.runs.is_empty());
 /// ```
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-065#runs")]
 pub fn runs(settings: &SettingsRoot, spelling: &str) -> Result<listing::ApplicationRuns, AppError> {
     let requested = qualified_ref(spelling)?;
     let group = requested
@@ -210,6 +213,7 @@ pub fn runs(settings: &SettingsRoot, spelling: &str) -> Result<listing::Applicat
 /// let settings = vibe_app::SettingsRoot::new(dir.path());
 /// assert!(vibe_app::prune_runs(&settings, "org.example/tool", 3).unwrap().pruned.is_empty());
 /// ```
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-065#runs")]
 pub fn prune_runs(
     settings: &SettingsRoot,
     spelling: &str,

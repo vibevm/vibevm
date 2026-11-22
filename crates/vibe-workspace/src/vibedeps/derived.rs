@@ -88,6 +88,7 @@ pub struct DerivedManifest {
 /// Existing recorded slots are reconciled by output path and hash, so renamed
 /// outputs are removed while unrecorded build artifacts remain untouched.
 #[allow(clippy::too_many_arguments)]
+#[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-045#materialisation")]
 pub fn materialise_with_spec_format(
     workspace_root: &Path,
     group: &Group,
@@ -123,6 +124,7 @@ mod declared;
 pub(super) use declared::prepare as prepare_declared;
 
 /// Read and validate the typed derived manifest from `slot`.
+#[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-045#materialisation")]
 pub fn read_derived_manifest(slot: &Path) -> Result<DerivedManifest, String> {
     let record_path = slot.join(SLOT_RECORD_FILENAME);
     match fs::symlink_metadata(&record_path) {
@@ -190,6 +192,7 @@ pub fn read_derived_manifest(slot: &Path) -> Result<DerivedManifest, String> {
 
 /// Cheap freshness gate consulted before presence trust. New slot records are
 /// preferred; legacy derived manifests remain readable when no record exists.
+#[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-045#materialisation")]
 pub fn format_is_current(slot: &Path, expected: SpecFormat) -> bool {
     let record_path = slot.join(SLOT_RECORD_FILENAME);
     match fs::symlink_metadata(&record_path) {
@@ -238,6 +241,7 @@ pub fn current_overlay_hash_for_slot(slot: &Path) -> Option<String> {
 
 /// Recipe-0 content hash over a transformed slot. New records hash exactly
 /// their payload rows; legacy slots retain the frozen walk/exclusion recipe.
+#[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-045#HASH-LAW")]
 pub fn compute_derived_hash(slot: &Path) -> Result<String, String> {
     let record_path = slot.join(SLOT_RECORD_FILENAME);
     match fs::symlink_metadata(&record_path) {

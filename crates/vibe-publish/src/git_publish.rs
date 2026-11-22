@@ -14,6 +14,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#publish");
 
+use specmark::spec;
 use std::path::Path;
 
 use tempfile::TempDir;
@@ -43,6 +44,9 @@ pub use submodules::SubmoduleProvenance;
 ///
 /// The push URL is passed directly to `git fetch` / `git push`; it is never
 /// installed as a remote and therefore never persisted in `.git/config`.
+#[spec(
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#PUBLISH-MUTABLE-VERSIONS"
+)]
 pub fn push_release(
     source_dir: &Path,
     clone_url: &str,
@@ -62,6 +66,9 @@ pub fn push_release(
     Ok(submodules)
 }
 
+#[spec(
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#PUBLISH-NEVER-RULES"
+)]
 pub(crate) fn push_release_controlled(
     source_dir: &Path,
     clone_url: &str,
@@ -347,6 +354,9 @@ fn push_release_refs(
 /// on `main`, and push to `clone_url`. No tag — used by redirect-stub
 /// creation where the stub repo starts tag-less and tags accrete later
 /// via [`push_tag_only`] (`vibe registry redirect-sync`).
+#[spec(
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#REDIRECT-CLI-SEMANTICS"
+)]
 pub fn push_initial(
     source_dir: &Path,
     clone_url: &str,
@@ -388,6 +398,9 @@ pub fn push_initial(
 /// `url` may carry embedded credentials (`https://x-access-token:T@…`)
 /// — this function never prints the URL, only the structured stderr
 /// classification of failures (with credentials redacted).
+#[spec(
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#REDIRECT-SYNC-HELPER"
+)]
 pub fn ls_remote_tags(url: &str) -> Result<Vec<String>, PublishError> {
     let output = git_command_in_temp(&["ls-remote", "--tags", "--", url])
         .output()
@@ -444,6 +457,9 @@ pub fn ls_remote_tags(url: &str) -> Result<Vec<String>, PublishError> {
 /// `staging_path` must be an existing local checkout of the stub remote
 /// (so the tag can resolve to a known commit). The push targets
 /// `clone_url` directly; no configured remote is required.
+#[spec(
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#REDIRECT-SYNC-HELPER"
+)]
 pub fn push_tag_only(staging_path: &Path, clone_url: &str, tag: &str) -> Result<(), PublishError> {
     let tag_msg = format!("redirect stub: surface target ref {tag}");
     run_git_in(staging_path, &["tag", "-a", tag, "-m", &tag_msg])?;
@@ -468,6 +484,7 @@ pub fn push_tag_only(staging_path: &Path, clone_url: &str, tag: &str) -> Result<
 /// If `git status --porcelain` is empty (nothing staged), the call fails
 /// with [`PublishError::Git`] rather than recording an empty commit —
 /// callers are expected to short-circuit "nothing changed" upstream.
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#publish")]
 pub fn commit_and_push(
     working_dir: &Path,
     clone_url: &str,
@@ -499,6 +516,9 @@ pub fn commit_and_push(
 /// missing target tags into it. The fetch is shallow (`--depth=1`) — we
 /// only need the `main` commit to anchor new tags onto. The URL is used
 /// directly for the fetch and is not persisted as a configured remote.
+#[spec(
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#REDIRECT-SYNC-HELPER"
+)]
 pub fn shallow_clone(clone_url: &str) -> Result<TempDir, PublishError> {
     let staging = TempDir::new().map_err(|e| PublishError::Io {
         path: std::env::temp_dir(),

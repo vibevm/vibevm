@@ -5,9 +5,11 @@ use super::{
 };
 use crate::steps::PlanInput;
 use crate::{AppError, Choice};
+use specmark::spec;
 use vibe_core::manifest::{ConfigurationFeatureVisibility, ConfigurationGroupDecl};
 use vibe_wire::generated::shared as w;
 
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-069#APP-CONFIGURATION-BASIS")]
 pub(crate) fn prepare(input: &PlanInput<'_>) -> Result<EvaluatedConfiguration, AppError> {
     let option = input.option;
     let definition = option

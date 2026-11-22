@@ -13,6 +13,9 @@ fn is_preflight(code: &Code) -> bool {
 /// use vibe_workspace::migration_planning::{input_read_error, validate_preflight_error};
 /// validate_preflight_error(&input_read_error()).unwrap();
 /// ```
+#[specmark::spec(
+    implements = "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-TRANSPORT"
+)]
 pub fn validate_preflight_error(error: &PlanError) -> Validated<()> {
     if error.schema != 1 {
         return Err(invalid("schema", "unsupported error schema"));

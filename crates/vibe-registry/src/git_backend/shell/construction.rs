@@ -134,6 +134,9 @@ impl ShellGit {
     /// Verify that the configured git binary responds to `--version`.
     ///
     /// Caches the result on this instance. Subsequent calls are free.
+    #[specmark::spec(
+        implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-001#backend"
+    )]
     pub fn preflight(&self) -> Result<(), GitError> {
         if let Some(native) = &self.native {
             return native.preflight();

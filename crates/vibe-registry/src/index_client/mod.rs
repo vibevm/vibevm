@@ -181,6 +181,7 @@ impl IndexClient {
     /// (5s) so a misconfigured URL does not stall every install. The
     /// probe request itself carries the bearer token when the plan is
     /// [`IndexAuth::Bearer`], so a private index's probe authenticates.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#http")]
     pub fn probe(base: &str, auth: IndexAuth) -> ProbeOutcome {
         match Self::probe_bound(base, auth, None) {
             Ok(outcome) => outcome,
@@ -314,6 +315,7 @@ impl IndexClient {
     /// mirroring how [`crate::git_package_registry::inject_token`] is
     /// public for external integrations while staying scheme-gated
     /// internally.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#http")]
     pub fn at_with_auth(base: impl Into<String>, auth: IndexAuth) -> IndexClient {
         let trimmed = base.into().trim_end_matches('/').to_string();
         IndexClient {
@@ -412,6 +414,7 @@ impl IndexClient {
     /// 0-length list), not 404. Path-segment encoding is delegated to
     /// `reqwest::Url` so PURL punctuation (`:`, `/`, `@`) is escaped
     /// correctly.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#http")]
     pub fn lookup_purl(&self, purl: &str) -> Result<PurlLookupResults, IndexError> {
         if let Some(admission) = &self.admission {
             admission.admit_address(&self.server_base)?;
@@ -467,6 +470,7 @@ impl IndexClient {
     /// and never resolves into a fetch without the consumer running
     /// through the regular `MultiRegistryResolver` path that
     /// re-verifies `content_hash` per [PROP-002 §2.1].
+    #[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#http")]
     pub fn search(
         &self,
         query: &str,

@@ -18,6 +18,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-068#proxy-system");
 
+use specmark::spec;
 use std::sync::{Arc, RwLock};
 
 /// The registry path of the Internet Settings policy, under `HKCU` and
@@ -133,6 +134,7 @@ static OVERRIDE: RwLock<Option<Arc<dyn WindowsProxySource>>> = RwLock::new(None)
 /// host's own settings, or `None` to restore the host. The test seam: no
 /// production path calls it, and a test that uses it is not at the mercy
 /// of the machine it runs on.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-068#proxy-system")]
 pub fn install_source(source: Option<Arc<dyn WindowsProxySource>>) {
     match OVERRIDE.write() {
         Ok(mut slot) => *slot = source,
@@ -144,6 +146,7 @@ pub fn install_source(source: Option<Arc<dyn WindowsProxySource>>) {
 /// the resolution itself (`vibe_net::system_proxy::resolve`): the Windows
 /// reader needs `unsafe` for the WinHTTP and registry calls, which this
 /// crate forbids, so the order logic lives here and the reader there.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-068#proxy-system")]
 pub fn installed_source() -> Option<Arc<dyn WindowsProxySource>> {
     match OVERRIDE.read() {
         Ok(slot) => slot.clone(),
@@ -206,6 +209,7 @@ pub fn installed_source() -> Option<Arc<dyn WindowsProxySource>> {
 /// let error = resolve_with(&Stub(None)).unwrap_err().to_string();
 /// assert!(error.contains("AutoConfigURL") && error.contains("fix:"), "{error}");
 /// ```
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-068#proxy-system")]
 pub fn resolve_with(source: &dyn WindowsProxySource) -> Result<SystemProxy, SystemProxyError> {
     let mut checked: Vec<String> = Vec::new();
 

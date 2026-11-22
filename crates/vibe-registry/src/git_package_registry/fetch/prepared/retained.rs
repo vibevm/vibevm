@@ -1,6 +1,7 @@
 //! Retain native single-package objects before the final destination is known.
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-073#NATIVE-MATERIALISATION");
 use super::*;
+use specmark::spec;
 
 pub(crate) struct RetainedNativePackage {
     temporary: tempfile::TempDir,
@@ -25,6 +26,7 @@ impl RetainedNativePackage {
     pub(crate) fn serving_endpoint(&self) -> Option<&str> {
         self.serving.as_deref()
     }
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-073#NATIVE-MATERIALISATION-LAW")]
     pub(crate) fn bind(
         self,
         registry: &GitPerPackageRegistry,
@@ -87,6 +89,7 @@ impl RetainedNativePackage {
     }
 }
 impl GitPerPackageRegistry {
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-073#NATIVE-MATERIALISATION-LAW")]
     pub(crate) fn retain_native_package(
         &self,
         group: &Group,
@@ -142,6 +145,7 @@ impl GitPerPackageRegistry {
             serving,
         })
     }
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-073#NATIVE-MATERIALISATION-LAW")]
     pub(crate) fn consume_retained_native(
         &self,
         source: RetainedNativePackage,

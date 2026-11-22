@@ -253,6 +253,9 @@ pub fn render_static(
 /// empty plan — the historical schedule, bytes and errors exactly
 /// (`R4-TRANSFORM-PLAN-ABI` §7). The install path, which does hold a world,
 /// goes through [`render_static_observed`].
+#[spec(
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#ARTIFACT-STATIC-MD"
+)]
 pub fn render_static_with_spec_format(
     boot: &EffectiveBoot,
     workspace_root: &Path,
@@ -338,6 +341,7 @@ pub fn write_boot_artifacts(
 /// No extension world reaches this entry, so the node lane it writes carries
 /// the empty plan — the historical schedule and bytes exactly. The install
 /// path goes through [`write_boot_artifacts_traced`], which does hold one.
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#ARTIFACTS-PAIR")]
 pub fn write_boot_artifacts_with_spec_format(
     node_dir: &Path,
     workspace_root: &Path,

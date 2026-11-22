@@ -15,6 +15,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#layout");
 
+use specmark::spec;
 use std::io::{Read, Write};
 use std::path::Path;
 
@@ -33,6 +34,7 @@ pub const FILENAME_GZ: &str = "primary.jsonl.gz";
 /// `entries` are sorted in place by [`VersionEntry::sort_key`] so the
 /// caller can pass any iteration order and the on-disk shape stays
 /// deterministic.
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#PRIMARY-JSONL")]
 pub fn serialise(entries: &mut [VersionEntry]) -> Result<Vec<u8>> {
     entries.sort_by(|a, b| a.sort_key().cmp(&b.sort_key()));
     let mut out = Vec::new();
@@ -49,6 +51,7 @@ pub fn serialise(entries: &mut [VersionEntry]) -> Result<Vec<u8>> {
     Ok(out)
 }
 
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#PRIMARY-JSONL")]
 pub fn write(dir: &Path, entries: &mut [VersionEntry]) -> Result<(WrittenFile, WrittenFile)> {
     let bytes = serialise(entries)?;
     let path = dir.join(FILENAME);
@@ -72,6 +75,7 @@ pub fn write(dir: &Path, entries: &mut [VersionEntry]) -> Result<(WrittenFile, W
 /// the one backend the manifest pins. Same input → same output across
 /// machines AND across consumers, so the sha256 in `repomd.json` stays
 /// stable.
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#PRIMARY-GZ")]
 pub fn gzip_deterministic(bytes: &[u8]) -> Result<Vec<u8>> {
     let mut encoder = GzEncoder::new(Vec::new(), Compression::new(6));
     encoder
@@ -82,6 +86,7 @@ pub fn gzip_deterministic(bytes: &[u8]) -> Result<Vec<u8>> {
         .map_err(|e| Error::Malformed(format!("gzip finish: {e}")))
 }
 
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#PRIMARY-JSONL")]
 pub fn read(dir: &Path) -> Result<Vec<VersionEntry>> {
     let path = dir.join(FILENAME);
     let bytes = std::fs::read(&path).map_err(|e| Error::Io {
@@ -96,6 +101,7 @@ pub fn read(dir: &Path) -> Result<Vec<VersionEntry>> {
 /// bytes flow through the same [`parse`] as the plain surface, so
 /// `VersionEntry` stays the one schema-generated reader for both
 /// (G11, PROP-044 §8) and the two files cannot drift apart.
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#PRIMARY-GZ")]
 pub fn read_gz(dir: &Path) -> Result<Vec<VersionEntry>> {
     let path = dir.join(FILENAME_GZ);
     let bytes = std::fs::read(&path).map_err(|e| Error::Io {
@@ -107,6 +113,7 @@ pub fn read_gz(dir: &Path) -> Result<Vec<VersionEntry>> {
 
 /// Decompress `primary.jsonl.gz` bytes, then run the plain surface's
 /// [`parse`] over what the envelope carried.
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#PRIMARY-GZ")]
 pub fn parse_gz(bytes: &[u8]) -> Result<Vec<VersionEntry>> {
     let mut decoder = GzDecoder::new(bytes);
     let mut plain = Vec::new();
@@ -116,6 +123,7 @@ pub fn parse_gz(bytes: &[u8]) -> Result<Vec<VersionEntry>> {
     parse(&plain)
 }
 
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#PRIMARY-JSONL")]
 pub fn parse(bytes: &[u8]) -> Result<Vec<VersionEntry>> {
     let text = std::str::from_utf8(bytes)
         .map_err(|e| Error::Malformed(format!("primary.jsonl is not valid UTF-8: {e}")))?;

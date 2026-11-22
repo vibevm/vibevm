@@ -114,6 +114,7 @@ pub enum TrustSource {
 
 impl TrustSource {
     /// The stable one-word form a machine reads (`vibe dl --json`).
+    #[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-068#proxy-trust")]
     pub fn kind(&self) -> &'static str {
         match self {
             Self::System => "system",
@@ -123,6 +124,7 @@ impl TrustSource {
     }
 
     /// The file this trust came from, when it came from a file.
+    #[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-068#proxy-trust")]
     pub fn source(&self) -> Option<&Path> {
         match self {
             Self::System => None,
@@ -131,6 +133,7 @@ impl TrustSource {
     }
 
     /// The sentence a person reads.
+    #[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-068#proxy-trust")]
     pub fn describe(&self) -> String {
         match self {
             Self::System => "trusted by system".to_owned(),
@@ -168,6 +171,7 @@ impl TrustSet {
     }
 
     /// The trust set these configured entries describe.
+    #[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-068#proxy-trust")]
     pub fn from_paths(paths: &[PathBuf]) -> Result<Self, TrustError> {
         let loaded = load::certificates_at(paths)?;
         let anchors = loaded
@@ -222,6 +226,7 @@ impl TrustSet {
     }
 
     /// The verifier every TLS client of this installation uses.
+    #[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-068#proxy-trust")]
     pub fn verifier(
         &self,
     ) -> Result<Arc<dyn rustls::client::danger::ServerCertVerifier>, TrustError> {
@@ -245,6 +250,7 @@ impl TrustSet {
     /// host does) select a protocol `hyper-util` then panics on. Offering
     /// `http/1.1` alone is exactly what `reqwest` offers for itself under
     /// these features; [`ALPN`] is asserted against that.
+    #[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-068#proxy-trust")]
     pub fn client_config(&self) -> Result<rustls::ClientConfig, TrustError> {
         let provider = verifier::provider();
         let mut config = rustls::ClientConfig::builder_with_provider(provider)
@@ -262,6 +268,7 @@ impl TrustSet {
     /// A client configuration that trusts exactly `roots` and nothing else
     /// — a caller that replaces the trust set deliberately, rather than
     /// adding to it (a registry given its own `ca`).
+    #[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-068#proxy-trust")]
     pub fn pinned_roots_config(pem: &[u8]) -> Result<rustls::ClientConfig, TrustError> {
         let path = Path::new("<captured registry trust>");
         let loaded = load::certificates_in_bytes(pem, path)?;
@@ -300,6 +307,7 @@ impl TrustSet {
     /// written, then the pins. Asking the system first means a server the
     /// machine already trusts is reported as the machine's, whatever else
     /// also names it.
+    #[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-068#proxy-trust")]
     pub fn attribute(
         &self,
         chain: &[CertificateDer<'static>],
@@ -350,6 +358,7 @@ impl TrustSet {
     /// The combined bundle a child `git` reads, written into the
     /// content-addressed cache. `None` when nothing is configured: the
     /// child then uses the platform's own trust, which is what it should.
+    #[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-068#proxy-git")]
     pub fn git_bundle(&self) -> Result<Option<PathBuf>, TrustError> {
         if self.is_empty() {
             return Ok(None);
@@ -360,6 +369,7 @@ impl TrustSet {
     /// [`Self::git_bundle`] written into an explicit cache directory — the
     /// seam a test drives without touching the operator's own settings
     /// directory, and the one [`Self::git_bundle`] itself calls.
+    #[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-068#proxy-git")]
     pub fn git_bundle_in(&self, cache: &Path) -> Result<Option<PathBuf>, TrustError> {
         if self.is_empty() {
             return Ok(None);
@@ -374,6 +384,7 @@ impl TrustSet {
     }
 
     /// The sentence that says who refused an untrusted chain.
+    #[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-068#proxy-trust")]
     pub fn untrusted_by(&self) -> &'static str {
         if self.is_empty() {
             "which the system store does not trust"

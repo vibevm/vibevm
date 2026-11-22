@@ -1,6 +1,7 @@
 //! Opt-in retirement of one independently reproduced plain-copy slot.
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-069#PERSISTENCE");
 use crate::{WorkspaceError, vibedeps};
+use specmark::spec;
 use std::{
     collections::BTreeMap,
     path::{Path, PathBuf},
@@ -157,6 +158,7 @@ pub struct CheckedRemovalPlan {
     census: Census,
 }
 impl CheckedRemovalPlan {
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-069#PERSISTENCE")]
     pub fn slot_relative(&self) -> Result<String, WorkspaceError> {
         let path = self.parent.join(&self.name);
         path.strip_prefix(self.project.root_path())
@@ -165,6 +167,7 @@ impl CheckedRemovalPlan {
             .map(|path| path.replace('\\', "/"))
             .ok_or_else(|| refused(&path, "slot path cannot be represented losslessly"))
     }
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-069#PERSISTENCE")]
     pub fn capture(
         workspace_root: &Path,
         old: &LockedPackage,

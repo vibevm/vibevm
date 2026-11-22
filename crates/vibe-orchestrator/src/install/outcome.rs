@@ -143,6 +143,7 @@ impl InstallRun {
     /// assert_eq!(run.packages_resolved, 0);
     /// ```
     #[must_use]
+    #[spec(implements = "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#install-workflow-in-detail")]
     pub fn new(project_root: PathBuf, disposition: InstallDisposition) -> Self {
         Self {
             disposition,

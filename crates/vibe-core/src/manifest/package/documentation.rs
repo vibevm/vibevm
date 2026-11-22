@@ -23,6 +23,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-057#relation");
 
+use specmark::spec;
 use std::path::{Path, PathBuf};
 
 use serde::{Deserialize, Serialize};
@@ -163,6 +164,7 @@ impl MediaDecl {
 
     /// Every declared image as `(field name, path)`, for the validator
     /// and for the gate that later opens the files.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-057#CARD-MEDIA-SOURCE")]
     pub fn declared(&self) -> Vec<(&'static str, &Path)> {
         let mut out: Vec<(&'static str, &Path)> = Vec::new();
         for (field, value) in [

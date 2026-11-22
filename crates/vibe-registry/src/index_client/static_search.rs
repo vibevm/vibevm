@@ -60,6 +60,7 @@ impl IndexClient {
 
 /// Score the catalog's records — one package per `(group, name)`, its
 /// usable versions ascending — and shape the answer as the route would.
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#integration")]
 pub(crate) fn search_entries(
     entries: Vec<VersionEntry>,
     query: &str,

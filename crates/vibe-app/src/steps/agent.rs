@@ -9,6 +9,7 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-064#parking");
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-064#never");
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-064#envelope");
 
+use specmark::spec;
 use std::path::{Path, PathBuf};
 use std::process::Command;
 use std::time::Instant;
@@ -61,6 +62,7 @@ fn prompt_literal(planned: &PlannedStep) -> Result<&str, AppError> {
 /// `--assume-yes` proceeds, an attended terminal asks, anything else is
 /// refused before any agent starts. Parked steps need no consent here: the
 /// hosting agent is shown the task.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-064#consent")]
 pub(crate) fn admit<'p>(
     hooks: &AgentHooks<'_>,
     plan: &Plan,
@@ -166,6 +168,7 @@ pub(crate) struct AgentStep<'a> {
 
 /// Run one agent step: the agent record for `steps.json` and either the
 /// answer's message or the error (a parked step is `AgentError::Parked`).
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-064#modes")]
 pub(crate) fn run(
     cx: &AgentStep<'_>,
     planned: &PlannedStep,

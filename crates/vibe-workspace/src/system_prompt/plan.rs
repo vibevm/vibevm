@@ -17,6 +17,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-076#SYS-BANDS");
 
+use specmark::spec;
 use vibe_core::manifest::{HostChoice, WhenCondition};
 
 use crate::boot::EffectiveBoot;
@@ -48,6 +49,7 @@ impl ContinuationBand {
     }
 
     /// The gate, for a band-G row.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-076#SYS-BANDS")]
     pub fn when(&self) -> Option<&WhenCondition> {
         match self {
             ContinuationBand::Unconditional => None,
@@ -93,6 +95,7 @@ impl ContinuationPlan {
     /// the artifact's order by construction rather than by agreement. The
     /// classification is the same one expression: a residual `when` is band
     /// G, its absence band U.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-076#SYS-BANDS")]
     pub fn of(boot: &EffectiveBoot) -> Self {
         Self {
             rows: boot
@@ -132,6 +135,7 @@ impl ContinuationPlan {
     /// assert_eq!(plan.resolve_host(HostChoice::Portable), plan);
     /// assert_eq!(plan.resolve_host(HostChoice::Fixed(TargetOs::Linux)), plan);
     /// ```
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-076#SYS-HOST-AND-TARGET")]
     pub fn resolve_host(&self, host: HostChoice) -> Self {
         let Some(fixed) = host.fixed() else {
             return self.clone();

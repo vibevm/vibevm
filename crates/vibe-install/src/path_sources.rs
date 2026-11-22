@@ -1,6 +1,7 @@
 //! Declaring-node path inputs projected into one workspace acquisition world.
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#workspace-section");
 use crate::error::{Error, Result};
+use specmark::spec;
 use std::{
     collections::BTreeMap,
     path::{Path, PathBuf},
@@ -9,6 +10,9 @@ use vibe_core::manifest::Manifest;
 
 /// Resolve every authored path at its declaring node, with a portable locator
 /// relative to the workspace root. Conflicting source owners refuse before use.
+#[spec(
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#workspace-section"
+)]
 pub fn workspace_path_sources(
     selected: &Path,
     manifest: &Manifest,

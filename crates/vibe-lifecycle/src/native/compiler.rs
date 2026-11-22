@@ -59,6 +59,7 @@ pub struct ArtifactCompilerNativeInvoker<'a> {
 
 impl<'a> ArtifactCompilerNativeInvoker<'a> {
     #[must_use]
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#BOOTSTRAP-ORDER")]
     pub fn new(
         all_compile_rows: &[&'a ExtensionRegistryRow],
         execution: NativeBuildExecution<'a>,
@@ -421,6 +422,7 @@ impl ArtifactCompilerNativeProvider {
     }
 
     #[must_use]
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#BOOTSTRAP-ORDER")]
     pub fn new(
         platform: NativePlatform,
         policies: BTreeMap<OwnerRuntimeId, CompilerNativePolicy>,
@@ -433,6 +435,7 @@ impl ArtifactCompilerNativeProvider {
         }
     }
 
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#BOOTSTRAP-ORDER")]
     pub fn existing(
         platform: NativePlatform,
         policies: BTreeMap<OwnerRuntimeId, CompilerNativePolicy>,

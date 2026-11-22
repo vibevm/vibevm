@@ -1,5 +1,6 @@
 //! Opt-in top-level handoff. Tokens stay opaque and never enter error reports.
 use super::*;
+use specmark::spec;
 
 /// What a top-level install attempt came to: a finished operation, or one
 /// held selection that waits for a Node provider the caller may supply.
@@ -81,6 +82,9 @@ impl NodeRemediation {
 
     /// Acquire only the bound metadata input through the ordinary installer owner.
     /// The operation-owned temporary file contains no prepared answers.
+    #[spec(
+        implements = "spec://org.vibevm.core/vibevm/common/PROP-069#APP-CONFIGURATION-CONTINUATION"
+    )]
     pub fn verify_runtime_input(
         &self,
         ctx: &OperationContext<'_>,
@@ -192,6 +196,7 @@ impl NodeRemediation {
     }
 }
 
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-069#APP-CONFIGURATION-CONTINUATION")]
 pub fn install_preparing_node(
     ctx: &OperationContext<'_>,
     resolved: &ResolvedPackage,
@@ -282,6 +287,7 @@ pub fn install_preparing_node(
 }
 
 /// One-shot continuation: lock and all mutable operation facts belong to this call.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-069#APP-CONFIGURATION-CONTINUATION")]
 pub fn continue_after_node(
     ctx: &OperationContext<'_>,
     resolved: &ResolvedPackage,

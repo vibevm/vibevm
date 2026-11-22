@@ -5,6 +5,7 @@
 //! object, the commit's tree, author, committer and message.
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#registry-mirror");
 
+use specmark::spec;
 use std::path::{Path, PathBuf};
 use std::process::Command;
 
@@ -138,6 +139,9 @@ impl GitStore {
     }
 
     /// Check out `tree` into the absent directory `dest`.
+    #[spec(
+        implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#registry-mirror"
+    )]
     pub(crate) fn checkout(&self, tree: &str, dest: &Path) -> Result<()> {
         std::fs::create_dir_all(dest).with_context(|| format!("creating `{}`", dest.display()))?;
         let index = self.path().join(format!("checkout-{tree}.index"));

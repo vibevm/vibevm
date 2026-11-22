@@ -4,6 +4,7 @@ use crate::{
     ResolvedGraph,
     source_edges::{OriginalRequirement, RequirementSite},
 };
+use specmark::spec;
 use std::collections::BTreeMap;
 use vibe_core::{
     Group,
@@ -20,6 +21,7 @@ pub struct CandidateKey {
     pub binding: CanonicalSourceBinding,
 }
 impl CandidateKey {
+    #[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#solver")]
     pub fn of(candidate: &RetainedSourceCandidate) -> Self {
         Self {
             group: candidate.group().clone(),
@@ -103,6 +105,7 @@ pub struct SourceSolveLimits {
 }
 impl SourceSolveLimits {
     /// Named operation bounds; exhaustion is explicit, never unsatisfiability.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#solver")]
     pub const fn standard_operation() -> Self {
         Self {
             package_names: 512,
@@ -201,6 +204,7 @@ pub trait SourceCandidateProvider: crate::VersionEnumerator {
     ) -> Result<vibe_registry::source_candidates::SourceCandidateInventory, crate::DepProviderError>;
 }
 
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#solver")]
 pub(crate) fn source_registry_error(
     error: vibe_registry::RegistryError,
 ) -> crate::DepProviderError {

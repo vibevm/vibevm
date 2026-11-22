@@ -96,6 +96,7 @@ impl SlotJudgment {
     /// };
     /// assert_eq!(judgment.first_declared_field(), "optional");
     /// ```
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#SLOT-CONTRIBUTION-JUDGMENT")]
     pub fn first_declared_field(&self) -> &'static str {
         if self.title.is_some() {
             "title"
@@ -110,6 +111,7 @@ impl SlotJudgment {
         }
     }
 
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#SLOT-CONTRIBUTION-JUDGMENT")]
     pub fn is_empty(&self) -> bool {
         self.title.is_none()
             && self.when.is_empty()

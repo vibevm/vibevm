@@ -24,6 +24,7 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-045#materialisation"
 use super::xml_out_emit::{bytes_start, empty, end, esc_text, indent, inline, start};
 use crate::doc::{Block, BlockNode, Cond, Fact, Section, SpecDoc, StatusEl, Unit};
 use quick_xml::events::{BytesDecl, BytesEnd, BytesText, Event};
+use specmark::spec;
 
 /// The dialect's namespace — the root attribute that self-identifies a
 /// spec file (PROP-045 ##DIALECT-SKETCH).
@@ -36,6 +37,7 @@ pub(crate) const NS: &str = "https://vibevm.org/spec/1";
 /// dialect's structural vocabulary. XML reserves every case-insensitive
 /// `xml` prefix, so those anchors stay in the generic `<section id=...>`
 /// fallback too.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-045#materialisation")]
 pub(crate) fn anchor_is_elementable(anchor: &str) -> bool {
     let mut chars = anchor.chars();
     let Some(first) = chars.next() else {
@@ -81,6 +83,7 @@ pub fn to_xml(doc: &SpecDoc) -> String {
     render(doc, false).0
 }
 
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-045#materialisation")]
 pub(crate) fn render(
     doc: &SpecDoc,
     capture: bool,

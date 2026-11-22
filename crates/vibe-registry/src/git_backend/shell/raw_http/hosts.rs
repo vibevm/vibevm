@@ -18,6 +18,7 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#perf");
 
 use serde::Deserialize;
+use specmark::spec;
 
 /// GitVerse's "no such file" code, delivered inside an HTTP 400 body as
 /// `{"code":4305,"message":"File: <path> not found"}`. Verified against
@@ -55,6 +56,7 @@ pub(super) struct RawHost {
 /// **default** `raw-file` rows of the Locator, so `vibe remap list` shows
 /// the two public endpoints and any row a user, a project or the
 /// invocation declares outranks them.
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#perf")]
 pub fn default_bases() -> Vec<(&'static str, &'static str)> {
     HOSTS
         .iter()

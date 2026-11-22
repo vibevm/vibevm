@@ -18,6 +18,7 @@ use super::ir;
 use super::ir::{Documents, StaticCompileMode};
 use super::pass::AnyIr;
 use super::verify::{IrVerifier, VerificationError};
+use specmark::spec;
 
 mod address;
 /// Visible to `compiler` so the R3.4 observer renders its diagnostics through
@@ -369,6 +370,7 @@ fn belt(level: bool, cardinality: bool) {
 }
 
 /// Project one domain carrier onto the one canonical generated IR value.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#WHOLE-IR-WIRE")]
 pub(crate) fn encode_generated(ir: &AnyIr) -> Result<wire::Ir, IrWireError> {
     let value = match ir {
         AnyIr::Source(source) => wire::Ir::SourceDocument(Box::new(wire::IrSourceDocument {

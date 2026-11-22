@@ -8,6 +8,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#C-ABI-LAW");
 
+use specmark::spec;
 use std::collections::HashMap;
 use std::path::{Path, PathBuf};
 use std::sync::{Arc, Mutex};
@@ -234,6 +235,7 @@ impl NativeMechanism {
     }
 
     /// Invoke one admitted operation through the shared ABI-1 response guard.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#R8-NATIVE-DEPLOY-PROVIDER")]
     pub fn invoke(&self, request: &DeployRequest) -> Result<DeployReply, NativeLoadError> {
         if self.expected_role != vibe_core::manifest::MechanismRole::Deploy {
             return Err(NativeLoadError::MechanismRoleInvocation {
@@ -303,6 +305,7 @@ impl Default for NativeLoader {
 impl NativeLoader {
     /// Create an empty process-lifetime loader cache.
     #[must_use]
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#PANIC-AND-VERSION")]
     pub fn new() -> Self {
         Self {
             cache: Mutex::new(HashMap::new()),
@@ -315,6 +318,7 @@ impl NativeLoader {
     /// The generated context is serialized once after ABI and manifest
     /// admission. Any plugin-owned non-null response is freed exactly once on
     /// every return path.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#PANIC-AND-VERSION")]
     pub fn invoke(&self, invocation: NativeInvocation<'_>) -> Result<Reply, NativeLoadError> {
         let (library, display_path) = self.admit_library(
             invocation.library,
@@ -337,6 +341,7 @@ impl NativeLoader {
     /// The request is passed through without decoding. Manifest admission fixes
     /// the expected schema to 2, and any plugin-owned response is copied while
     /// its exact-once free guard remains live.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#C-ABI-LAW")]
     pub fn invoke_compile(
         &self,
         invocation: NativeCompileInvocation<'_>,
@@ -350,6 +355,7 @@ impl NativeLoader {
     }
 
     /// Admit ABI 1 and one exact compiler manifest row without invoking it.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#PANIC-AND-VERSION")]
     pub fn admit_compile(
         &self,
         library_path: &Path,
@@ -373,6 +379,7 @@ impl NativeLoader {
 
     /// Admit one exact mechanism descriptor and retain its owned data beside
     /// the shared cached library handle.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#PANIC-AND-VERSION")]
     pub fn admit_mechanism(
         &self,
         library_path: &Path,
@@ -402,6 +409,7 @@ impl NativeLoader {
     }
 
     /// Admit and invoke one package-supplied deploy mechanism.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#R8-NATIVE-DEPLOY-PROVIDER")]
     pub fn invoke_mechanism(
         &self,
         invocation: NativeMechanismInvocation<'_>,

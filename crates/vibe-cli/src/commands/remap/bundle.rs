@@ -67,6 +67,7 @@ pub(crate) fn read_manifest(dir: &Path) -> Result<wire::RemapBundle> {
 }
 
 /// Write a bundle's `MANIFEST.json`.
+#[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-066#transport")]
 pub(crate) fn write_manifest(dir: &Path, document: &wire::RemapBundle) -> Result<()> {
     let path = dir.join(MANIFEST);
     let body = serde_json::to_string_pretty(document).context("rendering the bundle manifest")?;
@@ -173,6 +174,7 @@ pub(crate) fn digest_of(path: &Path) -> Option<String> {
 
 /// Copy one file into `<dir>/artifacts/<sha256>/<filename>` and describe
 /// it for the manifest.
+#[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-066#transport")]
 pub(crate) fn stage_file(
     dir: &Path,
     file: &Path,

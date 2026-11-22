@@ -30,6 +30,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-019#instances");
 
+use specmark::spec;
 use std::collections::BTreeSet;
 
 use semver::Version;
@@ -89,6 +90,7 @@ impl DistributionComponentName {
     /// The wire string this component name spells — the same value the
     /// schema's closed vocabulary declares, and the name the installer
     /// scripts read out of `components[].name`.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-019#SEAM-BUNDLE")]
     pub fn as_str(&self) -> &'static str {
         match self {
             Self::Vibe => "vibe",
@@ -99,6 +101,7 @@ impl DistributionComponentName {
 }
 
 impl BundleDistributionManifest {
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-019#SEAM-BUNDLE")]
     pub fn new(
         version: Version,
         source_commit: impl Into<String>,
@@ -128,6 +131,7 @@ impl BundleDistributionManifest {
         Ok(manifest)
     }
 
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-019#SEAM-BUNDLE")]
     pub fn validate(&self) -> Result<(), ReleaseManifestError> {
         validate_schema(self.schema_version)?;
         validate_identity(
@@ -152,6 +156,7 @@ impl BundleDistributionManifest {
         Ok(())
     }
 
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-019#SEAM-BUNDLE")]
     pub fn to_json_bytes(&self) -> Result<Vec<u8>, ReleaseManifestError> {
         self.validate()?;
         let mut canonical = self.clone();
@@ -165,6 +170,7 @@ impl BundleDistributionManifest {
         )
     }
 
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-019#SEAM-BUNDLE")]
     pub fn from_json_slice(bytes: &[u8]) -> Result<Self, ReleaseManifestError> {
         validate_buffer_size(
             "bundle manifest",
@@ -178,6 +184,7 @@ impl BundleDistributionManifest {
 }
 
 impl PlatformDistributionFragment {
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-019#SEAM-BUNDLE")]
     pub fn new(
         asset: DistributionAsset,
         bootstrap: DistributionAsset,
@@ -199,6 +206,7 @@ impl PlatformDistributionFragment {
         Ok(fragment)
     }
 
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-019#SEAM-BUNDLE")]
     pub fn validate(&self) -> Result<(), ReleaseManifestError> {
         validate_schema(self.schema_version)?;
         validate_identity(
@@ -269,6 +277,7 @@ impl PlatformDistributionFragment {
         Ok(())
     }
 
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-019#SEAM-BUNDLE")]
     pub fn to_json_bytes(&self) -> Result<Vec<u8>, ReleaseManifestError> {
         self.validate()?;
         let mut canonical = self.clone();
@@ -283,6 +292,7 @@ impl PlatformDistributionFragment {
         )
     }
 
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-019#SEAM-BUNDLE")]
     pub fn from_json_slice(bytes: &[u8]) -> Result<Self, ReleaseManifestError> {
         validate_buffer_size(
             "platform fragment",
@@ -296,6 +306,7 @@ impl PlatformDistributionFragment {
 }
 
 impl AggregateDistributionManifest {
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-019#RELEASE-TARGETS")]
     pub fn from_platforms(
         platforms: Vec<PlatformDistributionFragment>,
     ) -> Result<Self, ReleaseManifestError> {
@@ -400,6 +411,7 @@ impl AggregateDistributionManifest {
     /// (`PROP-019#release-production`). `from_platforms`, `to_json_bytes`
     /// and `from_json_slice` hold writers and release-host mirrors to it,
     /// so no incomplete release is ever written or republished.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-019#RELEASE-TARGETS")]
     pub fn validate(&self) -> Result<(), ReleaseManifestError> {
         self.validate_entries()?;
         let expected = SUPPORTED_DISTRIBUTION_TARGETS
@@ -447,6 +459,9 @@ impl AggregateDistributionManifest {
     /// twice, an aggregate with no entries, and an aggregate that does not
     /// describe `target` — that last one by name, because the operator's
     /// question is which file to copy next.
+    #[spec(
+        implements = "spec://org.vibevm.core/vibevm/common/PROP-019#RELEASE-SOURCE-PARTIAL-AGGREGATE"
+    )]
     pub fn validate_for_target(&self, target: &str) -> Result<(), ReleaseManifestError> {
         self.validate_entries()?;
         if !self
@@ -468,6 +483,7 @@ impl AggregateDistributionManifest {
         Ok(())
     }
 
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-019#SEAM-BUNDLE")]
     pub fn to_json_bytes(&self) -> Result<Vec<u8>, ReleaseManifestError> {
         self.validate()?;
         let mut canonical = self.clone();

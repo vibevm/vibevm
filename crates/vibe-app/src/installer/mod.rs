@@ -16,6 +16,7 @@ pub mod programs;
 pub mod shell;
 pub mod source_build;
 
+use specmark::spec;
 use std::fs;
 use std::io;
 use std::path::{Path, PathBuf};
@@ -122,6 +123,7 @@ pub(crate) struct Located<'a> {
 /// A `deny` row — or `unmatched = "deny"` with nothing matching — refuses
 /// before any connection with the code `remap_denied`. When every
 /// candidate fails, the error names each one and why.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-066#locator")]
 pub(crate) fn fetch_located(
     input: &Located<'_>,
     package_root: &Path,

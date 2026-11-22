@@ -66,6 +66,7 @@ pub fn bundle_file_name(version: &str, target: &str) -> String {
 /// );
 /// assert_eq!(bundle_version("vibevm-1.0.13-aarch64-apple-darwin.zip", target), None);
 /// ```
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-066#drops")]
 pub fn bundle_version(file_name: &str, target: &str) -> Option<semver::Version> {
     let middle = file_name
         .strip_prefix("vibevm-")?
@@ -96,6 +97,7 @@ pub fn release_dir_version(name: &str) -> Option<semver::Version> {
 /// assert_eq!(url_file_name("https://h.example/d/tool-1.0.tgz?x=1#f"), Some("tool-1.0.tgz".into()));
 /// assert_eq!(url_file_name("https://h.example/"), None);
 /// ```
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-066#drops")]
 pub fn url_file_name(url: &str) -> Option<String> {
     let without = url.split(['?', '#']).next().unwrap_or(url);
     let path = without.split_once("://").map_or(without, |(_, rest)| rest);
@@ -122,6 +124,7 @@ pub fn url_file_name(url: &str) -> Option<String> {
 /// );
 /// assert_eq!(with_separator("/srv/drop/t.tgz", '/'), "/srv/drop/t.tgz");
 /// ```
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-066#drops")]
 pub fn with_separator(shown: &str, separator: char) -> String {
     shown
         .chars()
@@ -142,6 +145,7 @@ pub fn with_separator(shown: &str, separator: char) -> String {
 /// let shown = shown_path(&joined);
 /// assert!(!shown.contains(if cfg!(windows) { '/' } else { '\\' }));
 /// ```
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-066#drops")]
 pub fn shown_path(path: &Path) -> String {
     let shown = path.display().to_string();
     if cfg!(windows) {
@@ -261,6 +265,7 @@ fn rungs(
 /// assert_eq!(row.only, Some(ArtifactKind::AppInput));
 /// assert_eq!(row.lookup, PathLookup::PackageDrop);
 /// ```
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-066#drops")]
 pub fn package_drop_row(drop: &Path, layer: Layer, source: &str) -> RemapRow {
     derived(
         RemapKey::Prefix(String::new()),
@@ -298,6 +303,7 @@ pub fn package_drop_row(drop: &Path, layer: Layer, source: &str) -> RemapRow {
 ///     RemapTarget::Path(PathBuf::from("/srv/rel/v1.0.13/DISTRIBUTIONS.json"))
 /// );
 /// ```
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-066#drops")]
 pub fn release_source_row(
     target: RemapTarget,
     layer: Layer,
@@ -339,6 +345,7 @@ impl Locator {
     /// The roots of every `[artifacts] packages` drop the rows declare, in
     /// winning order (highest layer first) — what an input declared with
     /// `drop = "packages"` is resolved through (`PROP-066#drops`).
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-066#drops")]
     pub fn package_drops(&self) -> Vec<&std::path::Path> {
         let mut drops: Vec<(u8, usize, &std::path::Path)> = self
             .rows()

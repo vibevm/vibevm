@@ -20,6 +20,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-076#SYS-HARNESS-EXECUTABLE");
 
+use specmark::spec;
 use std::path::Path;
 
 use anyhow::{Result, bail};
@@ -49,6 +50,7 @@ pub(crate) struct Launcher {
 
 /// Every launcher this machine has, built-ins first and user ones
 /// overriding a built-in of the same name.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-076#SYS-HARNESS-EXECUTABLE")]
 pub(crate) fn resolve_all(settings: &SettingsRoot, config: &AgentsConfig) -> Result<Vec<Launcher>> {
     let path = settings.agents_path().display().to_string();
     let mut launchers: Vec<Launcher> = HarnessKind::ALL
@@ -126,6 +128,7 @@ pub(crate) fn resolve(
 /// in a `vibe.toml`. The manifest parser would already reject the table as
 /// an unknown field; this says *why* instead, because "unknown field
 /// `agent`" is not the sentence a contributor needs to read.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-076#SYS-HARNESS-EXECUTABLE")]
 pub(crate) fn refuse_project_launchers(project_root: &Path) -> Result<()> {
     let path = project_root.join(vibe_core::manifest::Manifest::FILENAME);
     let Ok(text) = std::fs::read_to_string(&path) else {

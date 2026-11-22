@@ -57,6 +57,7 @@ use crate::citations::sources::SpecSources;
 use crate::content::ExampleBody;
 use crate::manifest;
 use crate::pages;
+use specmark::spec;
 
 /// Every example the source of the translation at `package_dir` authors,
 /// by page address and then by id.
@@ -105,6 +106,7 @@ use crate::pages;
 /// // empty rather than by refusing.
 /// assert!(borrowed(&adaptation, &SpecSources::new()).unwrap().is_empty());
 /// ```
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-057#LOC-EXAMPLE-REF")]
 pub fn borrowed(
     package_dir: &Path,
     sources: &SpecSources,
@@ -222,6 +224,7 @@ impl BorrowedPage {
     pub fn examples(&self) -> &BTreeMap<String, ExampleBody> {
         &self.examples
     }
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-057#LOC-EXAMPLE-REF")]
     pub fn recheck(&self) -> crate::Result<()> {
         if let Some(empty) = &self.empty {
             empty
@@ -250,6 +253,7 @@ impl BorrowedPage {
 /// assert!(prepared.examples().is_empty());
 /// prepared.recheck().unwrap();
 /// ```
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-057#LOC-EXAMPLE-REF")]
 pub fn prepare_borrowed_by(
     package_dir: &Path,
     page: &str,

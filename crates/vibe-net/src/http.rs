@@ -84,6 +84,7 @@ pub fn route<B: RouteBuilder>(builder: B, ambient: Ambient) -> Result<B, NetErro
 /// `[proxy]`, `ambient` decides. Either way the client is given the one
 /// trust set — the operating system's verifier plus the configured extra
 /// certificates ([`crate::TrustSet`]). Verification is never disabled.
+#[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-068#proxy")]
 pub fn route_in<B: RouteBuilder>(
     session: &Arc<NetworkSession>,
     builder: B,

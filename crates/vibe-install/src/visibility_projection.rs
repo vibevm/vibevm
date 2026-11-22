@@ -1,5 +1,6 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-050#effective-set");
 
+use specmark::spec;
 use std::collections::BTreeSet;
 
 use vibe_core::manifest::Manifest;
@@ -83,6 +84,7 @@ pub struct Projection {
 /// }).unwrap();
 /// assert!(result.analysis.effective.is_empty());
 /// ```
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-050#effective-set")]
 pub fn project(input: &ProjectionInput<'_>) -> Result<Projection> {
     let mut graph = VisibilityGraph::default();
     // Which coordinates the solve actually selected. An accepted
@@ -253,6 +255,7 @@ fn node_id(group: &Group, name: &str) -> NodeId {
 /// let graph = vibe_install::solve_visible_graph(&Empty, &root, &[], true).unwrap();
 /// assert!(graph.packages.is_empty());
 /// ```
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-050#RESOLVE-PRUNE-INTERLEAVING")]
 pub fn solve_visible_graph<S: crate::InstallSource + ?Sized>(
     source: &S,
     root_manifest: &Manifest,
@@ -429,6 +432,7 @@ impl<P: VersionEnumerator + ?Sized> VersionEnumerator for FilteringDepProvider<'
 /// }
 /// assert!(metadata_manifest(&Missing, &PackageRef::parse("org.x/missing").unwrap()).is_err());
 /// ```
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-050#RESOLVE-PRUNE-INTERLEAVING")]
 pub fn metadata_manifest<P: DepProvider>(
     provider: &P,
     pkg: &PackageRef,
@@ -464,6 +468,7 @@ pub fn metadata_manifest<P: DepProvider>(
 /// let graph = solve_with_visibility_mask(Empty, None, &[], &BTreeSet::new(), true).unwrap();
 /// assert!(graph.packages.is_empty());
 /// ```
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-050#RESOLVE-PRUNE-INTERLEAVING")]
 pub fn solve_with_visibility_mask<P: VersionEnumerator>(
     provider: P,
     solver: Option<&str>,

@@ -20,6 +20,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-075#TEMPLATE-DISCOVERY");
 
+use specmark::spec;
 use std::collections::{BTreeMap, BTreeSet};
 use std::path::{Path, PathBuf};
 
@@ -41,6 +42,7 @@ impl TemplateLayer {
     ///
     /// `Ok(None)` means this package publishes no template revision —
     /// the ordinary case for every package in the tree.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-075#TEMPLATE-DISCOVERY")]
     pub fn discover_in_directory(
         &self,
         registry_root: &Path,
@@ -244,6 +246,7 @@ impl TemplateLayer {
 /// // A `template` key in some other table is not the flag.
 /// assert!(!declares_template("[package]\nname = \"t\"\n\n[other]\ntemplate = true\n"));
 /// ```
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-075#TEMPLATE-DOCUMENT-READING")]
 pub fn declares_template(manifest_toml: &str) -> bool {
     #[derive(serde::Deserialize)]
     struct OnlyPackage {
@@ -277,6 +280,7 @@ pub fn declares_template(manifest_toml: &str) -> bool {
 /// );
 /// assert!(declared_version("[package]\nname = \"t\"\n").is_none());
 /// ```
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-075#TEMPLATE-DOCUMENT-READING")]
 pub fn declared_version(manifest_toml: &str) -> Option<semver::Version> {
     #[derive(serde::Deserialize)]
     struct OnlyPackage {

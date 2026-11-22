@@ -3,6 +3,7 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-074#OVERRIDE-CONTROL
 use crate::{cli::UserOverrideCommand, output};
 use anyhow::{Context, Result, bail};
 use serde::{Deserialize, Serialize};
+use specmark::spec;
 use std::path::{Path, PathBuf};
 use vibe_core::cancellation::CancellationToken;
 use vibe_safefs::{ExternalStore, Project};
@@ -194,6 +195,7 @@ pub(crate) fn observed_root(path: &Path) -> Result<Option<(PathBuf, bool)>> {
     };
     Ok(Some((override_root(&settings, binding), binding.enabled)))
 }
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-074#OVERRIDE-CONTROLS")]
 pub(crate) fn run(
     ctx: &output::Context,
     command: UserOverrideCommand,
@@ -418,6 +420,7 @@ pub(crate) fn user_enabled(path: &Path) -> Result<bool> {
         .find(|row| row.identity == selected.identity)
         .is_none_or(|row| row.user_enabled))
 }
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-074#OVERRIDE-CONTROLS")]
 pub(crate) fn set_user_enabled(
     ctx: &output::Context,
     path: &Path,

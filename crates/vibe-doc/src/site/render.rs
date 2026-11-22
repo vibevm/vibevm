@@ -41,6 +41,7 @@ use crate::build::{self, Format};
 use crate::citations::SpecSources;
 use crate::error::{DocError, Result};
 use crate::manifest;
+use specmark::spec;
 
 /// The three projections a site serves, in the order they are written.
 ///
@@ -171,6 +172,7 @@ impl Rendered {
 /// and three trees holding the «render failed» page. The only way out
 /// with an error is a failure of the OUTPUT — a directory that cannot be
 /// written — because that is not about the package at all.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-057#SITE-RENDER-IDEMPOTENT")]
 pub fn render(pair: &Pair, prepare: &dyn Prepare, options: &Options) -> Result<Rendered> {
     let mut notes = Vec::new();
     match attempt(pair, prepare, options, &mut notes) {

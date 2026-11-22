@@ -1,8 +1,10 @@
 //! Command-facing projection operations over the shared receipt owners.
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-018#vibe-skill");
 use super::*;
+use specmark::spec;
 
 impl DeclaredSkillProjection {
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-018#CMD-SKILL-INSTALL")]
     pub fn install(&self, dry_run: bool) -> Result<Vec<PackageSkillReport>> {
         let mut reports = Vec::new();
         let mut processed = std::collections::BTreeSet::new();
@@ -227,6 +229,7 @@ impl DeclaredSkillProjection {
         Ok(rows)
     }
 
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-018#CMD-SKILL-UNINSTALL")]
     pub fn uninstall(&self, dry_run: bool) -> Result<Vec<PackageSkillReport>> {
         let mut reports = Vec::with_capacity(self.tasks.len());
         let mut processed = std::collections::BTreeSet::new();

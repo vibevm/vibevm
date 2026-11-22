@@ -8,6 +8,7 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-059#launcher-operati
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-059#menu");
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-059#launcher-catalog");
 
+use specmark::spec;
 use std::path::{Path, PathBuf};
 
 use vibe_core::manifest::{IconDecl, LauncherDecl, LauncherKind, LauncherSource, launcher_command};
@@ -104,6 +105,7 @@ fn or_default(own: &[String], fallback: &[String]) -> Vec<String> {
 /// `applications/icons` keeps the package-relative icon files — together
 /// with the user layer and the usage facts every row quotes
 /// (`PROP-059#launcher-catalog`).
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-059#launcher-operations")]
 pub fn listing(
     installation: &Installation,
     storage: &Storage,
@@ -297,6 +299,7 @@ fn row(
 /// launchers (and only installations that have one) when `menu_only`, and
 /// the home and the revision a client compares instead of refetching it
 /// (`PROP-059#launcher-catalog`).
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-059#launcher-catalog")]
 pub fn listing_all(
     index: &Index,
     storage: &Storage,
@@ -340,6 +343,7 @@ pub fn listing_all(
 /// `vibe app icon`: the best existing file of the launcher's icon set, or of
 /// the application's when the launcher has none; without a launcher the
 /// application's, then the default launcher's (`PROP-059#menu`).
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-059#menu")]
 pub fn icon_choice(
     installation: &Installation,
     storage: &Storage,

@@ -1,6 +1,7 @@
 //! Original requirement occurrences before package-reference flattening.
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#solver");
 use crate::DepProviderError;
+use specmark::spec;
 use vibe_core::{
     PackageRef,
     manifest::{Manifest, Requires},
@@ -59,6 +60,7 @@ pub struct OriginalRequirement<P> {
 /// assert!(edges.is_empty());
 /// # Ok::<(), vibe_resolver::DepProviderError>(())
 /// ```
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#solver")]
 pub fn original_requirements<P>(
     manifest: &Manifest,
     pin: impl Fn(&Requires, &PackageRef) -> Option<P>,

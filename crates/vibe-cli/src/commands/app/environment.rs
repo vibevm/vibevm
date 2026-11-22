@@ -6,6 +6,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-065#env-step");
 
+use specmark::spec;
 use std::path::Path;
 
 use anyhow::Result;
@@ -69,6 +70,7 @@ fn from_kind(kind: ValueKind) -> RegistryValueKind {
 
 /// The write that applies `entry` over `current`, and the entry with the
 /// replaced value recorded; `None` when nothing changes.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-065#env-step")]
 pub(crate) fn apply_write(
     entry: &EnvEntry,
     current: Option<&RawUserVar>,
@@ -121,6 +123,7 @@ pub(crate) fn apply_write(
 /// or deleted, an unset one restored, a PATH entry taken out again — and
 /// a `Path` that vibe itself created is deleted rather than left empty
 /// once its last entry is gone.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-065#env-step")]
 pub(crate) fn remove_write(
     entry: &EnvEntry,
     current: Option<&RawUserVar>,

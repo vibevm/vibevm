@@ -15,6 +15,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-025#manifest");
 
+use specmark::spec;
 use std::path::Path;
 
 use serde::{Deserialize, Serialize};
@@ -32,6 +33,7 @@ pub enum ToolChannel {
 }
 
 impl ToolChannel {
+    #[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-025#manifest")]
     pub const fn as_str(self) -> &'static str {
         match self {
             ToolChannel::Binary => "binary",
@@ -69,6 +71,7 @@ pub struct Tool {
 /// served by a binary that is itself declared. Both are true and an agent
 /// needs both: the binary is what a human runs, the server is what an agent
 /// speaks to, and collapsing them would hide one of the two.
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-025#manifest")]
 pub fn collect_tools(project_root: &Path) -> Result<Vec<Tool>, BinsError> {
     let mut out: Vec<Tool> = Vec::new();
 

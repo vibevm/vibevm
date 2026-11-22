@@ -15,6 +15,7 @@
 //! hasher. Slots predating `.vibe-slot.toml` retain the registry tree-hash
 //! path, including recipe dispatch for both historical wire forms.
 
+use specmark::spec;
 use std::collections::HashMap;
 use std::path::Path;
 
@@ -296,6 +297,7 @@ impl SlotVerifier for RegistrySlotVerifier {
 /// than [`SlotCheck::Verified`] answers `false`, and the caller then performs
 /// the ordinary apply.
 #[must_use]
+#[spec(implements = "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#install-workflow-in-detail")]
 pub fn resolution_slots_verified(
     workspace_root: &Path,
     resolution: &[ResolvedDep],

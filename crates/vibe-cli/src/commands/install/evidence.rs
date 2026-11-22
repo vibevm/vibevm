@@ -21,6 +21,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-065#ordinary-plan");
 
+use specmark::spec;
 use std::collections::BTreeMap;
 use std::path::{Path, PathBuf};
 use std::sync::{Arc, Mutex};
@@ -93,6 +94,7 @@ impl StepEvidence {
         }
     }
 
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-065#ordinary-plan")]
     pub(crate) fn stream(
         &self,
         entry: &vibe_install::SlotLifecyclePlanEntry,
@@ -166,6 +168,7 @@ impl StepEvidence {
     /// One contribution ended: append its row, write its log, and rewrite
     /// `steps.json`. Answers with the log it wrote, which is the path a
     /// failure's warning names (PROP-065 `#ordinary-failure`).
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-065#ordinary-plan")]
     pub(crate) fn record(&self, report: &SlotLifecycleReport) -> Option<PathBuf> {
         let Some(target) = &report.slot_target else {
             // A host-declared contribution belongs to no package version, so

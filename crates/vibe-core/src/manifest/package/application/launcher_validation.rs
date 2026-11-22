@@ -4,6 +4,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-059#menu");
 
+use specmark::spec;
 use std::collections::BTreeSet;
 use std::path::Path;
 
@@ -23,6 +24,7 @@ impl LauncherDecl {
     /// `launchers_from`, where a row may omit `name`, `executable` and
     /// `kind` to override a derived launcher field by field. `at` is the
     /// row's address, `installer_options[i].launchers[j]`.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-059#launch-points")]
     pub(crate) fn validate(
         &self,
         override_allowed: bool,

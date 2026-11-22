@@ -391,6 +391,7 @@ impl SiteProfile {
     /// The profile's `[[remap]]` rows as one local-layer source labelled
     /// [`SITE_PROFILE_SOURCE`] — what the composition root places beneath
     /// the user's own `settings.toml` rows.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-019#SITE-PROFILE-LAYER")]
     pub fn remap_rows(&self, origin: &str) -> Result<LoadedSource, SiteProfileError> {
         crate::remap::rows_from_decls(
             self.remap.clone(),
@@ -405,6 +406,7 @@ impl SiteProfile {
 
     /// The registry layer (`PROP-002#registry-layers`, scope `site`): the
     /// tables a `registry.toml` would carry.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-019#SITE-PROFILE-LAYER")]
     pub fn registry_layer(&self) -> GlobalRegistryConfig {
         GlobalRegistryConfig {
             registries: self.registries.clone(),
@@ -417,6 +419,7 @@ impl SiteProfile {
 
     /// The user-config tables the profile supplies, as a `config.toml`
     /// would carry them.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-019#SITE-PROFILE-LAYER")]
     pub fn user_config_layer(&self) -> UserConfig {
         UserConfig {
             artifacts: self.artifacts.clone(),
@@ -461,6 +464,7 @@ pub struct InstalledSiteProfile {
 /// (`<settings-dir>/site-profile.toml`). A missing file is `Ok(None)`; a
 /// stored file that no longer validates (edited by hand) is an error, so it
 /// is noticed rather than silently ignored.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-019#site-profile")]
 pub fn installed() -> Result<Option<InstalledSiteProfile>, SiteProfileError> {
     match crate::settings::site_profile_path() {
         Some(path) => installed_at(&path),
@@ -469,6 +473,7 @@ pub fn installed() -> Result<Option<InstalledSiteProfile>, SiteProfileError> {
 }
 
 /// [`installed`] for an explicit path.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-019#site-profile")]
 pub fn installed_at(path: &Path) -> Result<Option<InstalledSiteProfile>, SiteProfileError> {
     let text = match std::fs::read_to_string(path) {
         Ok(text) => text,
@@ -543,6 +548,7 @@ pub struct SiteReceipt {
 
 impl SiteReceipt {
     /// Read a receipt; a missing file is `Ok(None)`.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-019#SITE-PROFILE-APPLY")]
     pub fn load_from(path: &Path) -> Result<Option<Self>, SiteProfileError> {
         let text = match std::fs::read_to_string(path) {
             Ok(text) => text,
@@ -565,6 +571,7 @@ impl SiteReceipt {
     /// The receipt as it would be written over `existing`
     /// ([`crate::toml_preserve::render_preserving`], so a comment someone
     /// added to the receipt survives a re-apply).
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-019#SITE-PROFILE-APPLY")]
     pub fn render(&self, existing: Option<&str>, path: &Path) -> Result<String, SiteProfileError> {
         crate::toml_preserve::render_preserving(existing, self).map_err(|source| {
             SiteProfileError::Serialize {

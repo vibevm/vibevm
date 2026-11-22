@@ -50,6 +50,7 @@ pub struct ResolvedPackage {
 /// assert_eq!(requested.name.as_str(), "demo");
 /// assert!(vibe_app::qualified_ref("demo").is_err());
 /// ```
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-059#commands")]
 pub fn qualified_ref(spelling: &str) -> Result<PackageRef, ResolveError> {
     let requested = PackageRef::parse(spelling).map_err(|error| ResolveError::Coordinate {
         spelling: spelling.into(),
@@ -74,6 +75,7 @@ pub fn qualified_ref(spelling: &str) -> Result<PackageRef, ResolveError> {
 /// let registry = vibe_registry::LocalRegistry::new(tmp.path().to_path_buf()).unwrap();
 /// assert!(!vibe_app::local_registry_carries(&registry, "org.example/demo").unwrap());
 /// ```
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-059#commands")]
 pub fn local_registry_carries(
     registry: &LocalRegistry,
     spelling: &str,
@@ -96,6 +98,7 @@ pub fn local_registry_carries(
 }
 
 /// Resolve from a local directory registry the caller constructed.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-059#commands")]
 pub fn from_local_registry(
     registry: &LocalRegistry,
     registry_root: &Path,
@@ -161,6 +164,7 @@ pub fn from_local_registry(
 ///
 /// `seed_default_registry` is the caller's composition-root reading of the
 /// `VIBE_NO_DEFAULT_REGISTRY` posture; this crate reads no environment.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-059#commands")]
 pub fn from_global(
     settings_root: &Path,
     spelling: &str,
@@ -198,6 +202,7 @@ pub fn from_global(
 /// [`from_global_with_operation`] resolves through, built here so a
 /// read-only enumeration can use the identical source chain without
 /// resolving or fetching anything (PROP-075 `#VERSIONS-LIST`).
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-075#VERSIONS-LIST")]
 pub fn global_resolver(
     settings_root: &Path,
     spelling: &str,
@@ -256,6 +261,7 @@ pub fn global_resolver(
 ///
 /// `Ok(None)` means no configured per-package registry names a template
 /// revision for the package, which is the ordinary case.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-075#TEMPLATE-IN-A-REPO")]
 pub fn template_from_global_with_operation(
     settings_root: &Path,
     group: &vibe_core::Group,
@@ -285,6 +291,7 @@ pub fn template_from_global_with_operation(
     }
 }
 
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-075#VERSIONS-LIST")]
 pub fn versions_from_global_with_operation(
     settings_root: &Path,
     group: &vibe_core::Group,
@@ -357,6 +364,7 @@ fn local_versions(
     }
 }
 
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-059#commands")]
 pub fn from_global_with_operation(
     settings_root: &Path,
     spelling: &str,
@@ -389,6 +397,7 @@ pub fn from_global_with_operation(
 
 /// Check the manifest against the registry coordinate and take its
 /// application declarations.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-059#commands")]
 pub fn from_manifest(
     manifest: Manifest,
     root: PathBuf,
@@ -438,6 +447,7 @@ pub fn from_manifest(
     })
 }
 
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-059#commands")]
 pub(crate) fn canonical_dir(path: &Path) -> Result<PathBuf, String> {
     let metadata = fs::symlink_metadata(path)
         .map_err(|error| format!("reading `{}`: {error}", path.display()))?;

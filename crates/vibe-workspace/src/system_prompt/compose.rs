@@ -29,6 +29,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-076#SYS-BAND-ORDER");
 
+use specmark::spec;
 use std::ops::Range;
 
 use vibe_core::manifest::{HostChoice, LaneForm, Manifest, TargetSelection};
@@ -74,6 +75,7 @@ pub enum SegmentId {
 
 impl SegmentId {
     /// The layer-qualified id, as a frame line and a sidecar spell it.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-076#SYS-SEGMENT-FRAMING")]
     pub fn as_str(self) -> &'static str {
         match self {
             SegmentId::Template => "project.template",
@@ -142,6 +144,7 @@ impl PrefixSettings {
     /// no `[project]` or `[package]` identity has no node id a marker line
     /// could carry, and an identity that cannot be written into an XML
     /// comment is named rather than sanitised.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-076#SYS-MANIFEST-TABLE")]
     pub fn of(manifest: &Manifest) -> Result<Self, WorkspaceError> {
         let section = manifest.system_prompt.clone().unwrap_or_default();
         let node_id = node_id(manifest)?;
@@ -193,6 +196,7 @@ struct Part {
 /// give the same bytes on every host, which is the claim `#SYS-DETERMINISM`
 /// makes and the reason a provider that caches on an exact prefix match can
 /// cache these bytes.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-076#SYS-BAND-ORDER")]
 pub fn compose_prefix(
     inputs: &CapturedPrefixInputs,
     settings: &PrefixSettings,

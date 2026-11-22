@@ -6,6 +6,7 @@
 //! settings or journals.
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-073#NATIVE-STOP-LAW");
 
+use specmark::spec;
 use std::process::ExitCode;
 
 use vibe_lifecycle::native::NATIVE_HELPER_MODE_ARG as HELPER_MODE_ARG;
@@ -14,6 +15,7 @@ use vibe_lifecycle::native::NATIVE_HELPER_MODE_ARG as HELPER_MODE_ARG;
 const STACK: usize = 32 << 20;
 
 /// Serve one helper session when argv selects the hidden helper mode.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-073#NATIVE-STOP-LAW")]
 pub(crate) fn entry() -> Option<ExitCode> {
     let args = std::env::args_os().skip(1).collect::<Vec<_>>();
     if args.first().is_none_or(|first| first != HELPER_MODE_ARG) {

@@ -38,6 +38,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-076#SYS-CAPTURE-REUSE");
 
+use specmark::spec;
 use vibe_core::manifest::SpecFormat;
 
 use crate::WorkspaceError;
@@ -161,6 +162,7 @@ pub enum InputRole {
 
 impl InputRole {
     /// The role's own name, as a witness spells it.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-076#SYS-CAPTURE-REUSE")]
     pub fn as_str(self) -> &'static str {
         match self {
             InputRole::Template => "template",
@@ -172,6 +174,7 @@ impl InputRole {
     /// The layer-qualified segment id this role's body carries in the
     /// composed prefix. Qualified from version 1 so two layers' sidecars
     /// merge without collision (`#SYS-LAYER-CONCATENATION`).
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-076#SYS-LAYER-CONCATENATION")]
     pub fn segment_id(self) -> &'static str {
         match self {
             InputRole::Template => "project.template",
@@ -236,6 +239,7 @@ pub enum LaneSpelling {
 
 impl LaneSpelling {
     /// The spelling the selected target format publishes.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-076#SYS-LANE-SPELLING")]
     pub fn of(spec_format: SpecFormat) -> Self {
         match spec_format {
             SpecFormat::Xml => LaneSpelling::StaticXml,
@@ -244,6 +248,7 @@ impl LaneSpelling {
     }
 
     /// The sidecar's own name for this spelling.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-076#SYS-LANE-SPELLING")]
     pub fn as_str(self) -> &'static str {
         match self {
             LaneSpelling::StaticMd => "static-md",
@@ -252,6 +257,7 @@ impl LaneSpelling {
     }
 
     /// The artifact's basename.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-076#SYS-LANE-SPELLING")]
     pub fn file_name(self) -> &'static str {
         match self {
             LaneSpelling::StaticMd => vibe_core::layout::STATIC_MD,

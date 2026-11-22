@@ -57,12 +57,14 @@ use vibe_doc::{llms, manifest};
 
 use crate::Reader;
 use crate::error::ApiError;
+use specmark::spec;
 
 mod media;
 mod resolve;
 mod statics;
 
 /// Build the router.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-057#SITE-MOUNT")]
 pub fn router(reader: Arc<Reader>) -> Router {
     Router::new()
         .route("/healthz", get(healthz))
@@ -403,6 +405,7 @@ fn page(reader: &Reader, address: &str) -> Result<Response, ApiError> {
 }
 
 /// One rendered island, dressed in the reader's shell.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-057#LOCAL-SERVE")]
 pub(crate) fn in_shell(reader: &Reader, page: &vibe_doc::pages::Page, island: &str) -> String {
     let stem = vibe_doc::pages::document_of(&page.rel);
     let at = format!("{}{}{stem}", reader.base, reader.prefix);

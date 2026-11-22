@@ -12,6 +12,7 @@
 //! for: one node per row, its versions as children.
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-075#MIRROR-DRY-RUN-OUTPUT");
 
+use specmark::spec;
 use vibe_wire::generated::registry_mirror_report as wire;
 
 use super::super::config::VersionList;
@@ -20,6 +21,7 @@ use crate::output;
 
 /// `AV-FMT-009`'s `templates[]`: the same facts the human form draws, for
 /// a client that reads the document instead.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-075#MIRROR-DRY-RUN-OUTPUT")]
 pub(crate) fn rows(
     selection: &Selection,
     outcomes: &[SnapshotOutcome],
@@ -120,6 +122,7 @@ fn version_row(version: &semver::Version, row: Option<&RowProjection>) -> wire::
 /// the bytes to fetch, the total and the inputs of unknown size — are
 /// only known once the projection exists, and a row must be drawn once,
 /// not twice.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-075#MIRROR-DRY-RUN-OUTPUT")]
 pub(crate) fn show(ctx: &output::Context, rows: &[SnapshotOutcome], projection: &Projection) {
     if ctx.is_json() {
         return;

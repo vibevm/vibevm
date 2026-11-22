@@ -2,6 +2,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#OBS-REGISTRY");
 
+use specmark::spec;
 use std::collections::BTreeMap;
 use std::io::Write;
 use std::path::Path;
@@ -29,6 +30,7 @@ use crate::output;
 
 use vibe_orchestrator as world;
 
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#OBS-REGISTRY")]
 pub fn run(ctx: &output::Context, args: ExtensionsArgs) -> Result<()> {
     let inspect = ctx.progress().task("Inspecting extension registry");
     let loaded = match world::inspect(&args.path) {
@@ -107,6 +109,7 @@ pub fn run(ctx: &output::Context, args: ExtensionsArgs) -> Result<()> {
     Ok(())
 }
 
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#OBS-REGISTRY")]
 pub fn run_compile(ctx: &output::Context, args: CompileArgs, offline: bool) -> Result<()> {
     if ctx.is_json() || ctx.is_quiet() {
         bail!(

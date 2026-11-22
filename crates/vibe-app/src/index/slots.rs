@@ -27,6 +27,7 @@ pub struct SlotState {
 impl SlotState {
     /// A slot whose default is `default` and which is on with no applied
     /// PATH entries.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-059#slot-off")]
     pub fn with_default(default: Option<String>) -> Self {
         Self {
             default,

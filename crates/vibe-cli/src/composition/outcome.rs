@@ -1,7 +1,9 @@
 //! Final command outcome rendering preserves the existing typed error chain.
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-073#OPERATION-EFFECTS-LAW");
 use crate::{commands, exit_code::as_exit_code};
+use specmark::spec;
 use std::process::ExitCode;
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-073#OPERATION-EFFECTS-LAW")]
 pub(crate) fn finish(
     ctx: &crate::output::Context,
     cancellation: &vibe_core::cancellation::CancellationToken,

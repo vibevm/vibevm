@@ -11,6 +11,7 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-068#proxy");
 
 use serde::{Deserialize, Serialize};
+use specmark::spec;
 use std::path::{Path, PathBuf};
 
 /// `[tls]` — extra certificates, always additive.
@@ -58,6 +59,7 @@ pub enum ExtraCa {
 
 impl ExtraCa {
     /// The paths this value names, in the order written.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-068#proxy-trust")]
     pub fn paths(&self) -> Vec<PathBuf> {
         match self {
             Self::One(path) => vec![path.clone()],
@@ -74,6 +76,7 @@ impl TlsConfig {
     }
 
     /// The paths `extra_ca` names, in the order written.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-068#proxy-trust")]
     pub fn extra_ca_paths(&self) -> Vec<PathBuf> {
         self.extra_ca
             .as_ref()
@@ -107,6 +110,7 @@ impl TlsConfig {
     /// assert_eq!(empty.problem().unwrap().0, "tls.extra_ca");
     /// assert!(TlsConfig::default().problem().is_none());
     /// ```
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-068#proxy-trust")]
     pub fn problem(&self) -> Option<(&'static str, String, &'static str)> {
         for path in self.extra_ca_paths() {
             if path.as_os_str().is_empty() {
@@ -122,6 +126,7 @@ impl TlsConfig {
 
     /// The `extra_ca` entries as `(key, path)` pairs, for the site
     /// profile's path validation and its Windows-path notes.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-068#proxy-trust")]
     pub fn declared_paths(&self) -> Vec<(&'static str, PathBuf)> {
         self.extra_ca_paths()
             .into_iter()
@@ -150,6 +155,7 @@ impl TlsConfig {
 ///     [PathBuf::from("/etc/corp-ca.pem"), PathBuf::from("/etc/corp-certs")]
 /// );
 /// ```
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-068#proxy-trust")]
 pub fn effective_extra_ca(tls: &TlsConfig, proxy: &super::ProxyConfig) -> Vec<PathBuf> {
     let mut out: Vec<PathBuf> = Vec::new();
     let mut push = |path: &Path| {

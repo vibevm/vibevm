@@ -21,6 +21,7 @@ specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#r
 
 use serde::Serialize;
 use serde::de::DeserializeOwned;
+use specmark::spec;
 use toml_edit::{ArrayOfTables, DocumentMut, Item, Table, TableLike};
 
 /// Render `value` for writing over a file whose current text is
@@ -46,6 +47,7 @@ use toml_edit::{ArrayOfTables, DocumentMut, Item, Table, TableLike};
 /// assert!(rendered.contains("[extra]\n# untouched\nk = 'v'\n"));
 /// assert!(rendered.contains("name = \"new\" # keep me?"));
 /// ```
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#registry-layers")]
 pub fn render_preserving<T>(existing: Option<&str>, value: &T) -> Result<String, toml::ser::Error>
 where
     T: Serialize + DeserializeOwned,

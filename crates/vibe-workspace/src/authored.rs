@@ -1,6 +1,7 @@
 //! Original discovery inputs remain separate from effective version-expanded manifests.
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-HOST-BOOT");
 use crate::{Workspace, WorkspaceError};
+use specmark::spec;
 use std::collections::{BTreeMap, BTreeSet};
 use std::path::Path;
 use vibe_core::manifest::Manifest;
@@ -91,6 +92,7 @@ impl Workspace {
     /// let after = vibe_workspace::Workspace::load(root.path()).unwrap();
     /// before.validate_authored_transition(&after, &before.root, &before.root_manifest).unwrap();
     /// ```
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-HOST-BOOT")]
     pub fn validate_authored_transition(
         &self,
         after: &Self,

@@ -31,6 +31,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#publish");
 
+use specmark::spec;
 use std::time::Duration;
 
 use serde::{Deserialize, Serialize};
@@ -62,6 +63,9 @@ pub struct GitverseRepoCreator {
 }
 
 impl GitverseRepoCreator {
+    #[spec(
+        implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#PUB-GITVERSE-CREATOR"
+    )]
     pub fn new(token: Token, expected_org: impl Into<String>) -> Result<Self, PublishError> {
         Self::with_endpoint(
             token,
@@ -71,6 +75,9 @@ impl GitverseRepoCreator {
         )
     }
 
+    #[spec(
+        implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#PUB-GITVERSE-CREATOR"
+    )]
     pub fn with_endpoint(
         token: Token,
         expected_org: impl Into<String>,

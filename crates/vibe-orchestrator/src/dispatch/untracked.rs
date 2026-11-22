@@ -3,6 +3,7 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#ENGINE-ALGORITHM");
 
 use anyhow::Result;
+use specmark::spec;
 use std::sync::Arc;
 use vibe_lifecycle::{
     AgentBackend, ExecutionReuse, HandlerExecution, LifecycleLease, LifecycleRun, RunMetadata,
@@ -24,6 +25,7 @@ use crate::ports::RunObserver;
 ///
 /// It also owes no verify boundary: a clean epoch is state-blind, so there is
 /// no durable half to compare against and no member to publish.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#ENGINE-ALGORITHM")]
 pub fn dispatch_plan_untracked(
     observer: &dyn RunObserver,
     plan: &RitualPlan,

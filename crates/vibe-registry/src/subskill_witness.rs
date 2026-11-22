@@ -1,6 +1,7 @@
 //! Source-admitted configured lazy-pull bytes, not membership inferred from cache.
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-069#EFFECT-CONSUMERS");
 use anyhow::{Result, bail, ensure};
+use specmark::spec;
 use std::{collections::BTreeSet, path::Path};
 use vibe_core::{
     ContentHash,
@@ -79,6 +80,7 @@ fn validate_declaration(row: &LockedSubskill, declaration: &[u8]) -> Result<()> 
 
 impl LocalSubskillAdmission {
     /// Called only by the retained local-source owner, before cache acquisition.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-069#EFFECT-CONSUMERS")]
     pub(crate) fn capture(
         root: &Path,
         manifest: &Manifest,
@@ -143,6 +145,7 @@ impl LocalSubskillAdmission {
     }
 
     /// Retain only a source observation that still agrees with the fetched tree.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-069#EFFECT-CONSUMERS")]
     pub fn finish(self, cached: &crate::CachedPackage) -> Result<Vec<LockedSubskill>> {
         ensure!(
             cached.manifest == self.manifest,
@@ -194,6 +197,7 @@ impl LocalSubskillAdmission {
 
 /// Validate the retained configured row and return the bytes of this held read.
 /// There is no cache hydration, sidecar trust, pathname reopen or legacy fallback.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-069#EFFECT-CONSUMERS")]
 pub fn read_configured_subskill(
     store_root: &Path,
     package: &LockedPackage,

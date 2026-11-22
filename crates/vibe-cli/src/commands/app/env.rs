@@ -171,6 +171,9 @@ fn inherited() -> (Option<String>, Option<OsString>) {
 }
 
 /// Resolve a selection and compose the child environment for it.
+#[specmark::spec(
+    implements = "spec://org.vibevm.core/vibevm/common/PROP-075#ACTIVATION-ENV-OUTPUT"
+)]
 pub(crate) fn resolve(shell: Shell, args: &AppEnvArgs) -> Result<Resolved> {
     let cwd = std::env::current_dir()?;
     let project = enclosing_project(&cwd);
@@ -394,6 +397,9 @@ pub(crate) fn lines(resolved: &Resolved) -> Vec<String> {
 }
 
 /// What the resolution reported and did not fail on, one human line each.
+#[specmark::spec(
+    implements = "spec://org.vibevm.core/vibevm/common/PROP-075#ACTIVATION-ENV-OUTPUT"
+)]
 pub(crate) fn notices(activation: &Activation) -> Vec<String> {
     let mut notices = activation.notices.clone();
     for selection in &activation.selections {
@@ -431,6 +437,9 @@ pub(crate) fn notices(activation: &Activation) -> Vec<String> {
 }
 
 /// The `vibe-app-env/1` answer.
+#[specmark::spec(
+    implements = "spec://org.vibevm.core/vibevm/common/PROP-075#ACTIVATION-ENV-OUTPUT"
+)]
 pub(crate) fn document(
     resolved: &Resolved,
     written: Option<&vibe_app::WrittenVersionFile>,

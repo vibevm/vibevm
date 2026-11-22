@@ -265,6 +265,9 @@ impl InstallOutcome {
     /// later step (the lock write) failed. `observer` learns each undone
     /// slot through [`super::SlotLifecycle::rolled_back`]. The `Err` names the
     /// first undo step that failed; every other step was still attempted.
+    #[spec(
+        implements = "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-011#materialise-diff"
+    )]
     pub fn roll_back(&mut self, observer: Option<&dyn super::SlotLifecycle>) -> Result<(), String> {
         match self.rollback.take() {
             Some(mut rollback) => rollback.restore(observer, &self.materialised),

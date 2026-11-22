@@ -1,6 +1,7 @@
 //! Exact heading-path selection; export names and source witnesses belong to hosts.
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-045#ORDINARY-COMMONMARK-PARSER");
 use super::*;
+use specmark::spec;
 /// Typed selector failure; the document/raw source remains available on every error.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum HeadingSelectionError {
@@ -50,6 +51,7 @@ impl CommonMarkDoc {
     /// assert_eq!(doc.resolve_headings(&["B".into(), "Same".into()]).unwrap().raw(), "## Same\nsecond\n");
     /// assert_eq!(doc.resolve_headings(&[]).unwrap_err(), HeadingSelectionError::MalformedSelector);
     /// ```
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-045#ORDINARY-COMMONMARK-PARSER")]
     pub fn resolve_headings(
         &self,
         headings: &[String],

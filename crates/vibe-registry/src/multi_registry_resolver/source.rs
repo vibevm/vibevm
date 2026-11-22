@@ -12,6 +12,7 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#registry-model");
 
 use super::*;
+use specmark::spec;
 
 /// One source in the priority-ordered registry walk. Git registries
 /// ([`GitPerPackageRegistry`] — per-package repos under an org URL, versions by
@@ -108,6 +109,9 @@ impl MonorepoRegistrySource {
     /// The local-directory view under `--offline`: only a local repository,
     /// and only its local remap candidates, are read. `None` when the
     /// repository is not local.
+    #[spec(
+        implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#OFFLINE-LOCAL-ONLY"
+    )]
     pub fn offline_local(&self) -> Result<Option<&LocalRegistry>, RegistryError> {
         if !self.is_local() {
             return Ok(None);
@@ -212,6 +216,9 @@ impl RegistrySource {
     /// The `[[registry]].name` — identifies the source for the fetch
     /// dispatch (a resolution records `registry_name`; fetch finds the source
     /// by name) and for the failure-discriminator attempts.
+    #[spec(
+        implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#REG-FIELD-NAME"
+    )]
     pub fn name(&self) -> &str {
         match self {
             RegistrySource::Git(g) => g.name(),
@@ -222,6 +229,9 @@ impl RegistrySource {
 
     /// The `[[registry]].url` — for the failure-discriminator attempts and
     /// the lockfile `source_url`.
+    #[spec(
+        implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#REG-FIELD-URL"
+    )]
     pub fn url(&self) -> &str {
         match self {
             RegistrySource::Git(g) => g.org_url(),
@@ -250,6 +260,9 @@ impl RegistrySource {
     /// every listing over the corporate shape — one mirrored monorepo and
     /// nothing else — then had no root at all (PROP-075
     /// `#VERSIONS-CHANNEL-DISCOVERY`).
+    #[spec(
+        implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#registry-model"
+    )]
     pub fn directory_root(&self, offline: bool) -> Option<PathBuf> {
         match self {
             RegistrySource::Git(_) => None,
@@ -284,6 +297,9 @@ pub(crate) fn is_local_directory_url(url: &str) -> bool {
 /// `file:/x` — and bare paths verbatim. UNC (`file://host/share`) and anything
 /// else with a non-empty authority are rejected: they are not the
 /// plain-directory registry shape `LocalRegistry` serves.
+#[spec(
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#LOCALDIR-REGISTRY"
+)]
 pub(crate) fn local_path_from_url(url: &str) -> Result<PathBuf, RegistryError> {
     let s = url.trim();
     let raw = if let Some(after) = s

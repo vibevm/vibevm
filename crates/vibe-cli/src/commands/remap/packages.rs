@@ -489,6 +489,7 @@ fn report(ctx: &output::Context, home: &RemapHome, installed: &[Installed]) -> R
 }
 
 /// Diagnose missing demanded authority before project installation or consent writes.
+#[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-066#package")]
 pub(crate) fn preflight_project_sources(selected: &Path) -> Result<()> {
     let manifest_path = selected.join(Manifest::FILENAME);
     if !manifest_path.exists() {
@@ -525,6 +526,7 @@ pub(crate) fn preflight_project_sources(selected: &Path) -> Result<()> {
 }
 
 /// Parent workspace owns the lock; a legacy misplaced child lock is not migrated.
+#[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-066#package")]
 pub(crate) fn owning_workspace(selected: &Path) -> Result<vibe_workspace::Workspace> {
     let selected = selected.canonicalize()?;
     let workspace = vibe_workspace::Workspace::discover(&selected)?;

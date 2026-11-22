@@ -3,6 +3,7 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-073#SOURCE-POLICY");
 
 use crate::remap::endpoint::{EndpointObservation, normalized_host_key, observe_endpoint};
 use serde::{Deserialize, Deserializer, Serialize};
+use specmark::spec;
 use std::collections::BTreeSet;
 use std::fmt;
 
@@ -26,6 +27,7 @@ pub use error::SourcePolicyError;
 #[serde(try_from = "String", into = "String")]
 pub struct RegistryPin(String);
 impl RegistryPin {
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-073#SOURCE-POLICY-LAW")]
     pub fn new(value: String) -> Result<Self, SourcePolicyError> {
         if value.is_empty() || value.trim() != value || value.chars().any(char::is_control) {
             return Err(SourcePolicyError::InvalidRegistryPin);
@@ -98,6 +100,7 @@ impl From<HostingSelector> for String {
 }
 impl HostingSelector {
     /// Exact destination keys consumed by transport admission, without DNS.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-073#SOURCE-POLICY")]
     pub fn host_keys(&self) -> Vec<&str> {
         match self {
             Self::Github => vec![
@@ -116,6 +119,7 @@ impl HostingSelector {
             Self::Host(host) => vec![host],
         }
     }
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-073#SOURCE-POLICY")]
     pub fn matches_endpoint(&self, address: &str) -> bool {
         let EndpointObservation::Network(authority) = observe_endpoint(address) else {
             return false;
@@ -170,6 +174,7 @@ impl SourcePolicyDecl {
     /// assert_eq!(merged.prefer_hosting, Some(vec![HostingSelector::Gitverse]));
     /// assert_eq!(merged.exclude_hosting, vec![HostingSelector::Github, HostingSelector::Gitverse]);
     /// ```
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-073#SOURCE-POLICY")]
     pub fn over(&self, lower: &SourcePolicyDecl) -> SourcePolicyDecl {
         let mut exclude_hosting = self.exclude_hosting.clone();
         for selector in &lower.exclude_hosting {
@@ -236,6 +241,7 @@ impl EffectiveSourcePolicy {
     /// let policy = EffectiveSourcePolicy::merge(&empty, &empty, &empty).unwrap();
     /// assert!(policy.denied_host_keys().is_empty());
     /// ```
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-073#SOURCE-POLICY")]
     pub fn merge(
         user: &SourcePolicyDecl,
         project: &SourcePolicyDecl,
@@ -284,6 +290,7 @@ impl EffectiveSourcePolicy {
     pub fn excluded_selectors(&self) -> impl Iterator<Item = &HostingSelector> {
         self.excluded.iter()
     }
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-073#SOURCE-POLICY")]
     pub fn denied_host_keys(&self) -> BTreeSet<String> {
         self.excluded
             .iter()
@@ -325,6 +332,7 @@ impl EffectiveSourcePolicy {
         self.excluded_by(endpoint).is_some()
     }
 
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-073#SOURCE-POLICY")]
     pub fn preference_rank(&self, actual_source: &str) -> usize {
         self.preference
             .iter()

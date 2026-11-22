@@ -8,6 +8,9 @@ use std::collections::{BTreeMap, BTreeSet};
 impl PackageConfiguration {
     /// Derive selected public authored data from an admitted historical record.
     /// No parameter, path, environment or secret input is expanded.
+    #[specmark::spec(
+        implements = "spec://org.vibevm.core/vibevm/common/PROP-069#DORMANT-SOURCE-BOUNDARY"
+    )]
     pub fn selected_data(
         &self,
         kind: crate::PackageKind,
@@ -65,6 +68,9 @@ impl PackageConfiguration {
     }
 
     /// Validated public bool projection, separate from selected effect data.
+    #[specmark::spec(
+        implements = "spec://org.vibevm.core/vibevm/common/PROP-069#DORMANT-SOURCE-BOUNDARY"
+    )]
     pub fn selected_parameters(
         &self,
         kind: crate::PackageKind,

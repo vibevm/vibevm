@@ -22,10 +22,16 @@ pub struct ManagedHttpClient {
 }
 impl ManagedHttpClient {
     /// Capture the existing unbound HTTP policy, for a separately authorized domain owner.
+    #[specmark::spec(
+        implements = "spec://org.vibevm.core/vibevm/common/PROP-073#OPERATION-EFFECTS-LAW"
+    )]
     pub fn legacy(timeout: Duration) -> Result<Self, ClientBuildError> {
         Self::captured(timeout, None, reqwest::header::HeaderMap::new(), None, None)
     }
     /// A legacy domain request cannot bypass a source client's immutable binding.
+    #[specmark::spec(
+        implements = "spec://org.vibevm.core/vibevm/common/PROP-073#OPERATION-EFFECTS-LAW"
+    )]
     pub fn execute_legacy(
         &self,
         method: reqwest::Method,
@@ -45,6 +51,9 @@ impl ManagedHttpClient {
     }
 
     /// Anonymous bound payload reads disable implicit redirects, proxies and retries.
+    #[specmark::spec(
+        implements = "spec://org.vibevm.core/vibevm/common/PROP-073#HTTP-ADMISSION-LAW"
+    )]
     pub fn bound(timeout: Duration, binding: Arc<HttpAdmission>) -> Result<Self, ClientBuildError> {
         Self::captured(
             timeout,
@@ -77,6 +86,9 @@ impl ManagedHttpClient {
     /// its own. The chain belongs to [`Self::get_with_headers`], because
     /// only a walk that sees each hop can keep those headers on the origin
     /// the address named.
+    #[specmark::spec(
+        implements = "spec://org.vibevm.core/vibevm/common/PROP-073#OPERATION-EFFECTS-LAW"
+    )]
     pub fn direct(
         timeout: Duration,
         binding: Option<Arc<HttpAdmission>>,
@@ -172,6 +184,9 @@ impl ManagedHttpClient {
     pub(crate) fn get(&self, url: impl reqwest::IntoUrl) -> RequestBuilder {
         self.blocking.get(url)
     }
+    #[specmark::spec(
+        implements = "spec://org.vibevm.core/vibevm/common/PROP-073#OPERATION-EFFECTS-LAW"
+    )]
     pub fn get_anonymous(
         &self,
         address: &str,
@@ -193,6 +208,9 @@ impl ManagedHttpClient {
     /// binding is in force. Only a [`Self::direct`] client may do this,
     /// because any other pool would follow a redirect before this side
     /// could decide.
+    #[specmark::spec(
+        implements = "spec://org.vibevm.core/vibevm/common/PROP-073#OPERATION-EFFECTS-LAW"
+    )]
     pub fn get_with_headers(
         &self,
         address: &str,

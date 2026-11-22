@@ -1,6 +1,7 @@
 //! Intrinsic Lane validation, independent of Closure and the production projector.
 
 use crate::doctree::{FenceSnapshot, FenceTracker};
+use specmark::spec;
 
 use super::super::ir::{
     ArtifactFrame, DocumentAddress, LaneChunk, LaneContribution, LaneIr, LaneNode,
@@ -63,6 +64,7 @@ pub(crate) fn validate_lane(lane: &LaneIr) -> Result<(), LaneValidationError> {
 
 /// The same intrinsic walk, returning its [`LaneShape`] summary for the
 /// inter-pass verifier.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#IR-REFACTOR")]
 pub(crate) fn validate_shape(lane: &LaneIr) -> Result<LaneShape, LaneValidationError> {
     validate_frame(lane)?;
     let mut closing_fences = Vec::with_capacity(lane.contributions.len());

@@ -4,6 +4,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-065#feature-tree");
 
+use specmark::spec;
 use std::collections::{BTreeMap, BTreeSet};
 
 use crate::manifest::{FieldError, FieldPath, declarant_path, is_portable_token};
@@ -244,6 +245,7 @@ impl InstallerOptionDecl {
 
 /// Type-specific fields and a default that the type accepts; `at` is the
 /// parameter's row.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-065#feature-tree")]
 pub(crate) fn validate_parameter(
     parameter: &ParameterDecl,
     table: &str,

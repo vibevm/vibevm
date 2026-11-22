@@ -10,6 +10,7 @@ use super::{
 };
 use crate::migration_planning::{MigrationPlanningResponse, plan_migration_json};
 use serde_json::Value;
+use specmark::spec;
 use vibe_core::manifest::Manifest;
 use vibe_wire::generated::migration::e1::{
     application_journal::ApplicationJournal,
@@ -158,6 +159,9 @@ fn plan_identities(plan: &Plan, before: &str, after: &str, diff: &str) -> Checke
     Ok(())
 }
 
+#[spec(
+    implements = "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-APPLICATION-WIRE"
+)]
 pub fn decode_operation_json(
     text: &str,
     grant: &OwnedManifestMigrationFile,
@@ -248,6 +252,9 @@ fn validate_operation(
     }
 }
 
+#[spec(
+    implements = "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-APPLICATION-WIRE"
+)]
 pub fn decode_journal_json(text: &str, grant: &OwnedManifestMigrationFile) -> Checked<Plan> {
     let journal: ApplicationJournal = serde_json::from_str(text).map_err(|_| {
         invalid(
@@ -261,6 +268,9 @@ pub fn decode_journal_json(text: &str, grant: &OwnedManifestMigrationFile) -> Ch
 
 /// Validates retained logical intent; actual filesystem bindings and before.bin
 /// bytes must still be measured by the runtime under the participating barrier.
+#[spec(
+    implements = "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-APPLICATION-WIRE"
+)]
 pub fn validate_journal(
     j: &ApplicationJournal,
     grant: &OwnedManifestMigrationFile,

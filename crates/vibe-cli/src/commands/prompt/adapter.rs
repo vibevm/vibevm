@@ -25,6 +25,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-076#SYS-REQUEST-ENVELOPE");
 
+use specmark::spec;
 use std::path::{Path, PathBuf};
 
 use anyhow::{Context, Result, bail};
@@ -159,6 +160,7 @@ impl RequestEnvelope {
     /// point of a witnessed band is that the bytes sent are the bytes
     /// measured, and a digest that no longer matches means the two are no
     /// longer the same request.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-076#SYS-REQUEST-ENVELOPE")]
     pub(crate) fn build(
         prepared: &PreparedRequest,
         prefix_path: &Path,

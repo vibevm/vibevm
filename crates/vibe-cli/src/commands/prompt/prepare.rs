@@ -3,6 +3,7 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-076#SYS-CONTINUATION-CACHEABLE");
 
 use anyhow::{Result, bail};
+use specmark::spec;
 use vibe_core::manifest::TargetOs;
 use vibe_wire::generated::prompt_prepare as wire;
 use vibe_workspace::system_prompt::{PreparedBand, check_node_prompt, prepare_request};
@@ -14,6 +15,7 @@ use super::Selected;
 /// The protocol tag `vibe-prompt-prepare/1`.
 pub(crate) const PROTOCOL: &str = "vibe-prompt-prepare/1";
 
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-076#SYS-CONTINUATION-CACHEABLE")]
 pub(crate) fn run(
     ctx: &output::Context,
     selected: &Selected,

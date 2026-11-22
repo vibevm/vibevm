@@ -438,6 +438,9 @@ pub(crate) fn analyze_effective_bound_native<P: OwnerNativeCompileProvider>(
 }
 
 #[allow(clippy::too_many_arguments)]
+#[specmark::spec(
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#install"
+)]
 pub(crate) fn analyze_effective_bound_native_with_sources<P: OwnerNativeCompileProvider>(
     effective: &boot::EffectiveBoot,
     workspace_root: &std::path::Path,

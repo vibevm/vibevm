@@ -1,6 +1,7 @@
 //! Historical inspection does not reconstruct executable current compiler state.
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#IR-EMBED-PROVENANCE-EPOCH");
 
+use specmark::spec;
 use vibe_wire::generated::compiler_ir::e1::ir::Ir;
 
 /// A structural/token/epoch refusal while inspecting a historical snapshot.
@@ -28,6 +29,7 @@ pub enum HistoricalCompilerIrError {
 /// assert!(matches!(historical,
 ///     vibe_wire::generated::compiler_ir::e1::ir::Ir::SourceDocument(_)));
 /// ```
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#IR-EMBED-PROVENANCE-EPOCH")]
 pub fn inspect_historical_compiler_ir(bytes: &[u8]) -> Result<Ir, HistoricalCompilerIrError> {
     let value: Ir =
         super::json::from_strict_slice(bytes).map_err(|error| HistoricalCompilerIrError::Read {

@@ -7,6 +7,7 @@
 //! comparison evidence for one invocation — never a second IR store, never a
 //! repair, and never a wire field.
 
+use specmark::spec;
 use std::fmt;
 
 use super::super::ir::{
@@ -349,6 +350,7 @@ pub(super) fn verify(before: &VerificationWitness, ir: &AnyIr) -> Result<(), Ver
 /// intrinsic frame/context agreement check) is named by the exact part it
 /// moved, and the whole-context comparison stays as the residual that still
 /// catches an artifact id, target or compile-mode rewrite.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#INTER-PASS-VERIFIER")]
 pub(crate) fn verify_lane_transition(
     before: &LaneWitness,
     actual: &LaneIr,

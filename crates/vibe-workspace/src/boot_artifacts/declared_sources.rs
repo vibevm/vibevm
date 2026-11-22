@@ -6,6 +6,7 @@ specmark::scope!(
 use crate::boot::{BootEntry, BootProvenance};
 use crate::install::ResolvedDep;
 use crate::{WorkspaceError, vibedeps};
+use specmark::spec;
 use std::collections::BTreeMap;
 use std::path::{Path, PathBuf};
 use std::sync::Arc;
@@ -30,6 +31,7 @@ pub(crate) struct DeclaredBootSources {
     generated: Arc<BTreeMap<PathBuf, generated::GeneratedObservation>>,
 }
 impl DeclaredBootSources {
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-INSTALLED-READ")]
     pub(crate) fn validate_emission(
         resolution: &[ResolvedDep],
         sources: Option<&Self>,
@@ -259,6 +261,7 @@ impl DeclaredBootSources {
         }
         Ok(Some((binding, row)))
     }
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-INSTALLED-READ")]
     pub(crate) fn snippet(
         &self,
         dep: &ResolvedDep,

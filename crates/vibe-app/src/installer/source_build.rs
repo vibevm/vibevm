@@ -6,6 +6,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-059#source-build");
 
+use specmark::spec;
 use std::fs::{self, File};
 use std::io::{self, Read};
 use std::path::{Path, PathBuf};
@@ -32,6 +33,7 @@ pub(crate) struct Fetched {
 
 /// The file name a source keeps: the last URL path segment (`source` when
 /// empty) or the file name of its package path.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-059#source-build")]
 pub(crate) fn source_filename(source: &SourceInputDecl) -> Result<String, InstallerError> {
     let raw = match (&source.url, &source.path) {
         (Some(url), _) => {
@@ -94,6 +96,7 @@ fn extraction(
 ///
 /// The second half of the answer is which candidate served the bytes —
 /// `None` when a cache hit or a package file needed no fetch at all.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-059#source-build")]
 pub(crate) fn fetch(
     cache_root: &Path,
     package_root: &Path,
@@ -249,6 +252,7 @@ fn named(mut served: super::ServedBy, input: &str) -> super::ServedBy {
 /// `<sources>/<name>/` holds the extracted archive or the file itself; a
 /// stale directory of the same name is replaced. Returns the notes of the
 /// extracted archives (links this platform could not materialise).
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-059#source-build")]
 pub(crate) fn lay_out(sources: &Path, fetched: &[Fetched]) -> Result<Vec<String>, InstallerError> {
     fs::create_dir_all(sources).map_err(|source| super::io("creating", sources, source))?;
     let mut notes = Vec::new();
@@ -326,6 +330,7 @@ fn recipe_command(
 }
 
 /// Move `VIBE_OUT` to `payload`; across filesystems, copy it instead.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-059#source-build")]
 pub(crate) fn move_payload(out: &Path, payload: &Path) -> Result<(), InstallerError> {
     if fs::rename(out, payload).is_ok() {
         return Ok(());

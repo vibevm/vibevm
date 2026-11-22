@@ -319,6 +319,7 @@ impl EffectiveReleaseSource {
     /// The remap row this source lowers to, when it redirects by layout.
     /// GitHub needs none; GitVerse is read through its API, so the row
     /// would have nothing to say.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-019#release-sources")]
     pub(crate) fn row(&self) -> Option<RemapRow> {
         let reason = format!(
             "release source `{}` from {}",

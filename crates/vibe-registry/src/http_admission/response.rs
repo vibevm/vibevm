@@ -2,6 +2,7 @@
 //! joins the worker before returning; no blocking HTTP work is detached.
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-073#OPERATION-EFFECTS-LAW");
 use super::*;
+use specmark::spec;
 use std::{
     io::{self, Read},
     sync::{
@@ -28,24 +29,28 @@ pub struct ControlledResponse {
     stop: Arc<AtomicBool>,
 }
 impl ManagedResponse {
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-073#OPERATION-EFFECTS-LAW")]
     pub fn status(&self) -> reqwest::StatusCode {
         match self {
             Self::Blocking(r) => r.status(),
             Self::Controlled(r) => r.status,
         }
     }
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-073#OPERATION-EFFECTS-LAW")]
     pub fn headers(&self) -> &reqwest::header::HeaderMap {
         match self {
             Self::Blocking(r) => r.headers(),
             Self::Controlled(r) => &r.headers,
         }
     }
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-073#OPERATION-EFFECTS-LAW")]
     pub fn url(&self) -> &Url {
         match self {
             Self::Blocking(r) => r.url(),
             Self::Controlled(r) => &r.url,
         }
     }
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-073#OPERATION-EFFECTS-LAW")]
     pub fn content_length(&self) -> Option<u64> {
         match self {
             Self::Blocking(r) => r.content_length(),
@@ -56,6 +61,7 @@ impl ManagedResponse {
         serde_json::from_slice(&self.bytes()?)
             .map_err(|error| HttpGetError::Io(io::Error::other(error)))
     }
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-073#OPERATION-EFFECTS-LAW")]
     pub fn text(self) -> Result<String, HttpGetError> {
         match self {
             Self::Blocking(response) => response.text().map_err(HttpGetError::Transport),
@@ -66,6 +72,7 @@ impl ManagedResponse {
             }
         }
     }
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-073#OPERATION-EFFECTS-LAW")]
     pub fn bytes(mut self) -> Result<Vec<u8>, HttpGetError> {
         let mut bytes = Vec::new();
         self.read_to_end(&mut bytes)

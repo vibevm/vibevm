@@ -4,6 +4,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-047#tool");
 
+use specmark::spec;
 use std::path::Path;
 
 use anyhow::{Context as _, Result, bail};
@@ -52,6 +53,7 @@ use grounding::{
     Ground, campaign_id, ground, refresh_state, refresh_state_with_evidence, resolve_campaign,
 };
 
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-047#tool")]
 pub fn run(ctx: &Context, args: ProgressArgs) -> Result<()> {
     match args.command {
         ProgressSubcommand::Scan(a) => scan(ctx, &a),

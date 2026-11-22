@@ -174,6 +174,7 @@ pub enum ChannelError {
 /// assert_eq!(plain.version, VersionSpec::parse("^22")?);
 /// # Ok::<(), Box<dyn std::error::Error>>(())
 /// ```
+#[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-075#CHANNEL-SYNTAX")]
 pub fn lower_channel(
     pkgref: &mut PackageRef,
     resolver: &dyn ChannelResolver,
@@ -233,6 +234,7 @@ pub fn lower_channel(
 /// let req = exact(&"24.22.2".parse().unwrap());
 /// assert_eq!(req.to_string(), "=24.22.2");
 /// ```
+#[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-075#CHANNEL-SYNTAX")]
 pub fn exact(version: &semver::Version) -> semver::VersionReq {
     semver::VersionReq {
         comparators: vec![semver::Comparator {

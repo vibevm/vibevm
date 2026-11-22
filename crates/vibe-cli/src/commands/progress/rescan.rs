@@ -10,6 +10,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-047#baseline");
 
+use specmark::spec;
 use std::collections::{BTreeMap, BTreeSet};
 use std::path::Path;
 
@@ -22,6 +23,7 @@ use crate::output::Context;
 
 /// Three-way compare (sources ↔ markers ↔ baseline) plus the code-side
 /// rules, printing the four classes with their counts.
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-047#CMD-RESCAN")]
 pub fn rescan_cmd(ctx: &Context, a: &ProgressRescanArgs) -> Result<()> {
     let g = super::ground(&a.common)?;
     let base = Baseline::load(&a.baseline)?;

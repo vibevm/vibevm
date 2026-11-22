@@ -15,6 +15,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-068#dl");
 
+use specmark::spec;
 use std::path::{Path, PathBuf};
 use std::time::{Duration, Instant};
 
@@ -111,6 +112,7 @@ impl DlError {
 }
 
 /// `vibe dl`.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-068#dl")]
 pub fn run(ctx: &Context, args: DlArgs, offline: bool, verbose: bool) -> Result<()> {
     if args.test_proxy {
         return test_proxy::run(ctx, &args, offline);

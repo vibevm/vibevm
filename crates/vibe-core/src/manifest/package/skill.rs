@@ -13,6 +13,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-018#skill-decl");
 
+use specmark::spec;
 use std::path::{Path, PathBuf};
 
 use serde::{Deserialize, Serialize};
@@ -133,6 +134,7 @@ pub struct SkillResourceDecl {
 impl SkillDecl {
     /// Validate the Agent Skills identity and declarant-root-relative source
     /// path before either standalone or automatic projection can observe it.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-018#skill-decl")]
     pub fn validate(&self) -> Result<(), String> {
         if !Self::valid_name(&self.name) {
             return Err(format!(

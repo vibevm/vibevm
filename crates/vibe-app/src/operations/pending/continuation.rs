@@ -1,5 +1,6 @@
 //! Verified mixed-owner parent relations; application targets remain package-specific.
 use super::*;
+use specmark::spec;
 
 pub(crate) fn owner_path(
     settings: &SettingsRoot,
@@ -84,6 +85,7 @@ pub(crate) fn retained_for(
     retaining_full_import(settings, state)
 }
 /// Only verified forward/backward relations widen a hosted continuation.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-069#APP-CONFIGURATION-CONTINUATION")]
 pub(crate) fn continuation_target(
     settings: &SettingsRoot,
     state: &StepsFile,

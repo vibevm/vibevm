@@ -5,10 +5,12 @@ use crate::{
     output,
 };
 use anyhow::{Result, bail};
+use specmark::spec;
 use std::io::{IsTerminal, Read};
 use vibe_core::cancellation::CancellationToken;
 use vibe_secrets::{Expected, MetadataSnapshot, ProtectedValue, SecretId, Store};
 
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-000#TS-USER-KEYRING")]
 pub fn run(ctx: &output::Context, args: SecretsArgs, cancel: &CancellationToken) -> Result<()> {
     let settings = admitted_settings()?;
     let store = Store::at_settings(&settings)?;

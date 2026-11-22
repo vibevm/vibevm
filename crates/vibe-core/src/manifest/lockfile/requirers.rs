@@ -88,6 +88,7 @@ impl Lockfile {
     /// assert_eq!(noted[0].scope.as_str(), "build");
     /// assert!(lock.packages[0].required_by.is_empty());
     /// ```
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-065#app-dependencies")]
     pub fn record_app_requirements<'m>(
         &mut self,
         manifest_of: impl Fn(&LockedPackage) -> Option<&'m Manifest>,

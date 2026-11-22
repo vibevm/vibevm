@@ -89,6 +89,7 @@ pub enum DeclaredSkillProvider {
 }
 
 impl DeclaredSkillProvider {
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-018#vibe-skill")]
     pub fn identity(&self) -> String {
         match self {
             Self::Authored { group, name, .. } | Self::Installed { group, name, .. } => {
@@ -163,6 +164,7 @@ pub struct DeclaredSkillFilter<'a> {
 }
 
 impl<'a> DeclaredSkillFilter<'a> {
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-018#CMD-SKILL-INSTALL")]
     pub fn new(names: &'a [String], agent: Option<&'a str>) -> Self {
         Self {
             names,
@@ -185,6 +187,7 @@ impl<'a> DeclaredSkillFilter<'a> {
 
     /// The package-phase binding's default: every declared skill and every
     /// agent allowed by that skill's `agents` list.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-018#CMD-SKILL-INSTALL")]
     pub fn all() -> DeclaredSkillFilter<'static> {
         DeclaredSkillFilter {
             names: &[],
@@ -197,6 +200,7 @@ impl<'a> DeclaredSkillFilter<'a> {
 
 /// Collect every declared skill reachable from `project_root`: the root and
 /// workspace members, followed by each installed lockfile package.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-018#CMD-SKILL-LIST")]
 pub fn collect_declared_skills(project_root: &Path) -> Result<Vec<DeclaredSkill>> {
     let ws = Workspace::discover(project_root)
         .with_context(|| format!("loading workspace at `{}`", project_root.display()))?;

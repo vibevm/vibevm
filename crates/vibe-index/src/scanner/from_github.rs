@@ -62,6 +62,9 @@ pub struct FromGithubOptions {
 }
 
 impl FromGithubOptions {
+    #[spec(
+        implements = "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#SRC-FROM-GITHUB"
+    )]
     pub fn new(org: impl Into<String>, clone_into: PathBuf) -> Self {
         FromGithubOptions {
             api_base: DEFAULT_API_BASE.into(),
@@ -119,6 +122,7 @@ pub struct Repo {
 /// Unconditional — delegates to [`list_repos_conditional`] with no
 /// validator (which never takes the 304 path), so this is exactly the
 /// plain walk, not duplicated.
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#SRC-FROM-GITHUB")]
 pub fn list_repos(opts: &FromGithubOptions) -> Result<Vec<Repo>> {
     match list_repos_conditional(opts, None)? {
         CondOutcome::Modified { repos, .. } => Ok(repos),
@@ -131,6 +135,7 @@ pub fn list_repos(opts: &FromGithubOptions) -> Result<Vec<Repo>> {
 }
 
 /// `Link: <…>; rel="next", <…>; rel="last"` → the URL bound to `rel="next"`.
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#SRC-FROM-GITHUB")]
 pub fn parse_next_link(link: &str) -> Option<String> {
     for part in link.split(',') {
         let part = part.trim();
@@ -173,6 +178,7 @@ pub fn clone_org(opts: &FromGithubOptions) -> Result<PathBuf> {
 /// warm cache survives across runs. Factored out of [`clone_org`] so
 /// the cache-aware path can reuse the clone half with a repo list it
 /// already holds — possibly served from the cache without re-listing.
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#SRC-FROM-GITHUB")]
 pub fn clone_repos_into(opts: &FromGithubOptions, repos: &[Repo]) -> Result<PathBuf> {
     std::fs::create_dir_all(&opts.clone_into).map_err(|e| Error::Io {
         path: opts.clone_into.clone(),
@@ -294,6 +300,7 @@ pub enum CondOutcome {
 /// leaves page 1 byte-identical would be missed. That is exactly why
 /// `rescan-org` exists (Р4): only a full traversal is certain, and
 /// the cheap probe is a default optimisation, not a guarantee.
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#INC-GITHUB")]
 pub fn list_repos_conditional(
     opts: &FromGithubOptions,
     validator: Option<&Validator>,
@@ -390,6 +397,7 @@ pub fn list_repos_conditional(
 ///   `rescan-org` skipping the probe) and the image re-persisted;
 /// - `None` — caching is off (`--no-cache-org`): enumerated without
 ///   any read or write, indistinguishable from pre-A3 (Р6).
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#cache-org")]
 pub fn resolve_repos(opts: &FromGithubOptions) -> Result<(Vec<Repo>, Option<bool>)> {
     let Some(cache_path) = opts.org_cache_path.as_deref() else {
         // Caching entirely off — plain enumeration, no image persisted.
@@ -453,6 +461,9 @@ pub fn resolve_repos(opts: &FromGithubOptions) -> Result<(Vec<Repo>, Option<bool
 /// passwords in its own log output, so the credentialised URL is
 /// safe to pass on the command line; vibevm itself MUST NEVER print
 /// it to stdout / stderr / JSON / log lines per [PROP-000 §20].
+#[spec(
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#SECRET-GITHUB-TOKENS"
+)]
 pub fn clone_url_with_token(url: &str, token: Option<&str>) -> String {
     let Some(token) = token else {
         return url.to_string();

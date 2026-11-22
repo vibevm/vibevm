@@ -4,6 +4,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-019#site-profile");
 
+use specmark::spec;
 use std::path::Path;
 
 use super::SiteProfile;
@@ -34,6 +35,7 @@ impl SiteProfile {
     /// assert!(notes.iter().all(|note| !note.contains("proxy.pac")));
     /// assert!(profile.windows_only_notes(true).is_empty());
     /// ```
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-019#site-profile")]
     pub fn windows_only_notes(&self, windows: bool) -> Vec<String> {
         if windows {
             return Vec::new();
@@ -93,6 +95,7 @@ pub fn is_absolute_anywhere(path: &Path) -> bool {
 /// assert!(is_windows_absolute(Path::new("D:\\vibe")));
 /// assert!(!is_windows_absolute(Path::new("/srv/vibe")));
 /// ```
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-019#INSTALL-ROOT-LEAD")]
 pub fn is_windows_absolute(path: &Path) -> bool {
     let text = path.to_string_lossy();
     let bytes = text.as_bytes();
@@ -118,6 +121,7 @@ pub fn is_windows_absolute(path: &Path) -> bool {
 /// assert!(!starts_at_home(Path::new("opt")));
 /// assert!(!starts_at_home(Path::new("/srv/vibe")));
 /// ```
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-019#INSTALL-ROOT-HOME")]
 pub fn starts_at_home(path: &Path) -> bool {
     matches!(
         path.components().next(),

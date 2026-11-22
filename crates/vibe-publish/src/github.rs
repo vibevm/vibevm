@@ -39,6 +39,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#publish");
 
+use specmark::spec;
 use std::borrow::Cow;
 use std::time::Duration;
 
@@ -82,6 +83,9 @@ pub struct GithubRepoCreator {
 }
 
 impl GithubRepoCreator {
+    #[spec(
+        implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#PUB-GITHUB-CREATOR"
+    )]
     pub fn new(token: Token, expected_org: impl Into<String>) -> Result<Self, PublishError> {
         Self::with_endpoint(
             token,
@@ -91,6 +95,9 @@ impl GithubRepoCreator {
         )
     }
 
+    #[spec(
+        implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#PUB-GITHUB-CREATOR"
+    )]
     pub fn with_endpoint(
         token: Token,
         expected_org: impl Into<String>,

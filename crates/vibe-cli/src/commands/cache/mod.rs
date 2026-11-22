@@ -19,10 +19,12 @@ mod clean;
 mod import;
 
 use anyhow::{Context, Result};
+use specmark::spec;
 
 use crate::cli::{CacheArgs, CacheSubcommand};
 use crate::output;
 
+#[spec(implements = "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#command-summary")]
 pub(crate) fn run(ctx: &output::Context, args: CacheArgs, root_offline: bool) -> Result<()> {
     match args.command {
         CacheSubcommand::Path => run_path(ctx),

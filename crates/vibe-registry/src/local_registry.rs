@@ -8,6 +8,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#registry-model");
 
+use specmark::spec;
 use std::fs;
 use std::path::{Path, PathBuf};
 
@@ -49,6 +50,9 @@ pub struct LocalRegistry {
 }
 
 impl LocalRegistry {
+    #[spec(
+        implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#LOCALDIR-REGISTRY"
+    )]
     pub fn new(root: impl Into<PathBuf>) -> Result<Self, RegistryError> {
         let root = root.into();
         if !root.is_dir() {
@@ -98,6 +102,9 @@ impl LocalRegistry {
     }
 
     /// List every version available for `<group>/<name>`, sorted ascending.
+    #[spec(
+        implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#LOCALDIR-REGISTRY"
+    )]
     pub fn list_versions(
         &self,
         group: &Group,
@@ -163,6 +170,9 @@ impl LocalRegistry {
     /// Unlike a remote git registry — which needs a PROP-005 index to
     /// be enumerated cheaply — a local directory is itself the
     /// enumeration, so this needs no index.
+    #[spec(
+        implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#LOCALDIR-REGISTRY"
+    )]
     pub fn candidate_groups(&self, name: &str) -> Result<Vec<Group>, RegistryError> {
         let mut groups: Vec<Group> = Vec::new();
         let entries = fs::read_dir(&self.root).map_err(|source| RegistryError::Io {
@@ -205,6 +215,9 @@ impl LocalRegistry {
     }
 
     /// Pick the highest version that satisfies `req`.
+    #[spec(
+        implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#LOCALDIR-REGISTRY"
+    )]
     pub fn resolve(&self, pkgref: &PackageRef) -> Result<ResolvedPackage, RegistryError> {
         let group = pkgref
             .group
@@ -276,6 +289,9 @@ impl LocalRegistry {
     /// An already-present entry is returned untouched (our code never
     /// rewrites one); its manifest is read back so the
     /// `CachedPackage` describes the bytes that will materialise.
+    #[spec(
+        implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#LOCALDIR-REGISTRY"
+    )]
     pub fn fetch(
         &self,
         resolved: &ResolvedPackage,

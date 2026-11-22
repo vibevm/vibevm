@@ -30,6 +30,7 @@ mod source;
 mod store;
 mod tools;
 
+use specmark::spec;
 use std::io::IsTerminal;
 use std::path::{Path, PathBuf};
 
@@ -166,6 +167,7 @@ fn absolute_lexical(path: &Path, cwd: &Path) -> Option<PathBuf> {
     normalized.is_absolute().then_some(normalized)
 }
 
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-019#VVM-COMMAND-GROUP")]
 pub fn run(ctx: &output::Context, args: VvmArgs, env: VvmEnv) -> Result<()> {
     match args.command {
         VvmSubcommand::Install(a) => observed(ctx, "Installing vibevm", |progress| {

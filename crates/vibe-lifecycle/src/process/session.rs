@@ -14,6 +14,7 @@ pub(crate) struct SessionProcess {
 }
 
 impl SessionProcess {
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-073#NATIVE-STOP-LAW")]
     pub(crate) fn spawn(
         program: &std::path::Path,
         args: &[OsString],

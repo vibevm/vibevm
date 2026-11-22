@@ -74,6 +74,7 @@ impl ExternalAgent {
     /// assert!(vibe_app::ExternalAgent::from_values(None, Some("[]")).unwrap().is_none());
     /// assert!(vibe_app::ExternalAgent::from_values(Some("tool"), Some("--x")).is_err());
     /// ```
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-064#external-registration")]
     pub fn from_values(
         command: Option<&str>,
         args: Option<&str>,
@@ -126,6 +127,7 @@ pub enum RunMode {
 }
 
 impl RunMode {
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-064#modes")]
     pub fn as_str(self) -> &'static str {
         match self {
             Self::Interactive => "interactive",
@@ -170,6 +172,7 @@ pub struct Invocation {
 /// assert_eq!(select_agent(&config, None, None).unwrap().unwrap().id, "codex");
 /// assert!(select_agent(&AgentsConfig::default(), None, None).unwrap().is_none());
 /// ```
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-064#selection")]
 pub fn select_agent(
     config: &AgentsConfig,
     flag: Option<&str>,
@@ -203,6 +206,7 @@ impl SelectedAgent {
     /// The program to start for one step (`PROP-064#agent-definition`,
     /// `#external-registration`): templates are argument arrays expanded
     /// one placeholder at a time, never a shell string.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-064#agent-definition")]
     pub fn invocation(&self, step: &str, mode: RunMode, values: &Placeholders<'_>) -> Invocation {
         let work = values.work.to_string_lossy().into_owned();
         match &self.delivery {

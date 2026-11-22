@@ -25,6 +25,7 @@ mod plain;
 // the component library is the reuse unit (PROP-041 §1 #built-on-tree-tui).
 pub(crate) mod tui;
 
+use specmark::spec;
 use std::path::{Path, PathBuf};
 
 use anyhow::{Result, anyhow, bail};
@@ -38,6 +39,7 @@ use tui::settings::TreeSettings;
 
 /// Run `vibe tree` — resolve the project, build the model, then dispatch to the
 /// requested surface.
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-036#CLI-SURFACE")]
 pub fn run(ctx: &output::Context, args: TreeArgs) -> Result<()> {
     let settings = TreeSettings::new();
     let prefs = settings.load();

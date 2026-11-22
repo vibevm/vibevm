@@ -11,6 +11,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-053#root");
 
+use specmark::spec;
 use std::path::{Path, PathBuf};
 
 use anyhow::{Context, Result, bail};
@@ -33,6 +34,7 @@ const GENERATED_BOOT: [&str; 5] = [
 ];
 
 /// Run `vibe clean`, then any chained phase.
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-053#root")]
 pub fn run(
     ctx: &output::Context,
     args: CleanArgs,
@@ -89,6 +91,7 @@ pub(crate) fn plan_wipe_prepared(project_root: &Path, workspace: &Workspace) -> 
     })
 }
 
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-053#root")]
 pub(crate) fn confirm_wipe(
     ctx: &output::Context,
     plan: &CleanPlan,
@@ -122,6 +125,9 @@ pub(crate) fn confirm_wipe(
     Ok(())
 }
 
+#[spec(
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-053#CLEAN-REMOVES-DERIVED"
+)]
 pub(crate) fn apply_wipe(ctx: &output::Context, plan: CleanPlan) -> Result<PathBuf> {
     let target_count = usize::from(plan.deps_root.exists()) + plan.generated.len();
     let wipe = ctx.progress().task("Removing generated workspace state");

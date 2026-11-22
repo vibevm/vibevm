@@ -14,6 +14,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#lockfile");
 
+use specmark::spec;
 use std::fmt;
 
 use serde::{Deserialize, Serialize};
@@ -115,6 +116,7 @@ pub enum RoutePublication {
 }
 impl RoutePublication {
     /// An unanticipated serving endpoint may reduce visibility, never increase it.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-066#provenance")]
     pub fn observed(self, selected: &str, actual: &str) -> Self {
         if self == Self::Project
             && crate::progress::transfer::safe_remote(selected)

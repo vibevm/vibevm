@@ -11,6 +11,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-047#baseline");
 
+use specmark::spec;
 use std::path::PathBuf;
 
 use anyhow::{Result, bail};
@@ -21,6 +22,7 @@ use crate::output::Context;
 
 /// Project the campaign's fact-grain verdicts onto §7.3's unit-grain
 /// record and write it out, saying what it wrote and what it left out.
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-047#CMD-BASELINE")]
 pub fn baseline_cmd(ctx: &Context, a: &ProgressBaselineArgs) -> Result<()> {
     let g = super::ground(&a.common)?;
     let Some(campaign) = &g.campaign else {
