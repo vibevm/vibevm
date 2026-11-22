@@ -139,7 +139,7 @@ Keep it current-state; prune stale lines.
   `fractality/v1.0.0/target/debug/fractality.exe`; their example packet is
   `fractality/v1.0.0/vibevm/vibespecs/examples/hello-glm.toml`. The v1 Cargo
   workspace now addresses its installed toolchain directly under
-  `vibevm/vibedeps/org.vibevm.ai-native.rust-ai-native-lang/1.0.0/`, so the
+  `vibevm/vibedeps/org.vibevm.ai-native.rust-ai-native-lang/1.0.12/`, so the
   root-`vibedeps` junction workaround verified on 2026-08-30 applied only to
   the removed layout and is retired. After derived dependencies are cleaned,
   regenerate them from the v1 slot with `<host>/target/debug/vibe.exe install

@@ -99,7 +99,7 @@ target/debug/vibe.exe bin build typescript-ai-native --assume-yes
 From the repo root the same floor runs without pnpm at all. Run it directly when the documentation web package changes:
 
 ```sh
-vibevm/vibedeps/org.vibevm.ai-native.typescript-ai-native-lang/1.0.0/target/release/typescript-ai-native.exe \
+vibevm/vibedeps/org.vibevm.ai-native.typescript-ai-native-lang/1.0.12/target/release/typescript-ai-native.exe \
   floor --path vibevm/vibepacks/org.vibevm.doc/web/v1.0.12
 node vibevm/vibepacks/org.vibevm.doc/web/v1.0.12/design/audit/contrast.mjs
 ```

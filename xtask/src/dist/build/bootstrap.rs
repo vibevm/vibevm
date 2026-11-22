@@ -9,7 +9,7 @@ use anyhow::{Result, bail};
 /// absent from Git. This preparation applies only to the owned gate scratch.
 pub(super) fn prepare_self_check_dependencies(root: &Path) -> Result<()> {
     let source = root.join("vibevm/vibepacks/org.vibevm.doc/web/v1.0.12");
-    let slot = root.join("vibevm/vibedeps/org.vibevm.doc.web/1.0.0");
+    let slot = root.join("vibevm/vibedeps/org.vibevm.doc.web/1.0.12");
     if source.is_dir() && !slot.exists() {
         copy_gate_dependency(&source, &slot)?;
     }
