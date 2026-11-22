@@ -1,8 +1,8 @@
 schema = 1
-source_hash = "sha256:7ed8f57a57fc9a064669a7b212ca6b8fd49efd86689aaf0cd3ac8998313bd481"
+source_hash = "sha256:9f740d083d9ead26b52c96dc356d774eaf2040917126d69216140dd0784298ba"
 spec_format = "xml"
 converter_recipe = "specdoc/4"
-derived_hash = "sha256:ef7e50968da5e2c39d06bc56dbadfe13ccf90bbf2fbca32d13c7adfc2af0e38f"
+derived_hash = "sha256:ddb4d934de955a605f4a3e8ff7dd36db12d8ad5cd9b6ad949aeed8b4073bca38"
 
 [[file]]
 path = "LICENSE.md"
@@ -12,9 +12,15 @@ source = "LICENSE.md"
 
 [[file]]
 path = "README.xml"
-sha256 = "85f66a51940e2ebb0a343e659d07c6c519b1343896c9f481f4c74fff120c3f27"
+sha256 = "920cf4a4f5027e5c0e3eae305013657000aeadca9e2175c1c3bdcc22ede0287a"
 disposition = "converted"
 source = "README.md"
+
+[[file]]
+path = "rules/decomposing.md"
+sha256 = "81f6f977a46a1730ec279714a405532a59b282ddfbde03bdb87216bed2c4bc85"
+disposition = "copied"
+source = "rules/decomposing.md"
 
 [[file]]
 path = "rules/lead-bounded.md"
@@ -72,7 +78,7 @@ source = "vibe.toml"
 
 [[file]]
 path = "vibevm/vibespecs/boot/13-flow-working-rules.xml"
-sha256 = "b850c3d8799ca7380dab2250f227793753b84ae1b401942d2384e4f07d6aa19c"
+sha256 = "8a21d040565d050461467d605a23fb353ddac849f041ba42183720b243c6e565"
 disposition = "copied"
 source = "vibevm/vibespecs/boot/13-flow-working-rules.xml"
 
