@@ -103,6 +103,24 @@ pub fn preset(name: &str) -> Option<&'static Preset> {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use std::collections::BTreeSet;
+    use vibe_core::agent_ids::{AGENTS, AgentId};
+
+    #[test]
+    fn presets_match_agent_vocabulary() {
+        let preset_names: BTreeSet<_> = presets().iter().map(|preset| preset.name).collect();
+        let vocabulary_names: BTreeSet<_> =
+            AGENTS.iter().filter_map(|agent| agent.preset).collect();
+        assert_eq!(preset_names, vocabulary_names);
+
+        for preset in presets() {
+            assert!(
+                AgentId::from_preset(preset.name).is_some(),
+                "{} belongs to the agent vocabulary",
+                preset.name
+            );
+        }
+    }
 
     #[test]
     fn every_preset_carries_the_prompt_in_both_shapes() {
