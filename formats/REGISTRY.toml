@@ -377,6 +377,16 @@ foreign_parsers = "many"
 corpus = "none"
 sunset = "none"
 
+# `vibe prompt types --json` — `vibe-prompt-types/1`. The generated
+# subagent types of one node and what the run did to each.
+[format.cli-prompt-types]
+epoch = 1
+schema = "schemas/prompt_types.jtd.json"
+recoverable = true
+foreign_parsers = "many"
+corpus = "none"
+sunset = "none"
+
 # `vibe prompt capture --json` — `vibe-prompt-capture/1`. The request
 # envelope an API runner builds: which band sits in which API role, where the
 # tool block goes, where band T goes, and — only when a provider usage record

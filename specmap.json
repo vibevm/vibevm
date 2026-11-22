@@ -8489,6 +8489,22 @@
     },
     {
       "crate_name": "<schema>",
+      "file": "schemas/prompt_types.jtd.json",
+      "item_kind": "schema",
+      "line": 1,
+      "symbol": "prompt_types",
+      "end_line": 33
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/prompt_types.jtd.json",
+      "item_kind": "schema-def",
+      "line": 18,
+      "symbol": "prompt_types::agentType",
+      "end_line": 31
+    },
+    {
+      "crate_name": "<schema>",
       "file": "schemas/index_cli/e1/purls_report.jtd.json",
       "item_kind": "schema",
       "line": 1,
@@ -84666,6 +84682,14 @@
       "line": 1,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#SYS-REQUEST-ENVELOPE",
+      "verb": "implements"
+    },
+    {
+      "file": "schemas/prompt_types.jtd.json",
+      "from_symbol": "prompt_types",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#SYS-WORKER-TYPES",
       "verb": "implements"
     },
     {

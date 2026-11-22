@@ -105,6 +105,7 @@ pub enum FormatId {
     CliPromptFlags,
     CliPromptPath,
     CliPromptPrepare,
+    CliPromptTypes,
     CliRegistryLayoutPublishReport,
     CliRegistryMirrorReport,
     CliRegistryPublishReport,

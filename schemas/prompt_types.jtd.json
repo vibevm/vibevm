@@ -1,0 +1,33 @@
+{
+  "metadata": {
+    "description": "Version 1 answer of vibe prompt types --json: the generated subagent types of one node, each with its file and what this run did to it or found.",
+    "spec": { "implements": "spec://org.vibevm.core/vibevm/common/PROP-076#SYS-WORKER-TYPES" },
+    "rustOptions": { "package": "vibe_wire::prompt_types" },
+    "x-rust-type": "PromptTypesReport",
+    "x-wire-order": ["protocol", "node", "harness", "mode", "directory", "types"]
+  },
+  "properties": {
+    "protocol": { "type": "string" },
+    "node": { "type": "string" },
+    "harness": { "type": "string" },
+    "mode": { "type": "string" },
+    "directory": { "type": "string" },
+    "types": { "elements": { "ref": "agentType" }, "metadata": { "x-empty": "emit" } }
+  },
+  "definitions": {
+    "agentType": {
+      "metadata": {
+        "description": "One generated subagent type: its name, its node-relative file and its status (created, updated, unchanged, removed, current, stale, missing, foreign, unavailable), with the reason when the type has no body or is stale for a stated reason.",
+        "x-wire-order": ["name", "file", "status", "reason"]
+      },
+      "properties": {
+        "name": { "type": "string" },
+        "file": { "type": "string" },
+        "status": { "type": "string" }
+      },
+      "optionalProperties": {
+        "reason": { "type": "string", "metadata": { "x-default": null } }
+      }
+    }
+  }
+}
