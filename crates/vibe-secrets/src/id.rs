@@ -1,4 +1,5 @@
 //! Random logical identity, unrelated to the stored value or human label.
+specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-000#TS-USER-KEYRING");
 use crate::Error;
 use serde::{Deserialize, Serialize};
 

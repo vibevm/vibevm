@@ -1,4 +1,5 @@
 //! Fixed trusted participant reference index; metadata-only, no value access.
+specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-000#TS-USER-KEYRING");
 use super::*;
 use sha2::{Digest, Sha256};
 use specmark::spec;

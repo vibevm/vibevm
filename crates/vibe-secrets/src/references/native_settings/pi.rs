@@ -1,4 +1,5 @@
 //! Fixed Pi models.json sink; credentials never cross this module's API.
+specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-000#TS-KEYRING-CONSUMER");
 use super::*;
 use serde_json::{Value, json};
 

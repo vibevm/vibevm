@@ -1,4 +1,5 @@
 //! Claude native Messages bearer adapter, not an OpenAI compatibility bridge.
+specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-000#TS-KEYRING-CONSUMER");
 use super::*;
 pub struct ClaudeSettingsAdapter;
 impl NativeSettingsAdapter for ClaudeSettingsAdapter {

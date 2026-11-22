@@ -1,4 +1,5 @@
 //! The collection edits of `vibe app` (PROP-059 `#launcher-catalog`).
+specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-059#launcher-catalog");
 
 /// The edits of one collection (PROP-059 `#launcher-catalog`).
 #[derive(Debug, clap::Subcommand)]

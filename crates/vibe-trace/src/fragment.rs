@@ -19,7 +19,7 @@
 //! genuine checkpoint built at publish time, so a body edited in the installed
 //! slot since then surfaces as drift.
 
-specmark::scope!("spec://org.vibevm.ai-native/core-ai-native/mechanisms/PROP-014#addressing-code");
+specmark::scope!("spec://core-ai-native/mechanisms/PROP-014#addressing-code");
 
 use std::fs;
 use std::path::Path;

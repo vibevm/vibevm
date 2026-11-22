@@ -41,9 +41,7 @@ pub(crate) type CapIndex = HashMap<String, Vec<CapProvider>>;
 /// every `[provides]` capability. Per-package errors are skipped — the
 /// main solve surfaces anything genuinely required. This is the eager
 /// step the lazy package path otherwise avoids (PROP-017 §8).
-#[spec(
-    implements = "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-017#ROW-CAPABILITY-RESOLVO-ENCODING"
-)]
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-017#encoding")]
 pub(crate) fn prescan<P: VersionEnumerator>(provider: &P, roots: &[PackageRef]) -> CapIndex {
     let mut index: CapIndex = HashMap::new();
     let mut seen: HashSet<(Group, String)> = HashSet::new();

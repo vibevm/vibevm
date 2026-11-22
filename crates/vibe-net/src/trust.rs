@@ -17,6 +17,7 @@
 //! checking that the certificate is current and is for that host. That is
 //! how a self-signed server certificate is trusted at all — webpki will
 //! not take an end-entity certificate as an anchor.
+specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-068#proxy-trust");
 
 use std::path::{Path, PathBuf};
 use std::sync::Arc;

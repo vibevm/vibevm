@@ -1,6 +1,7 @@
 //! Step-by-step diagnosis of the network route (`vibe self doctor`):
 //! px present and started → `px --test` → `CONNECT` through the proxy →
 //! TLS with the trust set. Each failed step names its cause and the fix.
+specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-068#proxy-doctor");
 
 use crate::{NetworkSession, http};
 use base64::Engine;

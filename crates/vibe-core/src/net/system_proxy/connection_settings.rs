@@ -2,6 +2,7 @@
 //! (`PROP-068#proxy-system`), as pure functions: the layout Windows
 //! writes under the user's `Connections` key, and the two reductions that
 //! turn its proxy and bypass strings into what px and vibe read.
+specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-068#proxy-system");
 
 use specmark::spec;
 

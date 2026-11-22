@@ -126,3 +126,9 @@ dispositioned = []
 [[external_specs]]
 namespace = "core-ai-native"
 root = "vibevm/vibedeps/org.vibevm.ai-native.core-ai-native/1.0.0/vibevm/vibespecs"
+
+# The managed-blocks protocol is cited by the environment block writer; it is
+# installed through the redbook edition and resolved from its slot.
+[[external_specs]]
+namespace = "org.vibevm.world/managed-blocks"
+root = "vibevm/vibedeps/org.vibevm.world.managed-blocks/1.0.0/vibevm/vibespecs"

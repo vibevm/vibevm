@@ -3,6 +3,7 @@
 //! Each frame is published by an atomic rename into the session's private
 //! scratch directory and consumed (removed) by its reader. Plugin stdout and
 //! stderr never share this channel.
+specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-073#NATIVE-STOP-LAW");
 
 use specmark::spec;
 use std::io::{ErrorKind, Read, Write};

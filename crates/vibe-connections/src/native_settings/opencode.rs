@@ -1,4 +1,5 @@
 //! OpenCode native config adapter over its concrete protected sink.
+specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-000#TS-KEYRING-CONSUMER");
 use super::*;
 pub struct OpenCodeSettingsAdapter;
 impl NativeSettingsAdapter for OpenCodeSettingsAdapter {

@@ -1,4 +1,5 @@
 //! Claude Code native Messages bearer config only, no OpenAI translation.
+specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-000#TS-KEYRING-CONSUMER");
 use super::*;
 use serde_json::{Value, json};
 pub struct ClaudeNativePreview(pub(super) PiNativePreview);

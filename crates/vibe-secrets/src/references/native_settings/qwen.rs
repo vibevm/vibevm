@@ -1,4 +1,5 @@
 //! Qwen native JSONC merge only; no credential export or alternate transport.
+specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-000#TS-KEYRING-CONSUMER");
 use super::*;
 
 pub struct QwenNativePreview(pub(super) PiNativePreview);

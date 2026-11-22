@@ -1,4 +1,5 @@
 //! Fixed native Hermes block-mapping YAML sink; no command or pool mutation.
+specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-000#TS-KEYRING-CONSUMER");
 use super::*;
 pub struct HermesNativePreview(pub(super) PiNativePreview);
 impl HermesNativePreview {

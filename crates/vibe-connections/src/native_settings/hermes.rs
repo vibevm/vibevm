@@ -1,4 +1,5 @@
 //! Hermes native config facade; secret remains inside fixed protected sink.
+specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-000#TS-KEYRING-CONSUMER");
 use super::*;
 pub struct HermesSettingsAdapter;
 impl NativeSettingsAdapter for HermesSettingsAdapter {

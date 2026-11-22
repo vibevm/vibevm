@@ -1,4 +1,5 @@
 //! One reviewed setup subject over existing metadata, not installation.
+specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-000#TS-KEYRING-CONSUMER");
 use super::*;
 use sha2::{Digest, Sha256};
 use specmark::spec;

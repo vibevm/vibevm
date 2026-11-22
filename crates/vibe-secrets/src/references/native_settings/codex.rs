@@ -1,4 +1,5 @@
 //! Fixed Codex Responses-native TOML sink. Native auth.json remains untouched.
+specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-000#TS-KEYRING-CONSUMER");
 use super::*;
 use toml_edit::{DocumentMut, Item, Table, value};
 

@@ -1,5 +1,6 @@
 //! One operation's network: the route, the lazily started px and the
 //! operation's trust bundle — released when the operation ends.
+specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-068#proxy");
 
 use crate::{NetError, PxError, TrustSet, px::PxProcess};
 use std::{

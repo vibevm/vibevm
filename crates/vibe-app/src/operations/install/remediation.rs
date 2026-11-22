@@ -1,4 +1,5 @@
 //! Opt-in top-level handoff. Tokens stay opaque and never enter error reports.
+specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-069#APP-CONFIGURATION-CONTINUATION");
 use super::*;
 use specmark::spec;
 

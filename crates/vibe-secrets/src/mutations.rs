@@ -1,4 +1,5 @@
 //! Metadata mutations share the immutable-value owner's lock and publication.
+specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-000#TS-USER-KEYRING");
 use super::*;
 use specmark::spec;
 

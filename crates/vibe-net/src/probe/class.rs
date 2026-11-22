@@ -1,4 +1,5 @@
 //! The failure classes of the probe: code, exit status, label and fix.
+specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-068#dl");
 
 /// What kind of failure stopped a request — each with a stable code, a
 /// distinct `vibe dl` exit status and the fix an operator can act on.

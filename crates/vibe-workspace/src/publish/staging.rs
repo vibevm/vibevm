@@ -247,7 +247,7 @@ pub fn generated_copy_description(pkgref: &str, upstream: &str) -> String {
 /// PROP-007 §2.8 layer 1; tone follows `vibe-publish`'s redirect-stub
 /// `build_redirect_readme`.
 #[spec(
-    implements = "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#ROW-SIGNAL-README"
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#SIGNALLING-LAYERS"
 )]
 pub fn generated_copy_readme_banner(pkgref: &str, upstream: &str) -> String {
     format!(
@@ -271,7 +271,7 @@ pub fn generated_copy_readme_banner(pkgref: &str, upstream: &str) -> String {
 /// The `.github/PULL_REQUEST_TEMPLATE.md` body written into a generated
 /// copy — fires at PR-creation time. PROP-007 §2.8 layer 4.
 #[spec(
-    implements = "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#ROW-SIGNAL-PR-TEMPLATE"
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#SIGNALLING-LAYERS"
 )]
 pub fn pull_request_template(pkgref: &str, upstream: &str) -> String {
     format!(

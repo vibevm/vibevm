@@ -1,5 +1,6 @@
 //! `vibe tool px …` — vibe's own proxy, lent to another tool
 //! (`PROP-068#proxy-tool`).
+specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-068#proxy-tool");
 
 /// `vibe tool <tool> …`: a facility vibe already runs for itself, made
 /// available to a command the user names.

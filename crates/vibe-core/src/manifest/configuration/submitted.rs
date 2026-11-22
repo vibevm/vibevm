@@ -1,4 +1,5 @@
 //! Submitted root originals and project-scoped drift binding; no input authority.
+specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-069#ORIGINAL-INTENT");
 use super::{
     ConfigurationDecl, ConfigurationIntentDecl, PackageConfiguration, PackageConfigurationError,
 };

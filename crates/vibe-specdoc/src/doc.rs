@@ -277,7 +277,7 @@ pub enum NoteKind {
 impl NoteKind {
     pub const ALL: &'static [NoteKind] = &[NoteKind::Note, NoteKind::Tip, NoteKind::Warning];
 
-    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-045#ROW-DOCVOCAB-NOTE")]
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-045#documentation-vocabulary")]
     pub fn as_str(self) -> &'static str {
         match self {
             NoteKind::Note => "note",
@@ -287,7 +287,7 @@ impl NoteKind {
     }
 
     /// The label the Markdown projection prints, capitalised for a reader.
-    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-045#ROW-DOCVOCAB-NOTE")]
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-045#documentation-vocabulary")]
     pub fn label(self) -> &'static str {
         match self {
             NoteKind::Note => "Note",
@@ -327,7 +327,7 @@ impl DerivedKind {
         DerivedKind::ManifestField,
     ];
 
-    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-045#ROW-DOCVOCAB-DERIVED")]
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-045#documentation-vocabulary")]
     pub fn as_str(self) -> &'static str {
         match self {
             DerivedKind::CliHelp => "cli-help",

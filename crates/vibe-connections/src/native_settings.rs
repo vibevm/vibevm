@@ -1,4 +1,5 @@
 //! Internal native-settings adapter composition; no raw credential surface.
+specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-000#TS-KEYRING-CONSUMER");
 use super::*;
 
 /// A prepared native-settings change. Its id is what the operator confirms;

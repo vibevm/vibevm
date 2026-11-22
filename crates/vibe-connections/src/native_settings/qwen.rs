@@ -1,4 +1,5 @@
 //! Qwen adapter facade over its concrete protected native writer.
+specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-000#TS-KEYRING-CONSUMER");
 use super::*;
 pub struct QwenSettingsAdapter;
 impl NativeSettingsAdapter for QwenSettingsAdapter {

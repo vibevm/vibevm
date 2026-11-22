@@ -1,4 +1,5 @@
 //! Codex native Responses adapter, never a Chat Completions translator.
+specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-000#TS-KEYRING-CONSUMER");
 use super::*;
 pub struct CodexSettingsAdapter;
 impl NativeSettingsAdapter for CodexSettingsAdapter {

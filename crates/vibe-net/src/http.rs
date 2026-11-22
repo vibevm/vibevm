@@ -1,4 +1,5 @@
 //! Every `reqwest` client vibe builds is configured here (`PROP-068#proxy`).
+specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-068#proxy");
 
 use crate::{NetError, NetworkSession};
 use std::sync::{Arc, Weak};

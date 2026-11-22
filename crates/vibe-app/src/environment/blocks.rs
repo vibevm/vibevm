@@ -165,6 +165,9 @@ pub fn has_block(markers: BlockMarkers, path: &Path) -> bool {
 
 /// The shell startup files of `home` that take a managed block, each with
 /// whether it uses fish syntax.
+#[specmark::spec(
+    implements = "spec://org.vibevm.world/managed-blocks/flows/managed-blocks/MANAGED-BLOCKS-PROTOCOL#root"
+)]
 pub fn managed_startup_files(home: &Path) -> Vec<(PathBuf, bool)> {
     startup_files(home)
 }

@@ -65,6 +65,7 @@ pub struct PackageConfiguration {
 /// assert_eq!(record.features, ["plain"]);
 /// # Ok::<(), Box<dyn std::error::Error>>(())
 /// ```
+#[specmark::spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-069#PERSISTENCE")]
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct ClosureFallbackBasis {
@@ -102,6 +103,7 @@ pub struct ClosureFallbackBasis {
 /// assert_eq!(record.forwarded_inputs[0].source_feature, "observability");
 /// # Ok::<(), Box<dyn std::error::Error>>(())
 /// ```
+#[specmark::spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-069#PERSISTENCE")]
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct ForwardedInput {
@@ -140,6 +142,7 @@ pub struct ForwardedInput {
 /// assert!(record.consumers["./vibe.toml"].selections.is_empty());
 /// # Ok::<(), Box<dyn std::error::Error>>(())
 /// ```
+#[specmark::spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-069#PERSISTENCE")]
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct AutomaticBasis {

@@ -1,4 +1,5 @@
 //! Concrete OpenCode native JSONC writer; never touches credential SQL.
+specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-000#TS-KEYRING-CONSUMER");
 use super::*;
 const PACKAGE: &str = "aisdk:@ai-sdk/openai-compatible";
 pub struct OpenCodeNativePreview(pub(super) PiNativePreview);

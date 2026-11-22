@@ -1,4 +1,5 @@
 //! The `no_proxy` bypass list (`PROP-068#proxy`).
+specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-068#proxy");
 
 use specmark::spec;
 use std::net::IpAddr;

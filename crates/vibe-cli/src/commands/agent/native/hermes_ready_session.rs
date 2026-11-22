@@ -1,5 +1,5 @@
 //! Explicit non-delivery attachment to one already-READY native conversation.
-specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-076#HERMES-READY-PLACEMENT");
+specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-076#SYS-HERMES-PI-NATIVE");
 use anyhow::{Context, Result, bail};
 use specmark::spec;
 use std::path::Path;

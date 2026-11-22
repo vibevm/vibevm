@@ -2,6 +2,7 @@
 //! (`PROP-068#proxy`). Passed per invocation (`-c` and environment);
 //! the user's git configuration is never written. SSH remotes are not
 //! proxied: their route is the SSH client's own configuration.
+specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-068#proxy-git");
 
 use std::path::Path;
 use std::sync::OnceLock;
