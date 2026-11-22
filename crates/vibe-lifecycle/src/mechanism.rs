@@ -59,6 +59,9 @@ pub(crate) mod skill;
 pub(crate) mod vibebin;
 pub(crate) mod zip;
 
+#[cfg(test)]
+mod client_vocabulary_tests;
+
 pub use build::{
     BuildError, BuildExecution, BuildOutcome, ProducedArtifact, execute_build_targets,
 };
