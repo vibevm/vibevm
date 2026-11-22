@@ -38,6 +38,8 @@ mod fetched {
 
 #[path = "../src/slot_verify.rs"]
 mod production_slot_verify;
+#[path = "support/slot_apply.rs"]
+mod slot_apply;
 
 #[path = "support/retained.rs"]
 mod retained;
@@ -295,7 +297,7 @@ fn run_install(
         Plan::Ready(p) => p,
         Plan::Fresh => panic!("explicit-root install must produce a real resolution, not Fresh"),
     };
-    vibe_install::apply(source, *planned, integrity).expect("apply succeeds")
+    slot_apply::apply_unwrapped(source, project, *planned, integrity).expect("apply succeeds")
 }
 
 fn run_install_format(
@@ -311,7 +313,8 @@ fn run_install_format(
         Plan::Ready(p) => p,
         Plan::Fresh => panic!("explicit-root install must produce a real resolution, not Fresh"),
     };
-    vibe_install::apply_with_spec_format(source, *planned, integrity, spec_format)
+    slot_apply::apply_with_spec_format(source, project, *planned, integrity, spec_format)
+        .map_err(slot_apply::inner_failure)
         .expect("apply succeeds")
 }
 
@@ -370,7 +373,7 @@ fn observed_install_reports_fetch_apply_and_record_in_order() {
         Plan::Ready(planned) => planned,
         Plan::Fresh => panic!("explicit install must resolve"),
     };
-    vibe_install::apply(&source, *planned, SlotIntegrity::TrustPresence).unwrap();
+    slot_apply::apply_unwrapped(&source, &project, *planned, SlotIntegrity::TrustPresence).unwrap();
 
     let events = log.0.lock().unwrap();
     let started = events
@@ -539,7 +542,7 @@ fn verify_surfaces_a_malformed_record_without_touching_the_slot() {
         Plan::Ready(planned) => planned,
         Plan::Fresh => panic!("explicit-root install must produce a real resolution, not Fresh"),
     };
-    let error = vibe_install::apply(&source, *planned, SlotIntegrity::Verify)
+    let error = slot_apply::apply_unwrapped(&source, &project, *planned, SlotIntegrity::Verify)
         .expect_err("a present malformed record is never treated as a legacy missing record");
 
     assert!(

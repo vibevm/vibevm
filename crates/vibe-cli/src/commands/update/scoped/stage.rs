@@ -255,7 +255,8 @@ pub(super) fn stage(
 
     // Build the partial resolution for the subtree — the form the shared
     // materialise + hook flow consumes (the same `ResolvedDep` shape
-    // `vibe install` hands to `apply_resolution`).
+    // `vibe install` hands to
+    // `apply_resolution_with_spec_format_and_slot_lifecycle_traced`).
     let resolution = project_rows(workspace, &updated);
 
     let source_hashes = SourceHashes(

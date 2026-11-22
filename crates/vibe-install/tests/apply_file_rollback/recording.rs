@@ -148,9 +148,10 @@ pub(super) fn plan(source: &MirrorSource, selected: &Path) -> Box<vibe_install::
 
 fn apply(
     source: &MirrorSource,
+    root: &Path,
     planned: Box<vibe_install::PlannedInstall>,
 ) -> Result<(), vibe_install::Error> {
-    vibe_install::apply(source, *planned, SlotIntegrity::Verify).map(|_| ())
+    slot_apply::apply_unwrapped(source, root, *planned, SlotIntegrity::Verify).map(|_| ())
 }
 
 fn fail_provenance_once() {
@@ -164,6 +165,32 @@ fn fail_provenance_once() {
             })));
         } else {
             fail_provenance_once();
+        }
+    })));
+}
+
+/// Once the manifest is published, plant a third-party provenance file while
+/// the lock publication verifies. Any other publication re-arms the hook.
+fn plant_provenance_after_manifest() {
+    vibe_safefs::arm_before_publish_verify(Some(Box::new(|_, name| {
+        if name == "vibe.toml" {
+            plant_provenance_during_lock();
+        } else {
+            plant_provenance_after_manifest();
+        }
+    })));
+}
+
+fn plant_provenance_during_lock() {
+    vibe_safefs::arm_before_publish_verify(Some(Box::new(|parent, name| {
+        if name == "vibe.lock" {
+            fs::write(
+                parent.path().join("vibe.lock.provenance"),
+                "SYNTHETIC_LATER_ACTOR",
+            )
+            .unwrap();
+        } else {
+            plant_provenance_during_lock();
         }
     })));
 }
@@ -185,7 +212,7 @@ fn partial_provenance_publication_restores_lock_manifest_and_existing_mode() {
     .unwrap();
     let planned = plan(&source, &selected);
     fail_provenance_once();
-    let result = apply(&source, planned);
+    let result = apply(&source, root, planned);
     vibe_safefs::fail_after_publish(None);
     vibe_safefs::arm_before_publish_verify(None);
     vibe_safefs::arm_before_bounded_read(None);
@@ -220,20 +247,10 @@ fn partial_provenance_publication_restores_lock_manifest_and_existing_mode() {
 fn never_written_provenance_third_state_is_left_while_owned_lock_rolls_back() {
     let (temp, source, selected) = fixture(false);
     let planned = plan(&source, &selected);
-    // The first publication is manifest; its verification hook arms the
-    // later lock hook. These are actual publisher callbacks, not fake undo.
-    vibe_safefs::arm_before_publish_verify(Some(Box::new(|_, name| {
-        assert_eq!(name, "vibe.toml");
-        vibe_safefs::arm_before_publish_verify(Some(Box::new(|parent, name| {
-            assert_eq!(name, "vibe.lock");
-            fs::write(
-                parent.path().join("vibe.lock.provenance"),
-                "SYNTHETIC_LATER_ACTOR",
-            )
-            .unwrap();
-        })));
-    })));
-    let result = apply(&source, planned);
+    // The manifest publication arms the later lock hook. These are actual
+    // publisher callbacks, not fake undo.
+    plant_provenance_after_manifest();
+    let result = apply(&source, temp.path(), planned);
     vibe_safefs::arm_before_publish_verify(None);
     let error = result.unwrap_err();
     assert!(
@@ -258,7 +275,7 @@ fn selected_member_and_workspace_lock_have_independent_captured_parents() {
     let workspace_before = fs::read(temp.path().join("vibe.toml")).unwrap();
     let planned = plan(&source, &selected);
     fail_provenance_once();
-    let result = apply(&source, planned);
+    let result = apply(&source, temp.path(), planned);
     vibe_safefs::fail_after_publish(None);
     vibe_safefs::arm_before_publish_verify(None);
     vibe_safefs::arm_before_bounded_read(None);

@@ -41,7 +41,7 @@ fn grouped_and_ungrouped_install_enroll_only_immediate_native_scan() {
         let root = fixture(grouped);
         let workspace = Workspace::load(root.path()).unwrap();
         let original = fs::read(root.path().join(boot_rel("10-native.payload"))).unwrap();
-        super::super::apply_resolution_with_spec_format(
+        super::super::test_helpers::apply_resolution_with_spec_format(
             &workspace,
             &[],
             vibe_core::user_config::SlotIntegrity::Verify,
@@ -179,7 +179,7 @@ fn later_selected_invalid_missing_and_ambiguous_nodes_refuse_before_package_effe
         let ws = Workspace::load(root.path()).unwrap();
         let before = fs::read(&manifest).unwrap();
         assert!(
-            super::super::apply_resolution_with_spec_format(
+            super::super::test_helpers::apply_resolution_with_spec_format(
                 &ws,
                 &[dep],
                 vibe_core::user_config::SlotIntegrity::Verify,

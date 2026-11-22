@@ -52,14 +52,14 @@ use metadata::apply_with_spec_format_and_slot_lifecycle;
 use native::NativeApplyPreparation;
 pub use publication::{publish_admitted_manifest, publish_empty_legacy_lock};
 
-/// What [`apply`] did — the caller renders it.
+/// What [`apply_with_spec_format_and_lifecycle_observed`] did — the caller
+/// renders it.
 #[derive(Debug)]
 pub struct ApplyReport {
     /// Materialised / skipped / pruned slots and the regenerated nodes —
     /// straight from the workspace orchestrator.
     pub outcome: InstallOutcome,
     /// The `slot:` contributions the lifecycle handler engine executed.
-    /// Empty on the entry points that run no slot lifecycle.
     pub lifecycle_reports: Vec<SlotLifecycleReport>,
     /// The same canonical run used by slot callbacks; the caller rebinds it
     /// to the durable world before dispatching normal phase contributions.
@@ -87,49 +87,6 @@ pub struct PreparedApplyReport {
     pub report: ApplyReport,
     pub workspace: Workspace,
     pub native: Option<vibe_workspace::install::NativeInstallCarriage>,
-}
-
-/// Apply a confirmed plan. `slot_integrity` selects the PROP-011 §2.3
-/// materialise-diff strategy (the caller reads it from the user
-/// config, so a malformed config fails before resolution, not here):
-/// `trust-presence` skips a present slot outright, `verify` first
-/// spot-checks its `content_hash` through [`RegistrySlotVerifier`].
-/// `source` is the same install source the plan ran against: the apply
-/// phase needs it to perform the deferred incremental `in-place` updates
-/// the plan held back from re-cloning (PROP-022 §2.4) — every other
-/// package is already fetched into `planned`.
-///
-/// No slot lifecycle runs on this entry point: it materialises, regenerates
-/// boot and records the lock, and a package's `slot:` contributions stay
-/// unexecuted. The install command applies through
-/// [`apply_with_spec_format_and_lifecycle_observed`] instead.
-pub fn apply<S: InstallSource + ?Sized>(
-    source: &S,
-    planned: PlannedInstall,
-    slot_integrity: SlotIntegrity,
-) -> Result<ApplyReport> {
-    apply_with_spec_format(source, planned, slot_integrity, SpecFormat::Mixed)
-}
-
-/// Apply a confirmed plan using the effective PROP-045 representation, with
-/// no slot lifecycle — see [`apply`].
-pub fn apply_with_spec_format<S: InstallSource + ?Sized>(
-    source: &S,
-    planned: PlannedInstall,
-    slot_integrity: SlotIntegrity,
-    spec_format: SpecFormat,
-) -> Result<ApplyReport> {
-    apply_with_spec_format_and_slot_lifecycle(
-        source,
-        planned,
-        slot_integrity,
-        spec_format,
-        SlotLifecycleMode::None,
-        None,
-        None,
-        None,
-    )
-    .map(|prepared| prepared.report)
 }
 
 /// The caller-supplied seams the slot lifecycle runs through: narration, and
@@ -163,6 +120,17 @@ impl SlotLifecycleSeams {
     }
 }
 
+/// Apply a confirmed plan. `slot_integrity` selects the PROP-011 §2.3
+/// materialise-diff strategy (the caller reads it from the user
+/// config, so a malformed config fails before resolution, not here):
+/// `trust-presence` skips a present slot outright, `verify` first
+/// spot-checks its `content_hash` through the registry slot verifier.
+/// `source` is the same install source the plan ran against: the apply
+/// phase needs it to perform the deferred incremental `in-place` updates
+/// the plan held back from re-cloning (PROP-022 §2.4) — every other
+/// package is already fetched into `planned`. `spec_format` is the
+/// effective PROP-045 representation; the package's `slot:` contributions
+/// run through the lifecycle handler engine under `seams` and `lease`.
 #[allow(clippy::too_many_arguments)]
 pub fn apply_with_spec_format_and_lifecycle_observed<S: InstallSource + ?Sized>(
     source: &S,

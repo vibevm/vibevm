@@ -614,7 +614,7 @@ fn held_project_observation_and_next_lock_use_current_preparation_alias() {
     plan.resolution[0].name = original_name;
     assert_eq!(f.source.prepared.borrow().len(), prepared_count);
     assert_eq!(worktree(&f.project), before);
-    vibe_install::apply(&f.source, *plan, SlotIntegrity::Verify).unwrap();
+    slot_apply::apply_unwrapped(&f.source, &f.project, *plan, SlotIntegrity::Verify).unwrap();
     let written = Lockfile::read(&lock_path).unwrap();
     assert_eq!(written.packages[0].registry.as_deref(), Some("fixture"));
     f.assert_provenance(f.source.prepared.borrow().last().unwrap());

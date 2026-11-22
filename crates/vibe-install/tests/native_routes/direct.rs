@@ -207,7 +207,8 @@ fn direct_git_and_override_complete_copy_and_inplace_public_plan_apply() {
         };
         let contacts = f.contacts("a");
         f.move_tag();
-        let result = vibe_install::apply(&source, *plan, SlotIntegrity::Verify).unwrap();
+        let result =
+            slot_apply::apply_unwrapped(&source, &f.project, *plan, SlotIntegrity::Verify).unwrap();
         assert_eq!(result.outcome.materialised.len(), 1);
         assert_eq!(
             f.contacts("a"),

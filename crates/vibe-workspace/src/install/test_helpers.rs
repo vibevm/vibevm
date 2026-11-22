@@ -136,3 +136,58 @@ impl SlotLifecycle for PreInstallCount {
         Ok(())
     }
 }
+
+/// The lifecycle-free apply most tests drive: the shipped full-resolution
+/// apply under [`SlotLifecycleMode::None`], with no verifier and the `mixed`
+/// spec representation.
+#[cfg(test)]
+pub(super) fn apply_resolution(
+    workspace: &Workspace,
+    resolution: &[ResolvedDep],
+    slot_integrity: SlotIntegrity,
+) -> Result<InstallOutcome, WorkspaceError> {
+    apply_resolution_with_spec_format(
+        workspace,
+        resolution,
+        slot_integrity,
+        SpecFormat::Mixed,
+        None,
+    )
+}
+
+/// [`apply_resolution`] with an injected slot verifier.
+#[cfg(test)]
+pub(super) fn apply_resolution_with(
+    workspace: &Workspace,
+    resolution: &[ResolvedDep],
+    slot_integrity: SlotIntegrity,
+    slot_verifier: Option<&dyn SlotVerifier>,
+) -> Result<InstallOutcome, WorkspaceError> {
+    apply_resolution_with_spec_format(
+        workspace,
+        resolution,
+        slot_integrity,
+        SpecFormat::Mixed,
+        slot_verifier,
+    )
+}
+
+/// [`apply_resolution_with`] under an explicit spec representation.
+#[cfg(test)]
+pub(super) fn apply_resolution_with_spec_format(
+    workspace: &Workspace,
+    resolution: &[ResolvedDep],
+    slot_integrity: SlotIntegrity,
+    spec_format: SpecFormat,
+    slot_verifier: Option<&dyn SlotVerifier>,
+) -> Result<InstallOutcome, WorkspaceError> {
+    apply_resolution_with_spec_format_and_slot_lifecycle_traced(
+        workspace,
+        resolution,
+        slot_integrity,
+        spec_format,
+        slot_verifier,
+        SlotLifecycleMode::None,
+        None,
+    )
+}

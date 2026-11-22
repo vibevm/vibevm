@@ -31,6 +31,28 @@ pub fn apply<S: InstallSource + ?Sized>(
     planned: PlannedInstall,
     slot_integrity: SlotIntegrity,
 ) -> Result<ApplyReport, vibe_install::Error> {
+    apply_with_spec_format(source, root, planned, slot_integrity, SpecFormat::Mixed)
+}
+
+/// [`apply`] with the failure underneath the lifecycle wrapper, for a test
+/// that matches on the install error itself.
+pub fn apply_unwrapped<S: InstallSource + ?Sized>(
+    source: &S,
+    root: &Path,
+    planned: PlannedInstall,
+    slot_integrity: SlotIntegrity,
+) -> Result<ApplyReport, vibe_install::Error> {
+    apply(source, root, planned, slot_integrity).map_err(inner_failure)
+}
+
+/// [`apply`] writing spec files in `spec_format`.
+pub fn apply_with_spec_format<S: InstallSource + ?Sized>(
+    source: &S,
+    root: &Path,
+    planned: PlannedInstall,
+    slot_integrity: SlotIntegrity,
+    spec_format: SpecFormat,
+) -> Result<ApplyReport, vibe_install::Error> {
     let metadata = RunMetadata {
         requested: "install".into(),
         chain: vec!["validate".into(), "install".into()],
@@ -47,7 +69,7 @@ pub fn apply<S: InstallSource + ?Sized>(
         source,
         planned,
         slot_integrity,
-        SpecFormat::Mixed,
+        spec_format,
         metadata,
         StreamMode::Null,
         SlotLifecycleSeams::refusing(),

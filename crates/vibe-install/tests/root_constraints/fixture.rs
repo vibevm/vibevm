@@ -281,7 +281,8 @@ impl Fixture {
         let Plan::Ready(plan) = plan else {
             panic!("fixture requires a real apply")
         };
-        vibe_install::apply(&self.source, *plan, SlotIntegrity::Verify).unwrap();
+        crate::slot_apply::apply_unwrapped(&self.source, &self.root, *plan, SlotIntegrity::Verify)
+            .unwrap();
         self.lock()
     }
 

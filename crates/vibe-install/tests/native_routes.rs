@@ -277,7 +277,8 @@ fn denied_primary_allowed_mirror_completes_public_plan_and_install() {
     );
     let log = Path::new(info["root"].as_str().unwrap()).join("a.log");
     let contacts = fs::read(&log).unwrap();
-    let report = vibe_install::apply(&source, *planned, SlotIntegrity::Verify).unwrap();
+    let report =
+        slot_apply::apply_unwrapped(&source, &project, *planned, SlotIntegrity::Verify).unwrap();
     assert_eq!(report.outcome.materialised.len(), 1);
     assert_eq!(fs::read(log).unwrap(), contacts);
     let slot = project

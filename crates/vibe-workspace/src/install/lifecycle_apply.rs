@@ -5,30 +5,38 @@ specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#
 use super::*;
 use crate::install::bootgen::regenerate_boot_from_traced;
 
-/// Apply a full resolution under exactly one dependency-slot lifecycle mode.
-pub fn apply_resolution_with_spec_format_and_slot_lifecycle(
-    workspace: &Workspace,
-    resolution: &[ResolvedDep],
-    slot_integrity: SlotIntegrity,
-    spec_format: SpecFormat,
-    slot_verifier: Option<&dyn SlotVerifier>,
-    lifecycle: SlotLifecycleMode<'_>,
-) -> Result<InstallOutcome, WorkspaceError> {
-    apply_resolution_with_spec_format_and_slot_lifecycle_traced(
-        workspace,
-        resolution,
-        slot_integrity,
-        spec_format,
-        slot_verifier,
-        lifecycle,
-        None,
-    )
-}
-
-/// The traced sibling of [`apply_resolution_with_spec_format_and_slot_lifecycle`]:
-/// one borrowed run carried through the boot regeneration this apply performs.
-/// Pre-install park/failure still aborts before any boot compilation — the
-/// recorder is only ever BORROWED here, never opened or finished.
+/// Materialise a resolution into the workspace under exactly one
+/// dependency-slot lifecycle mode and regenerate every node's boot artifacts
+/// (PROP-009 §2.7), carrying one borrowed trace run through that boot
+/// regeneration.
+///
+/// Materialisation is workspace-wide — one dependency slot per resolved
+/// package at the absolute root. Boot artifacts are computed per node: the
+/// root from the whole resolution, a member from its own `[requires]`
+/// closure, with the absolute root's foundation boot inherited downward.
+///
+/// `slot_integrity` governs the PROP-011 §2.3 materialise-diff skip: with
+/// [`SlotIntegrity::TrustPresence`] a slot already on disk for the
+/// resolved version is trusted without a materialisation pass; with
+/// [`SlotIntegrity::Verify`] a present slot is accepted only after its
+/// `content_hash` checks out. `slot_verifier` is consulted for an
+/// identity-current present slot under [`SlotIntegrity::Verify`]
+/// (PROP-011 §2.3/§5.2) before the fast path trusts it. A hash that matches
+/// the resolution's recorded `content_hash` accepts the slot **without**
+/// materialising (the spot-check replaces the always-rematerialise pass, it
+/// does not add to it); a divergence re-materialises the slot and records a
+/// warn line naming the package and both hashes. `None` degrades `Verify` to
+/// the always-rematerialise discipline — exactly what
+/// `vibe reinstall --force` (reconcile slots from a fresh fetch) and
+/// `vibe update` ask for. A mutable in-workspace `file://` source (§2.6) is
+/// identity-current only when its valid slot record carries the
+/// freshly-fetched source hash; an `in-place` package (PROP-022 §2.4) remains
+/// on its separate update path.
+///
+/// [`SlotLifecycleMode::None`] runs no slot lifecycle: the plain
+/// materialise-and-regenerate core. Pre-install park/failure still aborts
+/// before any boot compilation — the recorder is only ever BORROWED here,
+/// never opened or finished.
 pub fn apply_resolution_with_spec_format_and_slot_lifecycle_traced(
     workspace: &Workspace,
     resolution: &[ResolvedDep],

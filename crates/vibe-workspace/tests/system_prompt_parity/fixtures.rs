@@ -22,7 +22,9 @@ use vibe_core::manifest::{Manifest, SpecFormat};
 use vibe_core::user_config::SlotIntegrity;
 use vibe_core::{ContentHash, Group, PackageKind};
 use vibe_workspace::Workspace;
-use vibe_workspace::install::{ResolvedDep, apply_resolution_with_spec_format};
+use vibe_workspace::install::{
+    ResolvedDep, SlotLifecycleMode, apply_resolution_with_spec_format_and_slot_lifecycle_traced,
+};
 
 /// The template every opted-in fixture writes. It ends with a newline, so a
 /// segment body is the input's bytes exactly and the LF policy is tested
@@ -53,11 +55,13 @@ impl Fixture {
     /// Regenerate again, with the same resolution and format.
     pub fn regenerate(&self) {
         let workspace = Workspace::load(self.ws.path()).expect("the fixture workspace loads");
-        apply_resolution_with_spec_format(
+        apply_resolution_with_spec_format_and_slot_lifecycle_traced(
             &workspace,
             &self.resolution,
             SlotIntegrity::TrustPresence,
             self.format,
+            None,
+            SlotLifecycleMode::None,
             None,
         )
         .expect("the fixture regenerates");

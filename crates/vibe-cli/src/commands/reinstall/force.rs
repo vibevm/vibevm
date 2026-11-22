@@ -201,8 +201,9 @@ pub(super) fn run(ctx: &output::Context, inputs: Forced<'_>) -> Result<Reinstall
             source_hash: Some(ContentHash::from_validated(cached.content_hash.clone())),
             embedded_sources: locked.embedded_sources.clone(),
             manifest: cached.manifest.clone(),
-            // The recorded resolution edges — `apply_resolution` walks
-            // them to compose each node's dependency boot. A lockfile
+            // The recorded resolution edges —
+            // `apply_resolution_with_spec_format_and_slot_lifecycle_traced` walks them to
+            // compose each node's dependency boot. A lockfile
             // dependency pkgref is group-qualified (PROP-008 §2.6).
             requires: locked
                 .dependencies

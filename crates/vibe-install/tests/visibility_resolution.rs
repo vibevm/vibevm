@@ -21,6 +21,8 @@ use vibe_workspace::install::ResolvedDep;
 
 #[path = "support/retained.rs"]
 mod retained;
+#[path = "support/slot_apply.rs"]
+mod slot_apply;
 
 const GROUP: &str = "org.test";
 
@@ -363,7 +365,13 @@ impl Fixture {
     fn plan_and_apply(&self) -> (Vec<ResolvedDep>, Lockfile) {
         let planned = self.ready();
         let resolution = planned.resolution.clone();
-        vibe_install::apply(&self.source, *planned, SlotIntegrity::TrustPresence).unwrap();
+        slot_apply::apply_unwrapped(
+            &self.source,
+            &self.root,
+            *planned,
+            SlotIntegrity::TrustPresence,
+        )
+        .unwrap();
         let lock = Lockfile::read(self.root.join(Lockfile::FILENAME)).unwrap();
         (resolution, lock)
     }

@@ -1,7 +1,9 @@
 //! The planning phase — derive roots and one source-bound metadata closure,
 //! including visibility, configuration and conditional activation. Preview
 //! returns that selection; installation acquires its exact retained candidates
-//! before [`apply`](crate::apply) publishes project state.
+//! before
+//! [`apply_with_spec_format_and_lifecycle_observed`](crate::apply_with_spec_format_and_lifecycle_observed)
+//! publishes project state.
 
 specmark::scope!("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#install-workflow-in-detail");
 
@@ -58,11 +60,13 @@ pub enum Plan {
     /// regenerates boot artifacts (cheap, self-healing) and reports.
     Fresh,
     /// A real resolution was computed and awaits the caller's
-    /// confirmation before [`apply`](crate::apply).
+    /// confirmation before
+    /// [`apply_with_spec_format_and_lifecycle_observed`](crate::apply_with_spec_format_and_lifecycle_observed).
     Ready(Box<PlannedInstall>),
 }
 
-/// A confirmed-pending resolution — everything [`apply`](crate::apply)
+/// A confirmed-pending resolution — everything
+/// [`apply_with_spec_format_and_lifecycle_observed`](crate::apply_with_spec_format_and_lifecycle_observed)
 /// needs, carried by value so the apply phase cannot observe state
 /// the plan did not produce.
 pub type NodeRootProjection = std::collections::BTreeMap<String, Vec<PackageRef>>;

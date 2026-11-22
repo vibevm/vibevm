@@ -80,13 +80,18 @@ fn definitely_before_publication_keeps_original_object_and_bytes() {
     assert_eq!(fs::read_to_string(path).unwrap(), BEFORE);
 }
 
-#[test]
-fn same_byte_replacement_during_verification_is_a_conflict_not_our_receipt() {
-    let (temp, source, planned) = prepared(Case::Complete);
-    let kept = std::sync::Arc::new(std::sync::Mutex::new(None));
-    let record = kept.clone();
+type KeptManifest = std::sync::Arc<std::sync::Mutex<Option<(Vec<u8>, Value)>>>;
+
+/// Swap the manifest for a same-byte object while its publication verifies.
+///
+/// The verification hook fires once per arming, so any other publication
+/// arms it again and the swap meets the manifest whenever that is published.
+fn replace_manifest_once(record: KeptManifest) {
     vibe_safefs::arm_before_publish_verify(Some(Box::new(move |parent, name| {
-        assert_eq!(name, "vibe.toml");
+        if name != "vibe.toml" {
+            replace_manifest_once(record.clone());
+            return;
+        }
         let path = parent.path().join(name);
         let bytes = fs::read(&path).unwrap();
         let replacement = parent.path().join("other-object");
@@ -94,9 +99,14 @@ fn same_byte_replacement_during_verification_is_a_conflict_not_our_receipt() {
         fs::rename(replacement, &path).unwrap();
         *record.lock().unwrap() = Some((bytes, identity(&path)));
     })));
-    // The one-shot verification hook must meet the manifest publication first,
-    // so this probe applies without a slot run and its own state writes.
-    let error = vibe_install::apply(&source, *planned, SlotIntegrity::Verify).unwrap_err();
+}
+
+#[test]
+fn same_byte_replacement_during_verification_is_a_conflict_not_our_receipt() {
+    let (temp, source, planned) = prepared(Case::Complete);
+    let kept = std::sync::Arc::new(std::sync::Mutex::new(None));
+    replace_manifest_once(kept.clone());
+    let error = apply(&source, planned).unwrap_err();
     vibe_safefs::arm_before_publish_verify(None);
     assert!(matches!(error, vibe_install::Error::RollbackFailed { .. }));
     assert_eq!(source.calls(), 0);

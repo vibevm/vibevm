@@ -75,7 +75,8 @@ fn public_native_fresh_then_warm_noop_and_dirty_cleanup() {
     let (_server, info, f) = fixture(false);
     let plan = f.ready();
     let before = contacts(&info);
-    let result = vibe_install::apply(&f.source, *plan, SlotIntegrity::Verify).unwrap();
+    let result =
+        slot_apply::apply_unwrapped(&f.source, &f.project, *plan, SlotIntegrity::Verify).unwrap();
     assert_eq!(result.outcome.materialised.len(), 1);
     assert_eq!(contacts(&info), before);
     assert_eq!(
@@ -100,14 +101,16 @@ fn public_native_fresh_then_warm_noop_and_dirty_cleanup() {
     let plan = f.ready();
     let before = contacts(&info);
     let inode = fs::metadata(&f.slot).unwrap().ino();
-    let result = vibe_install::apply(&f.source, *plan, SlotIntegrity::Verify).unwrap();
+    let result =
+        slot_apply::apply_unwrapped(&f.source, &f.project, *plan, SlotIntegrity::Verify).unwrap();
     assert_eq!(result.outcome.skipped.len(), 1);
     assert_eq!(fs::metadata(&f.slot).unwrap().ino(), inode);
     assert_eq!(contacts(&info), before);
     let plan = f.ready();
     write(&f.slot, "payload.txt", "dirty after preparation");
     write(&f.slot, "untracked.tmp", "untracked after preparation");
-    let result = vibe_install::apply(&f.source, *plan, SlotIntegrity::Verify).unwrap();
+    let result =
+        slot_apply::apply_unwrapped(&f.source, &f.project, *plan, SlotIntegrity::Verify).unwrap();
     assert_eq!(result.outcome.materialised.len(), 1);
     assert!(!f.slot.join("untracked.tmp").exists());
     assert_eq!(
@@ -127,7 +130,8 @@ fn public_native_copy_keeps_store_identity_and_uses_normal_versioned_slot() {
     let (_server, info, f) = fixture(true);
     let plan = f.ready();
     let before = contacts(&info);
-    let result = vibe_install::apply(&f.source, *plan, SlotIntegrity::Verify).unwrap();
+    let result =
+        slot_apply::apply_unwrapped(&f.source, &f.project, *plan, SlotIntegrity::Verify).unwrap();
     assert_eq!(contacts(&info), before);
     assert_eq!(result.outcome.materialised.len(), 1);
     assert!(!f.slot.join(".git").exists());
@@ -177,10 +181,11 @@ fn legacy_second(f: &mut Fixture, info: &serde_json::Value) {
 )]
 fn mixed_cached_legacy_and_native_ignore_writes_share_owned_undo() {
     let (_server, info, mut f) = fixture(false);
-    vibe_install::apply(&f.source, *f.ready(), SlotIntegrity::Verify).unwrap();
+    slot_apply::apply_unwrapped(&f.source, &f.project, *f.ready(), SlotIntegrity::Verify).unwrap();
     failures::publish(&info, "second", "exit 37\n", false);
     legacy_second(&mut f, &info);
     let planned = failures::ready(&f);
+    slot_apply::discard_run_record(&f.project);
     let before = failures::snapshot(&f.project);
     let error =
         slot_apply::apply(&f.source, &f.project, *planned, SlotIntegrity::Verify).unwrap_err();
@@ -195,10 +200,19 @@ fn mixed_cached_legacy_and_native_ignore_writes_share_owned_undo() {
 fn mixed_deferred_legacy_and_native_refuse_before_caller_writes() {
     let (_server, info, mut f) = fixture(false);
     legacy_second(&mut f, &info);
-    vibe_install::apply(&f.source, *failures::ready(&f), SlotIntegrity::Verify).unwrap();
+    slot_apply::apply_unwrapped(
+        &f.source,
+        &f.project,
+        *failures::ready(&f),
+        SlotIntegrity::Verify,
+    )
+    .unwrap();
     let planned = failures::ready(&f);
+    slot_apply::discard_run_record(&f.project);
     let before = failures::snapshot(&f.project);
-    let error = vibe_install::apply(&f.source, *planned, SlotIntegrity::Verify).unwrap_err();
+    let error = slot_apply::apply_unwrapped(&f.source, &f.project, *planned, SlotIntegrity::Verify)
+        .unwrap_err();
+    slot_apply::discard_run_record(&f.project);
     assert!(
         error
             .to_string()
@@ -213,7 +227,7 @@ fn mixed_deferred_legacy_and_native_refuse_before_caller_writes() {
 )]
 fn metadata_only_commit_is_materialised_even_when_payload_is_identical() {
     let (_server, info, f) = fixture(false);
-    vibe_install::apply(&f.source, *f.ready(), SlotIntegrity::Verify).unwrap();
+    slot_apply::apply_unwrapped(&f.source, &f.project, *f.ready(), SlotIntegrity::Verify).unwrap();
     let old = git(&f.slot, &["rev-parse", "HEAD"]);
     let bytes = fs::read(f.slot.join("payload.txt")).unwrap();
     let work = Path::new(info["work"].as_str().unwrap());
@@ -231,7 +245,9 @@ fn metadata_only_commit_is_materialised_even_when_payload_is_identical() {
         ],
     );
     git(&bare, &["update-server-info"]);
-    let result = vibe_install::apply(&f.source, *f.ready(), SlotIntegrity::Verify).unwrap();
+    let result =
+        slot_apply::apply_unwrapped(&f.source, &f.project, *f.ready(), SlotIntegrity::Verify)
+            .unwrap();
     assert_eq!(result.outcome.materialised.len(), 1);
     assert_ne!(git(&f.slot, &["rev-parse", "HEAD"]), old);
     assert_eq!(fs::read(f.slot.join("payload.txt")).unwrap(), bytes);

@@ -124,9 +124,10 @@ fn prepare_manifest(planned: &mut PlannedInstall) -> Result<bool> {
     //    `(group, name)`; a no-op in install-from-manifest mode.
     //
     //    This MUST run before the boot regeneration below:
-    //    `apply_resolution` composes each node's boot from its
-    //    `[requires]`, so a package installed by pkgref has to be
-    //    declared first or its boot snippet is dropped from the
+    //    `apply_resolution_with_spec_format_and_slot_lifecycle_traced`
+    //    composes each node's boot from its `[requires]`, so a
+    //    package installed by pkgref has to be declared first or its
+    //    boot snippet is dropped from the
     //    generated `INDEX.md`.
     //
     //    A requested root absent from the fetched set means the

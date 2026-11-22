@@ -1,8 +1,8 @@
 //! Apply a resolution to the workspace — the install half of the loading
 //! model (PROP-009 §2.7).
 //!
-//! [`apply_resolution`] takes a discovered [`Workspace`] and a resolved,
-//! fetched dependency set, and:
+//! [`apply_resolution_with_spec_format_and_slot_lifecycle_traced`] takes a
+//! discovered [`Workspace`] and a resolved, fetched dependency set, and:
 //!
 //! 1. materialises each resolved package into its dependency slot
 //!    ([`crate::vibedeps`]);
@@ -67,7 +67,6 @@ pub use model::{InstallOutcome, PostInstallPlan, ResolvedDep, SlotCheck, SlotVer
 pub use placement::PreparedSlotPlacement;
 
 pub use lifecycle_apply::{
-    apply_resolution_with_spec_format_and_slot_lifecycle,
     apply_resolution_with_spec_format_and_slot_lifecycle_traced,
     apply_resolution_with_spec_format_and_slot_lifecycle_traced_native,
     apply_resolution_with_spec_format_and_slot_lifecycle_traced_native_progress,
@@ -101,88 +100,6 @@ pub use native::{
     NativeInstallCarriage, NativeInstallOutcome, NativeInstallReplayError,
     regenerate_boot_from_traced_native,
 };
-
-/// Materialise a resolution into the workspace and regenerate every node's
-/// boot artifacts (PROP-009 §2.7).
-///
-/// Materialisation is workspace-wide — one dependency slot per resolved
-/// package at the absolute root. Boot artifacts are computed per node: the
-/// root from the whole resolution, a member from its own `[requires]`
-/// closure, with the absolute root's foundation boot inherited downward.
-///
-/// `slot_integrity` governs the PROP-011 §2.3 materialise-diff skip: with
-/// [`SlotIntegrity::TrustPresence`] a slot already on disk for the
-/// resolved version is trusted without a materialisation pass; with
-/// [`SlotIntegrity::Verify`] a present slot is accepted only after its
-/// `content_hash` checks out — see [`apply_resolution_with`], which takes
-/// the verifying seam. This entry point carries no verifier, so `Verify`
-/// here is the shipped always-rematerialise discipline — exactly what
-/// `vibe reinstall --force` (reconcile slots from a fresh fetch) and
-/// `vibe update` ask for.
-///
-/// No slot lifecycle runs here: this is the materialise-and-regenerate core.
-/// A caller that owns slot contributions takes
-/// [`apply_resolution_with_spec_format_and_slot_lifecycle`] instead.
-pub fn apply_resolution(
-    workspace: &Workspace,
-    resolution: &[ResolvedDep],
-    slot_integrity: SlotIntegrity,
-) -> Result<InstallOutcome, WorkspaceError> {
-    apply_resolution_with_spec_format(
-        workspace,
-        resolution,
-        slot_integrity,
-        SpecFormat::Mixed,
-        None,
-    )
-}
-
-/// The seam-injectable form of [`apply_resolution`]: `slot_verifier` is
-/// consulted for an identity-current present slot under
-/// [`SlotIntegrity::Verify`] (PROP-011 §2.3/§5.2) before the fast path trusts
-/// it. A hash that matches the resolution's recorded
-/// `content_hash` accepts the slot **without** materialising (the
-/// always-rematerialise behaviour `verify` shipped with was stricter and
-/// costlier than the contract: the spot-check replaces that pass, it does
-/// not add to it); a divergence re-materialises the slot and records a
-/// warn line naming the package and both hashes. `None` degrades `Verify`
-/// to the shipped always-rematerialise discipline. A mutable in-workspace
-/// `file://` source (§2.6) is identity-current only when its valid slot record
-/// carries the freshly-fetched source hash; an `in-place` package
-/// (PROP-022 §2.4) remains on its separate update path.
-pub fn apply_resolution_with(
-    workspace: &Workspace,
-    resolution: &[ResolvedDep],
-    slot_integrity: SlotIntegrity,
-    slot_verifier: Option<&dyn SlotVerifier>,
-) -> Result<InstallOutcome, WorkspaceError> {
-    apply_resolution_with_spec_format(
-        workspace,
-        resolution,
-        slot_integrity,
-        SpecFormat::Mixed,
-        slot_verifier,
-    )
-}
-
-/// Apply a resolution with the effective PROP-045 spec representation.
-/// The entry points above select `mixed`.
-pub fn apply_resolution_with_spec_format(
-    workspace: &Workspace,
-    resolution: &[ResolvedDep],
-    slot_integrity: SlotIntegrity,
-    spec_format: SpecFormat,
-    slot_verifier: Option<&dyn SlotVerifier>,
-) -> Result<InstallOutcome, WorkspaceError> {
-    apply_resolution_with_spec_format_and_slot_lifecycle(
-        workspace,
-        resolution,
-        slot_integrity,
-        spec_format,
-        slot_verifier,
-        SlotLifecycleMode::None,
-    )
-}
 
 /// Internal materialisation, integrity, and slot-event bookkeeping. Public
 /// outcome reporting stays separate from slot-event eligibility.

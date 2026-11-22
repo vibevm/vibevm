@@ -4,12 +4,18 @@ specmark::scope!(
 );
 
 use super::fixture::*;
+use crate::slot_apply;
+use std::path::Path;
 use vibe_core::manifest::{Lockfile, Manifest};
 use vibe_core::user_config::SlotIntegrity;
 use vibe_install::{Plan, PlannedInstall};
 
-fn apply(source: &Source, plan: Box<PlannedInstall>) -> Result<(), vibe_install::Error> {
-    vibe_install::apply(source, *plan, SlotIntegrity::Verify).map(|_| ())
+fn apply(
+    source: &Source,
+    root: &Path,
+    plan: Box<PlannedInstall>,
+) -> Result<(), vibe_install::Error> {
+    slot_apply::apply_unwrapped(source, root, *plan, SlotIntegrity::Verify).map(|_| ())
 }
 
 #[test]
@@ -39,7 +45,7 @@ fn relative_selected_member_completes_plan_apply_and_reload() {
     .unwrap() else {
         panic!("explicit install must plan")
     };
-    apply(&f.source, plan).unwrap();
+    apply(&f.source, &root, plan).unwrap();
     let lock = Lockfile::read(root.join("vibe.lock")).unwrap();
     assert_eq!(lock.packages.len(), 1);
     assert!(matches!(
@@ -72,7 +78,7 @@ fn native_symlink_alias_keeps_the_selected_member() {
     .unwrap() else {
         panic!("explicit install must plan")
     };
-    apply(&f.source, plan).unwrap();
+    apply(&f.source, &f.root, plan).unwrap();
     let member = vibe_core::manifest::Manifest::read(f.root.join("a/vibe.toml")).unwrap();
     assert_eq!(member.requires.packages[0].version.to_string(), "=1.0.0");
     assert_eq!(f.lock().packages.len(), 1);
@@ -102,7 +108,7 @@ fn changed_sibling_version_or_kind_refuses_apply_and_preserves_current_bytes() {
             &format!("[project]\nname='b'\nversion='1.0.0'\n[requires.packages]\n{changed}\n"),
         );
         let before = files(&f.root);
-        let error = apply(&f.source, plan)
+        let error = apply(&f.source, &f.root, plan)
             .expect_err("the already-read sibling declaration must match the selected resolution");
         assert!(
             matches!(&error, vibe_install::Error::Workspace(vibe_workspace::WorkspaceError::SpecMaterialization { path, reason }) if path == &f.root.join("b") && reason.contains("SOURCE-HOST-BOOT-LAW")),
@@ -134,12 +140,7 @@ fn changed_sibling_common_input_refuses_apply_before_selected_publication() {
         "[project]\nname='member'\nversion='1.0.0'\n[requires.packages.'org.constraints/x']\nversion='1'\nconfiguration={policy='require-selection'}\n",
     );
     let before = files(&f.root);
-    let error = vibe_install::apply(
-        &f.source,
-        *planned,
-        vibe_core::user_config::SlotIntegrity::Verify,
-    )
-    .unwrap_err();
+    let error = apply(&f.source, &f.root, planned).unwrap_err();
     assert!(
         matches!(
             &error,
@@ -147,6 +148,7 @@ fn changed_sibling_common_input_refuses_apply_before_selected_publication() {
         ),
         "{error}"
     );
+    slot_apply::discard_run_record(&f.root);
     assert_eq!(
         files(&f.root),
         before,
@@ -163,16 +165,12 @@ fn programmatic_resolution_common_definition_refuses_before_apply_effects() {
     };
     planned.resolution[0].manifest.configuration=Manifest::parse_str("[package]\ngroup='org.constraints'\nname='x'\nkind='flow'\nversion='1.0.0'\n[configuration]\n").unwrap().configuration;
     let before = files(&f.root);
-    let error = vibe_install::apply(
-        &f.source,
-        *planned,
-        vibe_core::user_config::SlotIntegrity::Verify,
-    )
-    .unwrap_err();
+    let error = apply(&f.source, &f.root, planned).unwrap_err();
     assert!(matches!(
         error,
         vibe_install::Error::ConfigurationUnsupported { .. }
     ));
+    slot_apply::discard_run_record(&f.root);
     assert_eq!(files(&f.root), before);
 }
 
@@ -286,7 +284,7 @@ fn reversed_legacy_seed_is_the_same_authored_map_after_known_publication() {
             .as_str(),
         "a"
     );
-    apply(&f.source, planned).unwrap();
+    apply(&f.source, &f.root, planned).unwrap();
     assert_eq!(f.lock().packages.len(), 2);
     assert!(
         f.lock()

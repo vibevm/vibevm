@@ -491,14 +491,17 @@ fn both_static_spellings_propagate_the_refusal() {
 
     let workspace =
         vibe_workspace::Workspace::load(fixture.ws.path()).expect("the workspace still loads");
-    let error = vibe_workspace::install::apply_resolution_with_spec_format(
-        &workspace,
-        &fixture.resolution,
-        vibe_core::user_config::SlotIntegrity::TrustPresence,
-        fixture.format,
-        None,
-    )
-    .expect_err("two spellings is a refusal");
+    let error =
+        vibe_workspace::install::apply_resolution_with_spec_format_and_slot_lifecycle_traced(
+            &workspace,
+            &fixture.resolution,
+            vibe_core::user_config::SlotIntegrity::TrustPresence,
+            fixture.format,
+            None,
+            vibe_workspace::install::SlotLifecycleMode::None,
+            None,
+        )
+        .expect_err("two spellings is a refusal");
     let message = error.to_string();
     assert!(
         message.contains("STATIC"),

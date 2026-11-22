@@ -70,7 +70,7 @@ mod cases {
         }
     }
     fn apply(f: &Fixture, format: SpecFormat) {
-        install::apply_resolution_with_spec_format(
+        apply_resolution_with_spec_format(
             &f.workspace,
             &f.resolution,
             vibe_core::user_config::SlotIntegrity::Verify,

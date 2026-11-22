@@ -15,9 +15,9 @@
 //!   own.
 //! - **Interaction** — confirmation prompts, TTY detection, and report
 //!   rendering. [`plan`] returns a [`Plan`] the caller presents and
-//!   confirms; [`apply`] runs only after the caller said yes. Progress
-//!   during planning surfaces through typed [`PlanEvent`]s, not
-//!   prints.
+//!   confirms; [`apply_with_spec_format_and_lifecycle_observed`] runs only
+//!   after the caller said yes. Progress during planning surfaces through
+//!   typed [`PlanEvent`]s, not prints.
 //!
 //! The split mirrors the original M0 crate of the same name
 //! (`plan_install` / `apply_install`), whose materialisation half
@@ -53,8 +53,7 @@ mod visibility_projection;
 
 pub use apply::{
     ApplyReport, LockPublication, PreparedApplyReport, ProjectRecordCapture,
-    ProjectRecordPublication, SlotLifecycleSeams, apply, apply_with_spec_format,
-    apply_with_spec_format_and_lifecycle_observed,
+    ProjectRecordPublication, SlotLifecycleSeams, apply_with_spec_format_and_lifecycle_observed,
     apply_with_spec_format_and_lifecycle_observed_traced,
     apply_with_spec_format_and_lifecycle_observed_traced_prepared, publish_admitted_manifest,
     publish_empty_legacy_lock,

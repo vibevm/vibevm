@@ -124,7 +124,8 @@ pub enum SlotCheck {
 /// }
 ///
 /// // The materialise pass consumes the seam through &dyn — the wiring
-/// // `apply_resolution_with` performs for every eligible present slot.
+/// // `apply_resolution_with_spec_format_and_slot_lifecycle_traced` performs
+/// // for every eligible present slot.
 /// fn consult(v: &dyn SlotVerifier) -> bool {
 ///     let _ = v; // hash + compare happens against a real slot in production
 ///     true
@@ -222,7 +223,11 @@ impl PostInstallPlan {
     }
 }
 
-/// What [`apply_resolution`] did — for the caller to report.
+/// What [`apply_resolution_with_spec_format_and_slot_lifecycle_traced`] did —
+/// for the caller to report.
+///
+/// [`apply_resolution_with_spec_format_and_slot_lifecycle_traced`]:
+/// crate::install::apply_resolution_with_spec_format_and_slot_lifecycle_traced
 #[derive(Debug)]
 pub struct InstallOutcome {
     /// Dependency-slot paths materialised this run — a new or version-bumped

@@ -3,7 +3,10 @@ mod cases {
     use super::super::*;
     use crate::{
         Workspace,
-        install::{ResolvedDep, apply_resolution_with_spec_format},
+        install::{
+            ResolvedDep, SlotLifecycleMode,
+            apply_resolution_with_spec_format_and_slot_lifecycle_traced,
+        },
         vibedeps,
     };
     use vibe_core::{
@@ -51,11 +54,13 @@ mod cases {
         workspace: &Workspace,
         dep: &ResolvedDep,
     ) -> Result<crate::install::InstallOutcome, WorkspaceError> {
-        apply_resolution_with_spec_format(
+        apply_resolution_with_spec_format_and_slot_lifecycle_traced(
             workspace,
             std::slice::from_ref(dep),
             SlotIntegrity::TrustPresence,
             SpecFormat::Mixed,
+            None,
+            SlotLifecycleMode::None,
             None,
         )
     }

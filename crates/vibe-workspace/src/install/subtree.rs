@@ -24,8 +24,9 @@ impl SubtreeOutcome {
 
 /// Materialise a **partial** resolution — a scoped `vibe update <pkg>` subtree
 /// — into dependency slots and raise the pre-install event of each
-/// payload-changing slot, the same placement flow [`apply_resolution`]
-/// performs (copy / hardlink / in-place move + rollback), but **without**
+/// payload-changing slot, the same placement flow
+/// [`apply_resolution_with_spec_format_and_slot_lifecycle_traced`] performs
+/// (copy / hardlink / in-place move + rollback), but **without**
 /// pruning unrelated slots or regenerating boot. A scoped update touches only
 /// the named subtree, so the caller removes any superseded slots itself and
 /// regenerates boot from the whole materialised tree afterwards; pruning here

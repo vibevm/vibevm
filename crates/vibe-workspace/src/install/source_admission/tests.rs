@@ -2,7 +2,7 @@ use super::*;
 #[cfg(test)]
 mod cases {
     use super::*;
-    use crate::install::{apply_resolution_with_spec_format, test_helpers::*};
+    use crate::install::test_helpers::*;
     use std::{collections::BTreeMap, fs, path::PathBuf};
     use tempfile::TempDir;
     fn workspace() -> (TempDir, Workspace) {

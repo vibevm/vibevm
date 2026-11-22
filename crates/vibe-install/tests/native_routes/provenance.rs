@@ -82,7 +82,8 @@ fn in_place_mirror_audit_survives_recording_noop_and_failed_apply() {
     assert_eq!(evidence.source_url.as_deref(), Some(canonical.as_str()));
     assert_eq!(evidence.fetched_from.as_deref(), Some(actual.as_str()));
     assert_eq!(evidence.resolved_commit.as_deref(), Some(wanted.as_str()));
-    let report = vibe_install::apply(&source, *plan, SlotIntegrity::Verify).unwrap();
+    let report =
+        slot_apply::apply_unwrapped(&source, &project, *plan, SlotIntegrity::Verify).unwrap();
     assert_eq!(report.outcome.materialised.len(), 1);
     let lock_path = project.join("vibe.lock");
     let sidecar = provenance_path(&lock_path);
@@ -108,7 +109,8 @@ fn in_place_mirror_audit_survives_recording_noop_and_failed_apply() {
     let noop = ready(&source, &project);
     let (_, _, _, evidence) = noop.package_sources().next().unwrap();
     assert_eq!(evidence.fetched_from.as_deref(), Some(actual.as_str()));
-    let report = vibe_install::apply(&source, *noop, SlotIntegrity::Verify).unwrap();
+    let report =
+        slot_apply::apply_unwrapped(&source, &project, *noop, SlotIntegrity::Verify).unwrap();
     assert_eq!(report.outcome.skipped.len(), 1);
     assert_eq!(fs::read(&sidecar).unwrap(), audit_bytes);
     assert_eq!(fs::metadata(&sidecar).unwrap().ino(), audit_inode);
@@ -141,6 +143,7 @@ fn in_place_mirror_audit_survives_recording_noop_and_failed_apply() {
     git(&info, work, &["add", "-A"]);
     publish(&info);
     let failing = ready(&source, &project);
+    slot_apply::discard_run_record(&project);
     let before = snapshot(&project);
     let error = slot_apply::apply(&source, &project, *failing, SlotIntegrity::Verify).unwrap_err();
     slot_apply::discard_run_record(&project);

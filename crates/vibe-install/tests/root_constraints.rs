@@ -9,6 +9,8 @@ mod fixture;
 mod retained;
 #[path = "root_constraints/review_cases.rs"]
 mod review_cases;
+#[path = "support/slot_apply.rs"]
+mod slot_apply;
 use fixture::*;
 use vibe_core::manifest::Manifest;
 use vibe_install::Plan;

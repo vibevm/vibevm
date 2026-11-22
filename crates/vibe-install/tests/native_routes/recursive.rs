@@ -206,7 +206,13 @@ fn recovery(cut: &str) {
         .unwrap(),
         store: root.path().join("store"),
     };
-    vibe_install::apply(&source, *ready(&source, &project), SlotIntegrity::Verify).unwrap();
+    slot_apply::apply_unwrapped(
+        &source,
+        &project,
+        *ready(&source, &project),
+        SlotIntegrity::Verify,
+    )
+    .unwrap();
     let slot = project
         .join(vibe_core::layout::current_vibedeps_root())
         .join("org.fixture.demo");
@@ -267,6 +273,7 @@ fn recovery(cut: &str) {
         git(&info, work, &["add", "vibevm"]);
     }
     publish(&info);
+    slot_apply::discard_run_record(&project);
     let before = snapshot(&project);
     let old_slot = snapshot(&slot);
     let plan = ready(&source, &project);

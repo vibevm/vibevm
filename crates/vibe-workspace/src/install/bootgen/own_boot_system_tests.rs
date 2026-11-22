@@ -54,7 +54,7 @@ fn fixture() -> tempfile::TempDir {
 
 fn regenerate(root: &Path) {
     let workspace = Workspace::load(root).unwrap();
-    super::super::apply_resolution_with_spec_format(
+    super::super::test_helpers::apply_resolution_with_spec_format(
         &workspace,
         &[],
         vibe_core::user_config::SlotIntegrity::Verify,

@@ -96,7 +96,7 @@ pub(super) fn publish(info: &serde_json::Value, name: &str, script: &str, broken
 fn case(cut: &str) {
     let (_server, info, mut f) = fixture(false);
     f.source.names = vec!["giant".into(), "second".into()];
-    vibe_install::apply(&f.source, *ready(&f), SlotIntegrity::Verify).unwrap();
+    slot_apply::apply_unwrapped(&f.source, &f.project, *ready(&f), SlotIntegrity::Verify).unwrap();
     let second = f.slot.with_file_name("org.vibevm.second");
     for (name, slot) in [("giant", &f.slot), ("second", &second)] {
         write(slot, ".git/sentinel", name);
@@ -133,6 +133,7 @@ fn case(cut: &str) {
         );
     }
     let plan = ready(&f);
+    slot_apply::discard_run_record(&f.project);
     let before = snapshot(&f.project);
     let old_first = snapshot(&f.slot);
     let old_second = snapshot(&second);

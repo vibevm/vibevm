@@ -67,6 +67,27 @@ impl InstallSource for NoResolution {
         panic!("apply must retain its preparation")
     }
 }
+
+/// Apply `planned` with no slot lifecycle, so these probes observe the
+/// materialisation boundary alone.
+fn apply<S: InstallSource + ?Sized>(
+    source: &S,
+    planned: PlannedInstall,
+    slot_integrity: SlotIntegrity,
+) -> Result<ApplyReport> {
+    apply_with_spec_format_and_slot_lifecycle(
+        source,
+        planned,
+        slot_integrity,
+        SpecFormat::Mixed,
+        SlotLifecycleMode::None,
+        None,
+        None,
+        None,
+    )
+    .map(|prepared| prepared.report)
+}
+
 #[test]
 fn host_path_disappearance_after_prepared_candidate_refuses_apply_before_effects() {
     let temp = tempfile::tempdir().unwrap();
