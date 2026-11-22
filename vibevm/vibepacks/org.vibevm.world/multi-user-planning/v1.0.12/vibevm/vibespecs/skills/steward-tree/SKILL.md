@@ -1,6 +1,6 @@
 ---
 name: steward-tree
-description: Render any schema-1 stewardship plan.toml as a static offline HTML tree with states, per-parent leaf counts, dependencies, acceptance and the validator's verdict. Use to inspect or review a plan's whole shape, or to keep a rendered view current while the plan changes; it reads the plan and writes only inside its output directory.
+description: Render any schema-1 stewardship plan.toml as a static offline HTML tree with states, per-parent leaf counts, dependencies, acceptance and the validator's verdict. Use to inspect or review a plan's whole shape, or to keep a rendered view current while the plan changes; it reads the plan and writes only inside its output directory, by default the context's disposable view/ directory.
 ---
 
 <status stage="impl" state="done"/>
@@ -29,15 +29,27 @@ and named by kind, never merged: `depends_on` reads as the inherited start gate
 [plan-hierarchy.xml#COMPLETION-GATES](../../flows/multi-user-planning/plan-hierarchy.xml).
 A kind a plan does not use takes no space in the pane. @status:impl/done
 
-@fact:TREE-SKILL-RUN Run the packaged Python 3.11+ renderer with the actual plan
-and a directory it may own. Nothing outside `--out` is written and the plan is
-opened read-only: @status:impl/done
+@fact:TREE-SKILL-RUN Run the packaged Python 3.11+ renderer on a steward
+context. `--resolve`, run inside the checkout, finds the context through
+`steward-common`; `--context` names it directly. Either reads
+`<context>/plan.toml` and writes `<context>/view/` unless `--out` names another
+directory. `--plan` with `--out` still renders any plan file. Nothing outside
+the output directory is written and the plan is opened read-only:
+@status:impl/done
 
 ```text
+python -B scripts/render_tree.py --resolve [--home <steward home>] [--lang ru|en] [--watch]
+python -B scripts/render_tree.py --context <steward home>/contexts/<context-id> [--out <directory>]
 python -B scripts/render_tree.py --plan <plan.toml> --out <directory> [--lang ru|en] [--watch]
 ```
 
-@fact:TREE-SKILL-OUTPUT `--out` receives `index.html`, a self-contained offline
+@fact:TREE-SKILL-VIEW-DISPOSABLE The context's `view/` is a disposable
+projection: delete it at any time, regenerate it from the plan, never read it
+back. It embeds no absolute path, so a copied steward home carries no stale
+machine path. Nothing outside the steward home is a planning source of truth.
+@status:impl/done
+
+@fact:TREE-SKILL-OUTPUT The output directory receives `index.html`, a self-contained offline
 page with no network, font or script dependency, and `plan-tree.json`, the same
 model for other readers. Both are replaced atomically and only when their bytes
 change, so a reload never sees a half-written page and an unchanged plan

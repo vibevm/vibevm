@@ -384,6 +384,74 @@ class TreeViewerTests(unittest.TestCase):
             process.stdout.close()
             process.stderr.close()
 
+    # ---- context view inside the steward home ------------------------------
+
+    CONTEXT_ID = "00000000-0000-4000-8000-0000000000aa"
+
+    def make_context(self) -> Path:
+        context = self.sandbox / "settings" / "steward" / "contexts" / self.CONTEXT_ID
+        context.mkdir(parents=True)
+        write_plan(context / "plan.toml", plan(node("A"), node("B", order=20)))
+        (context / "settings.toml").write_text('schema = 1\nlang = "en"\n', encoding="utf-8")
+        return context
+
+    @staticmethod
+    def snapshot(root: Path) -> dict[str, bytes]:
+        return {str(path.relative_to(root)): path.read_bytes()
+                for path in sorted(root.rglob("*")) if path.is_file()}
+
+    def cli_in(self, cwd: Path, *arguments, env=None):
+        command = [sys.executable, "-B", "-I", str(HERE / "render_tree.py"), *arguments]
+        return subprocess.run(command, cwd=cwd, text=True, timeout=60, capture_output=True,
+                              encoding="utf-8", env=env or {**os.environ, "PYTHONIOENCODING": "utf-8"})
+
+    def test_context_view_is_written_only_inside_view_without_absolute_paths(self):
+        context = self.make_context()
+        before = self.snapshot(self.sandbox)
+        run = self.cli_in(self.sandbox, "--context", str(context))
+        self.assertEqual(run.returncode, 0, run.stdout + run.stderr)
+        after = self.snapshot(self.sandbox)
+        prefix = str((context / "view").relative_to(self.sandbox))
+        self.assertEqual({key: value for key, value in after.items() if not key.startswith(prefix)}, before)
+        self.assertEqual(sorted(path.name for path in (context / "view").iterdir()),
+                         ["index.html", "plan-tree.json"])
+        for name in ("index.html", "plan-tree.json"):
+            text = (context / "view" / name).read_text(encoding="utf-8")
+            for absolute in (str(self.sandbox), str(context), str(Path.home())):
+                self.assertNotIn(absolute, text)
+                self.assertNotIn(json.dumps(absolute)[1:-1], text)
+        payload = json.loads((context / "view" / "plan-tree.json").read_text(encoding="utf-8"))
+        self.assertEqual((payload["lang"], payload["plan"]["source_name"]), ("en", "plan.toml"))
+        run = self.cli_in(self.sandbox, "--context", str(context), "--out", "explicit")
+        self.assertEqual(run.returncode, 0, run.stdout + run.stderr)
+        self.assertTrue((self.sandbox / "explicit" / "index.html").is_file())
+        run = self.cli_in(self.sandbox, "--plan", "absent.toml")
+        self.assertEqual((run.returncode, json.loads(run.stdout)["code"]), (2, "ARGUMENTS_INVALID"))
+
+    def test_resolve_renders_the_context_bound_to_the_current_repository(self):
+        context = self.make_context()
+        repo = self.sandbox / "repo"
+        repo.mkdir()
+        env = {key: value for key, value in os.environ.items() if not key.startswith("GIT_")}
+        env.update({"PYTHONIOENCODING": "utf-8", "HOME": str(self.sandbox), "GIT_CONFIG_NOSYSTEM": "1",
+                    "GIT_CONFIG_GLOBAL": os.devnull, "GIT_CEILING_DIRECTORIES": str(self.sandbox.parent),
+                    "VIBE_SETTINGS": str(self.sandbox / "settings")})
+        for args in (["init", "-q", "-b", "main"],
+                     ["-c", "user.name=F", "-c", "user.email=f@example.invalid",
+                      "commit", "-q", "--allow-empty", "-m", "root"]):
+            subprocess.run(["git", *args], cwd=repo, env=env, check=True, capture_output=True)
+        run = self.cli_in(repo, "--resolve", env=env)
+        self.assertEqual((run.returncode, json.loads(run.stdout)["code"]), (2, "CONTEXT_NOT_FOUND"))
+        root = subprocess.run(["git", "rev-list", "--max-parents=0", "HEAD"], cwd=repo, env=env,
+                              check=True, capture_output=True, text=True).stdout.strip()
+        (context / "binding.toml").write_text(
+            f'schema = 2\ncontext_id = "{self.CONTEXT_ID}"\nproject_name = "sample"\n'
+            f'repository_id = "{root}"\ndefault = true\nrevisions = []\n', encoding="utf-8")
+        run = self.cli_in(repo, "--resolve", env=env)
+        self.assertEqual(run.returncode, 0, run.stdout + run.stderr)
+        self.assertEqual(json.loads(run.stdout)["index"], str(context / "view" / "index.html"))
+        self.assertEqual(sorted(path.name for path in repo.iterdir()), [".git"])
+
 
 if __name__ == "__main__":
     unittest.main()

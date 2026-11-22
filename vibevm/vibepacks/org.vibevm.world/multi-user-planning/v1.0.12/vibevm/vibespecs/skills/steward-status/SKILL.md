@@ -20,10 +20,13 @@ request also authorizes continuation, report the verified state and continue
 within that scope. A stop or narrower instruction takes precedence over the
 standing campaign route. @status:impl/done
 
-1. @fact:STATUS-RESOLVE Resolve the exact repository/worktree/revision binding
-   under `~/.vibe/steward/contexts/*/binding.toml`. An explicit context named by
-   the owner wins. Do not guess between duplicate exact matches.
-   @status:impl/done
+1. @fact:STATUS-RESOLVE Resolve the context with
+   `python -B ../steward-common/scripts/resolve_context.py` run in the checkout
+   (add `--context-id <id>` when the owner names one; `--home` overrides the
+   steward home). It reads `<steward home>/contexts/*/binding.toml` and matches by
+   repository identity, branch selector and default context, falling back to a
+   schema-1 exact path. Do not guess between the candidates it lists, and report
+   "no context" rather than creating one unasked. @status:impl/done
 2. @fact:STATUS-READ On cold start, resume, compaction, or model/account change,
    read global/context settings, advisory custody, the whole
    `plan.toml`, and the repository's actual branch, HEAD, ahead/behind and dirty

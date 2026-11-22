@@ -9,6 +9,7 @@ import json
 import os
 from pathlib import Path
 import re
+import runpy
 import tempfile
 import tomllib
 from typing import Any
@@ -16,6 +17,8 @@ from typing import Any
 
 SCHEMA = 1
 CLAUDE_CONDITION_MAX_UTF16 = 4000
+# Shared steward-home resolution (`user-local-state.xml#CONTEXT-RESOLUTION`).
+STEWARD_HOME = Path(__file__).resolve().parents[2] / "steward-common/scripts/steward_home.py"
 TERMINAL_SELECTION_STATES = {"accepted", "dropped", "superseded", "deferred"}
 ROUTE_TERMINAL_STATES = {"accepted", "dropped", "superseded", "deferred"}
 ALLOWED_STATES = {
@@ -693,8 +696,25 @@ def current_status(context: Path, goal_bytes: bytes, claude_bytes: bytes | None)
     return not reasons, reasons
 
 
+def context_of(args: argparse.Namespace) -> Path:
+    """`--context`, or the current repository's context through the resolver."""
+    if not getattr(args, "resolve", False):
+        return args.context
+    steward = runpy.run_path(str(STEWARD_HOME))
+    try:
+        result = steward["resolve"](steward["steward_home"](getattr(args, "home", None)), Path.cwd())
+    except steward["StewardError"] as exc:
+        raise GoalError("GOAL_CONTEXT_UNRESOLVED", f"{exc.code}: {exc}") from exc
+    if result.status == "found":
+        return result.context_dir
+    if result.status == "ambiguous":
+        names = ", ".join(candidate.context_id for candidate in result.candidates)
+        raise GoalError("GOAL_CONTEXT_UNRESOLVED", f"several contexts match; name one with --context: {names}")
+    raise GoalError("GOAL_CONTEXT_UNRESOLVED", "no steward context is bound to this repository")
+
+
 def run(args: argparse.Namespace) -> dict[str, Any]:
-    context = args.context.resolve()
+    context = context_of(args).resolve()
     if not context.is_dir():
         raise GoalError("GOAL_PLAN_INVALID", f"context directory not found: {context}")
     last_moved = False
@@ -756,7 +776,11 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
 
 def parser() -> argparse.ArgumentParser:
     result = argparse.ArgumentParser(description=__doc__)
-    result.add_argument("--context", type=Path, required=True)
+    source = result.add_mutually_exclusive_group(required=True)
+    source.add_argument("--context", type=Path, help="steward context directory")
+    source.add_argument("--resolve", action="store_true",
+                        help="resolve the context of the repository in the current directory")
+    result.add_argument("--home", type=Path, help="steward home for --resolve; default <settings dir>/steward")
     result.add_argument(
         "--holder-id",
         help="deprecated compatibility metadata; not an ordinary publication gate",

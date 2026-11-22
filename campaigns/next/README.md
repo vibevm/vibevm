@@ -10,7 +10,7 @@ The baseline is refined plan revision 4 at commit ce0fa4c51e370ce3141021e29a9539
 
 Read the project's common boot, then resolve the multi-user-planning context bound to this repository/worktree/branch. A new contributor initializes once from plan.seed.toml; binding.toml records the actual canonical roots/Git common directory/revision, and settings.toml selects goal_node = "NEXT". Personal state belongs under that user's ~/.vibe/steward/contexts/<id>/, never in this repository.
 
-The seed is a portable initialization template. Do not overwrite an existing adaptive plan with it. Merge deliberate plan changes by stable IDs and preserve accepted/candidate evidence. The installed protocol and renderer live in vibevm/vibedeps/org.vibevm.world.multi-user-planning/1.0.0/.
+The seed is a portable initialization template. Do not overwrite an existing adaptive plan with it. Merge deliberate plan changes by stable IDs and preserve accepted/candidate evidence. The installed protocol and renderer live in vibevm/vibedeps/org.vibevm.world.multi-user-planning/1.0.12/.
 
 Run these separately from the selected checkout, replacing <context> with its resolved local directory:
 

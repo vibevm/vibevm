@@ -2,8 +2,10 @@
 """Render any schema-1 stewardship plan as a static, offline plan tree.
 
 The viewer is derived navigation over `plan.toml`, never a second plan: it
-writes only inside `--out`, reads the plan without changing it, and reports the
+writes only inside its output directory (`--out`, or `<context>/view/` for
+`--context` / `--resolve`), reads the plan without changing it, and reports the
 protocol validator's own verdict so a picture can never contradict the tools.
+The view is disposable: it may be deleted at any time and is never read back.
 Display buckets and per-parent counting follow
 `plan-hierarchy.xml#TREE-DISPLAY-BUCKETS` / `#TREE-LEAF-COUNTING`.
 """
@@ -30,6 +32,9 @@ GENERATOR = "steward-tree/1"
 # rules on top of the goal renderer's structural checks, so the tree reports the
 # same verdict the frontier and goal tools act on.
 VALIDATOR = Path(__file__).resolve().parents[2] / "steward-parallel/scripts/parallel_frontier.py"
+# Shared steward-home resolution (`user-local-state.xml#CONTEXT-RESOLUTION`).
+STEWARD_HOME = Path(__file__).resolve().parents[2] / "steward-common/scripts/steward_home.py"
+VIEW_DIR = "view"
 
 # One bucket per node state; `accepted` and `candidate` never merge, because
 # implemented and accepted are different facts.
@@ -643,26 +648,59 @@ def watch(plan_path: Path, out: Path, lang: str | None, interval: float) -> int:
 
 def parser() -> argparse.ArgumentParser:
     result = argparse.ArgumentParser(description=__doc__)
-    result.add_argument("--plan", type=Path, required=True, help="path to a schema-1 plan.toml")
-    result.add_argument("--out", type=Path, required=True, help="output directory; nothing outside it is written")
+    source = result.add_mutually_exclusive_group(required=True)
+    source.add_argument("--plan", type=Path, help="path to a schema-1 plan.toml; requires --out")
+    source.add_argument("--context", type=Path,
+                        help="steward context directory; reads its plan.toml, writes <context>/view/")
+    source.add_argument("--resolve", action="store_true",
+                        help="resolve the context of the repository in the current directory")
+    result.add_argument("--home", type=Path, help="steward home for --resolve; default <settings dir>/steward")
+    result.add_argument("--out", type=Path, help="output directory; nothing outside it is written")
     result.add_argument("--lang", choices=LANGS, help="initial UI locale; default: plan/settings, else ru")
     result.add_argument("--watch", action="store_true", help="re-render while the plan bytes change")
     result.add_argument("--interval", type=float, default=2.0, help="--watch poll seconds (default 2)")
     return result
 
 
+def resolved_context(home: Path | None) -> Path:
+    """The context of the current repository, through the shared resolver."""
+    steward = runpy.run_path(str(STEWARD_HOME))
+    try:
+        result = steward["resolve"](steward["steward_home"](home), Path.cwd())
+    except steward["StewardError"] as exc:
+        raise TreeError(exc.code, str(exc)) from exc
+    if result.status == "found":
+        return result.context_dir
+    if result.status == "ambiguous":
+        names = ", ".join(candidate.context_id for candidate in result.candidates)
+        raise TreeError("CONTEXT_AMBIGUOUS", f"several contexts match; name one with --context: {names}")
+    raise TreeError("CONTEXT_NOT_FOUND", "no steward context is bound to this repository")
+
+
+def plan_and_out(args: argparse.Namespace) -> tuple[Path, Path]:
+    """`--plan` + `--out` as before, or a context's plan and its `view/`."""
+    if args.plan is not None:
+        if args.out is None:
+            raise TreeError("ARGUMENTS_INVALID", "--plan requires --out")
+        return args.plan, args.out
+    context = args.context if args.context is not None else resolved_context(args.home)
+    if not context.is_dir():
+        raise TreeError("CONTEXT_NOT_FOUND", f"context directory not found: {context}")
+    return context / "plan.toml", args.out if args.out is not None else context / VIEW_DIR
+
+
 def main(argv: list[str] | None = None) -> int:
     args = parser().parse_args(argv)
     try:
-        out = args.out
+        plan_path, out = plan_and_out(args)
         out.mkdir(parents=True, exist_ok=True)
         if not out.is_dir():
             raise TreeError("OUTPUT_UNWRITABLE", f"not a directory: {out}")
         if args.interval <= 0:
             raise TreeError("ARGUMENTS_INVALID", "--interval must be positive")
         if args.watch:
-            return watch(args.plan, out, args.lang, args.interval)
-        report = render_once(args.plan, out, args.lang)
+            return watch(plan_path, out, args.lang, args.interval)
+        report = render_once(plan_path, out, args.lang)
     except OSError as exc:
         print(json.dumps({"ok": False, "code": "OUTPUT_UNWRITABLE", "message": str(exc)}))
         return 2

@@ -200,5 +200,12 @@ still render under a failing verdict, because an invalid plan is exactly what
 needs looking at. Dependencies are shown as typed edges, which lets a plan carry
 more than one dependency kind without changing this display law. Reference
 viewer: `spec://org.vibevm.world/multi-user-planning/skills/steward-tree#root`.</TREE-VIEWER-IS-DERIVED></p>
+    <p><TREE-VIEW-IN-HOME fact="true" status="spec/done">**The view lives in
+the steward home and is disposable.** The reference viewer writes a context's
+view to `&lt;context&gt;/view/` (`index.html`, `plan-tree.json`) unless an
+explicit output directory is given. The view may be deleted at any time, is
+never read back, and embeds no absolute path. Nothing outside the steward home
+is a planning source of truth: see
+`user-local-state.xml#HOME-IS-THE-ONLY-PLANNING-TRUTH`.</TREE-VIEW-IN-HOME></p>
   </display>
 </spec>

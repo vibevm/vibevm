@@ -4,8 +4,12 @@
 from __future__ import annotations
 
 import importlib.util
+import json
+import os
 from pathlib import Path
 import shutil
+import subprocess
+import sys
 from types import SimpleNamespace
 import tempfile
 import unittest
@@ -503,6 +507,42 @@ class CompletionGateTests(unittest.TestCase):
         self.assertIn("[C] planned — Node C; depends on: none; completes after: X", goal)
         quiet = dict(snapshot, plan=self.plan(self.node("C", kind="campaign")))
         self.assertNotIn("completes after", render_goal.render(quiet)[0].decode("utf-8"))
+
+
+class ResolveTests(unittest.TestCase):
+    """`--resolve` finds the context through the shared steward-home resolver."""
+
+    def test_resolve_publishes_into_the_bound_context_and_refuses_without_one(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary).resolve()
+            home = root / "settings" / "steward"
+            shutil.copytree(FIXTURE / "home", home)
+            context = home / "contexts" / "00000000-0000-4000-8000-000000000001"
+            (context / "GOAL.md").unlink(missing_ok=True)
+            (context / "GOAL-CLAUDE.txt").unlink(missing_ok=True)
+            repo = root / "repo"
+            repo.mkdir()
+            env = {key: value for key, value in os.environ.items() if not key.startswith("GIT_")}
+            env.update({"PYTHONIOENCODING": "utf-8", "HOME": str(root), "GIT_CONFIG_NOSYSTEM": "1",
+                        "GIT_CONFIG_GLOBAL": os.devnull, "GIT_CEILING_DIRECTORIES": str(root.parent)})
+            for args in (["init", "-q", "-b", "main"],
+                         ["-c", "user.name=F", "-c", "user.email=f@example.invalid",
+                          "commit", "-q", "--allow-empty", "-m", "root"]):
+                subprocess.run(["git", *args], cwd=repo, env=env, check=True, capture_output=True)
+            command = [sys.executable, "-B", "-I", str(HERE / "render_goal.py"), "--resolve", "--home", str(home)]
+            run = subprocess.run(command, cwd=repo, env=env, capture_output=True, text=True, timeout=60)
+            self.assertEqual(run.returncode, 2, run.stdout + run.stderr)
+            self.assertEqual(json.loads(run.stdout)["code"], "GOAL_CONTEXT_UNRESOLVED")
+            self.assertFalse((context / "GOAL.md").exists())
+            root_commit = subprocess.run(["git", "rev-list", "--max-parents=0", "HEAD"], cwd=repo, env=env,
+                                         check=True, capture_output=True, text=True).stdout.strip()
+            (context / "binding.toml").write_text(
+                f'schema = 2\ncontext_id = "{context.name}"\nproject_name = "example"\n'
+                f'repository_id = "{root_commit}"\ndefault = true\nrevisions = []\n', encoding="utf-8")
+            run = subprocess.run(command, cwd=repo, env=env, capture_output=True, text=True, timeout=60)
+            self.assertEqual(run.returncode, 0, run.stdout + run.stderr)
+            self.assertEqual(json.loads(run.stdout)["goal_path"], str(context / "GOAL.md"))
+            self.assertTrue((context / "GOAL.md").is_file())
 
 
 if __name__ == "__main__":

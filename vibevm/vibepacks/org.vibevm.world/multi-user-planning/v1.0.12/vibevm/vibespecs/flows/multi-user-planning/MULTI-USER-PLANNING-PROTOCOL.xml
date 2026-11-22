@@ -22,7 +22,8 @@ drive it.</FRAMEWORK-NOT-AGENT></p>
   accepted decisions and maintainer/integrator policy. It is shareable across
   contributors and machines.</PLANE-PROJECT>
       <PLANE-CONTRIBUTOR fact="true" status="spec/done">**Contributor execution
-  state** lives under that developer's `~/.vibe/steward/`: personal settings,
+  state** lives under that developer's steward home (`~/.vibe/steward/` by
+  default, see `user-local-state.xml#STATE-HOME`): personal settings,
   branch/worktree context and adaptive plan. Custody is advisory coordination;
   formal handoff bundles exist only when the owner explicitly requests a
   transfer between central sessions on the same machine.</PLANE-CONTRIBUTOR>
@@ -165,8 +166,9 @@ product diff is integrated or intentionally rejected, then clean it.</NO-EARLY-C
   <non-goals title="7. Version 1 boundaries">
     <facts ordered="false">
       <NO-DISTRIBUTED-LOCK fact="true" status="spec/done">No distributed lock or
-  cross-machine consensus. Cross-machine transfer requires an explicit exported
-  bundle and is deferred until a transport and identity model are specified.</NO-DISTRIBUTED-LOCK>
+  cross-machine consensus. Copying the whole steward home between a user's own
+  machines is supported; concurrent writers on two machines are not
+  coordinated.</NO-DISTRIBUTED-LOCK>
       <NO-ENFORCEMENT-CLAIM fact="true" status="spec/done">No enforcement claim.
   Advisory custody, coherent snapshots and atomic replacement make conflicts
   reviewable; they cannot prevent a malicious or broken process from editing

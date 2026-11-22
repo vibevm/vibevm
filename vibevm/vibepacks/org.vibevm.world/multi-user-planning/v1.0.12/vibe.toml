@@ -1,12 +1,9 @@
-# The vibevm repository currently maintains its 1.0.0 package family as
-# mutable in-tree development slots. Refresh the consumer materialization and
-# content hash after each accepted source change; do not mint patch versions
-# merely to move the dogfood tree forward.
+# The version of this package follows the vibevm version.
 [package]
 name = "multi-user-planning"
 group = "org.vibevm.world"
 kind = "flow"
-version = "1.0.0"
+version = "1.0.12"
 epoch = 1
 format = "normal"
 authors = ["Oleg Chirukhin"]
@@ -45,6 +42,11 @@ description = "Render or refresh the deterministic local campaign goal from the 
 name = "steward-parallel"
 path = "vibevm/vibespecs/skills/steward-parallel"
 description = "Inspect ready work, review backlog and declared or bound parallel conflicts without launching jobs or changing the plan"
+
+[[skill]]
+name = "steward-common"
+path = "vibevm/vibespecs/skills/steward-common"
+description = "Locate the steward home and the context bound to the current repository, read-only, or write a portable schema-2 binding on explicit request"
 
 [[skill]]
 name = "steward-tree"

@@ -19,6 +19,18 @@ modifying or replacing it. Without Python, follow the same byte rules directly
 and perform the double-render check.
 @status:impl/done
 
+```text
+python -B scripts/render_goal.py --resolve [--home <steward home>] [--check]
+python -B scripts/render_goal.py --context <steward home>/contexts/<context-id> [--check]
+```
+
+@fact:GOAL-SKILL-CONTEXT `--resolve`, run inside the checkout, finds the
+context through `steward-common` (repository identity, branch selector, default
+context); no match or several candidates is the refusal
+`GOAL_CONTEXT_UNRESOLVED`, and nothing is written. `--context` names the
+context directory directly. The outputs stay inside that context.
+@status:impl/done
+
 ## Procedure {#procedure}
 
 1. @fact:GOAL-SKILL-RESOLVE Resolve the exact stewardship context and read its

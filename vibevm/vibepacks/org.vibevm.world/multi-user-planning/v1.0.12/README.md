@@ -94,15 +94,25 @@ evidence mechanics that any capable agent or human coordinator can use.
   `candidate` («Сделано · ждёт приёмки») distinct from `accepted`, the
   leaf-descendant counting rule, and the law that a rendered tree is derived
   navigation carrying the validator's verdict. @status:spec/done
-- @fact:CONTENT-SKILLS Five optional agent skills: status-only orientation,
+- @fact:CONTENT-SKILLS Six optional agent skills: status-only orientation,
   explicit same-machine formal handoff, deterministic goal refresh,
   `steward-parallel` for a read-only JSON frontier with readiness, conflicts,
-  candidate batches and review backlog, and `steward-tree` for a static offline
-  HTML tree of any conformant plan. They are not `vibe.exe` commands.
+  candidate batches and review backlog, `steward-tree` for a static offline
+  HTML tree of any conformant plan, and `steward-common` for locating the
+  steward home and context and for explicit portable binding. They are not
+  `vibe.exe` commands. @status:impl/done
+- @fact:CONTENT-CONTEXT A portable steward home in
+  `vibevm/vibespecs/skills/steward-common`: the home is `$VIBE_SETTINGS/steward`
+  or `~/.vibe/steward`; a context is bound to a repository by its root commit
+  id rather than by a path, so the whole home can be copied to another of the
+  same person's machines and still resolve. `resolve_context.py` is read-only;
+  `bind_context.py` writes a schema-2 binding only on explicit request.
   @status:impl/done
 - @fact:CONTENT-TREE A generic plan viewer in
-  `vibevm/vibespecs/skills/steward-tree`: `render_tree.py --plan <plan.toml>
-  --out <dir> [--watch]` writes a self-contained `index.html` plus
+  `vibevm/vibespecs/skills/steward-tree`: `render_tree.py --resolve` (or
+  `--context <dir>`) writes the context's disposable `view/`, and
+  `render_tree.py --plan <plan.toml> --out <dir> [--watch]` renders any plan;
+  either writes a self-contained `index.html` plus
   `plan-tree.json` atomically, with no network, no build step and no
   project-specific layer. It shows the node tree, the full state vocabulary in
   display buckets, per-parent leaf counts, typed dependency edges and their

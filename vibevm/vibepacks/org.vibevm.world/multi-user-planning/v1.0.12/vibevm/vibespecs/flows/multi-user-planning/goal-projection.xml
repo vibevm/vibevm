@@ -14,9 +14,14 @@ exact bounded slash command a human can paste into Claude Code.</SCOPE></p>
   `GOAL.md` is a deterministic projection. On any mismatch, discard/regenerate
   the goal rather than editing the plan to match it.</GOAL-IS-DERIVED>
       <GOAL-IS-LOCAL fact="true" status="spec/done">The outputs live at
-  `~/.vibe/steward/contexts/&lt;context-id&gt;/{GOAL.md,GOAL-CLAUDE.txt}`. They are
-  never committed, mirrored, packaged, or used to grant another contributor
-  authority.</GOAL-IS-LOCAL>
+  `&lt;steward home&gt;/contexts/&lt;context-id&gt;/{GOAL.md,GOAL-CLAUDE.txt}`
+  (`user-local-state.xml#STATE-HOME`). They are never committed, mirrored,
+  packaged, or used to grant another contributor authority.</GOAL-IS-LOCAL>
+      <GOAL-CONTEXT-SELECTION fact="true" status="spec/done">The renderer takes
+  the context either as `--context &lt;dir&gt;` or, with `--resolve`, from the
+  repository in the current directory through
+  `user-local-state.xml#CONTEXT-RESOLUTION`; `--home` overrides the steward
+  home.</GOAL-CONTEXT-SELECTION>
       <GOAL-HAS-NO-LLM fact="true" status="spec/done">Canonical bytes use no
   model completion, paraphrase, chat history or provider call. An LLM may
   explain the result separately; it never rewrites `GOAL.md`.</GOAL-HAS-NO-LLM>
@@ -262,6 +267,9 @@ canonical paragraph</fence>
       <REFUSE-CLAUDE-LIMIT fact="true" status="spec/done">`GOAL_CLAUDE_BASE_TOO_LONG`:
   mandatory condition clauses alone exceed the observed client cap; canonical
   GOAL remains available.</REFUSE-CLAUDE-LIMIT>
+      <REFUSE-CONTEXT fact="true" status="spec/done">`GOAL_CONTEXT_UNRESOLVED`:
+  `--resolve` found no context or several candidates; nothing is written and the
+  candidates are named.</REFUSE-CONTEXT>
     </facts>
   </refusals>
   <companion title="10. Automation boundary">

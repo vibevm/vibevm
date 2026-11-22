@@ -3,11 +3,20 @@
   <title id="root">User-local stewardship state and capability profiles</title>
   <status stage="spec" state="done"/>
   <home title="1. State home">
-    <p><STATE-HOME fact="true" status="spec/done">The state root is
-`~/.vibe/steward/`. It belongs to one operating-system user and may be shared by
-that user's successive central agents on the same machine. It is not committed,
-packaged, mirrored or treated as another contributor's authority.</STATE-HOME></p>
-    <fence lang="text">~/.vibe/steward/
+    <p><STATE-HOME fact="true" status="spec/done">The state root, the
+**steward home**, is `&lt;settings dir&gt;/steward/`, where the settings
+directory is `$VIBE_SETTINGS` when that variable is set and non-empty and
+`~/.vibe` otherwise. It belongs to one person and may be shared by that
+person's successive central agents. It is not committed, packaged, mirrored or
+treated as another contributor's authority.</STATE-HOME></p>
+    <p><HOME-OVERRIDE fact="true" status="spec/done">Every packaged script
+that locates the steward home resolves it through the one shared helper
+`skills/steward-common/scripts/steward_home.py` and accepts `--home` as an
+explicit override: `resolve_context.py`, and `render_goal.py` and
+`render_tree.py` when run with `--resolve`. `bind_context.py` takes the home
+from its `--context` directory, which must lie in that home's `contexts/`
+directory. No other environment variable selects the home.</HOME-OVERRIDE></p>
+    <fence lang="text">&lt;settings dir&gt;/steward/
   config.toml
   contexts/
     &lt;opaque-context-id&gt;/
@@ -17,6 +26,7 @@ packaged, mirrored or treated as another contributor's authority.</STATE-HOME></
       GOAL.md
       GOAL-CLAUDE.txt
       custody.toml
+      view/
       sessions/
       handoffs/
       records/</fence>
@@ -36,8 +46,22 @@ reports. Availability and retry observations belong in local evidence, not in
 shared project policy.</PROVIDER-IDENTITY-IS-NOT-CONTEXT></p>
     <p><OPAQUE-CONTEXT-ID fact="true" status="spec/done">`opaque-context-id` is a
 random UUID rendered as lowercase ASCII. It is an identity only; never parse
-meaning from it. Discovery scans `contexts/*/binding.toml`, so no mutable global
-context index is required.</OPAQUE-CONTEXT-ID></p>
+meaning from it. The context directory is named by its id, and a binding whose
+`context_id` differs from that name is invalid and reported. Discovery scans
+`contexts/*/binding.toml`, so no mutable global context index is required.</OPAQUE-CONTEXT-ID></p>
+    <p><HOME-IS-THE-ONLY-PLANNING-TRUTH fact="true" status="spec/done">Nothing
+outside the steward home is a planning source of truth for a context. Generated
+files elsewhere, exported pages and dashboards are copies; a second plan for the
+same project outside the context's `plan.toml` is not allowed.</HOME-IS-THE-ONLY-PLANNING-TRUTH></p>
+    <p><VIEW-IS-DISPOSABLE fact="true" status="spec/done">`view/` holds the
+derived tree view of the context's plan (`index.html`, `plan-tree.json`). It may
+be deleted at any time, is never read back as state, and is regenerated from
+`plan.toml` on demand.</VIEW-IS-DISPOSABLE></p>
+    <p><HOME-IS-PORTABLE fact="true" status="spec/done">The whole steward home
+may be copied to another of the same person's machines at any time and works
+there without repair: context resolution uses repository identity and never
+reads recorded paths. Concurrent writers on two machines are not coordinated;
+the person keeps one machine writing at a time.</HOME-IS-PORTABLE></p>
   </home>
   <config title="2. Global defaults">
     <p><CREATE-DEFAULTS fact="true" status="spec/done">An owner-facing central
@@ -52,11 +76,11 @@ not silently ignored. It is operator configuration, so JTD is intentionally out
 of scope.</CONFIG-STRICT></p>
   </config>
   <binding title="3. Context binding">
-    <p><BINDING-TUPLE fact="true" status="spec/done">A context binds an exact
-tuple: canonical repository root, canonical worktree root, Git common directory,
-and branch ref (or detached commit). Absolute paths are allowed because the file
-is local. A different branch or worktree may therefore use a different profile
-and plan without affecting teammates or sibling worktrees.</BINDING-TUPLE></p>
+    <p><BINDING-TUPLE fact="true" status="spec/done">A schema-1 binding (the
+previous format, still read) binds an exact tuple: canonical repository root,
+canonical worktree root, Git common directory, and branch ref (or detached
+commit). It matches only that exact tuple, so moving or copying the checkout
+loses the match until the binding is converted to schema 2.</BINDING-TUPLE></p>
     <fence lang="toml">schema = 1
 context_id = "3d7a79bf-5f27-4b88-9eaa-c8323df5cb03"
 project_name = "example"
@@ -64,13 +88,51 @@ repository_root = "C:/work/example"
 worktree_root = "C:/work/example"
 git_common_dir = "C:/work/example/.git"
 revision_selector = "refs/heads/main"</fence>
+    <p><REPOSITORY-IDENTITY fact="true" status="spec/done">A project is
+identified by its repository, not by a path: `repository_id` is the
+lexicographically smallest root commit id reachable from `HEAD`
+(`git rev-list --max-parents=0 HEAD`). Every clone and worktree of one
+repository yields the same id on every machine. A shallow clone has no
+usable identity, because its boundary commits look like roots, and it is
+refused until it is unshallowed.</REPOSITORY-IDENTITY></p>
+    <p><BINDING-SCHEMA-2 fact="true" status="spec/done">A schema-2 binding
+names the repository by `repository_id`. `default = true` marks the context used
+when several contexts share that repository and none serves the current branch;
+at most one context per `repository_id` holds it. `revisions` optionally lists
+the branch selectors (`main` or `refs/heads/main`) this context serves; empty
+means any. Several checkouts and roles of one project therefore share one
+context and one plan.</BINDING-SCHEMA-2></p>
+    <fence lang="toml">schema = 2
+context_id = "3d7a79bf-5f27-4b88-9eaa-c8323df5cb03"
+project_name = "example"
+repository_id = "0123456789abcdef0123456789abcdef01234567"
+default = true
+revisions = []
+
+[[seen]]
+worktree_root = "C:/work/example"</fence>
+    <p><SEEN-IS-ADVISORY fact="true" status="spec/done">`[[seen]]` entries
+record where the context was used. They are hints for a human, never identity;
+they may be stale or absent, and resolution never reads them.</SEEN-IS-ADVISORY></p>
     <p><CONTEXT-RESOLUTION fact="true" status="spec/done">Resolution order is:
-an explicit context id named by the owner; an exact binding match; otherwise a
-new context. Zero matches creates; more than one exact match is corruption and
-must be surfaced, never settled by newest timestamp. Moving a checkout creates
-a new binding unless the owner explicitly repairs the old one. Once resolved,
-any owner-facing central agent may continue from that context under the current
-owner instruction; a previous holder/session claim is not authority.</CONTEXT-RESOLUTION></p>
+(1) a context id named by the owner; (2) the schema-2 contexts whose
+`repository_id` equals the current repository's: exactly one wins; among several,
+the one whose `revisions` contains the current branch wins, else the one with
+`default = true`; otherwise resolution refuses and lists the candidates;
+(3) a schema-1 binding whose exact path tuple matches; (4) otherwise "no
+context". Resolution never guesses, never settles a tie by timestamp and never
+creates or repairs a context; creating a context and writing a binding are
+separate explicit actions. Once resolved, any owner-facing central agent may
+continue from that context under the current owner instruction; a previous
+holder/session claim is not authority.</CONTEXT-RESOLUTION></p>
+    <p><RESOLVER-TOOLS fact="true" status="spec/done">The reference resolver is
+`skills/steward-common/scripts/resolve_context.py`: read-only, JSON output,
+exit 0 found, 1 none, 2 ambiguous, 3 error. `bind_context.py` in the same
+directory writes a schema-2 binding for an existing context only on explicit
+request: it converts schema 1 by keeping `context_id` and `project_name`,
+computing `repository_id` and moving the old path tuple into one `[[seen]]`
+entry, and it refuses a second `default = true` for one repository unless told
+`--take-default`, which moves the default.</RESOLVER-TOOLS></p>
   </binding>
   <settings title="4. Settings and live switching">
     <p><SETTING-PRECEDENCE fact="true" status="spec/done">Effective settings use
@@ -118,5 +180,8 @@ identity informs forensics; it never selects the profile automatically.</SESSION
 absolute paths but never tokens, API keys, Authorization values, raw sensitive
 provider bodies or copied environment dumps. Record a secret source name or
 token-file path only when operationally necessary.</NO-SECRETS></p>
+    <p><GENERATED-HAS-NO-PATHS fact="true" status="spec/done">Generated
+files (`GOAL.md`, `GOAL-CLAUDE.txt`, the tree view) embed no absolute path, so a
+copied steward home carries no stale machine path in them.</GENERATED-HAS-NO-PATHS></p>
   </sessions>
 </spec>
