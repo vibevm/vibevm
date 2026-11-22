@@ -32,6 +32,7 @@ pub(crate) fn prepare(ctx: &output::Context, args: &mut InstallArgs) -> Result<(
         );
     }
     let root = super::resolve_project_root(&args.path)?;
+    let isolated = output::default_registry_isolated();
     let project = vibe_safefs::Project::open(&root)?;
     let bytes = project
         .read_file_snapshot_bounded("vibe.toml", 64 * 1024)?
@@ -71,7 +72,7 @@ pub(crate) fn prepare(ctx: &output::Context, args: &mut InstallArgs) -> Result<(
             let result = vibe_package_source::configuration_preview::integer::preview(&root,
                 &vibe_wire::generated::ordinary_integer_preview_request::OrdinaryIntegerPreviewRequest {
                     protocol:"vibe-ordinary-integer-preview/2".into(),package:package.clone(),input:Some(input.clone()),
-                })?;
+                }, isolated)?;
             ensure!(
                 envelope.package == package
                     && envelope.project_witness == result.project_witness
@@ -95,8 +96,9 @@ pub(crate) fn prepare(ctx: &output::Context, args: &mut InstallArgs) -> Result<(
         package: package.clone(),
         input: None,
     };
-    let description =
-        vibe_package_source::configuration_preview::configuration_preview(&root, &request)?;
+    let description = vibe_package_source::configuration_preview::configuration_preview(
+        &root, &request, isolated,
+    )?;
     let envelope = if args.ordinary_interactive {
         let input = crate::commands::show::configuration_preview::collect_answers(&description)?;
         OrdinaryInstallAnswers {
@@ -151,6 +153,7 @@ pub(crate) fn prepare(ctx: &output::Context, args: &mut InstallArgs) -> Result<(
                 parameters: envelope.input.parameters.clone(),
             }),
         },
+        isolated,
     )?;
     ensure!(
         result.source == description.source

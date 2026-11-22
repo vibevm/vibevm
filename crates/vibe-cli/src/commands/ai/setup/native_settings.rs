@@ -98,7 +98,7 @@ where
     } = target;
     if overrides
         .iter()
-        .any(|name| std::env::var_os(name).is_some())
+        .any(|name| crate::commands::app::facts::env_set(name))
     {
         bail!("native settings destination override is not yet admitted");
     }

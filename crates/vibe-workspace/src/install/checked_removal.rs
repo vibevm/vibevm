@@ -15,6 +15,46 @@ macro_rules! require { ($condition:expr, $($arg:tt)*) => { if !$condition { retu
 /// Trusted Rust composition supplies a slot reproduced by the incumbent plain
 /// copy materializer from an independently verified exact old source. Recheck
 /// only that source identity; this port does not judge the live slot's custody.
+///
+/// ```
+/// use std::path::{Path, PathBuf};
+/// use vibe_core::manifest::LockedPackage;
+/// use vibe_workspace::install::{CheckedRemovalPlan, PreparedRetirementSlot};
+///
+/// struct Reproduced {
+///     row: LockedPackage,
+///     slot: PathBuf,
+///     source_unchanged: bool,
+/// }
+/// impl PreparedRetirementSlot for Reproduced {
+///     fn package(&self) -> &LockedPackage { &self.row }
+///     fn expected_slot(&self) -> &Path { &self.slot }
+///     fn recheck_source(&self) -> Result<(), String> {
+///         if self.source_unchanged { Ok(()) } else { Err("old source changed".into()) }
+///     }
+/// }
+/// let row = |version: &str| -> Result<LockedPackage, toml::de::Error> {
+///     toml::from_str(&format!(
+///         "kind = 'tool'\nname = 'leaf'\ngroup = 'org.example'\nversion = '{version}'\n\
+///          source_url = 'file:///fixture'\ncontent_hash = 'sha256:{}'\n",
+///         "a".repeat(64)
+///     ))
+/// };
+/// let temporary = tempfile::tempdir()?;
+/// let expected = Reproduced {
+///     row: row("1.0.0")?,
+///     slot: temporary.path().join("reference"),
+///     source_unchanged: true,
+/// };
+/// let slot: &dyn PreparedRetirementSlot = &expected;
+/// assert!(slot.recheck_source().is_ok());
+/// assert_eq!(slot.package().name.as_str(), "leaf");
+/// // A retained row that is not exactly the reproduced one is refused before
+/// // any slot is read.
+/// let other = row("2.0.0")?;
+/// assert!(CheckedRemovalPlan::capture(temporary.path(), &other, slot).is_err());
+/// # Ok::<(), Box<dyn std::error::Error>>(())
+/// ```
 pub trait PreparedRetirementSlot {
     fn package(&self) -> &LockedPackage;
     fn expected_slot(&self) -> &Path;

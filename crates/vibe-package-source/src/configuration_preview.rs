@@ -231,15 +231,21 @@ pub(crate) fn evaluate(
 }
 
 /// Describe/evaluate one compulsory exact ordinary root, without acquisition.
-/// The trusted root is supplied by the host, never by the MCP request.
+/// The trusted root is supplied by the host, never by the MCP request, and so
+/// is `default_registry_isolated`: whether the host's composition root observed
+/// the isolated no-default-registry posture (`VIBE_NO_DEFAULT_REGISTRY` exactly
+/// `1`). This crate reads no environment; without that posture the preview
+/// refuses.
 pub fn configuration_preview(
     trusted_root: &std::path::Path,
     request: &OrdinaryConfigurationPreviewRequest,
+    default_registry_isolated: bool,
 ) -> anyhow::Result<wire::OrdinaryConfigurationPreviewResult> {
     let (mut result, witness) = observe(
         trusted_root,
         &request.package,
         serde_json::to_vec(request)?.len(),
+        default_registry_isolated,
         |manifest, source| evaluate(manifest, request, source),
     )?;
     result.project_witness = Some(witness);
@@ -250,6 +256,7 @@ pub(super) fn observe<T>(
     trusted_root: &std::path::Path,
     package: &str,
     request_bytes: usize,
+    default_registry_isolated: bool,
     evaluate: impl FnOnce(&Manifest, wire::Source) -> Result<T, PackageConfigurationError>,
 ) -> anyhow::Result<(T, String)> {
     use anyhow::{anyhow, bail};
@@ -259,10 +266,11 @@ pub(super) fn observe<T>(
     if request_bytes > MAX_INPUT_BYTES {
         return Err(refuse("preview answers exceed the bounded input limit"));
     }
-    // This is the same suppression condition used by the actual CLI host's
-    // embedded-registry startup, not a second best-effort discovery routine.
-    // A host without it cannot prove ambient source equivalence in this slice.
-    if std::env::var("VIBE_NO_DEFAULT_REGISTRY").as_deref() != Ok("1") {
+    // The host decides this posture at its composition root from the same
+    // suppression condition its embedded-registry startup uses, not a second
+    // best-effort discovery routine. A host without it cannot prove ambient
+    // source equivalence in this slice.
+    if !default_registry_isolated {
         return Err(refuse(
             "embedded source influence is not excluded; preview requires the isolated no-default-registry posture",
         ));

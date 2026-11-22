@@ -4,6 +4,20 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-065#npm-runtime");
 use super::{InstallerOptionDecl, StepKind, steps_of};
 use serde::{Deserialize, Serialize};
 
+/// The `[installer_options.npm_runtime]` table: one exact npm package and
+/// version, the step input that carries its bytes, and the Node range it needs.
+///
+/// ```
+/// use vibe_core::manifest::NpmRuntimeDecl;
+///
+/// let runtime: NpmRuntimeDecl = toml::from_str(
+///     "step = 'fetch'\ninput = 'npm'\npackage = '@scope/tool'\nversion = '1.2.0'\nnode_range = '>=22.0.0'",
+/// )
+/// .unwrap();
+/// assert_eq!(runtime.package, "@scope/tool");
+/// assert_eq!(runtime.minimum_node().unwrap(), semver::Version::new(22, 0, 0));
+/// assert!(runtime.accepts_node(&semver::Version::new(24, 1, 0)).unwrap());
+/// ```
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct NpmRuntimeDecl {

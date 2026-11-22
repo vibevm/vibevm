@@ -4,6 +4,18 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-065#system-python");
 use serde::{Deserialize, Serialize};
 
 /// Fixed Python capability, not an executable name or package-authored probe.
+///
+/// ```
+/// use vibe_core::manifest::SystemPythonDecl;
+///
+/// let python: SystemPythonDecl = toml::from_str(
+///     "implementation = 'cpython'\nmajor = 3\nminor = 14\nsoabi = 'cpython-314-x86_64-linux-gnu'",
+/// )
+/// .unwrap();
+/// assert_eq!(python.minor, 14);
+/// assert!(python.accepts("cpython", 3, 14, "cpython-314-x86_64-linux-gnu"));
+/// assert!(!python.accepts("pypy", 3, 14, "cpython-314-x86_64-linux-gnu"));
+/// ```
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct SystemPythonDecl {

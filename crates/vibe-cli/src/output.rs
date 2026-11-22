@@ -157,6 +157,15 @@ pub(crate) fn seeds_default_registry() -> bool {
     std::env::var_os("VIBE_NO_DEFAULT_REGISTRY").is_none()
 }
 
+/// Whether the isolated no-default-registry posture holds: `true` exactly when
+/// `VIBE_NO_DEFAULT_REGISTRY` is `1`, the condition the read-only
+/// configuration preview requires before it can prove that no embedded source
+/// influences its answer. Read here, at the CLI composition root, and handed to
+/// `vibe-package-source` as an explicit input.
+pub(crate) fn default_registry_isolated() -> bool {
+    std::env::var("VIBE_NO_DEFAULT_REGISTRY").as_deref() == Ok("1")
+}
+
 /// Resolve the unattended posture: CLI flag wins; otherwise consult
 /// the env-var. There is no provenance enum for this — the value is
 /// boolean and the source rarely matters in practice (logs carry

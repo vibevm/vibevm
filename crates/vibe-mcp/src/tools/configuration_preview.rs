@@ -51,14 +51,15 @@ impl McpTool for ConfigurationPreviewMcpTool {
         let request = parse_request(args.clone())
             .map_err(|error| ToolError::InvalidArguments(error.to_string()))?;
         let result =
-            configuration_preview(&ctx.project_root, &request).map_err(|error| {
-                match error.downcast::<vibe_core::manifest::PackageConfigurationError>() {
-                    Ok(error) => ToolError::ConfigurationPreview(Box::new(error)),
-                    Err(error) => ToolError::PreExecution(format!(
-                        "ordinary configuration preview refused: {error:#}"
-                    )),
-                }
-            })?;
+            configuration_preview(&ctx.project_root, &request, ctx.default_registry_isolated)
+                .map_err(|error| {
+                    match error.downcast::<vibe_core::manifest::PackageConfigurationError>() {
+                        Ok(error) => ToolError::ConfigurationPreview(Box::new(error)),
+                        Err(error) => ToolError::PreExecution(format!(
+                            "ordinary configuration preview refused: {error:#}"
+                        )),
+                    }
+                })?;
         Ok(ToolOutput::ok(
             serde_json::to_value(result).map_err(|error| ToolError::Internal(error.to_string()))?,
         ))

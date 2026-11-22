@@ -39,6 +39,7 @@ impl McpTool for ConfigurationPreviewV2McpTool {
         let result = vibe_package_source::configuration_preview::integer::preview(
             &ctx.project_root,
             &request,
+            ctx.default_registry_isolated,
         )
         .map_err(|_| ToolError::PreExecution("integer preview v2 refused".into()))?;
         Ok(ToolOutput::ok(serde_json::to_value(result).map_err(

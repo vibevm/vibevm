@@ -6,15 +6,15 @@ use tempfile::tempdir;
 use crate::Error;
 use crate::manifest::{ExtensionDecl, ExtensionHandler, ExtensionPassKind, Manifest};
 
-const PROJECT: &str = "[project]\nname = \"demo\"\nversion = \"0.1.0\"\n";
+pub(super) const PROJECT: &str = "[project]\nname = \"demo\"\nversion = \"0.1.0\"\n";
 const PACKAGE: &str =
     "[package]\ngroup = \"org.demo\"\nname = \"pkg\"\nkind = \"flow\"\nversion = \"0.1.0\"\n";
 
-fn parse(role: &str, declarations: &str) -> Manifest {
+pub(super) fn parse(role: &str, declarations: &str) -> Manifest {
     Manifest::parse_str(&format!("{role}\n{declarations}")).unwrap()
 }
 
-fn parse_error(role: &str, declarations: &str) -> String {
+pub(super) fn parse_error(role: &str, declarations: &str) -> String {
     Manifest::parse_str(&format!("{role}\n{declarations}"))
         .unwrap_err()
         .to_string()
@@ -403,121 +403,6 @@ handler = { kind = "builtin", name = "" }
         &manifest.extensions[0].handler,
         ExtensionHandler::Builtin { name } if name.is_empty()
     ));
-}
-
-#[test]
-#[verifies("spec://org.vibevm.core/vibevm/common/PROP-054#COMPILER-INTERNALS-FLAG")]
-fn pass_wire_accepts_each_frozen_kind_shape_and_roundtrips_it() {
-    let manifest = parse(
-        PROJECT,
-        r#"
-[[extension]]
-id = "transform"
-point = "compile:pass"
-handler = { kind = "builtin", name = "x" }
-compiler_internals = true
-pass = { kind = "transform", level = "source", after = "parse" }
-[[extension]]
-id = "lowering"
-point = "compile:pass"
-handler = { kind = "builtin", name = "x" }
-compiler_internals = true
-pass = { kind = "lowering", from = "document", to = "closure", before = "close" }
-[[extension]]
-id = "replacement-lowering"
-point = "compile:pass"
-handler = { kind = "builtin", name = "x" }
-compiler_internals = true
-pass = { kind = "lowering", replace = "emit", artifact = "static-xml" }
-[[extension]]
-id = "frontend"
-point = "compile:pass"
-handler = { kind = "builtin", name = "x" }
-compiler_internals = true
-pass = { kind = "frontend", formats = ["txt"] }
-[[extension]]
-id = "backend"
-point = "compile:pass"
-handler = { kind = "builtin", name = "x" }
-compiler_internals = true
-pass = { kind = "backend", artifact = "json" }
-"#,
-    );
-    assert_eq!(
-        manifest
-            .extensions
-            .iter()
-            .map(|row| row.pass.as_ref().unwrap().kind)
-            .collect::<Vec<_>>(),
-        [
-            ExtensionPassKind::Transform,
-            ExtensionPassKind::Lowering,
-            ExtensionPassKind::Lowering,
-            ExtensionPassKind::Frontend,
-            ExtensionPassKind::Backend,
-        ]
-    );
-    let rendered = toml::to_string_pretty(&manifest).unwrap();
-    assert_eq!(manifest, Manifest::parse_str(&rendered).unwrap());
-}
-
-#[test]
-#[verifies("spec://org.vibevm.core/vibevm/common/PROP-054#PASS-TIER-LAW")]
-fn pass_wire_refuses_missing_conflicting_blank_and_foreign_fields() {
-    for (pass, expected) in [
-        (
-            r#"pass = { kind = "transform", after = "parse" }"#,
-            "requires field `level`",
-        ),
-        (
-            r#"pass = { kind = "transform", level = "source" }"#,
-            "exactly one",
-        ),
-        (
-            r#"pass = { kind = "transform", level = "source", after = "parse", from = "source" }"#,
-            "forbids field `from`",
-        ),
-        (
-            r#"pass = { kind = "lowering", from = "source", after = "parse" }"#,
-            "requires fields `from` and `to`",
-        ),
-        (
-            r#"pass = { kind = "lowering" }"#,
-            "requires fields `from` and `to`",
-        ),
-        (
-            r#"pass = { kind = "lowering", after = "parse", artifact = "  " }"#,
-            "must not be blank",
-        ),
-        (
-            r#"pass = { kind = "frontend" }"#,
-            "requires field `formats`",
-        ),
-        (
-            r#"pass = { kind = "frontend", formats = [] }"#,
-            "field `formats` is empty",
-        ),
-        (
-            r#"pass = { kind = "frontend", formats = ["txt"], after = "parse" }"#,
-            "forbids field `after`",
-        ),
-        (
-            r#"pass = { kind = "backend" }"#,
-            "requires field `artifact`",
-        ),
-        (
-            r#"pass = { kind = "backend", artifact = " " }"#,
-            "must not be blank",
-        ),
-    ] {
-        let error = parse_error(
-            PROJECT,
-            &format!(
-                "[[extension]]\nid = \"x\"\npoint = \"compile:pass\"\nhandler = {{ kind = \"builtin\", name = \"x\" }}\ncompiler_internals = true\n{pass}\n"
-            ),
-        );
-        assert!(error.contains(expected), "expected {expected:?}: {error}");
-    }
 }
 
 #[test]

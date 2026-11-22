@@ -569,6 +569,8 @@ mod tests_ecosystem;
 #[cfg(test)]
 mod tests_extension_controls;
 #[cfg(test)]
+mod tests_extension_passes;
+#[cfg(test)]
 mod tests_extensions;
 #[cfg(test)]
 mod tests_field_paths;

@@ -70,6 +70,11 @@ pub struct ServerContext {
     /// root observes `VIBE_NO_DEFAULT_REGISTRY`; embedded-root discovery has
     /// its separate CI rule).
     pub(crate) seed_default_registry: bool,
+    /// Whether the CLI composition root observed the isolated
+    /// no-default-registry posture (`VIBE_NO_DEFAULT_REGISTRY` exactly `1`)
+    /// the read-only configuration previews require. Decided by the surface
+    /// that built this context; no tool argument can alter it.
+    pub(crate) default_registry_isolated: bool,
 }
 
 impl ServerContext {
@@ -83,6 +88,7 @@ impl ServerContext {
             lifecycle_policy: InstallPolicy::default(),
             embedded_registry_root: None,
             seed_default_registry: false,
+            default_registry_isolated: false,
             manifest_migration_authority: None,
         }
     }
@@ -100,6 +106,7 @@ impl ServerContext {
             lifecycle_policy: InstallPolicy::default(),
             embedded_registry_root: None,
             seed_default_registry: false,
+            default_registry_isolated: false,
             manifest_migration_authority: None,
         }
     }
@@ -143,6 +150,24 @@ impl ServerContext {
         }
     }
 
+    /// Record the surface-decided isolated no-default-registry posture the
+    /// configuration-preview tools require. A context built without this
+    /// builder is not isolated, so those previews refuse.
+    ///
+    /// ```
+    /// use vibe_mcp::ServerContext;
+    ///
+    /// let ctx = ServerContext::new("/some/project").with_default_registry_isolation(true);
+    /// assert!(ctx.project_root.ends_with("project"));
+    /// ```
+    #[must_use]
+    pub fn with_default_registry_isolation(self, isolated: bool) -> Self {
+        ServerContext {
+            default_registry_isolated: isolated,
+            ..self
+        }
+    }
+
     /// Load the project's lockfile fresh on every call. Returns an
     /// empty lockfile if `vibe.lock` does not exist yet — callers
     /// surface the empty-state through their normal output rather
@@ -170,6 +195,7 @@ mod tests {
             assert!(context.lifecycle_policy.spec_format_default.is_none());
             assert!(context.embedded_registry_root.is_none());
             assert!(!context.seed_default_registry);
+            assert!(!context.default_registry_isolated);
         }
     }
 
@@ -203,6 +229,7 @@ mod tests {
                 lifecycle_policy,
                 embedded_registry_root,
                 seed_default_registry,
+                default_registry_isolated,
                 manifest_migration_authority,
             } = context;
             let _ = (
@@ -211,6 +238,7 @@ mod tests {
                 lifecycle_policy,
                 embedded_registry_root,
                 seed_default_registry,
+                default_registry_isolated,
                 manifest_migration_authority,
             );
         }

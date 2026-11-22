@@ -31,9 +31,12 @@ pub fn original(input: &request::Input) -> ConfigurationIntentDecl {
     }
 }
 
+/// The integer/profile counterpart of [`super::configuration_preview`]; the
+/// host supplies the same `default_registry_isolated` posture.
 pub fn preview(
     root: &std::path::Path,
     req: &request::OrdinaryIntegerPreviewRequest,
+    default_registry_isolated: bool,
 ) -> anyhow::Result<result::OrdinaryIntegerPreviewResult> {
     anyhow::ensure!(
         req.protocol == "vibe-ordinary-integer-preview/2",
@@ -43,6 +46,7 @@ pub fn preview(
         root,
         &req.package,
         serde_json::to_vec(req)?.len(),
+        default_registry_isolated,
         |manifest, source| {
             let fail = |why: &str| unsupported(&req.package, why);
             let metadata = manifest

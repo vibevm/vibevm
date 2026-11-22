@@ -323,11 +323,13 @@ fn run_serve(args: McpServeArgs, runtime: McpRuntime) -> Result<()> {
         // (`PROP-077#NO-RECOMMENDS-FLAG`).
         no_recommends: false,
     };
-    let server_ctx = ServerContext::new(project_root).with_lifecycle_execution(
-        policy,
-        runtime.embedded_registry_root,
-        runtime.seed_default_registry,
-    );
+    let server_ctx = ServerContext::new(project_root)
+        .with_lifecycle_execution(
+            policy,
+            runtime.embedded_registry_root,
+            runtime.seed_default_registry,
+        )
+        .with_default_registry_isolation(output::default_registry_isolated());
     let server_ctx = match args.migration_recovery_store {
         Some(store) => server_ctx
             .with_manifest_migration_authority(store, args.migration_file)

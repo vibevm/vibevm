@@ -20,8 +20,9 @@ pub(super) fn run(ctx: &output::Context, args: ShowConfigurationPreviewArgs) -> 
     }
     // Preserve no-follow ancestry rather than canonicalizing user paths away.
     let root = std::path::absolute(&args.path)?;
+    let isolated = output::default_registry_isolated();
     if args.interactive {
-        return interactive(&root, args.package);
+        return interactive(&root, args.package, isolated);
     }
     let input = args
         .input
@@ -47,6 +48,7 @@ pub(super) fn run(ctx: &output::Context, args: ShowConfigurationPreviewArgs) -> 
             package: args.package,
             input,
         },
+        isolated,
     )?;
     if ctx.is_json() {
         ctx.emit_json(&result)?;
@@ -56,13 +58,14 @@ pub(super) fn run(ctx: &output::Context, args: ShowConfigurationPreviewArgs) -> 
     Ok(())
 }
 
-fn interactive(root: &std::path::Path, package: String) -> Result<()> {
+fn interactive(root: &std::path::Path, package: String, isolated: bool) -> Result<()> {
     let description = configuration_preview(
         root,
         &OrdinaryConfigurationPreviewRequest {
             package: package.clone(),
             input: None,
         },
+        isolated,
     )?;
     let input = collect_answers(&description)?;
     let result = configuration_preview(
@@ -71,6 +74,7 @@ fn interactive(root: &std::path::Path, package: String) -> Result<()> {
             package,
             input: Some(input),
         },
+        isolated,
     )?;
     if result.source != description.source
         || result.version != description.version
@@ -178,6 +182,7 @@ pub(super) fn run_integer(ctx: &output::Context, args: ShowConfigurationPreviewA
             package: args.package,
             input,
         },
+        output::default_registry_isolated(),
     )?;
     if ctx.is_json() {
         ctx.emit_json(&result)?;
