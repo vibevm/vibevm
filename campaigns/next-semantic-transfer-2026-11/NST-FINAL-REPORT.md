@@ -63,6 +63,24 @@ undelivered remainder was moved out of NST to `ARCHITECTURE-REMAINDER`.
 - `vibe check` failed on a dependency slot whose body was never committed.
 - The code generator binary is not tracked and was absent from the clone.
 
+## Limits of what was accepted
+
+These stages of the global repair were closed on a bounded list, not on their
+original wording:
+
+- **Reconciliation** is a file-level inventory with a mandate-to-area table.
+  The function and test matrix and the linkage to the 222 task identities were
+  not built. Its 78 changed source files with no spec or test reference are
+  listed in the document and were not chased.
+- **Trace and test** added markers only. No new positive or negative behaviour
+  tests were written by that stage.
+- **Review through the external graphical-client lens** (VibeVM as the package
+  backend of a separate client, owner clarification of 2026-11-19) was not
+  performed.
+- **Synchronization stages** were not performed: one session did the work.
+- **Integration**: the branch is not merged and not pushed, and its checkout is
+  kept for the owner's testing.
+
 ## Not run
 
 | Check | Why |

@@ -3400,4 +3400,7 @@ Source: [`campaigns/next-semantic-transfer-2026-11/NST-FINAL-REPORT.md`](campaig
 - **P3 · NST closure: the docs surface snapshot `vibevm-docs/v1.0.0/maintenance/surface/1.0.0.json` still names `[hooks]` and the removed report rows.** Refresh at the next documentation release. Size S.
 - **P3 · NST closure: `vibe.lock` records machine paths.** Its `source_url` rows name the checkout the tool ran in; moving the branch to another directory needs `vibe update --sources-only --offline --registry <repo>/vibevm/vibepacks`. Size S.
 - **P3 · NST closure: `ManifestWire` keeps a `hooks` reader so the refusal can be typed,** which makes `vibe doc surface` list `hooks` as a known key. Size S.
+- **P2 · NST closure: the reconciliation stops at files.** `NST-RECONCILE-1.0.0.md` has no function or test matrix and no linkage to the 222 task identities; its 78 changed source files without a spec or test reference were listed, not examined. Size M.
+- **P2 · NST closure: no review through the external graphical-client lens.** The owner's 2026-11-19 clarification asks to judge complete client-driven journeys with VibeVM as a package backend; no such review was done and no gaps were recorded. Size M.
+- **P3 · NST closure: the trace stage wrote no behaviour tests.** Functions gained markers; functions without any test reference were not given tests. Size M.
 - **P3 · NST closure: three campaign documents differ between the architect and builder trees and were not merged** (`PRIOR-APP-STEPS-COMPLETE-01.md`, `CORP-AGENTS-01.md`, `CORP-KIT-BUILDER-FIRST-01.md`). Size S.
