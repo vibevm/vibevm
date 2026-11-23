@@ -77,11 +77,13 @@ fn build_reports_what_it_did_and_where_then_reports_unchanged() {
         .prompt("build")
         .assert()
         .success()
-        .stdout(predicate::str::contains("system prompt: rebuilt → "))
+        .stdout(predicate::str::contains(
+            "✻ system prompt rebuilt · SYSTEM.md ",
+        ))
         .stdout(predicate::str::contains("SYSTEM.md"))
-        .stdout(predicate::str::contains("lane → "))
+        .stdout(predicate::str::contains("AGENT-LANE.md "))
         .stdout(predicate::str::contains("AGENT-LANE.md"))
-        .stdout(predicate::str::contains(" bytes)"));
+        .stdout(predicate::str::contains(" bytes"));
     assert!(project.boot("SYSTEM.md").exists());
     assert!(project.boot("SYSTEM.meta.json").exists());
     assert!(project.boot("AGENT-LANE.md").exists());
@@ -102,7 +104,7 @@ fn build_reports_what_it_did_and_where_then_reports_unchanged() {
         .prompt("build")
         .assert()
         .success()
-        .stdout(predicate::str::contains("system prompt: unchanged → "));
+        .stdout(predicate::str::contains("✻ system prompt unchanged"));
 }
 
 #[test]
@@ -112,8 +114,10 @@ fn a_project_that_has_not_opted_in_is_told_so_rather_than_left_silent() {
         .prompt("build")
         .assert()
         .success()
-        .stdout(predicate::str::contains("system prompt: not generated"))
-        .stdout(predicate::str::contains("has not opted in"));
+        .stdout(predicate::str::contains("○ system prompt  not opted in"))
+        .stdout(predicate::str::contains(
+            "vibe prompt init opts this project in",
+        ));
     assert!(!project.boot("SYSTEM.md").exists());
 }
 
@@ -126,7 +130,7 @@ fn deleting_the_template_removes_exactly_the_four_owned_paths() {
         .prompt("build")
         .assert()
         .success()
-        .stdout(predicate::str::contains("system prompt: removed"));
+        .stdout(predicate::str::contains("✻ system prompt removed"));
     for name in [
         "SYSTEM.md",
         "SYSTEM.meta.json",
@@ -478,8 +482,10 @@ fn an_install_ends_with_the_same_summary_line_as_a_build() {
         .arg(project.dir.path())
         .assert()
         .success()
-        .stdout(predicate::str::contains("system prompt: rebuilt → "))
-        .stdout(predicate::str::contains("lane → "));
+        .stdout(predicate::str::contains(
+            "system prompt  rebuilt · SYSTEM.md ",
+        ))
+        .stdout(predicate::str::contains("AGENT-LANE.md "));
     // A second reinstall with nothing changed says `unchanged`, exactly as
     // `vibe prompt build` does — one sentence, spelled in one place.
     project
@@ -489,7 +495,23 @@ fn an_install_ends_with_the_same_summary_line_as_a_build() {
         .arg(project.dir.path())
         .assert()
         .success()
-        .stdout(predicate::str::contains("system prompt: unchanged → "));
+        .stdout(predicate::str::contains("✓ system prompt  unchanged"));
+}
+
+#[test]
+fn a_failed_reinstall_prints_no_prompt_summary() {
+    let project = Project::opted_in();
+    project.prompt("build").assert().success();
+    fs::write(project.boot("SYSTEM-TEMPLATE.md"), [0xff]).unwrap();
+    project
+        .user
+        .vibe()
+        .args(["reinstall", "--assume-yes"])
+        .arg(project.dir.path())
+        .assert()
+        .failure()
+        .stdout(predicate::str::contains("system prompt").not())
+        .stderr(predicate::str::contains("SYSTEM-TEMPLATE.md"));
 }
 
 #[test]
@@ -507,7 +529,7 @@ fn an_install_of_a_project_without_the_opt_in_says_nothing_about_a_prompt() {
         .clone();
     let printed = String::from_utf8(output).unwrap();
     assert!(
-        !printed.contains("system prompt:"),
+        !printed.contains("system prompt"),
         "a project that never opted in was told about a prompt: {printed}"
     );
     assert!(!project.boot("SYSTEM.md").exists());

@@ -532,7 +532,7 @@ fn a_member_node_publishes_its_own_prefix_and_not_the_roots() {
         .args(["--node", world::MEMBER_REL])
         .assert()
         .success()
-        .stdout(predicate::str::contains("system prompt: "));
+        .stdout(predicate::str::contains("system prompt "));
 
     let member_boot = world.root.join(world::MEMBER_REL).join(common::boot_dir());
     let prefix = fs::read_to_string(member_boot.join(vibe_core::layout::SYSTEM_MD))
