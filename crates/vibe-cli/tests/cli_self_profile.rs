@@ -224,6 +224,84 @@ fn doctor_fix_requires_explicit_consent_and_does_not_claim_process_path_repaired
     );
 }
 
+/// Regression for the 2026-11-23 profile leak: a durable-profile write
+/// reaches `$HOME` and nothing outside it.
+///
+/// `crates/vibe-cli/tests/vvm.rs` pinned `VIBEVM_INSTALL_ROOT` at a temp
+/// directory and left `HOME` alone, so `self install` activated its build
+/// against the developer's real `~/.bashrc` and left `PATH` and
+/// `VIBEVM_HOME` pointing into a temp tree the test then deleted. The
+/// product was never at fault — `dirs::home_dir()` reads `$HOME` before
+/// the password database — but nothing proved that, so nothing noticed
+/// when a test forgot to set it.
+///
+/// This pins the property itself: the target the CLI names, the file it
+/// writes and the only file it creates are all inside the isolated home,
+/// and the target does not escape into the home this test process runs in.
+#[test]
+#[specmark::spec(verifies = "spec://org.vibevm.core/vibevm/common/PROP-019#path", r = 3)]
+fn a_durable_profile_write_stays_inside_the_isolated_home() {
+    let base = tempfile::tempdir().unwrap();
+    let home = tempfile::tempdir().unwrap();
+    let source = tempfile::tempdir().unwrap();
+    let imported = import(
+        base.path(),
+        home.path(),
+        &payload(source.path()),
+        &["--use", "--yes"],
+    );
+    assert!(imported.status.success(), "{imported:?}");
+
+    // The managed block went into this home's `.bashrc`, and that rc file
+    // is the only thing the write put in the home at all.
+    let rc = home.path().join(".bashrc");
+    let text = fs::read_to_string(&rc).unwrap_or_else(|error| {
+        panic!(
+            "no durable profile at `{}` ({error}) — the write went somewhere \
+             outside the isolated home",
+            rc.display()
+        )
+    });
+    assert!(
+        text.contains("# >>> vibevm (VVM) — managed, do not edit by hand >>>"),
+        "{text}"
+    );
+    assert!(
+        text.contains(&format!(
+            "export PATH='{}'",
+            base.path().join("opt").join("bin").display()
+        )),
+        "{text}"
+    );
+    assert_eq!(
+        snapshot(home.path()).into_keys().collect::<Vec<_>>(),
+        vec![PathBuf::from(".bashrc")]
+    );
+
+    // And the durable target the CLI reports is that same file. A build
+    // that resolved the home from the password database instead of `$HOME`
+    // would name the operator's own profile right here — which is exactly
+    // what the leak did.
+    let doctor = command(base.path(), home.path())
+        .args(["--json", "self", "doctor"])
+        .output()
+        .unwrap();
+    let target = report(&doctor)["durable_environment"]["target"]
+        .as_str()
+        .expect("a reported durable target")
+        .to_owned();
+    assert_eq!(target, rc.display().to_string());
+    // `TMPDIR` under the real home would make this vacuous rather than
+    // wrong, so it is asserted only when the two are genuinely disjoint.
+    let real = PathBuf::from(std::env::var_os("HOME").expect("this process has a home"));
+    if !home.path().starts_with(&real) {
+        assert!(
+            !Path::new(&target).starts_with(&real),
+            "the durable target escaped the isolated home: {target}"
+        );
+    }
+}
+
 /// Owner decision 2026-11-08 (Need 8): the login-shell probe runs only with
 /// consent — `--probe-login-shell` for non-interactive callers. A real
 /// `bash -l` in an isolated HOME reads `.bash_profile`, not `.bashrc`, so the
