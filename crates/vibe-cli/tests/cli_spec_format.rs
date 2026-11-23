@@ -21,7 +21,7 @@ use vibe_workspace::vibedeps::{
 
 const REDBOOK_GROUP: &str = "org.vibevm.world";
 const REDBOOK_NAME: &str = "redbook";
-const VERSION: &str = "1.0.0";
+const VERSION: &str = "1.0.12";
 const XML_GROUP: &str = "org.vibevm.test";
 const XML_NAME: &str = "xmlpkg";
 

@@ -208,12 +208,12 @@ fn redbook_materialises_fully_xml_with_md_readmes_converted() {
     let source = Path::new(env!("CARGO_MANIFEST_DIR"))
         .join("../..")
         .join(vibe_core::layout::current_packages_root())
-        .join("org.vibevm.world/redbook/v1.0.0");
+        .join("org.vibevm.world/redbook/v1.0.12");
     materialise_with_spec_format(
         workspace.path(),
         &group("org.vibevm.world"),
         "redbook",
-        &version("1.0.0"),
+        &version("1.0.12"),
         &source,
         CopyMode::Copy,
         SpecFormat::Xml,
@@ -225,7 +225,7 @@ fn redbook_materialises_fully_xml_with_md_readmes_converted() {
         workspace.path(),
         &group("org.vibevm.world"),
         "redbook",
-        &version("1.0.0"),
+        &version("1.0.12"),
     );
     let manifest = read_derived_manifest(&slot).unwrap();
     let converted = manifest

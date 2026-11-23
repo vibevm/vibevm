@@ -10,7 +10,7 @@ use std::path::{Path, PathBuf};
 use common::{UserScratch, git_available, make_per_package_registry, run_git, run_git_output};
 
 /// A scratch home whose `registry.toml` names one git registry, with the
-/// package `org.vibevm.world/wal@1.0.0` already cloned into its cache by a
+/// package `org.vibevm.world/wal@1.0.12` already cloned into its cache by a
 /// project install — the state a global install leaves behind.
 struct Home {
     outer: tempfile::TempDir,
@@ -49,7 +49,7 @@ impl Home {
         let text = fs::read_to_string(&manifest).unwrap();
         fs::write(
             &manifest,
-            text.replacen("version = \"1.0.0\"", "version = \"1.1.0\"", 1),
+            text.replacen("version = \"1.0.12\"", "version = \"1.1.0\"", 1),
         )
         .unwrap();
         run_git(&src, &["commit", "-am", "org.vibevm.world/wal@1.1.0"]);
@@ -143,7 +143,7 @@ fn plain_sync_outside_a_project_refreshes_the_home_and_draws_a_trailer() {
     let home = Home::new();
     let report = json(&home.vibe(&["--json", "registry", "sync"]));
     assert_eq!(report["scope"], "user");
-    assert_eq!(report["refreshed"][0]["clones"][0]["ref"], "v1.0.0");
+    assert_eq!(report["refreshed"][0]["clones"][0]["ref"], "v1.0.12");
 
     let human = home.vibe(&["registry", "sync", "-g"]);
     assert!(human.status.success());
@@ -152,7 +152,10 @@ fn plain_sync_outside_a_project_refreshes_the_home_and_draws_a_trailer() {
         stdout.contains("refreshed 1 registry"),
         "the trailer names the count: {stdout}"
     );
-    assert!(stdout.contains("org.vibevm.world/wal @ v1.0.0"), "{stdout}");
+    assert!(
+        stdout.contains("org.vibevm.world/wal @ v1.0.12"),
+        "{stdout}"
+    );
 }
 
 #[test]

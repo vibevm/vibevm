@@ -865,7 +865,7 @@ fn vendor_produces_bare_repo_per_lockfile_entry() {
     // `vibe registry vendor`. The vendor dir should contain a bare
     // git repo per lockfile entry, ready for use as `[[mirror]] url
     // = "file:///<abs>"`. Verifies the repo is consumable by checking
-    // that `git clone` succeeds against it and that the v1.0.0 tag
+    // that `git clone` succeeds against it and that the v1.0.12 tag
     // is preserved.
     if !git_available() {
         eprintln!("skipping vendor_produces_bare_repo_per_lockfile_entry: git not on PATH");
@@ -929,7 +929,7 @@ fn vendor_produces_bare_repo_per_lockfile_entry() {
     );
 
     // Verify the bare repo is a usable git source. `git ls-remote
-    // <vendor>/org.vibevm.world.wal.git` must list the v1.0.0 tag the
+    // <vendor>/org.vibevm.world.wal.git` must list the v1.0.12 tag the
     // install pulled in. Routed through the loud `run_git_output`
     // helper (B-075): a failing git here panics with argv, exit code,
     // both streams, cwd, and the destination state — not just stderr.
@@ -939,8 +939,8 @@ fn vendor_produces_bare_repo_per_lockfile_entry() {
     );
     let tags = String::from_utf8_lossy(&ls_out.stdout);
     assert!(
-        tags.contains("refs/tags/v1.0.0"),
-        "vendored repo missing v1.0.0 tag — got:\n{tags}"
+        tags.contains("refs/tags/v1.0.12"),
+        "vendored repo missing v1.0.12 tag — got:\n{tags}"
     );
 
     // Cloning from the vendored repo into a fresh worktree must
@@ -953,14 +953,14 @@ fn vendor_produces_bare_repo_per_lockfile_entry() {
         &[
             "clone",
             "--branch",
-            "v1.0.0",
+            "v1.0.12",
             bare_repo.to_str().unwrap(),
             worktree.to_str().unwrap(),
         ],
     );
     assert!(
         worktree.join("vibe.toml").is_file(),
-        "vendored repo's v1.0.0 tag did not produce expected payload"
+        "vendored repo's v1.0.12 tag did not produce expected payload"
     );
 }
 
@@ -1956,7 +1956,7 @@ fn install_unattended_skips_confirm_like_assume_yes() {
             .path()
             .join(common::slot_rel(
                 "org.vibevm.world.wal",
-                "1.0.0",
+                "1.0.12",
                 common::spec_rel("flows/wal/WAL-PROTOCOL.md")
             ))
             .is_file()
@@ -1964,7 +1964,7 @@ fn install_unattended_skips_confirm_like_assume_yes() {
                 .path()
                 .join(common::slot_rel(
                     "org.vibevm.world.wal",
-                    "1.0.0",
+                    "1.0.12",
                     common::spec_rel("flows/wal/WAL-PROTOCOL.xml")
                 ))
                 .is_file()
@@ -4219,11 +4219,11 @@ fn reinstall_regenerates_deleted_boot_artifacts() {
     assert!(
         index_body.contains(&common::slot_boot_rel(
             "org.vibevm.world.wal",
-            "1.0.0",
+            "1.0.12",
             "10-flow-wal.md"
         )) || index_body.contains(&common::slot_boot_rel(
             "org.vibevm.world.wal",
-            "1.0.0",
+            "1.0.12",
             "10-flow-wal.xml"
         )),
         "regenerated INDEX.md must name the materialised dependency boot:\n{index_body}"
@@ -4369,7 +4369,7 @@ fn reinstall_force_refetches_corrupted_vibedeps() {
     // whichever PROP-045 serialisation the package ships.
     let slot_proto = project.path().join(common::slot_rel(
         "org.vibevm.world.wal",
-        "1.0.0",
+        "1.0.12",
         common::spec_rel("flows/wal"),
     ));
     let corrupted = if slot_proto.join("WAL-PROTOCOL.md").is_file() {
@@ -4404,5 +4404,5 @@ fn reinstall_force_refetches_corrupted_vibedeps() {
     let lock: vibe_core::manifest::Lockfile =
         toml::from_str(&fs::read_to_string(project.path().join("vibe.lock")).unwrap()).unwrap();
     assert_eq!(lock.packages.len(), 1);
-    assert_eq!(lock.packages[0].version.to_string(), "1.0.0");
+    assert_eq!(lock.packages[0].version.to_string(), "1.0.12");
 }

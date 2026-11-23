@@ -46,18 +46,18 @@ fn full_install_cycle() {
         .success();
 
     // The package's whole published tree is materialised into its
-    // `vibedeps/` slot — the real org.vibevm.world/wal v1.0.0 ships
+    // `vibedeps/` slot — the real org.vibevm.world/wal v1.0.12 ships
     // `vibe.toml`, a README and the `spec/` tree (plus a skill and
     // LICENSE, not asserted here). Spec sources live in either PROP-045
     // serialisation (the corpus flipped to XML sources on 2026-08-24),
     // so the guard is CONTENT presence, not the spelling.
     let slot = project
         .path()
-        .join(common::slot_dir("org.vibevm.world.wal", "1.0.0"));
+        .join(common::slot_dir("org.vibevm.world.wal", "1.0.12"));
     assert!(
         slot.join("vibe.toml").is_file(),
         "expected `{}` after install",
-        common::slot_rel("org.vibevm.world.wal", "1.0.0", "vibe.toml")
+        common::slot_rel("org.vibevm.world.wal", "1.0.12", "vibe.toml")
     );
     for rel in [
         "README.md".to_string(),
@@ -67,7 +67,7 @@ fn full_install_cycle() {
         common::spec_rel("flows/wal/morning-routine.md"),
     ] {
         let xml = rel.replace(".md", ".xml");
-        let slot_dir = common::slot_dir("org.vibevm.world.wal", "1.0.0");
+        let slot_dir = common::slot_dir("org.vibevm.world.wal", "1.0.12");
         assert!(
             slot.join(&rel).is_file() || slot.join(&xml).is_file(),
             "expected `{slot_dir}/{rel}` (either serialisation) after install"
@@ -116,11 +116,11 @@ fn full_install_cycle() {
     assert!(
         index.contains(&common::slot_boot_rel(
             "org.vibevm.world.wal",
-            "1.0.0",
+            "1.0.12",
             "10-flow-wal.md"
         )) || index.contains(&common::slot_boot_rel(
             "org.vibevm.world.wal",
-            "1.0.0",
+            "1.0.12",
             "10-flow-wal.xml"
         )),
         "INDEX.md must name the installed dependency's boot snippet:\n{index}"
@@ -151,7 +151,7 @@ fn full_install_cycle() {
     let lock: vibe_core::manifest::Lockfile = toml::from_str(&lock_text).unwrap();
     assert_eq!(lock.packages.len(), 1);
     assert_eq!(lock.packages[0].name, "wal");
-    assert_eq!(lock.packages[0].version.to_string(), "1.0.0");
+    assert_eq!(lock.packages[0].version.to_string(), "1.0.12");
     assert!(lock.packages[0].content_hash.starts_with("sha256:"));
     assert!(
         lock.packages[0].files_written.is_empty(),
@@ -167,7 +167,7 @@ fn full_install_cycle() {
     // no `.vibe/cache/` copy (PROP-010 §2.7).
     assert!(
         user.settings
-            .join("cache/org.vibevm.world/wal/v1.0.0/vibe.toml")
+            .join("cache/org.vibevm.world/wal/v1.0.12/vibe.toml")
             .is_file(),
         "the install must land the store entry under the settings home"
     );
@@ -185,7 +185,7 @@ fn full_install_cycle() {
         .success()
         .stdout(predicate::str::contains("flow"))
         .stdout(predicate::str::contains("wal"))
-        .stdout(predicate::str::contains("1.0.0"));
+        .stdout(predicate::str::contains("1.0.12"));
 
     // `vibe uninstall` removes the package's `vibedeps/` slot.
     user.vibe()
@@ -249,7 +249,7 @@ fn install_second_install_is_idempotent() {
         .success();
 
     // Second install of the same package succeeds — the slot is already
-    // present for 1.0.0, so materialisation skips it (PROP-011 §2.3).
+    // present for 1.0.12, so materialisation skips it (PROP-011 §2.3).
     user.vibe()
         .arg("install")
         .arg("org.vibevm.world/wal")
@@ -268,7 +268,7 @@ fn install_second_install_is_idempotent() {
             .path()
             .join(common::slot_rel(
                 "org.vibevm.world.wal",
-                "1.0.0",
+                "1.0.12",
                 "vibe.toml"
             ))
             .is_file(),
@@ -295,7 +295,7 @@ fn install_skips_a_present_slot_on_re_install() {
     let registry = make_wal_dir_registry(reg_home.path());
     user.init_project(project.path());
 
-    // First install materialises the `vibedeps/org.vibevm.world.wal/1.0.0` slot.
+    // First install materialises the `vibedeps/org.vibevm.world.wal/1.0.12` slot.
     user.vibe()
         .arg("install")
         .arg("org.vibevm.world/wal")
@@ -332,7 +332,7 @@ fn install_skips_a_present_slot_on_re_install() {
     assert_eq!(skipped.len(), 1, "the present slot must be skipped");
     assert_eq!(
         skipped[0].as_str().unwrap(),
-        common::slot_dir("org.vibevm.world.wal", "1.0.0")
+        common::slot_dir("org.vibevm.world.wal", "1.0.12")
     );
     assert!(
         report["materialised"].as_array().unwrap().is_empty(),
@@ -380,7 +380,7 @@ fn install_reports_json() {
     assert_eq!(materialised.len(), 1);
     assert_eq!(
         materialised[0].as_str().unwrap(),
-        common::slot_dir("org.vibevm.world.wal", "1.0.0")
+        common::slot_dir("org.vibevm.world.wal", "1.0.12")
     );
     assert_eq!(last["nodes_regenerated"].as_array().unwrap().len(), 1);
 }
@@ -459,7 +459,7 @@ fn uninstall_errors_when_package_not_installed() {
 
 /// `vibe install <pkgref>` (no version) records the user-supplied
 /// pkgref in `vibe.toml` `[requires].packages` with the **caret**
-/// shape derived from the resolved version (`org.vibevm.world/wal@^1.0.0`).
+/// shape derived from the resolved version (`org.vibevm.world/wal@^1.0.12`).
 /// Same default as Cargo / npm / Poetry — `vibe update` later picks
 /// up patch-compatible bumps without needing an explicit re-pin.
 #[test]
@@ -491,10 +491,10 @@ fn install_writes_caret_pkgref_to_vibe_toml_requires() {
     let recorded = &manifest.requires.packages[0];
     assert_eq!(recorded.qualified_name(), "org.vibevm.world/wal");
     // Caret shape: rendered string ends in `@^<resolved>`. The real
-    // org.vibevm.world/wal ships at v1.0.0 so the manifest carries `^1.0.0`.
+    // org.vibevm.world/wal ships at v1.0.12 so the manifest carries `^1.0.12`.
     assert_eq!(
         recorded.to_string(),
-        "org.vibevm.world/wal@^1.0.0",
+        "org.vibevm.world/wal@^1.0.12",
         "expected caret-default constraint, got: {recorded}"
     );
     // M1.15 wire shape: `[requires.packages]` map-form table with the key
@@ -504,8 +504,8 @@ fn install_writes_caret_pkgref_to_vibe_toml_requires() {
         "expected [requires.packages] header in rendered vibe.toml:\n{toml_text}"
     );
     assert!(
-        toml_text.contains("\"org.vibevm.world/wal\" = \"^1.0.0\""),
-        "expected `\"org.vibevm.world/wal\" = \"^1.0.0\"` row in rendered vibe.toml:\n{toml_text}"
+        toml_text.contains("\"org.vibevm.world/wal\" = \"^1.0.12\""),
+        "expected `\"org.vibevm.world/wal\" = \"^1.0.12\"` row in rendered vibe.toml:\n{toml_text}"
     );
 }
 
@@ -716,7 +716,7 @@ fn install_preserves_explicit_constraint_in_vibe_toml() {
     let manifest = vibe_core::manifest::Manifest::parse_str(&toml_text).unwrap();
     assert_eq!(manifest.requires.packages.len(), 1);
     // CLI typed `^1.0`; manifest preserves `^1.0`. We do NOT tighten
-    // to the resolved `^1.0.0` — the operator's wider declaration
+    // to the resolved `^1.0.12` — the operator's wider declaration
     // wins.
     assert_eq!(
         manifest.requires.packages[0].to_string(),
@@ -725,7 +725,7 @@ fn install_preserves_explicit_constraint_in_vibe_toml() {
 }
 
 /// `vibe install <pkgref> --exact` pins the manifest to the exact
-/// resolved version (`=1.0.0`), npm `--save-exact` shape. Overrides
+/// resolved version (`=1.0.12`), npm `--save-exact` shape. Overrides
 /// any constraint the CLI form carried.
 #[test]
 fn install_with_exact_flag_pins_manifest_to_eq_resolved() {
@@ -750,7 +750,7 @@ fn install_with_exact_flag_pins_manifest_to_eq_resolved() {
     assert_eq!(manifest.requires.packages.len(), 1);
     assert_eq!(
         manifest.requires.packages[0].to_string(),
-        "org.vibevm.world/wal@=1.0.0",
+        "org.vibevm.world/wal@=1.0.12",
         "expected =-pinned exact constraint with --exact"
     );
 }
@@ -797,7 +797,7 @@ fn install_from_manifest_uses_requires() {
             .path()
             .join(common::slot_rel(
                 "org.vibevm.world.wal",
-                "1.0.0",
+                "1.0.12",
                 common::spec_rel("flows/wal/WAL-PROTOCOL.md")
             ))
             .is_file()
@@ -805,7 +805,7 @@ fn install_from_manifest_uses_requires() {
                 .path()
                 .join(common::slot_rel(
                     "org.vibevm.world.wal",
-                    "1.0.0",
+                    "1.0.12",
                     common::spec_rel("flows/wal/WAL-PROTOCOL.xml")
                 ))
                 .is_file(),
@@ -830,11 +830,11 @@ fn install_from_manifest_uses_requires() {
     assert!(
         index.contains(&common::slot_boot_rel(
             "org.vibevm.world.wal",
-            "1.0.0",
+            "1.0.12",
             "10-flow-wal.md"
         )) || index.contains(&common::slot_boot_rel(
             "org.vibevm.world.wal",
-            "1.0.0",
+            "1.0.12",
             "10-flow-wal.xml"
         )),
         "INDEX.md must name the dependency's boot file under its slot:\n{index}"
@@ -984,7 +984,7 @@ fn install_from_git_registry() {
         "expected per-package URL ending in /org.vibevm.world.wal.git, got: {}",
         entry.source_url
     );
-    assert_eq!(entry.source_ref.as_deref(), Some("v1.0.0"));
+    assert_eq!(entry.source_ref.as_deref(), Some("v1.0.12"));
     assert!(!entry.overridden);
 
     // Cache layout: one bucket dir under cache/, with packages/<kind>-<name>/
@@ -1092,7 +1092,7 @@ fn a_mirror_serves_install_beside_remap_and_drop_rows() {
         .success();
     let slot = project
         .path()
-        .join(common::slot_dir("org.vibevm.world.wal", "1.0.0"));
+        .join(common::slot_dir("org.vibevm.world.wal", "1.0.12"));
     assert!(slot.join("vibe.toml").is_file(), "{}", slot.display());
     let lock_text = fs::read_to_string(project.path().join("vibe.lock")).unwrap();
     let lock: vibe_core::manifest::Lockfile = toml::from_str(&lock_text).unwrap();
@@ -1124,7 +1124,7 @@ fn install_from_git_source_with_tag_records_source_kind_git() {
         .arg("--git")
         .arg(&url)
         .arg("--tag")
-        .arg("v1.0.0")
+        .arg("v1.0.12")
         .arg("--path")
         .arg(project.path())
         .arg("--assume-yes")
@@ -1154,7 +1154,7 @@ fn install_from_git_source_with_tag_records_source_kind_git() {
     assert_eq!(g.name, "wal");
     assert_eq!(g.url, url);
     assert!(
-        matches!(&g.ref_kind, vibe_core::manifest::GitRefKind::Tag(t) if t == "v1.0.0"),
+        matches!(&g.ref_kind, vibe_core::manifest::GitRefKind::Tag(t) if t == "v1.0.12"),
         "expected tag refkind, got: {:?}",
         g.ref_kind
     );
@@ -1170,7 +1170,7 @@ fn install_from_git_source_with_tag_records_source_kind_git() {
         "lockfile source_kind"
     );
     assert!(!pkg.overridden);
-    assert_eq!(pkg.source_ref.as_deref(), Some("v1.0.0"));
+    assert_eq!(pkg.source_ref.as_deref(), Some("v1.0.12"));
     assert_eq!(pkg.registry, None);
 
     // Package tree materialised into its `vibedeps/` slot — a
@@ -1181,7 +1181,7 @@ fn install_from_git_source_with_tag_records_source_kind_git() {
             .path()
             .join(common::slot_rel(
                 "org.vibevm.world.wal",
-                "1.0.0",
+                "1.0.12",
                 common::spec_rel("flows/wal/WAL-PROTOCOL.md")
             ))
             .is_file()
@@ -1189,7 +1189,7 @@ fn install_from_git_source_with_tag_records_source_kind_git() {
                 .path()
                 .join(common::slot_rel(
                     "org.vibevm.world.wal",
-                    "1.0.0",
+                    "1.0.12",
                     common::spec_rel("flows/wal/WAL-PROTOCOL.xml")
                 ))
                 .is_file(),
@@ -1200,7 +1200,7 @@ fn install_from_git_source_with_tag_records_source_kind_git() {
             .path()
             .join(common::slot_rel(
                 "org.vibevm.world.wal",
-                "1.0.0",
+                "1.0.12",
                 "vibe.toml"
             ))
             .is_file()
@@ -1299,7 +1299,7 @@ fn install_git_source_then_repeat_install_no_args_is_idempotent() {
         .arg("--git")
         .arg(&url)
         .arg("--tag")
-        .arg("v1.0.0")
+        .arg("v1.0.12")
         .arg("--path")
         .arg(project.path())
         .arg("--assume-yes")
@@ -1338,7 +1338,7 @@ fn install_git_source_then_repeat_install_no_args_is_idempotent() {
             .path()
             .join(common::slot_rel(
                 "org.vibevm.world.wal",
-                "1.0.0",
+                "1.0.12",
                 "vibe.toml"
             ))
             .is_file()
@@ -1364,7 +1364,7 @@ fn uninstall_removes_git_source_from_manifest_and_lockfile() {
         .arg("--git")
         .arg(&url)
         .arg("--tag")
-        .arg("v1.0.0")
+        .arg("v1.0.12")
         .arg("--path")
         .arg(project.path())
         .arg("--assume-yes")
