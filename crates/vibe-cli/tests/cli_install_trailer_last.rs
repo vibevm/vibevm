@@ -186,12 +186,73 @@ fn explicit_root_without_evidence_has_no_log_suffix() {
     assert!(!last.contains("log"), "{last}");
 }
 
+/// Recognize the actual successful trace table, not merely an accepted flag.
+fn successful_trace_before_trailer(text: &str) -> bool {
+    let lines: Vec<_> = text
+        .lines()
+        .filter(|line| !line.trim().is_empty())
+        .collect();
+    let headings: Vec<_> = lines
+        .iter()
+        .enumerate()
+        .filter(|(_, line)| line.contains("compile trace:"))
+        .collect();
+    if headings.len() != 1 || !headings[0].1.contains("compile trace: ok") {
+        return false;
+    }
+    let Some(table) = lines.iter().position(|line| {
+        line.split_whitespace().collect::<Vec<_>>()
+            == [
+                "pass",
+                "invocations",
+                "pass",
+                "µs",
+                "verify",
+                "µs",
+                "encode",
+                "µs",
+            ]
+    }) else {
+        return false;
+    };
+    let last = lines.len() - 1;
+    headings[0].0 < table
+        && table + 1 < last
+        && lines[table + 1..last].iter().any(|line| {
+            let cells: Vec<_> = line.split_whitespace().collect();
+            cells.len() == 5
+                && cells[1].parse::<u64>().is_ok_and(|count| count > 0)
+                && cells[2..]
+                    .iter()
+                    .all(|cell| cell.trim_end_matches('+').parse::<u64>().is_ok())
+        })
+        && lines[last].starts_with("✻ ")
+}
+
 #[test]
 fn traced_human_install_trailer_follows_trace_and_root() {
     let user = UserScratch::new();
     let home = tempfile::tempdir().unwrap();
     let project = tempfile::tempdir().unwrap();
+    let local = tempfile::tempdir().unwrap();
+    registry(local.path(), false);
+    let package = local.path().join("org.fixture/root/v0.1.0");
+    let manifest = package.join("vibe.toml");
+    let text = std::fs::read_to_string(&manifest).unwrap();
+    std::fs::write(
+        &manifest,
+        format!("{text}\n[boot_snippet]\nsource = \"boot.md\"\ncategory = \"flow\"\n"),
+    )
+    .unwrap();
+    std::fs::write(
+        package.join("boot.md"),
+        "# Synthetic compile input\n\nKeep fixture output deterministic.\n",
+    )
+    .unwrap();
     init(&user, home.path(), project.path());
+    let manifest = project.path().join("vibe.toml");
+    let text = std::fs::read_to_string(&manifest).unwrap();
+    std::fs::write(&manifest, format!("{text}\n[requires]\npackages = {{ \"org.fixture/root\" = {{ version = \"^0.1\", link = \"static\" }} }}\n")).unwrap();
     let output = command(
         &user,
         home.path(),
@@ -199,12 +260,36 @@ fn traced_human_install_trailer_follows_trace_and_root() {
             "install",
             "--offline",
             "--trace-compile",
+            "--registry",
+            local.path().to_str().unwrap(),
+            "--assume-yes",
             "--path",
             project.path().to_str().unwrap(),
         ],
     );
     let last = trailer(&output);
     assert!(!last.contains("log"), "{last}");
+    let text = String::from_utf8_lossy(&output.stdout);
+    assert!(
+        successful_trace_before_trailer(&text),
+        "missing successful trace table before trailer: {text}"
+    );
+    let without_trace = command(
+        &user,
+        home.path(),
+        &[
+            "install",
+            "--offline",
+            "--path",
+            project.path().to_str().unwrap(),
+        ],
+    );
+    trailer(&without_trace);
+    let text = String::from_utf8_lossy(&without_trace.stdout);
+    assert!(
+        !successful_trace_before_trailer(&text),
+        "the same positive control must reject a real untraced run: {text}"
+    );
 }
 
 #[test]
