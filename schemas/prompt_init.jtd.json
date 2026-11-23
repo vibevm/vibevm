@@ -1,0 +1,15 @@
+{
+  "metadata": {
+    "description": "Version 1 answer of vibe prompt init --json: the node that was opted in to the system prompt and the workspace-relative path of the authored template written for it. Nothing is built.",
+    "spec": { "implements": "spec://org.vibevm.core/vibevm/common/PROP-076#SYS-OPT-IN" },
+    "rustOptions": { "package": "vibe_wire::prompt_init" },
+    "x-rust-type": "PromptInitReport",
+    "x-wire-order": ["protocol", "node", "template", "created"]
+  },
+  "properties": {
+    "protocol": { "type": "string" },
+    "node": { "type": "string" },
+    "template": { "type": "string" },
+    "created": { "type": "boolean" }
+  }
+}

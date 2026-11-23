@@ -103,6 +103,7 @@ pub enum FormatId {
     CliPromptCheck,
     CliPromptCompose,
     CliPromptFlags,
+    CliPromptInit,
     CliPromptPath,
     CliPromptPrepare,
     CliPromptTypes,

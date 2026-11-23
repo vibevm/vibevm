@@ -377,6 +377,16 @@ foreign_parsers = "many"
 corpus = "none"
 sunset = "none"
 
+# `vibe prompt init --json` — `vibe-prompt-init/1`. The node opted in to
+# the system prompt and the authored template written for it.
+[format.cli-prompt-init]
+epoch = 1
+schema = "schemas/prompt_init.jtd.json"
+recoverable = true
+foreign_parsers = "many"
+corpus = "none"
+sunset = "none"
+
 # `vibe prompt types --json` — `vibe-prompt-types/1`. The generated
 # subagent types of one node and what the run did to each.
 [format.cli-prompt-types]

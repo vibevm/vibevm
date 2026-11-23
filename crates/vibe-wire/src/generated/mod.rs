@@ -106,6 +106,7 @@ pub mod prompt_build;
 pub mod prompt_check;
 pub mod prompt_compose;
 pub mod prompt_flags;
+pub mod prompt_init;
 pub mod prompt_path;
 pub mod prompt_prepare;
 pub mod prompt_request_capture;
