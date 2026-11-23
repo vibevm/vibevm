@@ -26,6 +26,17 @@ pub enum PromptPart {
 
 #[derive(Debug, clap::Subcommand)]
 pub enum PromptCommand {
+    /// Opt this project in to the system prompt: write a minimal authored
+    /// SYSTEM-TEMPLATE.md naming the project. Builds nothing.
+    Init {
+        /// The node, as a workspace-relative path. Default: the selected one.
+        #[arg(long, value_name = "REL")]
+        node: Option<String>,
+        /// The project directory to work in.
+        #[arg(long, default_value = ".")]
+        path: PathBuf,
+    },
+
     /// Explicitly write a private composed prefix; never sends an API request.
     Compose {
         #[arg(long, value_name = "REL")]

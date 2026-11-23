@@ -308,9 +308,11 @@ pub(crate) fn policy(command: &Command, terminal_attached: bool) -> CommandPolic
         Command::Update(_) => FiniteFallback("Command update"),
         Command::Reinstall(_) => FiniteFallback("Command reinstall"),
         Command::Check(_) => FiniteFallback("Command check"),
-        // `build` runs one node's compile and one transaction; the five
-        // read-only verbs open a bounded set of files and print.
+        // `build` runs one node's compile and one transaction, `init` writes
+        // one authored file; the five read-only verbs open a bounded set of
+        // files and print.
         Command::Prompt(args) => match &args.command {
+            PromptCommand::Init { .. } => FiniteFallback("Command prompt init"),
             PromptCommand::Build { .. } => FiniteFallback("Command prompt build"),
             PromptCommand::Compose { .. } => FiniteFallback("Command prompt compose"),
             PromptCommand::Types { .. } => FiniteFallback("Command prompt types"),

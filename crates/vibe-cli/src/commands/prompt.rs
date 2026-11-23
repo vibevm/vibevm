@@ -1,4 +1,4 @@
-//! `vibe prompt build | check | prepare | path | flags` — the explicit
+//! `vibe prompt init | build | check | prepare | path | flags` — the explicit
 //! operations surface of the cache-stable prefix.
 //!
 //! The driver is thin on purpose. Freshness, the request materials, the
@@ -30,6 +30,7 @@ mod check;
 mod compose;
 mod flags;
 mod harness_version;
+mod init;
 mod local_artifact;
 mod path;
 mod personal;
@@ -86,6 +87,7 @@ pub(crate) fn reporting_the_prompt<T>(
 #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-076#SYS-OPERATIONS-SURFACE")]
 pub fn run(ctx: &output::Context, args: PromptArgs) -> Result<()> {
     match args.command {
+        PromptCommand::Init { node, path } => init::run(ctx, &select(&path, node.as_deref())?),
         PromptCommand::Build { node, path } => build::run(ctx, &select(&path, node.as_deref())?),
         PromptCommand::Compose {
             node,
