@@ -8401,6 +8401,14 @@
     },
     {
       "crate_name": "<schema>",
+      "file": "schemas/prompt_init.jtd.json",
+      "item_kind": "schema",
+      "line": 1,
+      "symbol": "prompt_init",
+      "end_line": 15
+    },
+    {
+      "crate_name": "<schema>",
       "file": "schemas/prompt_path.jtd.json",
       "item_kind": "schema",
       "line": 1,
@@ -21950,8 +21958,8 @@
       "item_kind": "fn",
       "line": 146,
       "symbol": "vibe_cli::command_progress::policy",
-      "end_line": 484,
-      "fingerprint": "tok1:826d4b668027642a0c65d5fe3cb492acdbe8c656136a35266164dae3df64f7d9"
+      "end_line": 486,
+      "fingerprint": "tok1:6baff48b84131672149aeae735d7d0e162874f68f8ec028981d329ca02bbb8ee"
     },
     {
       "crate_name": "vibe-cli",
@@ -22014,7 +22022,7 @@
       "line": 62,
       "symbol": "vibe_cli::commands::agent::launch::run",
       "end_line": 357,
-      "fingerprint": "tok1:585cd3714ef5e204f1c0e2fc0e4ac8b29bca0d89e06a7d56e17168d639b176bc"
+      "fingerprint": "tok1:06d7c6de6d61d5620a7b520b74afd82a7971577798829256a1f7ef6b2d56c54c"
     },
     {
       "crate_name": "vibe-cli",
@@ -22209,9 +22217,27 @@
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/commands/agent.rs",
       "item_kind": "fn",
-      "line": 35,
+      "line": 138,
+      "symbol": "vibe_cli::commands::agent::render_list",
+      "end_line": 188,
+      "fingerprint": "tok1:944e44bb2b53af7a88e0583500233e5126cb55b9b524eebfef484dd825bfd40f"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/agent.rs",
+      "item_kind": "fn",
+      "line": 428,
+      "symbol": "vibe_cli::commands::agent::render_presets",
+      "end_line": 468,
+      "fingerprint": "tok1:d65dbde8d22aa13815a9bc7ebb385e9dc2c5a38d670b3c797a16546d0007d9ed"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/agent.rs",
+      "item_kind": "fn",
+      "line": 41,
       "symbol": "vibe_cli::commands::agent::run",
-      "end_line": 87,
+      "end_line": 93,
       "fingerprint": "tok1:a98b573cecb473a581b7669e8ef2f3f9671c07ecff6f64832678f36ef2833971"
     },
     {
@@ -24261,18 +24287,45 @@
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/commands/install/confirm.rs",
       "item_kind": "fn",
-      "line": 190,
+      "line": 159,
+      "symbol": "vibe_cli::commands::install::confirm::CliConfirmGate<'_>::ask_apply",
+      "end_line": 165,
+      "fingerprint": "tok1:8dce82ffeda5bd46dc8566ca2368cfea472ba7155421ded44bf68cb23834c3b4"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/install/confirm.rs",
+      "item_kind": "fn",
+      "line": 167,
+      "symbol": "vibe_cli::commands::install::confirm::CliConfirmGate<'_>::ask_apply_with",
+      "end_line": 178,
+      "fingerprint": "tok1:7e12dba661fe0cfc718c5f32c7cab551386303b0affe131f1397fd051c8dc8b9"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/install/confirm.rs",
+      "item_kind": "fn",
+      "line": 211,
       "symbol": "vibe_cli::commands::install::confirm::tests::canonical_selected_destination_is_named_for_projects_and_custom_user_settings",
-      "end_line": 229,
+      "end_line": 250,
       "fingerprint": "tok1:ca17b5c9f38744a2edb2b0d63b38ca8dee4e66e78ebd304a674bf54a9087e0ab"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/commands/install/confirm.rs",
       "item_kind": "fn",
-      "line": 231,
+      "line": 290,
+      "symbol": "vibe_cli::commands::install::confirm::tests::install_question_releases_the_progress_panel",
+      "end_line": 325,
+      "fingerprint": "tok1:e20f1e3fc30e2220b0688fd8a7755af618d52a1c60a63ce3183a0f95ea4fb8d1"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/install/confirm.rs",
+      "item_kind": "fn",
+      "line": 252,
       "symbol": "vibe_cli::commands::install::confirm::tests::typed_user_scope_is_automatic_without_widening_invocation_posture",
-      "end_line": 267,
+      "end_line": 288,
       "fingerprint": "tok1:310ef7013ea056731506a9a063ae6e4fec696f67a801b30e5de981c6061c6b68"
     },
     {
@@ -24605,8 +24658,8 @@
       "item_kind": "fn",
       "line": 105,
       "symbol": "vibe_cli::commands::install::trust::judgment",
-      "end_line": 145,
-      "fingerprint": "tok1:91f9ffcb1cd576ceb4115f6dd52db59cb765dc8c4ebb92a992a5784dce346cb8"
+      "end_line": 152,
+      "fingerprint": "tok1:4de898224f0425041be7845457a577115b5c00562fe711eb377b7d186eb5bb2e"
     },
     {
       "crate_name": "vibe-cli",
@@ -25719,9 +25772,9 @@
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/commands/prompt/build.rs",
       "item_kind": "fn",
-      "line": 154,
+      "line": 155,
       "symbol": "vibe_cli::commands::prompt::build::Snapshot::summary",
-      "end_line": 190,
+      "end_line": 191,
       "fingerprint": "tok1:7878e46d7d4bae34e32ec635795e47f043811e3112f55e60dc4967728520610a"
     },
     {
@@ -25822,6 +25875,33 @@
       "symbol": "vibe_cli::commands::prompt::harness_version::gate",
       "end_line": 172,
       "fingerprint": "tok1:2517f77c9585c24868c0d3450a802b6d0c5e96b4c9794065081ac68d80d0cd56"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/prompt/init.rs",
+      "item_kind": "mod",
+      "line": 12,
+      "symbol": "vibe_cli::commands::prompt::init",
+      "end_line": 12,
+      "fingerprint": "tok1:550626aa77a51606c7046a29b3272ec62ce648218ab17770daf2cb4247abeab8"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/prompt/init.rs",
+      "item_kind": "fn",
+      "line": 87,
+      "symbol": "vibe_cli::commands::prompt::init::frame",
+      "end_line": 99,
+      "fingerprint": "tok1:9119a3b1b61791a66c1e0720d673e436ed43f1475b062de8f608b01cc087b7a3"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/prompt/init.rs",
+      "item_kind": "fn",
+      "line": 29,
+      "symbol": "vibe_cli::commands::prompt::init::run",
+      "end_line": 85,
+      "fingerprint": "tok1:d56f898508ef345b0fabaa3ce6b4806b2bb69f8ecb45c05079fe5fde09bf9395"
     },
     {
       "crate_name": "vibe-cli",
@@ -25935,10 +26015,10 @@
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/commands/prompt.rs",
       "item_kind": "fn",
-      "line": 86,
+      "line": 87,
       "symbol": "vibe_cli::commands::prompt::run",
-      "end_line": 143,
-      "fingerprint": "tok1:136d2599491b23a0132a3730d150d7ea8d5437c9d6b9ecfb2c29a9ee35aa2420"
+      "end_line": 145,
+      "fingerprint": "tok1:2221338d846fcea4af5e6d2c35443405645245a98bcfe441f0367573dcba9efa"
     },
     {
       "crate_name": "vibe-cli",
@@ -27231,27 +27311,27 @@
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/commands/remap/uninstall.rs",
       "item_kind": "mod",
-      "line": 17,
+      "line": 18,
       "symbol": "vibe_cli::commands::remap::uninstall",
-      "end_line": 17,
+      "end_line": 18,
       "fingerprint": "tok1:511dbfa0e550e62cad8dd8df70d7042887d0bf75d11c5bdd2108e6220a6a028f"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/commands/remap/uninstall.rs",
       "item_kind": "fn",
-      "line": 130,
+      "line": 131,
       "symbol": "vibe_cli::commands::remap::uninstall::copy_into_local_layer",
-      "end_line": 173,
+      "end_line": 174,
       "fingerprint": "tok1:5b1cc9cac10ba480edda7556ffb3dfa4d3493a5f906df0aeff48abfde02e36b2"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/commands/remap/uninstall.rs",
       "item_kind": "fn",
-      "line": 36,
+      "line": 37,
       "symbol": "vibe_cli::commands::remap::uninstall::run",
-      "end_line": 72,
+      "end_line": 73,
       "fingerprint": "tok1:bc4ce69740f5cf709a71184efce78617dd08e30eff43bb14032fc6edfc228ebd"
     },
     {
@@ -31130,8 +31210,8 @@
       "item_kind": "fn",
       "line": 6,
       "symbol": "vibe_cli::composition::outcome::finish",
-      "end_line": 71,
-      "fingerprint": "tok1:1906b5ce71e89b944f94d5b5c875b1a36896349fb1faff519ea11a87ab6df428"
+      "end_line": 77,
+      "fingerprint": "tok1:b6c84c260ffcdf9ba25b401233856cddf761aee059bc3ea0c720f90680523e8c"
     },
     {
       "crate_name": "vibe-cli",
@@ -31236,10 +31316,19 @@
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/exit_code.rs",
       "item_kind": "fn",
-      "line": 84,
+      "line": 104,
       "symbol": "vibe_cli::exit_code::as_exit_code",
-      "end_line": 163,
-      "fingerprint": "tok1:2603ea74eda29b8d25767d9352b862ae39835667b1e96ad1718bca3f661ccba3"
+      "end_line": 186,
+      "fingerprint": "tok1:5a0cfe8ea22fb00e6cf205a1d947cc3206c66d2812d26f734c50b4af3c12fac3"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/exit_code.rs",
+      "item_kind": "fn",
+      "line": 88,
+      "symbol": "vibe_cli::exit_code::is_cancelled",
+      "end_line": 102,
+      "fingerprint": "tok1:6253cb5427f313534b9d52ffd3d76edb6ebc75d54ae08c00350d171d1d982c97"
     },
     {
       "crate_name": "vibe-cli",
@@ -31347,7 +31436,7 @@
       "line": 120,
       "symbol": "vibe_cli::output::language::list::List::render_at",
       "end_line": 197,
-      "fingerprint": "tok1:8dcf1c7f00b967ee0a444774db567a847e3b466ed5b748faaa0ff5b6e7e5dcf5"
+      "fingerprint": "tok1:7ce46b56b1cd9ae8d73af8641c9680227d2c6beff549c34f9ba257288df76c9b"
     },
     {
       "crate_name": "vibe-cli",
@@ -31461,6 +31550,15 @@
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/output/lines.rs",
       "item_kind": "fn",
+      "line": 178,
+      "symbol": "vibe_cli::output::lines::Context::cancelled",
+      "end_line": 193,
+      "fingerprint": "tok1:f53fd78db85145ed919801e8561b2a62ec5043eea5fe81621013599190175470"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/output/lines.rs",
+      "item_kind": "fn",
       "line": 130,
       "symbol": "vibe_cli::output::lines::Context::error_with_suffix",
       "end_line": 176,
@@ -31470,9 +31568,9 @@
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/output/lines.rs",
       "item_kind": "fn",
-      "line": 282,
+      "line": 305,
       "symbol": "vibe_cli::output::lines::refusal_of",
-      "end_line": 358,
+      "end_line": 381,
       "fingerprint": "tok1:ac1d49e7972cabaf220b8979b426fbdba7b3cd87693295fea2335656b8992e4d"
     },
     {
@@ -31623,18 +31721,54 @@
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/output/prompts/ask.rs",
       "item_kind": "fn",
-      "line": 75,
+      "line": 101,
       "symbol": "vibe_cli::output::prompts::ask::choose_opt_interruptible",
-      "end_line": 127,
-      "fingerprint": "tok1:d910e9c73e1b4eda4fea8dcff06fb202fcd1aa6ca381bf2da334a5caa02fc1e5"
+      "end_line": 118,
+      "fingerprint": "tok1:57550b2a4e2e60cea42b7b98bc9e0596e57fd1ef71f8d4a4b0a72cbe84713266"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/output/prompts/ask.rs",
       "item_kind": "fn",
-      "line": 194,
+      "line": 16,
+      "symbol": "vibe_cli::output::prompts::ask::confirm",
+      "end_line": 38,
+      "fingerprint": "tok1:dfa985ff72b947cfe4dc2394888d5974971e133880cd3943130622601116a0d6"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/output/prompts/ask.rs",
+      "item_kind": "fn",
+      "line": 40,
+      "symbol": "vibe_cli::output::prompts::ask::confirm_then",
+      "end_line": 53,
+      "fingerprint": "tok1:ff2a174588c746682eecd62a09f6e125eded0544ce9652a58c653c81e44ca448"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/output/prompts/ask.rs",
+      "item_kind": "fn",
+      "line": 131,
+      "symbol": "vibe_cli::output::prompts::ask::list_key",
+      "end_line": 145,
+      "fingerprint": "tok1:f2cb95ffb602f311ab7cb3cb28a75fec2cb88e0d820f546ab6dd276b903943e0"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/output/prompts/ask.rs",
+      "item_kind": "fn",
+      "line": 147,
+      "symbol": "vibe_cli::output::prompts::ask::list_question",
+      "end_line": 201,
+      "fingerprint": "tok1:2d3f0a060253a5ad7b6aff382258b10483b1046c470bb9481edd03a8f8c1454e"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/output/prompts/ask.rs",
+      "item_kind": "fn",
+      "line": 268,
       "symbol": "vibe_cli::output::prompts::ask::secret",
-      "end_line": 269,
+      "end_line": 343,
       "fingerprint": "tok1:cd1fd8d3b176b54eebb00797499f32a1da5324c748df1d76105b0f997deca5d4"
     },
     {
@@ -31654,6 +31788,15 @@
       "symbol": "vibe_cli::output::prompts::columns::column_items",
       "end_line": 119,
       "fingerprint": "tok1:2c92b835e5296ad1af1afc640bfefdb5ec3de2fc220f372442e428e99d09da12"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/output/prompts/tests.rs",
+      "item_kind": "fn",
+      "line": 321,
+      "symbol": "vibe_cli::output::prompts::tests::list_key_moves_chooses_and_cancels",
+      "end_line": 354,
+      "fingerprint": "tok1:ef642f3568f17aedbaf244663b475838088f1304fbd5f3bb3a07d6cf31d4239e"
     },
     {
       "crate_name": "vibe-cli",
@@ -35044,8 +35187,17 @@
       "file": "crates/vibe-cli/tests/cli_self_profile.rs",
       "item_kind": "fn",
       "line": 227,
+      "symbol": "vibe_cli::tests::cli_self_profile::a_durable_profile_write_stays_inside_the_isolated_home",
+      "end_line": 303,
+      "fingerprint": "tok1:41e66a89f8bf2a70dc860ff626bf93a234ed36177cb2839677423df66974d3eb"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/tests/cli_self_profile.rs",
+      "item_kind": "fn",
+      "line": 305,
       "symbol": "vibe_cli::tests::cli_self_profile::consented_login_probe_reports_whether_the_managed_path_reaches_login_shells",
-      "end_line": 273,
+      "end_line": 351,
       "fingerprint": "tok1:c3df427e614233babeeda62a9de88121976149ad6aa3d95797672311073dd3c1"
     },
     {
@@ -83557,6 +83709,15 @@
       "symbol": "xtask wire-diff",
       "end_line": 355,
       "fingerprint": "tok1:33e27340871ff436017c9a6166b256a5a5cb70a6cf12c6f5e66bd4f6c78d9de1"
+    },
+    {
+      "crate_name": "xtask",
+      "file": "xtask/src/dist/release/prepare.rs",
+      "item_kind": "fn",
+      "line": 18,
+      "symbol": "xtask::dist::release::prepare::prepare_with",
+      "end_line": 62,
+      "fingerprint": "tok1:5f17024a72ff7bb18d886e48f047386915f5a7de011a74fb75280b9460ff7abc"
     }
   ],
   "edges": [
@@ -84991,6 +85152,14 @@
       "line": 1,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#SYS-HARNESS-EXECUTABLE",
+      "verb": "implements"
+    },
+    {
+      "file": "schemas/prompt_init.jtd.json",
+      "from_symbol": "prompt_init",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#SYS-OPT-IN",
       "verb": "implements"
     },
     {
@@ -94741,8 +94910,24 @@
     },
     {
       "file": "crates/vibe-cli/src/commands/agent.rs",
+      "from_symbol": "vibe_cli::commands::agent::render_list",
+      "line": 153,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-067#list",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-cli/src/commands/agent.rs",
+      "from_symbol": "vibe_cli::commands::agent::render_presets",
+      "line": 438,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-067#list",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-cli/src/commands/agent.rs",
       "from_symbol": "vibe_cli::commands::agent::run",
-      "line": 35,
+      "line": 41,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-064#agent-definition",
       "verb": "implements"
@@ -96584,16 +96769,40 @@
     },
     {
       "file": "crates/vibe-cli/src/commands/install/confirm.rs",
+      "from_symbol": "vibe_cli::commands::install::confirm::CliConfirmGate<'_>::ask_apply",
+      "line": 162,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-067#question",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-cli/src/commands/install/confirm.rs",
+      "from_symbol": "vibe_cli::commands::install::confirm::CliConfirmGate<'_>::ask_apply_with",
+      "line": 169,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-067#question",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-cli/src/commands/install/confirm.rs",
       "from_symbol": "vibe_cli::commands::install::confirm::tests::canonical_selected_destination_is_named_for_projects_and_custom_user_settings",
-      "line": 191,
+      "line": 212,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-060#INSTALL-DESTINATION",
       "verb": "verifies"
     },
     {
       "file": "crates/vibe-cli/src/commands/install/confirm.rs",
+      "from_symbol": "vibe_cli::commands::install::confirm::tests::install_question_releases_the_progress_panel",
+      "line": 291,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-067#question",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-cli/src/commands/install/confirm.rs",
       "from_symbol": "vibe_cli::commands::install::confirm::tests::typed_user_scope_is_automatic_without_widening_invocation_posture",
-      "line": 232,
+      "line": 253,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-027#REG-USER-PROJECT-MATERIALISATION",
       "verb": "verifies"
@@ -97886,7 +98095,7 @@
     {
       "file": "crates/vibe-cli/src/commands/prompt/build.rs",
       "from_symbol": "vibe_cli::commands::prompt::build::Snapshot::summary",
-      "line": 159,
+      "line": 160,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#SYS-OPERATIONS-PATH-AND-FLAGS",
       "verb": "implements"
@@ -97977,6 +98186,30 @@
       "line": 103,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#SYS-SOFT-LAUNCH",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-cli/src/commands/prompt/init.rs",
+      "from_symbol": "vibe_cli::commands::prompt::init",
+      "line": 12,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#SYS-OPT-IN",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-cli/src/commands/prompt/init.rs",
+      "from_symbol": "vibe_cli::commands::prompt::init::frame",
+      "line": 91,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#SYS-OPT-IN",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-cli/src/commands/prompt/init.rs",
+      "from_symbol": "vibe_cli::commands::prompt::init::run",
+      "line": 33,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#SYS-OPT-IN",
       "verb": "implements"
     },
     {
@@ -98079,7 +98312,7 @@
     {
       "file": "crates/vibe-cli/src/commands/prompt.rs",
       "from_symbol": "vibe_cli::commands::prompt::run",
-      "line": 86,
+      "line": 87,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#SYS-OPERATIONS-SURFACE",
       "verb": "implements"
@@ -99238,7 +99471,7 @@
     {
       "file": "crates/vibe-cli/src/commands/remap/uninstall.rs",
       "from_symbol": "vibe_cli::commands::remap::uninstall",
-      "line": 17,
+      "line": 18,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-066#uninstall",
       "verb": "implements"
@@ -99246,7 +99479,7 @@
     {
       "file": "crates/vibe-cli/src/commands/remap/uninstall.rs",
       "from_symbol": "vibe_cli::commands::remap::uninstall::copy_into_local_layer",
-      "line": 133,
+      "line": 134,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-066#uninstall",
       "verb": "documents"
@@ -99254,7 +99487,7 @@
     {
       "file": "crates/vibe-cli/src/commands/remap/uninstall.rs",
       "from_symbol": "vibe_cli::commands::remap::uninstall::run",
-      "line": 37,
+      "line": 38,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-066#uninstall",
       "verb": "documents"
@@ -102920,9 +103153,17 @@
     {
       "file": "crates/vibe-cli/src/exit_code.rs",
       "from_symbol": "vibe_cli::exit_code::as_exit_code",
-      "line": 84,
+      "line": 104,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#exit-codes",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-cli/src/exit_code.rs",
+      "from_symbol": "vibe_cli::exit_code::is_cancelled",
+      "line": 91,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-067#question",
       "verb": "implements"
     },
     {
@@ -103119,6 +103360,14 @@
     },
     {
       "file": "crates/vibe-cli/src/output/lines.rs",
+      "from_symbol": "vibe_cli::output::lines::Context::cancelled",
+      "line": 181,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-067#question",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-cli/src/output/lines.rs",
       "from_symbol": "vibe_cli::output::lines::Context::error_with_suffix",
       "line": 138,
       "provenance": "authored",
@@ -103128,7 +103377,7 @@
     {
       "file": "crates/vibe-cli/src/output/lines.rs",
       "from_symbol": "vibe_cli::output::lines::refusal_of",
-      "line": 286,
+      "line": 309,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-067#refusal",
       "verb": "implements"
@@ -103264,7 +103513,39 @@
     {
       "file": "crates/vibe-cli/src/output/prompts/ask.rs",
       "from_symbol": "vibe_cli::output::prompts::ask::choose_opt_interruptible",
-      "line": 77,
+      "line": 103,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-067#question",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-cli/src/output/prompts/ask.rs",
+      "from_symbol": "vibe_cli::output::prompts::ask::confirm",
+      "line": 29,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-067#question",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-cli/src/output/prompts/ask.rs",
+      "from_symbol": "vibe_cli::output::prompts::ask::confirm_then",
+      "line": 43,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-067#question",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-cli/src/output/prompts/ask.rs",
+      "from_symbol": "vibe_cli::output::prompts::ask::list_key",
+      "line": 132,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-067#question",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-cli/src/output/prompts/ask.rs",
+      "from_symbol": "vibe_cli::output::prompts::ask::list_question",
+      "line": 151,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-067#question",
       "verb": "implements"
@@ -103272,7 +103553,7 @@
     {
       "file": "crates/vibe-cli/src/output/prompts/ask.rs",
       "from_symbol": "vibe_cli::output::prompts::ask::secret",
-      "line": 195,
+      "line": 269,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-067#question",
       "verb": "implements"
@@ -103292,6 +103573,14 @@
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-065#display",
       "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-cli/src/output/prompts/tests.rs",
+      "from_symbol": "vibe_cli::output::prompts::tests::list_key_moves_chooses_and_cancels",
+      "line": 322,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-067#question",
+      "verb": "verifies"
     },
     {
       "file": "crates/vibe-cli/src/output/prompts.rs",
@@ -106421,8 +106710,17 @@
     },
     {
       "file": "crates/vibe-cli/tests/cli_self_profile.rs",
+      "from_symbol": "vibe_cli::tests::cli_self_profile::a_durable_profile_write_stays_inside_the_isolated_home",
+      "line": 242,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#path",
+      "verb": "verifies",
+      "pinned_r": 3
+    },
+    {
+      "file": "crates/vibe-cli/tests/cli_self_profile.rs",
       "from_symbol": "vibe_cli::tests::cli_self_profile::consented_login_probe_reports_whether_the_managed_path_reaches_login_shells",
-      "line": 232,
+      "line": 310,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#path",
       "verb": "verifies",
@@ -150348,6 +150646,14 @@
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#FORMAT-SIMPLE",
       "verb": "verifies"
+    },
+    {
+      "file": "xtask/src/dist/release/prepare.rs",
+      "from_symbol": "xtask::dist::release::prepare::prepare_with",
+      "line": 18,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-019#RELEASE-MUTABLE",
+      "verb": "implements"
     }
   ],
   "schema": 3,
@@ -176316,7 +176622,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:412fc9f087b5b78c3ff49c3f0499eddb8d411514bf972bae4aaf97bbd187de71",
+      "content_hash": "sha256:b8573347d2fc4bff339f07376020b9eb8be0b07c52daf8a1cce59ee66e567d7b",
       "doc_path": "common/PROP-067",
       "file": "vibevm/vibespecs/common/PROP-067-terminal-display-language.xml",
       "heading": "PROP-067 — The terminal display language: blocks, a gutter, a fold, one palette",
@@ -176433,10 +176739,10 @@
     },
     {
       "anchor": "question",
-      "content_hash": "sha256:c0db89250c36105a3db2b1ae3971bf586f2a70a8e85d611b1f6198d45a6f9eb6",
+      "content_hash": "sha256:acc90bbbd47b2f0b68394a83d2a73cd6275c8fd5cf6c28a94ccaf8032acf6f0c",
       "doc_path": "common/PROP-067",
       "file": "vibevm/vibespecs/common/PROP-067-terminal-display-language.xml",
-      "heading": "A question is a block: `? <prompt>` in the gutter, its choices as a list under it at column 2 with the selected row highlighted, the key legend as one dim hint line under the list, a blank line before and after. When answered, the block collapses to `✓ <prompt>  <value>` with the value in the `ok` role and bold — exactly the shape of a finished step, because a question answered is work done. The wizard's answers therefore accumulate as a list at the top of the screen, above the rule that opens the plan. The shared prompt theme of PROP-065 `#display` is the implementation of this paragraph; its column rules (name, id, description, detected) are the `#list` rules applied to choices. `dialoguer` draws no footer under a list, so the key legend is printed once per process, dim, above the first list question rather than under it. A yes-or-no question whose body is the thing being decided — a remap offer, the download of the documentation shell — prints that body under its `?` gutter line before the prompt, and only the prompt collapses: the body stays above the `✓` line as the record of what was answered, and the collapsed line may say what was decided (`✓ remap offer  accepted org.corp/intranet`) rather than `yes`. @status:spec/done",
+      "heading": "A question is a block: `? <prompt>` in the gutter, its choices as a list under it at column 2 with the selected row highlighted, the key legend as one dim hint line under the list, a blank line before and after. When answered, the block collapses to `✓ <prompt>  <value>` with the value in the `ok` role and bold — exactly the shape of a finished step, because a question answered is work done. The wizard's answers therefore accumulate as a list at the top of the screen, above the rule that opens the plan. The shared prompt theme of PROP-065 `#display` is the implementation of this paragraph; its column rules (name, id, description, detected) are the `#list` rules applied to choices. `dialoguer` draws no footer under a list, so the key legend is printed once per process, dim, above the first list question rather than under it. A yes-or-no question whose body is the thing being decided — a remap offer, the download of the documentation shell — prints that body under its `?` gutter line before the prompt, and only the prompt collapses: the body stays above the `✓` line as the record of what was answered, and the collapsed line may say what was decided (`✓ remap offer  accepted org.corp/intranet`) rather than `yes`. A yes-or-no question is a list of two rows, `yes` and `no`, with the marker on the default; it takes no letter answers, so the keyboard layout never matters, and escape interrupts the command rather than answering `no`. A question asked while a progress panel is on screen releases the panel's key reader first. @status:spec/done",
       "line": 18,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-067#question"
     },
@@ -176451,10 +176757,10 @@
     },
     {
       "anchor": "trailer",
-      "content_hash": "sha256:f1cad1fe7e085e9b79533ec8d6d4d2b6cdf1cd366d9a8138aeaa0824301ac9de",
+      "content_hash": "sha256:abeb50f126288eef22003d82580f33f87d99d9a3d956c9916593a990df713eb8",
       "doc_path": "common/PROP-067",
       "file": "vibevm/vibespecs/common/PROP-067-terminal-display-language.xml",
-      "heading": "Every command that did work ends with one trailer block: `✻ <what happened> · <how long> · <where the record is>` — `✻ installed org.vibevm.apps/vim@9.1.0 · 3 steps · 2m 14s · log ~/.vibe/cache/app-runs/vim/2026-11-01T10-51/`. It is the one line a reader keeps: the glyph `✻` is used for nothing else, the headline is in the `ok` role on success and the `alert` role on failure (`✻ failed at build · 2m 10s · log …`), and the path is written in full. A command that only listed or explained has no trailer; its last list is its answer. A command that was parked or needs a decision ends with a trailer whose headline says so (`✻ parked at step agent-review · resume with`), followed by the command on its own accent line. A parked trailer is drawn in the `warn` role: it is neither a success nor a failure. The count is the number of finished blocks the run drew; the record is the run directory of the latest step log. @status:spec/done",
+      "heading": "Every command that did work ends with one trailer block: `✻ <what happened> · <how long> · <where the record is>` — `✻ installed org.vibevm.apps/vim@9.1.0 · 3 steps · 2m 14s · log ~/.vibe/cache/app-runs/vim/2026-11-01T10-51/`. It is the one line a reader keeps: the glyph `✻` is used for nothing else, the headline is in the `ok` role on success and the `alert` role on failure (`✻ failed at build · 2m 10s · log …`), and the path is written in full. A command that only listed or explained has no trailer; its last list is its answer. The exception is a listing that sums up a registry kept in one file — `vibe agent list` and `vibe agent presets` (`#coverage`) — which closes its lists with a summary trailer in the `ok` role: the counts, and the file the rows came from written in full. A command that was parked or needs a decision ends with a trailer whose headline says so (`✻ parked at step agent-review · resume with`), followed by the command on its own accent line. A parked trailer is drawn in the `warn` role: it is neither a success nor a failure. The count is the number of finished blocks the run drew; the record is the run directory of the latest step log. @status:spec/done",
       "line": 20,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-067#trailer"
     },
@@ -176478,10 +176784,10 @@
     },
     {
       "anchor": "coverage",
-      "content_hash": "sha256:12ad2e0fe71b919ea0915eb93a9160460ddfba49a1711304135100e9baae2f30",
+      "content_hash": "sha256:d613bd787aa1be84f270f976a6b5c5677cd2f32e04cf6dcdcfccec1be2df8723",
       "doc_path": "common/PROP-067",
       "file": "vibevm/vibespecs/common/PROP-067-terminal-display-language.xml",
-      "heading": "The rules bind every human-readable output of the CLI, drawn by one module that owns the glyphs, the roles, the rule, the block, the list and the trailer: the progress renderer of PROP-060 (the panel is a stream of blocks with folds), the plan and the wizard of PROP-065, the catalog listings of PROP-059, the remap views of PROP-066, `vibe self`, `vibe list`, `vibe check`, the `init` wizard, every refusal. No command composes its own glyph, colour or separator; a command that needs a shape this document does not name amends this document first. The test that guards it is the one PROP-065 `#display` already has for the prompt theme, widened: no `console::style`, no `dialoguer` theme, no hand-written glyph, no box glyph spelled as an escape and no `vibe: warning:`-style prefix outside the one module. Covered by name: project `vibe install`, `update`, `uninstall`, `cache import`, `cache clean`, `vibe init`, `vibe self install|update|reinstall|use|rollback|import|remove|gc` and the foreground `vibe app start` end with a trailer (the last one on stderr, because stdout belongs to the program that ran); `vibe self ls|current` is a measured list with `[active]` and `[running]` state words and the source execution under a rule of its own; `vibe check` draws its findings as blocks under a rule and closes with a summary, because it only reports; every question — `init`, the install confirmation, `reinstall`, `mcp`, `self remove|gc|source`, `skill`, `clean`, `cache clean`, `doc shell`, `update`, `uninstall`, the remap consent and uninstall questions, the app wizard — is asked through the one set of prompt helpers of the module and collapses to `✓ <prompt>  <value>`; a remark that is neither a step nor a warning is a dim hint line, and consecutive hints touch. `vibe tree`'s plain view keeps its tree of `├`/`└` (its rows are all known before the first is written), drawn with branches the module owns and spelled in ASCII where the terminal reports no vocabulary. Two deliberate exemptions: the full-screen interfaces `vibe tree` and `vibe prefs` draw their own screens, outside a line-oriented terminal's blocks, and are exempt from the guard; and the PROP-060 progress rows of `vibe self` (`[done] Activating installed version [715ms]` and their kin) stay the progress renderer's, the trailer following them as the last block. Under `--quiet` a project command keeps the one summary line its quiet contract already prints (`vibe install: …`, `vibe update: …`, `vibe uninstall: …`, `vibe init: …`, `vibe cache …: …`), because scripts read those lines; the trailer is the human mode's. Test modules name the glyphs they assert. @status:spec/done",
+      "heading": "The rules bind every human-readable output of the CLI, drawn by one module that owns the glyphs, the roles, the rule, the block, the list and the trailer: the progress renderer of PROP-060 (the panel is a stream of blocks with folds), the plan and the wizard of PROP-065, the catalog listings of PROP-059, the remap views of PROP-066, `vibe self`, `vibe list`, `vibe check`, the `init` wizard, every refusal. No command composes its own glyph, colour or separator; a command that needs a shape this document does not name amends this document first. The test that guards it is the one PROP-065 `#display` already has for the prompt theme, widened: no `console::style`, no `dialoguer` theme, no hand-written glyph, no box glyph spelled as an escape and no `vibe: warning:`-style prefix outside the one module. Covered by name: project `vibe install`, `update`, `uninstall`, `cache import`, `cache clean`, `vibe init`, `vibe self install|update|reinstall|use|rollback|import|remove|gc` and the foreground `vibe app start` end with a trailer (the last one on stderr, because stdout belongs to the program that ran); `vibe self ls|current` is a measured list with `[active]` and `[running]` state words and the source execution under a rule of its own; `vibe agent list` is measured lists under the rules `launchers`, `agent definitions`, `trust` and (when present) `external registration`, and `vibe agent presets` one measured list, each closed by a summary trailer (`✻ 7 launchers · 0 agent definitions · default none · <path in full>`, `✻ 8 agent presets · placeholders …`) that is also the one line both print under `--quiet`; `vibe check` draws its findings as blocks under a rule and closes with a summary, because it only reports; every question — `init`, the install confirmation, `reinstall`, `mcp`, `self remove|gc|source`, `skill`, `clean`, `cache clean`, `doc shell`, `update`, `uninstall`, the remap consent and uninstall questions, the app wizard — is asked through the one set of prompt helpers of the module and collapses to `✓ <prompt>  <value>`; a remark that is neither a step nor a warning is a dim hint line, and consecutive hints touch. `vibe tree`'s plain view keeps its tree of `├`/`└` (its rows are all known before the first is written), drawn with branches the module owns and spelled in ASCII where the terminal reports no vocabulary. Two deliberate exemptions: the full-screen interfaces `vibe tree` and `vibe prefs` draw their own screens, outside a line-oriented terminal's blocks, and are exempt from the guard; and the PROP-060 progress rows of `vibe self` (`[done] Activating installed version [715ms]` and their kin) stay the progress renderer's, the trailer following them as the last block. Under `--quiet` a project command keeps the one summary line its quiet contract already prints (`vibe install: …`, `vibe update: …`, `vibe uninstall: …`, `vibe init: …`, `vibe cache …: …`), because scripts read those lines; the trailer is the human mode's. Test modules name the glyphs they assert. @status:spec/done",
       "line": 23,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-067#coverage"
     },
@@ -176514,10 +176820,10 @@
     },
     {
       "anchor": "changelog",
-      "content_hash": "sha256:c2d5d69d3611c5dddc8cc158d5bac9b0cff471294b401899577e42bb0a16c884",
+      "content_hash": "sha256:c5b5c28831d36a55aef0465d7b64130fe6b3e42b8082577c0d84284e7d14303b",
       "doc_path": "common/PROP-067",
       "file": "vibevm/vibespecs/common/PROP-067-terminal-display-language.xml",
-      "heading": "2026-11-01 — drafted from the owner's screenshots of Claude Code's conversation view: block, gutter, fold, collapse, list, children, heading, meta, palette, inline, question, refusal, trailer, width, plain, coverage; example screens for `install -g` and a refusal. 2026-11-01 — built: `output::language` owns the glyphs, roles, rule, block, list, meta, trailer and refusal; the panel, the plan, the wizard, refusals, warnings and the app and remap listings draw through it. Amended where building found the draft silent or impossible: the failed block's order (`#collapse`), a finished child's glyph (`#children`), a redirected stream's width and metadata that does not fit (`#width`), the accent hue (`#palette`), library error prose (`#inline`), the legend's place (`#question`), how a refusal is read from an error (`#refusal`), the parked trailer's role and the count (`#trailer`), `--plain` and the child stream (`#plain`), the full-screen interfaces (`#coverage`), `vibe app list -g` (`#acceptance`). 2026-11-01 — coverage finished: trailers on project `install`, `update`, `uninstall`, `cache import|clean`, `init`, the `vibe self` verbs and the foreground `app start`; `vibe self ls|current` as a measured list; `vibe check` findings as blocks; every question through the module's prompt helpers, the remap consent as a `#question` block (PROP-066 `#consent`); `vibe tree`'s plain branches from the module; the remaining `warning:` and `note:` prefixes as `!` diagnostics and dim hints; the guard widened to box-glyph escapes and the `vibe:` prefix; a decided body stays above its collapsed answer (`#question`). Named in `#coverage`: the two exemptions (the full-screen interfaces, the PROP-060 progress rows of `vibe self`), the trailer of a foreground program on stderr, and quiet mode's one summary line kept for project commands. @status:spec/done",
+      "heading": "2026-11-01 — drafted from the owner's screenshots of Claude Code's conversation view: block, gutter, fold, collapse, list, children, heading, meta, palette, inline, question, refusal, trailer, width, plain, coverage; example screens for `install -g` and a refusal. 2026-11-01 — built: `output::language` owns the glyphs, roles, rule, block, list, meta, trailer and refusal; the panel, the plan, the wizard, refusals, warnings and the app and remap listings draw through it. Amended where building found the draft silent or impossible: the failed block's order (`#collapse`), a finished child's glyph (`#children`), a redirected stream's width and metadata that does not fit (`#width`), the accent hue (`#palette`), library error prose (`#inline`), the legend's place (`#question`), how a refusal is read from an error (`#refusal`), the parked trailer's role and the count (`#trailer`), `--plain` and the child stream (`#plain`), the full-screen interfaces (`#coverage`), `vibe app list -g` (`#acceptance`). 2026-11-01 — coverage finished: trailers on project `install`, `update`, `uninstall`, `cache import|clean`, `init`, the `vibe self` verbs and the foreground `app start`; `vibe self ls|current` as a measured list; `vibe check` findings as blocks; every question through the module's prompt helpers, the remap consent as a `#question` block (PROP-066 `#consent`); `vibe tree`'s plain branches from the module; the remaining `warning:` and `note:` prefixes as `!` diagnostics and dim hints; the guard widened to box-glyph escapes and the `vibe:` prefix; a decided body stays above its collapsed answer (`#question`). Named in `#coverage`: the two exemptions (the full-screen interfaces, the PROP-060 progress rows of `vibe self`), the trailer of a foreground program on stderr, and quiet mode's one summary line kept for project commands. 2026-11-23 — `vibe agent list|presets` drawn as measured lists closed by a summary trailer with the registry path in full; `#trailer` names that exception and `#coverage` the two commands. Their `--quiet` line is now that trailer (before: `N agent definition(s) in <path>; default: x` and `N agent preset(s); placeholders …`). @status:spec/done",
       "line": 64,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-067#changelog"
     },
@@ -179868,7 +180174,7 @@
     },
     {
       "anchor": "files",
-      "content_hash": "sha256:a691ff5343a3076c829d2562a13102f4eafd7cf45e531023ec2d441294c15aa1",
+      "content_hash": "sha256:e46e30876aecc5cc46a92cb42687a46a7b3602e6bfc7e99319dbbd9d353f64b6",
       "doc_path": "common/PROP-076",
       "file": "vibevm/vibespecs/common/PROP-076-system-prompt-prefix.xml",
       "heading": "3. Authored and generated files",
@@ -179904,10 +180210,10 @@
     },
     {
       "anchor": "SYS-OPT-IN",
-      "content_hash": "sha256:ad2cf7c6eb1205b62c7da861665b0b6aad06441392a173730296764caf83bd82",
+      "content_hash": "sha256:c98c57ddc91aed3be4e2b3ee7389d0c272c83a1b437d2db55c414164b99cce63",
       "doc_path": "common/PROP-076",
       "file": "vibevm/vibespecs/common/PROP-076-system-prompt-prefix.xml",
-      "heading": "**Decided 2026-11-10 — presence of the template is the opt-in, and nothing else is.** No template, no generation and no change whatever to the node's boot: `vibe install` behaves byte-for-byte as it does today, which is what makes this feature free for every project that does not want it. A present but empty template means \"opt in with no frame of my own\" and generates a prefix of the entrypoint export plus the lane. `vibe init` may **offer** to create a template; no installation ever creates, overwrites or deletes an authored template. Opting out is deleting the template, which removes only the two provably-owned generated outputs (`#SYS-REMOVAL-AND-CONFLICT`). @status:impl/done",
+      "heading": "**Decided 2026-11-10 — presence of the template is the opt-in, and nothing else is.** No template, no generation and no change whatever to the node's boot: `vibe install` behaves byte-for-byte as it does today, which is what makes this feature free for every project that does not want it. A present but empty template means \"opt in with no frame of my own\" and generates a prefix of the entrypoint export plus the lane. `vibe init` may **offer** to create a template; no installation ever creates, overwrites or deletes an authored template. Opting out is deleting the template, which removes only the two provably-owned generated outputs (`#SYS-REMOVAL-AND-CONFLICT`). `vibe prompt init` writes a minimal template that names the project and builds nothing; it refuses when the template exists, and every message that reports a project as not opted in names it. @status:impl/done",
       "line": 20,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#SYS-OPT-IN"
     },
