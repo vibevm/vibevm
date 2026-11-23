@@ -144,6 +144,10 @@ impl PlainRenderer {
         if headline.command {
             return;
         }
+        if matches!(end, End::Finished) && !logs.first_sight(&headline) {
+            logs.discard_task_log(id);
+            return;
+        }
         self.line(&row(collapsed(&headline, id, width, end, elapsed, logs)));
     }
 

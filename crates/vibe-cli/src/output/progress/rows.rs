@@ -9,11 +9,15 @@ use std::path::{Path, PathBuf};
 use std::sync::Mutex;
 use std::sync::atomic::{AtomicUsize, Ordering};
 use std::time::Duration;
+use vibe_core::progress::TaskId;
 
 use crate::output::language::{self, Glyph, Line, Meta, Role, paint};
 
 /// How many lines of a failed step's log stay as its evidence.
 pub(super) const EVIDENCE: usize = 30;
+
+/// A child's identity within its immediate parent's rows for one run.
+type ChildRowKey = (Option<TaskId>, usize, String, String);
 
 /// What this run's rows have recorded: the step logs by step id, so a
 /// finished row can count its lines and a failed one keep its tail, and how
@@ -24,9 +28,28 @@ pub(super) struct StepLogs {
     tasks: Mutex<BTreeMap<vibe_core::progress::TaskId, PathBuf>>,
     rows: AtomicUsize,
     last: Mutex<Option<PathBuf>>,
+    seen: Mutex<std::collections::BTreeSet<ChildRowKey>>,
 }
 
 impl StepLogs {
+    /// Whether this child headline is new in this run; root rows always draw.
+    pub(super) fn first_sight(&self, headline: &Headline) -> bool {
+        if headline.depth == 0 {
+            return true;
+        }
+        self.seen
+            .lock()
+            .map(|mut seen| {
+                seen.insert((
+                    headline.parent_id,
+                    headline.depth,
+                    headline.name.clone(),
+                    headline.title.clone(),
+                ))
+            })
+            .unwrap_or(true)
+    }
+
     pub(super) fn note(&self, step: &str, log: &Path) {
         if let Ok(mut logs) = self.logs.lock() {
             logs.insert(step.to_owned(), log.to_owned());
@@ -34,6 +57,22 @@ impl StepLogs {
         if let Ok(mut last) = self.last.lock() {
             *last = Some(log.to_owned());
         }
+    }
+
+    /// Forget only a completed task's log mapping when its row is suppressed.
+    pub(super) fn discard_task_log(&self, id: TaskId) {
+        if let Ok(mut tasks) = self.tasks.lock() {
+            tasks.remove(&id);
+        }
+    }
+
+    /// Whether a task-specific log mapping remains registered.
+    #[cfg(test)]
+    pub(super) fn has_task_log(&self, id: TaskId) -> bool {
+        self.tasks
+            .lock()
+            .map(|tasks| tasks.contains_key(&id))
+            .unwrap_or(false)
     }
 
     pub(super) fn note_task(&self, id: vibe_core::progress::TaskId, log: &Path) {
@@ -72,6 +111,8 @@ impl StepLogs {
 /// What one task is, as the renderers draw it.
 #[derive(Debug, Clone)]
 pub(super) struct Headline {
+    /// The immediate parent task, independent of its visible depth.
+    pub(super) parent_id: Option<TaskId>,
     /// The step id or the label's first column — never cut.
     pub(super) name: String,
     /// The rest of the label.
@@ -98,6 +139,7 @@ impl Headline {
         // Each part is made terminal-safe on its own: the sanitiser folds
         // the two spaces that separate them.
         Self {
+            parent_id: None,
             name: super::sanitize(name),
             title: super::sanitize(title),
             depth,

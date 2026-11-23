@@ -99,7 +99,8 @@ impl Shapes {
             Some(parent) => parent.depth + 1,
             None => 0,
         };
-        let headline = Headline::parse(label, depth, command);
+        let mut headline = Headline::parse(label, depth, command);
+        headline.parent_id = parent;
         if depth == 0 && !command {
             self.name_width = self.name_width.max(headline.name.chars().count());
         }
@@ -429,6 +430,10 @@ impl InteractiveRenderer {
         if task.headline.command {
             return;
         }
+        if matches!(end, End::Finished) && !logs.first_sight(&task.headline) {
+            logs.discard_task_log(id);
+            return;
+        }
         let text = row(collapsed(&task.headline, id, width, end, elapsed, logs));
         if !self.stderr {
             let _ = self.multi.println(text);
@@ -447,3 +452,7 @@ impl InteractiveRenderer {
 #[cfg(test)]
 #[path = "progress/tests.rs"]
 mod tests;
+
+#[cfg(test)]
+#[path = "progress/tests_collapse.rs"]
+mod tests_collapse;
