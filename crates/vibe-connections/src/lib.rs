@@ -5,44 +5,8 @@ use serde::{Deserialize, Serialize};
 use std::{collections::BTreeMap, path::Path};
 use vibe_secrets::{Expected, SecretId};
 
-/// The connection-metadata layer's one error enum. Every message is fixed
-/// text: it names the violated rule and a fix, never an endpoint or a value.
-///
-/// ```
-/// use vibe_connections::{Error, Metadata};
-///
-/// // Plain http is admitted only towards a loopback address.
-/// let metadata = Metadata {
-///     label: "Synthetic".into(),
-///     endpoint: "http://provider.invalid/v1".into(),
-///     api_kind: "openai-chat-completions".into(),
-///     default_model: "synthetic".into(),
-/// };
-/// let error = metadata.validate().unwrap_err();
-/// assert!(matches!(error, Error::Invalid));
-/// assert!(error.to_string().contains("TS-KEYRING-CONSUMER"));
-/// assert!(!error.to_string().contains("provider.invalid"));
-/// ```
-#[derive(Debug, thiserror::Error)]
-#[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-000#TS-KEYRING-CONSUMER")]
-pub enum Error {
-    #[error(
-        "invalid nonsecret connection metadata \
-         (violates spec://org.vibevm.core/vibevm/common/PROP-000#TS-KEYRING-CONSUMER; \
-          fix: give a bounded label and model, a supported API kind and harness, and an \
-          https or loopback http endpoint without credentials, query or fragment)"
-    )]
-    Invalid,
-    #[error(
-        "connection metadata serialization failed \
-         (violates spec://org.vibevm.core/vibevm/common/PROP-000#TS-KEYRING-CONSUMER; \
-          fix: remove the connection whose stored nonsecret metadata is missing or \
-          unreadable and add it again)"
-    )]
-    Metadata,
-    #[error(transparent)]
-    Store(#[from] vibe_secrets::Error),
-}
+mod error;
+pub use error::Error;
 /// The nonsecret description of one AI connection. The credential is not
 /// here: a connection points at a keyring item by reference.
 ///
@@ -551,7 +515,7 @@ impl Store {
         expected: u64,
     ) -> Result<BindingObservation, Error> {
         if binding.is_some() && !vibe_secrets::reference_binding_supported(harness) {
-            return Err(Error::Invalid);
+            return Err(Error::BindingUnsupported);
         }
         if let Some(binding) = &binding {
             let target = match binding {
@@ -565,7 +529,7 @@ impl Store {
             if let Some(target) = target
                 && !metadata_supports(harness, &self.details(&target)?.metadata.api_kind)
             {
-                return Err(Error::Invalid);
+                return Err(Error::BindingIncompatible);
             }
         }
         self.0.bind_reference("ai", harness, binding, expected)?;
