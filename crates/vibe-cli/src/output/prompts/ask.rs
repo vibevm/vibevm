@@ -11,6 +11,8 @@ use dialoguer::{Input, MultiSelect, Select};
 use specmark::spec;
 use vibe_app::Choice;
 
+use crate::output::language::{Glyph, GlyphSet, PromptGlyphs, Role};
+
 use super::{ItemStyles, answer, answers, column_items, key_legend, space_before_question};
 
 /// A yes-or-no question, drawn as a list of two rows with the marker on
@@ -55,8 +57,18 @@ pub(crate) fn confirm_then(
 /// The two rows of a yes-or-no question, `yes` first; the answer line is
 /// left to the caller.
 fn yes_or_no(prompt: &str, default: bool) -> dialoguer::Result<bool> {
+    yes_or_no_on(prompt, default, &console::Term::stderr())
+}
+
+/// The confirmation policy over the same terminal boundary as optional lists.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-067#question")]
+pub(super) fn yes_or_no_on(
+    prompt: &str,
+    default: bool,
+    term: &impl ListTerminal,
+) -> dialoguer::Result<bool> {
     let rows = ["yes".to_owned(), "no".to_owned()];
-    match list_question(prompt, &rows, yes_or_no_row(default))? {
+    match list_question(prompt, &rows, yes_or_no_row(default), term)? {
         Some(index) => Ok(index == 0),
         None => Err(std::io::Error::new(
             std::io::ErrorKind::Interrupted,
@@ -72,15 +84,51 @@ pub(super) fn yes_or_no_row(default: bool) -> usize {
     if default { 0 } else { 1 }
 }
 
+/// One row of a list question: the prompt cursor of `set` in the accent
+/// role on the selected row, a blank of the same width on the others.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-067#question")]
+pub(super) fn list_row(row: &str, active: bool, set: GlyphSet) -> String {
+    if active {
+        let cursor = super::role_style(Role::Accent).apply_to(PromptGlyphs::in_set(set).active);
+        format!("{cursor} {row}")
+    } else {
+        format!("  {row}")
+    }
+}
+
+/// The line an escaped interruptible choice leaves: the skipped glyph, the
+/// padded question name and `kept unchanged`, all dim.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-067#question")]
+pub(super) fn kept_line(prompt: &str, set: GlyphSet) -> String {
+    let dim = super::role_style(Role::Dim);
+    format!(
+        "{} {}  {}",
+        dim.apply_to(Glyph::Skipped.in_set(set)),
+        dim.apply_to(super::answer_name(prompt)),
+        dim.apply_to("kept unchanged")
+    )
+}
+
+/// The default a text question draws: none for an empty one, so the prompt
+/// reads `? Endpoint ›` rather than `? Endpoint () ›`.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-067#question")]
+pub(super) fn shown_default(default: &str) -> Option<&str> {
+    (!default.is_empty()).then_some(default)
+}
+
 /// A line of text, with the value it starts from.
 pub(crate) fn text(prompt: &str, default: &str, allow_empty: bool) -> dialoguer::Result<String> {
     space_before_question();
-    Input::<String>::with_theme(&super::prompt_theme())
+    let theme = super::prompt_theme();
+    let value = Input::<String>::with_theme(&theme)
         .with_prompt(prompt)
         .default(default.to_owned())
-        .show_default(true)
+        .show_default(shown_default(default).is_some())
+        .report(false)
         .allow_empty(allow_empty)
-        .interact_text()
+        .interact_text()?;
+    answer(&theme, prompt, &value);
+    Ok(value)
 }
 
 /// One row of `choices`, which the reader must pick: escape is not an
@@ -106,13 +154,26 @@ pub(crate) fn choose_opt_interruptible(
     choices: &[Choice],
     default: usize,
 ) -> dialoguer::Result<Option<usize>> {
+    choose_opt_interruptible_on(prompt, choices, default, &console::Term::stderr())
+}
+
+/// The optional-selector policy, including its kept line, over a terminal.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-067#question")]
+pub(super) fn choose_opt_interruptible_on(
+    prompt: &str,
+    choices: &[Choice],
+    default: usize,
+    term: &impl ListTerminal,
+) -> dialoguer::Result<Option<usize>> {
     if choices.is_empty() {
         return Err(std::io::Error::other("answer choices are empty").into());
     }
     let labels: Vec<String> = choices.iter().map(Choice::label).collect();
-    let picked = list_question(prompt, &labels, default)?;
+    let picked = list_question(prompt, &labels, default, term)?;
     if let Some(index) = picked {
         answer(&super::prompt_theme(), prompt, &labels[index]);
+    } else {
+        term.write_line(&kept_line(prompt, GlyphSet::detect()))?;
     }
     Ok(picked)
 }
@@ -144,8 +205,55 @@ pub(super) fn list_key(key: &console::Key, selected: usize, len: usize) -> ListK
     }
 }
 
+/// Key, draw and cursor operations at the list-question boundary.
+/// The real terminal delegates directly to console; tests apply these same
+/// operations to an in-memory screen before supplying a key.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-067#question")]
+pub(super) trait ListTerminal {
+    /// Whether raw key input is available.
+    fn is_term(&self) -> bool;
+    /// Width used to count wrapped question lines.
+    fn columns(&self) -> usize;
+    /// Draw the shared spacing and legend before the erasable question.
+    fn prepare(&self);
+    /// Write a line and advance the cursor.
+    fn write_line(&self, line: &str) -> std::io::Result<()>;
+    /// Erase preceding rows and return the cursor to their start.
+    fn clear_last_lines(&self, lines: usize) -> std::io::Result<()>;
+    /// Make every drawn row visible before reading a key.
+    fn flush(&self) -> std::io::Result<()>;
+    /// Read a raw key, restoring terminal mode before returning.
+    fn read_key_raw(&self) -> std::io::Result<console::Key>;
+}
+
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-067#question")]
+impl ListTerminal for console::Term {
+    fn is_term(&self) -> bool {
+        console::Term::is_term(self)
+    }
+    fn columns(&self) -> usize {
+        usize::from(self.size().1).max(1)
+    }
+    fn prepare(&self) {
+        space_before_question();
+        key_legend();
+    }
+    fn write_line(&self, line: &str) -> std::io::Result<()> {
+        console::Term::write_line(self, line)
+    }
+    fn clear_last_lines(&self, lines: usize) -> std::io::Result<()> {
+        console::Term::clear_last_lines(self, lines)
+    }
+    fn flush(&self) -> std::io::Result<()> {
+        console::Term::flush(self)
+    }
+    fn read_key_raw(&self) -> std::io::Result<console::Key> {
+        console::Term::read_key_raw(self)
+    }
+}
+
 /// The one list loop behind [`choose_opt_interruptible`] and [`confirm`]:
-/// the prompt line, the rows with `›` on the active one, and on a choice
+/// the prompt line, the rows with an accent cursor on the active one, and on a choice
 /// the whole block erased so the caller's `✓` line stands alone. `None`
 /// is escape or Ctrl-C.
 #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-067#question")]
@@ -153,22 +261,20 @@ fn list_question(
     prompt: &str,
     rows: &[String],
     default: usize,
+    term: &impl ListTerminal,
 ) -> dialoguer::Result<Option<usize>> {
-    use console::Term;
-    let term = Term::stderr();
     if !term.is_term() {
         // console answers every key with `Unknown` off a terminal, which
         // would redraw forever; refuse as `dialoguer` does.
         return Err(std::io::Error::new(std::io::ErrorKind::NotConnected, "not a terminal").into());
     }
     let theme = super::prompt_theme();
-    space_before_question();
-    key_legend();
+    term.prepare();
     let mut label = String::new();
     dialoguer::theme::Theme::format_prompt(&theme, &mut label, prompt)
         .map_err(std::io::Error::other)?;
     term.write_line(&label)?;
-    let columns = usize::from(term.size().1).max(1);
+    let columns = term.columns().max(1);
     let label_lines = console::measure_text_width(&label).div_ceil(columns).max(1);
     let mut selected = default.min(rows.len() - 1);
     let mut drawn = false;
@@ -177,11 +283,7 @@ fn list_question(
             term.clear_last_lines(rows.len())?;
         }
         for (index, row) in rows.iter().enumerate() {
-            term.write_line(&format!(
-                "{} {}",
-                if index == selected { "›" } else { " " },
-                row
-            ))?;
+            term.write_line(&list_row(row, index == selected, GlyphSet::detect()))?;
         }
         term.flush()?;
         drawn = true;
@@ -194,7 +296,10 @@ fn list_question(
                 term.clear_last_lines(rows.len() + label_lines)?;
                 return Ok(Some(chosen));
             }
-            ListKey::Cancel => return Ok(None),
+            ListKey::Cancel => {
+                term.clear_last_lines(rows.len() + label_lines)?;
+                return Ok(None);
+            }
             ListKey::Ignore => {}
         }
     }

@@ -359,3 +359,191 @@ fn the_yes_or_no_marker_starts_on_the_default() {
     assert_eq!(yes_or_no_row(true), 0, "default yes marks the `yes` row");
     assert_eq!(yes_or_no_row(false), 1, "default no marks the `no` row");
 }
+
+#[test]
+#[specmark::verifies("spec://org.vibevm.core/vibevm/common/PROP-067#question")]
+fn list_rows_mark_the_selected_row_with_the_prompt_cursor() {
+    use super::ask::list_row;
+    let plain = |text: String| console::strip_ansi_codes(&text).into_owned();
+    assert_eq!(plain(list_row("yes", true, GlyphSet::Unicode)), "❯ yes");
+    assert_eq!(plain(list_row("yes", true, GlyphSet::Ascii)), "> yes");
+    assert_eq!(plain(list_row("no", false, GlyphSet::Unicode)), "  no");
+}
+
+#[test]
+#[specmark::verifies("spec://org.vibevm.core/vibevm/common/PROP-067#question")]
+fn kept_line_uses_the_active_glyph_set() {
+    use super::ask::kept_line;
+    let plain = |text: String| console::strip_ansi_codes(&text).into_owned();
+    assert_eq!(
+        plain(kept_line("API kind", GlyphSet::Unicode)),
+        "○ API kind   kept unchanged"
+    );
+    assert_eq!(
+        plain(kept_line("API kind", GlyphSet::Ascii)),
+        "- API kind   kept unchanged"
+    );
+}
+
+#[test]
+#[specmark::verifies("spec://org.vibevm.core/vibevm/common/PROP-067#question")]
+fn an_empty_text_default_is_not_drawn() {
+    use super::ask::shown_default;
+    let theme = themed(GlyphSet::Unicode);
+    let mut empty = String::new();
+    theme
+        .format_input_prompt(&mut empty, "Endpoint", shown_default(""))
+        .unwrap();
+    assert_eq!(console::strip_ansi_codes(&empty), "? Endpoint › ");
+    let mut given = String::new();
+    theme
+        .format_input_prompt(&mut given, "Label", shown_default("Default"))
+        .unwrap();
+    assert_eq!(console::strip_ansi_codes(&given), "? Label (Default) › ");
+}
+
+/// A virtual screen applying line writes and console's move-up/erase-line
+/// operations. Keys are released only after a flushed, complete choice block.
+#[derive(Default)]
+struct QuestionScreen {
+    rows: Vec<String>,
+    cursor: usize,
+    flushed: bool,
+    reads: usize,
+    clears: Vec<usize>,
+}
+
+/// Controlled terminal for the production list loop and cancellation policies.
+struct QuestionTerminal {
+    screen: std::cell::RefCell<QuestionScreen>,
+    choices: Vec<String>,
+}
+
+impl QuestionTerminal {
+    /// Require the entire block, including its last choice, before a key.
+    fn new(choices: &[&str]) -> Self {
+        Self {
+            screen: std::cell::RefCell::new(QuestionScreen::default()),
+            choices: choices.iter().map(|row| (*row).to_owned()).collect(),
+        }
+    }
+
+    /// Visible nonempty screen rows after applying every cursor/erase operation.
+    fn visible(&self) -> Vec<String> {
+        self.screen
+            .borrow()
+            .rows
+            .iter()
+            .filter(|row| !row.is_empty())
+            .cloned()
+            .collect()
+    }
+}
+
+#[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-067#question")]
+impl super::ask::ListTerminal for QuestionTerminal {
+    fn is_term(&self) -> bool {
+        true
+    }
+    fn columns(&self) -> usize {
+        120
+    }
+    fn prepare(&self) {}
+    fn write_line(&self, line: &str) -> std::io::Result<()> {
+        let mut screen = self.screen.borrow_mut();
+        let cursor = screen.cursor;
+        screen.rows.resize_with(cursor + 1, String::new);
+        screen.rows[cursor] = console::strip_ansi_codes(line).into_owned();
+        screen.cursor += 1;
+        screen.flushed = false;
+        Ok(())
+    }
+    fn clear_last_lines(&self, lines: usize) -> std::io::Result<()> {
+        let mut screen = self.screen.borrow_mut();
+        screen.clears.push(lines);
+        // Each console operation moves up, erases a row and resets its column.
+        for _ in 0..lines {
+            screen.cursor = screen.cursor.checked_sub(1).expect("erase above screen");
+            let cursor = screen.cursor;
+            screen.rows[cursor].clear();
+        }
+        screen.flushed = false;
+        Ok(())
+    }
+    fn flush(&self) -> std::io::Result<()> {
+        self.screen.borrow_mut().flushed = true;
+        Ok(())
+    }
+    fn read_key_raw(&self) -> std::io::Result<console::Key> {
+        let mut screen = self.screen.borrow_mut();
+        assert!(screen.flushed, "key requested before drawing was flushed");
+        assert_eq!(screen.cursor, self.choices.len() + 1);
+        assert!(screen.rows[0].starts_with("? "));
+        for (index, choice) in self.choices.iter().enumerate() {
+            let selected = if screen.reads == 0 { 0 } else { 1 };
+            let prefix = if index == selected {
+                PromptGlyphs::detect().active
+            } else {
+                " "
+            };
+            assert_eq!(screen.rows[index + 1], format!("{prefix} {choice}"));
+        }
+        let key = match screen.reads {
+            0 => console::Key::ArrowDown,
+            1 => console::Key::Escape,
+            _ => panic!("read beyond Escape"),
+        };
+        screen.reads += 1;
+        Ok(key)
+    }
+}
+
+#[test]
+#[specmark::verifies("spec://org.vibevm.core/vibevm/common/PROP-067#question")]
+fn interruptible_select_collapses_on_escape() {
+    let labels = [
+        "Keep native settings unchanged",
+        "Write connection",
+        "Other choice",
+    ];
+    let term = QuestionTerminal::new(&labels);
+    let choices = super::ask::named(&labels);
+    let picked =
+        super::ask::choose_opt_interruptible_on("Native settings", &choices, 0, &term).unwrap();
+    assert_eq!(picked, None);
+    assert_eq!(
+        term.visible(),
+        [format!(
+            "{} Native settings  kept unchanged",
+            Glyph::Skipped.text()
+        )]
+    );
+    let screen = term.screen.borrow();
+    assert_eq!(
+        screen.reads, 2,
+        "Escape followed the fully drawn last choice"
+    );
+    assert_eq!(
+        screen.clears,
+        [3, 4],
+        "redraw rows, then erase the whole block"
+    );
+    assert_eq!(screen.cursor, 1, "one kept row, no question or options");
+}
+
+#[test]
+#[specmark::verifies("spec://org.vibevm.core/vibevm/common/PROP-067#question")]
+fn yes_no_escape_interrupts_without_kept_line() {
+    let term = QuestionTerminal::new(&["yes", "no"]);
+    let error = super::ask::yes_or_no_on("Remove settings?", true, &term).unwrap_err();
+    let dialoguer::Error::IO(error) = error;
+    assert_eq!(error.kind(), std::io::ErrorKind::Interrupted);
+    assert!(
+        term.visible().is_empty(),
+        "confirmation must not leave a kept line"
+    );
+    let screen = term.screen.borrow();
+    assert_eq!(screen.reads, 2);
+    assert_eq!(screen.clears, [2, 3]);
+    assert_eq!(screen.cursor, 0);
+}
