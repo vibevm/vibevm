@@ -91,6 +91,14 @@ pub fn run(ctx: &output::Context, args: AiArgs, cancel: &CancellationToken) -> R
             let launcher = super::agent::launchers::resolve(&settings_root, &config, &name)?;
             let harness = launcher.kind.as_str();
             cancel.checkpoint()?;
+            let change = action.as_ref().map(|(mode, connection, _)| match mode {
+                AiBindingMode::Native => format!("restored native binding for {harness}"),
+                AiBindingMode::InheritDefault => format!("bound {harness} to inherit-default"),
+                AiBindingMode::Connection => format!(
+                    "bound {harness} to connection {}",
+                    connection.as_deref().unwrap_or_default()
+                ),
+            });
             let result = if let Some((mode, connection, expected)) = action {
                 let binding = match (mode, connection) {
                     (AiBindingMode::Native, None) => None,
@@ -102,7 +110,9 @@ pub fn run(ctx: &output::Context, args: AiArgs, cancel: &CancellationToken) -> R
                             connection: parse_id(id)?,
                         })
                     }
-                    _ => bail!("binding mode requires exactly its applicable connection argument"),
+                    _ => bail!(
+                        "binding_arguments_invalid: binding mode and connection argument do not match (violates spec://org.vibevm.core/vibevm/common/PROP-000#TS-KEYRING-CONSUMER; fix: pass --connection ID only with --mode connection; omit --connection for native and inherit-default)"
+                    ),
                 };
                 store
                     .set_binding(harness, binding, expected)
@@ -114,6 +124,11 @@ pub fn run(ctx: &output::Context, args: AiArgs, cancel: &CancellationToken) -> R
                 serde_json::json!({"protocol":"vibe-ai-binding/1","ok":true,"binding":result});
             if ctx.is_json() {
                 ctx.emit_json(&report)?;
+            } else if let Some(change) = change {
+                ctx.trailer(&format!(
+                    "{change} · store revision {}",
+                    result.store_revision
+                ));
             } else if ctx.is_quiet() {
                 ctx.summary(&view::binding_quiet(&result));
             } else {
@@ -123,8 +138,14 @@ pub fn run(ctx: &output::Context, args: AiArgs, cancel: &CancellationToken) -> R
         }
     };
     cancel.checkpoint()?;
+    let mut action = None;
     let selected = match command {
         ConnectionCommand::Default { command } => {
+            let change = match &command {
+                ConnectionDefaultCommand::Show => None,
+                ConnectionDefaultCommand::Set { .. } => Some(true),
+                ConnectionDefaultCommand::Clear { .. } => Some(false),
+            };
             let selection = match command {
                 ConnectionDefaultCommand::Show => store.default_selection()?,
                 ConnectionDefaultCommand::Set { id, expect_store } => {
@@ -132,7 +153,9 @@ pub fn run(ctx: &output::Context, args: AiArgs, cancel: &CancellationToken) -> R
                 }
                 ConnectionDefaultCommand::Clear { expect_store, yes } => {
                     if !yes {
-                        bail!("clearing default connection requires explicit --yes");
+                        bail!(
+                            "consent_required: clearing the default connection needs --yes (violates spec://org.vibevm.core/vibevm/common/PROP-000#TS-KEYRING-CONSUMER; fix: `vibe ai connections default clear --expect-store {expect_store} --yes`)"
+                        );
                     }
                     store.clear_default(expect_store)?
                 }
@@ -146,7 +169,25 @@ pub fn run(ctx: &output::Context, args: AiArgs, cancel: &CancellationToken) -> R
                     .as_ref()
                     .and_then(|id| store.details(id).ok())
                     .map(|connection| connection.metadata.label);
-                if ctx.is_quiet() {
+                if let Some(set) = change {
+                    let what = if set {
+                        let id = selection
+                            .connection
+                            .as_ref()
+                            .ok_or(vibe_secrets::Error::NotFound)?
+                            .as_str();
+                        match label {
+                            Some(label) => format!("default connection set to {label} ({id})"),
+                            None => format!("default connection set to {id}"),
+                        }
+                    } else {
+                        "cleared default connection".into()
+                    };
+                    ctx.trailer(&format!(
+                        "{what} · store revision {}",
+                        selection.store_revision
+                    ));
+                } else if ctx.is_quiet() {
                     ctx.summary(&view::default_quiet(&selection, label.as_deref()));
                 } else {
                     ctx.block(&view::default_block(&selection, label.as_deref()));
@@ -165,13 +206,15 @@ pub fn run(ctx: &output::Context, args: AiArgs, cancel: &CancellationToken) -> R
         } => {
             let secret = parse_id(secret_ref)?;
             let metadata = vibe_connections::Metadata {
-                label,
+                label: label.clone(),
                 endpoint,
                 api_kind,
                 default_model,
             };
             cancel.checkpoint()?;
-            Some(store.add(metadata, &secret)?)
+            let id = store.add(metadata, &secret)?;
+            action = Some(format!("added connection {label} · {}", id.as_str()));
+            Some(id)
         }
         ConnectionCommand::Remove {
             id: raw,
@@ -186,13 +229,16 @@ pub fn run(ctx: &output::Context, args: AiArgs, cancel: &CancellationToken) -> R
             };
             if !yes {
                 bail!(
-                    "connection unbinding requires explicit --yes; it never erases the referenced secret"
+                    "consent_required: removing connection {id} needs --yes (violates spec://org.vibevm.core/vibevm/common/PROP-000#TS-KEYRING-CONSUMER; fix: `vibe ai connections remove {id} --expect-store {expect_store} --expect-current {} --yes`): unbinding does not erase the referenced secret",
+                    expected.current_revision.as_str(),
+                    id = id.as_str()
                 );
             }
             cancel.checkpoint()?;
             store
                 .remove(&id, &expected)
                 .map_err(|error| diagnostics::removal(&store, &id, &expected, error))?;
+            action = Some(format!("removed connection {}", id.as_str()));
             None
         }
     };
@@ -208,6 +254,11 @@ pub fn run(ctx: &output::Context, args: AiArgs, cancel: &CancellationToken) -> R
     let report = serde_json::json!({"protocol":"vibe-ai-connections/1","ok":true,"store_revision":snapshot.store_revision,"items":snapshot.items});
     if ctx.is_json() {
         ctx.emit_json(&report)?;
+    } else if let Some(action) = action {
+        ctx.trailer(&format!(
+            "{action} · store revision {}",
+            snapshot.store_revision
+        ));
     } else if ctx.is_quiet() {
         ctx.summary(&view::connections_count(
             snapshot.items.len(),
