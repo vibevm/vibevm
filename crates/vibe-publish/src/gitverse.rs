@@ -12,7 +12,18 @@
 //! - `POST /orgs/{org}/repos` — create repo in an org.
 //!   - 201 → created.
 //!   - 409 → already exists (race condition).
-//!   - 401 / 403 / 404 mapped per PROP-002 §2.10.
+//!   - 401 / 403 / 404 / 422 mapped per PROP-002 §2.10.
+//!
+//! Cooperative control. Both endpoints run through the retained
+//! [`ManagedHttpClient`](vibe_registry::http_admission::ManagedHttpClient),
+//! exactly as the GitHub adapter does, so a
+//! [`CancellationToken`](vibe_core::cancellation::CancellationToken)
+//! carrying control stops the publish *before* a request is started and
+//! aborts one already in flight
+//! ([PROP-073 `#PROJECT-COOPERATIVE-STOP`](../../../vibevm/vibespecs/common/PROP-073.xml)).
+//! The uncontrolled [`RepoCreator::repo_exists`] / [`RepoCreator::create_repo`]
+//! entry points are the same code paths driven with a default (no-control)
+//! token, so the two can never drift apart.
 //!
 //! Authentication: `Authorization: Bearer <token>` per the GitVerse
 //! docs. The `Accept` header MUST be
@@ -59,7 +70,7 @@ pub struct GitverseRepoCreator {
     /// not to escalate scope.
     expected_org: String,
     token: Token,
-    client: reqwest::blocking::Client,
+    client: vibe_registry::http_admission::ManagedHttpClient,
 }
 
 impl GitverseRepoCreator {
@@ -84,18 +95,12 @@ impl GitverseRepoCreator {
         api_base: &str,
         host_name: &str,
     ) -> Result<Self, PublishError> {
-        let builder = vibe_net::http::route(
-            reqwest::blocking::Client::builder().timeout(Duration::from_secs(30)),
-            vibe_net::http::Ambient::Inherit,
-        )
-        .map_err(|e| PublishError::HttpFailed {
-            host: host_name.to_string(),
-            message: format!("constructing HTTP client: {e}"),
-        })?;
-        let client = builder.build().map_err(|e| PublishError::HttpFailed {
-            host: host_name.to_string(),
-            message: format!("constructing HTTP client: {e}"),
-        })?;
+        let client =
+            vibe_registry::http_admission::ManagedHttpClient::legacy(Duration::from_secs(30))
+                .map_err(|e| PublishError::HttpFailed {
+                    host: host_name.to_string(),
+                    message: format!("constructing HTTP client: {e}"),
+                })?;
         Ok(GitverseRepoCreator {
             api_base: api_base.trim_end_matches('/').to_string(),
             host_name: host_name.to_string(),
@@ -151,14 +156,99 @@ impl RepoCreator for GitverseRepoCreator {
     }
 
     fn repo_exists(&self, org: &ValidatedOrg, name: &str) -> Result<bool, PublishError> {
+        self.repo_exists_with_control(
+            org,
+            name,
+            &vibe_core::cancellation::CancellationToken::default(),
+        )
+    }
+
+    fn create_repo(
+        &self,
+        org: &ValidatedOrg,
+        name: &str,
+        opts: &CreateOpts,
+    ) -> Result<RepoInfo, PublishError> {
+        self.create_repo_with_control(
+            org,
+            name,
+            opts,
+            &vibe_core::cancellation::CancellationToken::default(),
+        )
+    }
+
+    fn repo_exists_controlled(
+        &self,
+        org: &ValidatedOrg,
+        name: &str,
+        token: &vibe_core::cancellation::CancellationToken,
+    ) -> Result<bool, PublishError> {
+        self.repo_exists_with_control(org, name, token)
+    }
+
+    fn create_repo_controlled(
+        &self,
+        org: &ValidatedOrg,
+        name: &str,
+        opts: &CreateOpts,
+        token: &vibe_core::cancellation::CancellationToken,
+    ) -> Result<RepoInfo, PublishError> {
+        self.create_repo_with_control(org, name, opts, token)
+    }
+}
+
+impl GitverseRepoCreator {
+    /// One cancellable GitVerse request: the adapter's two required
+    /// headers, an optional JSON body, and the owner's stop control.
+    /// Mirrors the GitHub adapter's helper so both hosts refuse, abort
+    /// and classify transport failures identically.
+    fn request_controlled(
+        &self,
+        method: reqwest::Method,
+        url: &str,
+        body: Option<Vec<u8>>,
+        token: &vibe_core::cancellation::CancellationToken,
+    ) -> Result<vibe_registry::http_admission::ManagedResponse, PublishError> {
+        let mut headers = reqwest::header::HeaderMap::new();
+        let invalid = |_: reqwest::header::InvalidHeaderValue| PublishError::HttpFailed {
+            host: self.host_name.clone(),
+            message: "invalid publisher request header".into(),
+        };
+        headers.insert(
+            reqwest::header::AUTHORIZATION,
+            self.auth_header().parse().map_err(invalid)?,
+        );
+        headers.insert(
+            reqwest::header::ACCEPT,
+            GITVERSE_ACCEPT.parse().map_err(invalid)?,
+        );
+        if body.is_some() {
+            headers.insert(
+                reqwest::header::CONTENT_TYPE,
+                reqwest::header::HeaderValue::from_static("application/json"),
+            );
+        }
+        self.client
+            .execute_legacy(method, url, headers, body, token)
+            .map_err(|error| match error {
+                vibe_registry::http_admission::HttpGetError::Transport(error) => {
+                    classify_send_error(error, &self.host_name)
+                }
+                error => PublishError::HttpFailed {
+                    host: self.host_name.clone(),
+                    message: error.to_string(),
+                },
+            })
+    }
+
+    fn repo_exists_with_control(
+        &self,
+        org: &ValidatedOrg,
+        name: &str,
+        cancellation: &vibe_core::cancellation::CancellationToken,
+    ) -> Result<bool, PublishError> {
         let url = format!("{}/repos/{}/{}", self.api_base, org.as_str(), name);
-        let res = self
-            .client
-            .get(&url)
-            .header(reqwest::header::AUTHORIZATION, self.auth_header())
-            .header(reqwest::header::ACCEPT, GITVERSE_ACCEPT)
-            .send()
-            .map_err(|e| classify_send_error(e, &self.host_name))?;
+        let res = self.request_controlled(reqwest::Method::GET, &url, None, cancellation)?;
         let status = res.status();
         if status.is_success() {
             return Ok(true);
@@ -180,11 +270,12 @@ impl RepoCreator for GitverseRepoCreator {
         }
     }
 
-    fn create_repo(
+    fn create_repo_with_control(
         &self,
         org: &ValidatedOrg,
         name: &str,
         opts: &CreateOpts,
+        cancellation: &vibe_core::cancellation::CancellationToken,
     ) -> Result<RepoInfo, PublishError> {
         let url = format!("{}/orgs/{}/repos", self.api_base, org.as_str());
         let body = CreateRepoBody {
@@ -197,19 +288,27 @@ impl RepoCreator for GitverseRepoCreator {
             auto_init: false,
             website: opts.homepage.as_deref(),
         };
-        let res = self
-            .client
-            .post(&url)
-            .header(reqwest::header::AUTHORIZATION, self.auth_header())
-            .header(reqwest::header::ACCEPT, GITVERSE_ACCEPT)
-            .json(&body)
-            .send()
-            .map_err(|e| classify_send_error(e, &self.host_name))?;
+        let bytes = serde_json::to_vec(&body).map_err(|error| PublishError::HttpFailed {
+            host: self.host_name.clone(),
+            message: error.to_string(),
+        })?;
+        let res =
+            self.request_controlled(reqwest::Method::POST, &url, Some(bytes), cancellation)?;
         let status = res.status();
         if status.is_success() {
-            let parsed: RepoResponse = res.json().map_err(|e| PublishError::HttpFailed {
-                host: self.host_name.clone(),
-                message: format!("parsing create-repo response: {e}"),
+            let parsed: RepoResponse = res.json().map_err(|error| {
+                if cancellation.acknowledged() {
+                    PublishError::Cancelled {
+                        repository_creation: "completed".into(),
+                        release_push: "not-started".into(),
+                        reason: "create-repo accepted; response metadata interrupted".into(),
+                    }
+                } else {
+                    PublishError::HttpFailed {
+                        host: self.host_name.clone(),
+                        message: format!("parsing create-repo response: {error}"),
+                    }
+                }
             })?;
             // Prefer SSH for clone URL since contributors typically have
             // SSH keys configured against the host. Fall back to HTTPS if
@@ -278,3 +377,7 @@ fn classify_send_error(e: reqwest::Error, host: &str) -> PublishError {
         message: e.to_string(),
     }
 }
+
+#[cfg(test)]
+#[path = "gitverse/tests.rs"]
+mod tests;
