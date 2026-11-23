@@ -46,6 +46,8 @@ impl World {
             .stdin(Stdio::null())
             .output()
             .unwrap();
+        assert_no_keys(&String::from_utf8_lossy(&output.stdout));
+        assert_no_keys(&String::from_utf8_lossy(&output.stderr));
         assert!(
             output.status.success(),
             "{}",
@@ -68,6 +70,8 @@ impl World {
         }
         drop(input);
         let output = child.wait_with_output().unwrap();
+        assert_no_keys(&String::from_utf8_lossy(&output.stdout));
+        assert_no_keys(&String::from_utf8_lossy(&output.stderr));
         assert!(
             output.status.success(),
             "{}",
@@ -86,13 +90,38 @@ impl World {
             .arg(serde_json::to_string(steps).unwrap())
             .output()
             .unwrap();
+        assert_no_keys(&String::from_utf8_lossy(&output.stdout));
+        assert_no_keys(&String::from_utf8_lossy(&output.stderr));
         assert!(
             output.status.success(),
             "{}",
             String::from_utf8_lossy(&output.stderr)
         );
-        serde_json::from_slice(&output.stdout).unwrap()
+        let report: serde_json::Value = serde_json::from_slice(&output.stdout).unwrap();
+        assert_no_keys(report["transcript"].as_str().unwrap());
+        report
     }
+}
+
+/// Snapshot only synthetic settings, comparing private bytes without printing them.
+fn settings_bytes(root: &std::path::Path) -> Vec<(PathBuf, Vec<u8>)> {
+    fn visit(root: &std::path::Path, dir: &std::path::Path, files: &mut Vec<(PathBuf, Vec<u8>)>) {
+        for entry in fs::read_dir(dir).unwrap() {
+            let path = entry.unwrap().path();
+            if path.is_dir() {
+                visit(root, &path, files);
+            } else {
+                files.push((
+                    path.strip_prefix(root).unwrap().to_owned(),
+                    fs::read(path).unwrap(),
+                ));
+            }
+        }
+    }
+    let mut files = Vec::new();
+    visit(root, root, &mut files);
+    files.sort_by(|a, b| a.0.cmp(&b.0));
+    files
 }
 
 fn agent_registry(w: &World) {
@@ -125,14 +154,15 @@ fn attended_setup_installs_selected_agent_packages_with_independent_outcomes() {
     let w = World::new();
     agent_registry(&w);
     let report = w.setup(&[
-        ("Install AI agent packages now?", "y"),
+        ("Install AI agent packages now?", "k\r"),
         ("Select agent packages to install", " \u{1b}[B \r"),
         ("Platform", "\r"),
         ("Architecture", "\r"),
-        ("Create a default AI connection now?", "n"),
+        ("Create a default AI connection now?", "\r"),
     ]);
     let transcript = report["transcript"].as_str().unwrap();
     assert_eq!(report["status"], 0, "{transcript}");
+    assert_eq!(report["terminal_restored"], true, "{transcript}");
     assert_eq!(report["sent"], 5, "{transcript}");
     assert!(
         transcript.contains("Agent package pi: installed"),
@@ -154,26 +184,40 @@ fn attended_setup_installs_selected_agent_packages_with_independent_outcomes() {
 
 const KEY: &str = "SYNTHETIC_ONBOARDING_KEY_NEVER_OUTPUT";
 
+fn assert_no_keys(text: &str) {
+    for key in [
+        KEY,
+        "SYNTHETIC_PROFILE_KEY_NEVER_OUTPUT",
+        "SYNTHETIC_OLD_KEY_NEVER_OUTPUT",
+        "SYNTHETIC_REPLACEMENT_KEY_NEVER_OUTPUT",
+    ] {
+        assert!(!text.contains(key), "synthetic protected value leaked");
+    }
+}
+
 #[test]
 fn attended_setup_without_default_creates_and_selects_connection() {
     let w = World::new();
     let key_line = format!("{KEY}\r");
+    // Enter accepts the displayed text default; typed text replaces that default.
+    // Default-no lists need k + Enter for yes, Enter alone for no.
     let report = w.setup(&[
-        ("Install AI agent packages now?", "n"),
-        ("Create a default AI connection now?", "y"),
-        ("Connection label", "\r"),
-        ("Endpoint URL", "http://127.0.0.1:32123/v1\r"),
+        ("Install AI agent packages now?", "\r"),
+        ("Create a default AI connection now?", "k\r"),
+        ("Label", "\r"),
+        ("Endpoint", "http://127.0.0.1:32123/v1\r"),
         ("API kind", "\r"),
-        ("Default model", "synthetic\r"),
+        ("Model", "synthetic\r"),
         ("API key (hidden)", key_line.as_str()),
-        ("native settings", "n"),
+        ("native settings", "\r"),
         ("Configure existing connection", "\u{1b}"),
     ]);
     let transcript = report["transcript"].as_str().unwrap();
     assert_eq!(report["status"], 0, "{transcript}");
+    assert_eq!(report["terminal_restored"], true, "{transcript}");
     assert_eq!(report["sent"], 9, "{transcript}");
     assert!(
-        transcript.contains("Default AI connection created: Default"),
+        transcript.contains("created default connection Default"),
         "{transcript}"
     );
     assert!(!transcript.contains(KEY));
@@ -195,6 +239,10 @@ fn attended_setup_without_default_creates_and_selects_connection() {
         w.json(&["ai", "connections", "default", "show"], None)["connection"],
         id.as_str()
     );
+    let index: toml::Value =
+        toml::from_str(&fs::read_to_string(w.path("settings/secrets/ai/index.toml")).unwrap())
+            .unwrap();
+    assert_eq!(index["selection"]["connection"].as_str(), Some(id.as_str()));
     let secrets = w.json(&["secrets", "list"], None);
     assert_eq!(secrets["items"].as_array().unwrap().len(), 1);
     assert_eq!(secrets["items"][0]["kind"], "api-key");
@@ -209,21 +257,22 @@ fn attended_setup_shows_profile_key_hint_and_proposes_profile_endpoint() {
     )
     .unwrap();
     let report = w.setup(&[
-        ("Install AI agent packages now?", "n"),
-        ("Create a default AI connection now?", "y"),
-        ("Connection label", "\r"),
-        ("Endpoint URL", "\r"),
+        ("Install AI agent packages now?", "\r"),
+        ("Create a default AI connection now?", "k\r"),
+        ("Label", "\r"),
+        ("Endpoint", "\r"),
         ("API kind", "\r"),
-        ("Default model", "synthetic\r"),
+        ("Model", "synthetic\r"),
         ("API key (hidden)", "SYNTHETIC_PROFILE_KEY_NEVER_OUTPUT\r"),
-        ("native settings", "n"),
+        ("native settings", "\r"),
         ("Configure existing connection", "\u{1b}"),
     ]);
     let transcript = report["transcript"].as_str().unwrap();
     assert_eq!(report["status"], 0, "{transcript}");
+    assert_eq!(report["terminal_restored"], true, "{transcript}");
     assert_eq!(report["sent"], 9, "{transcript}");
     assert!(
-        transcript.contains("Get an API key: Example AI Hub (https://ai-hub.example.com/keys)"),
+        transcript.contains("get an API key: Example AI Hub · https://ai-hub.example.com/keys"),
         "{transcript}"
     );
     assert!(!transcript.contains("SYNTHETIC_PROFILE_KEY_NEVER_OUTPUT"));
@@ -243,14 +292,21 @@ fn attended_setup_shows_profile_key_hint_and_proposes_profile_endpoint() {
 #[test]
 fn attended_setup_without_default_declined_writes_nothing() {
     let w = World::new();
+    let before = settings_bytes(&w.path("settings"));
     let report = w.setup(&[
-        ("Install AI agent packages now?", "n"),
-        ("Create a default AI connection now?", "n"),
+        ("Install AI agent packages now?", "\r"),
+        ("Create a default AI connection now?", "\r"),
     ]);
     let transcript = report["transcript"].as_str().unwrap();
     assert_eq!(report["status"], 0, "{transcript}");
+    assert_eq!(report["terminal_restored"], true, "{transcript}");
+    assert_eq!(report["sent"], 2, "{transcript}");
     assert!(
-        transcript.contains("AI setup skipped; connections and bindings unchanged."),
+        settings_bytes(&w.path("settings")) == before,
+        "decline changed settings bytes"
+    );
+    assert!(
+        transcript.contains("ai setup skipped; connections and bindings unchanged"),
         "{transcript}"
     );
     assert_eq!(
@@ -353,16 +409,17 @@ fn attended_setup_with_default_reuses_it_without_writes() {
     let old = seed_default(&w);
     let before = w.json(&["ai", "connections", "list"], None)["store_revision"].clone();
     let report = w.setup(&[
-        ("Install AI agent packages now?", "n"),
-        ("Reuse this default connection?", "\r"),
-        ("native settings", "n"),
+        ("Install AI agent packages now?", "\r"),
+        ("Reuse the default connection?", "\r"),
+        ("native settings", "\r"),
         ("Configure existing connection", "\u{1b}"),
     ]);
     let transcript = report["transcript"].as_str().unwrap();
     assert_eq!(report["status"], 0, "{transcript}");
+    assert_eq!(report["terminal_restored"], true, "{transcript}");
     assert_eq!(report["sent"], 4, "{transcript}");
     assert!(
-        transcript.contains("Default AI connection: Old"),
+        transcript.contains("default connection Old · "),
         "{transcript}"
     );
     assert_eq!(
@@ -387,24 +444,25 @@ fn attended_setup_with_default_replaced_default_only_keeps_explicit_qwen() {
     let w = World::new();
     let old = seed_default(&w);
     let report = w.setup(&[
-        ("Install AI agent packages now?", "n"),
-        ("Reuse this default connection?", "n"),
-        ("Replace the default connection?", "y"),
-        ("Connection label", "New\r"),
-        ("Endpoint URL", "http://127.0.0.1:32124/v1\r"),
+        ("Install AI agent packages now?", "\r"),
+        ("Reuse the default connection?", "j\r"),
+        ("Replace the default connection?", "k\r"),
+        ("Label", "New\r"),
+        ("Endpoint", "http://127.0.0.1:32124/v1\r"),
         ("API kind", "\r"),
-        ("Default model", "synthetic\r"),
+        ("Model", "synthetic\r"),
         (
             "API key (hidden)",
             "SYNTHETIC_REPLACEMENT_KEY_NEVER_OUTPUT\r",
         ),
         ("Default update scope", "\r"),
         ("Review default and managed overrides", "\u{1b}[B\r"),
-        ("native settings", "n"),
+        ("native settings", "\r"),
         ("Configure existing connection", "\u{1b}"),
     ]);
     let transcript = report["transcript"].as_str().unwrap();
     assert_eq!(report["status"], 0, "{transcript}");
+    assert_eq!(report["terminal_restored"], true, "{transcript}");
     assert_eq!(report["sent"], 12, "{transcript}");
     assert!(!transcript.contains("SYNTHETIC_REPLACEMENT_KEY_NEVER_OUTPUT"));
     let new = w.json(&["ai", "connections", "default", "show"], None)["connection"]
