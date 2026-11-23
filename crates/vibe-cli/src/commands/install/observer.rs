@@ -32,6 +32,8 @@ pub(super) struct HumanTrailer {
     pub root: Option<String>,
     /// The parent of logs/ from the first successfully recorded step.
     pub evidence_directory: Option<PathBuf>,
+    /// Direct install emits this line only after its adapter has completed.
+    pub defer: bool,
 }
 
 /// Shared only between this run's observer and final renderer.

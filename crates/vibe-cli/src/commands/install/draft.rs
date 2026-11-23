@@ -96,6 +96,16 @@ impl InstallDraft {
         }
     }
 
+    /// Defer only a successful ordinary human trailer until adapter completion.
+    pub(crate) fn defer_trailer(&mut self) -> impl FnOnce(&output::Context) + use<> {
+        self.human.defer = true;
+        let progress = self.progress.clone();
+        let summary = self.world_summary;
+        let mut human = self.human.clone();
+        human.defer = false;
+        move |ctx| report::render_human_progress(ctx, &progress, summary, "", &human)
+    }
+
     /// The generated root, with the member attached — pure, total, and the
     /// ONLY place an install report is built.
     ///
@@ -166,7 +176,9 @@ impl InstallDraft {
             return Ok(());
         }
         render_weak_lines(ctx, &report);
-        report::render_human_progress(ctx, &progress, world_summary, quiet_suffix, &human);
+        if !human.defer {
+            report::render_human_progress(ctx, &progress, world_summary, quiet_suffix, &human);
+        }
         Ok(())
     }
 }

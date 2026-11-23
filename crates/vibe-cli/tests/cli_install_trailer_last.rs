@@ -187,6 +187,27 @@ fn explicit_root_without_evidence_has_no_log_suffix() {
 }
 
 #[test]
+fn traced_human_install_trailer_follows_trace_and_root() {
+    let user = UserScratch::new();
+    let home = tempfile::tempdir().unwrap();
+    let project = tempfile::tempdir().unwrap();
+    init(&user, home.path(), project.path());
+    let output = command(
+        &user,
+        home.path(),
+        &[
+            "install",
+            "--offline",
+            "--trace-compile",
+            "--path",
+            project.path().to_str().unwrap(),
+        ],
+    );
+    let last = trailer(&output);
+    assert!(!last.contains("log"), "{last}");
+}
+
+#[test]
 fn multiple_explicit_roots_have_no_single_root_attribution() {
     let user = UserScratch::new();
     let home = tempfile::tempdir().unwrap();

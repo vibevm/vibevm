@@ -360,6 +360,55 @@ fn the_executor_folds_a_notice_into_the_root_it_emits() {
     );
 }
 
+/// A real adapter sink refusal must decide the root's first terminal event.
+#[test]
+fn install_report_refusal_emits_one_failed_terminal_and_no_success() {
+    use std::sync::{Arc, Mutex};
+    use vibe_core::progress::{Progress, ProgressEvent, ProgressEventKind, ProgressObserver};
+    #[derive(Default)]
+    struct Events(Mutex<Vec<ProgressEventKind>>);
+    impl ProgressObserver for Events {
+        fn observe(&self, event: ProgressEvent) {
+            self.0.lock().unwrap().push(event.kind);
+        }
+    }
+    struct Refusing;
+    impl DiagnosticSink for Refusing {
+        fn diagnostic(&mut self, _: &str) {}
+        fn render_root(
+            &mut self,
+            _: &output::Context,
+            _: RegisteredReportDraft,
+            _: Option<CompileTraceReport>,
+            _: &str,
+        ) -> Result<()> {
+            anyhow::bail!("controlled report sink refusal")
+        }
+    }
+    let events = Arc::new(Events::default());
+    let root = Progress::new(events.clone()).task("Installing packages");
+    let mut finalized = failed(None, Vec::new());
+    finalized.original_error = None;
+    let error = render_install_with_sink(&json_ctx(), finalized, &root, &mut Refusing)
+        .expect_err("the actual adapter's sink refused");
+    assert_eq!(error.to_string(), "controlled report sink refusal");
+    drop(root);
+    let events = events.0.lock().unwrap();
+    assert_eq!(
+        events
+            .iter()
+            .filter(|e| matches!(e, ProgressEventKind::Failed { .. }))
+            .count(),
+        1
+    );
+    assert!(!events.iter().any(|e| matches!(
+        e,
+        ProgressEventKind::Finished { .. }
+            | ProgressEventKind::Skipped { .. }
+            | ProgressEventKind::Stopped
+    )));
+}
+
 /// The end-to-end shape still returns the original error.
 #[test]
 fn a_silent_json_failure_still_returns_its_original_error() {

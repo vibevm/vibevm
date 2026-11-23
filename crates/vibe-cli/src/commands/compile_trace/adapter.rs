@@ -74,6 +74,53 @@ pub(crate) fn render_finalized(
     render_finalized_with_sink(ctx, finalized, &mut CtxSink(ctx))
 }
 
+impl RegisteredReportDraft {
+    /// Direct install keeps its root active through fallible report emission,
+    /// then closes it before the deferred successful human trailer.
+    pub(crate) fn render_install_finalized(
+        ctx: &output::Context,
+        finalized: FinalizedCommand<Self>,
+        overall: &vibe_core::progress::ProgressTask,
+    ) -> Result<()> {
+        render_install_with_sink(ctx, finalized, overall, &mut CtxSink(ctx))
+    }
+}
+
+/// Production install completion seam, including the real adapter result.
+fn render_install_with_sink(
+    ctx: &output::Context,
+    mut finalized: FinalizedCommand<RegisteredReportDraft>,
+    overall: &vibe_core::progress::ProgressTask,
+    sink: &mut dyn DiagnosticSink,
+) -> Result<()> {
+    let deferred = match &mut finalized.report {
+        RegisteredReportDraft::Install(draft)
+            if finalized.original_error.is_none()
+                && finalized.emit_report
+                && draft.ok
+                && draft.delegation.is_none()
+                && !ctx.is_json()
+                && !ctx.is_quiet() =>
+        {
+            Some(draft.defer_trailer())
+        }
+        _ => None,
+    };
+    let parked = finalized.plan == PlanDisposition::Discard;
+    let result = render_finalized_with_sink(ctx, finalized, sink);
+    match &result {
+        Err(_) => overall.fail("package installation failed"),
+        Ok(()) if parked => overall.skip("waiting for the hosting agent"),
+        Ok(()) => overall.finish(),
+    }
+    if result.is_ok()
+        && let Some(trailer) = deferred
+    {
+        trailer(ctx);
+    }
+    result
+}
+
 /// The whole adapter, with its diagnostic channel injected.
 pub(crate) fn render_finalized_with_sink(
     ctx: &output::Context,

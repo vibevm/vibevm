@@ -40,9 +40,7 @@ use vibe_core::user_config::UserConfig;
 use vibe_lifecycle::{LifecycleLease, RunMetadata};
 
 use crate::cli::InstallArgs;
-use crate::commands::compile_trace::{
-    self, CommandExit, PlanDisposition, RegisteredReportDraft, TracePreparation, render_finalized,
-};
+use crate::commands::compile_trace::{self, CommandExit, RegisteredReportDraft, TracePreparation};
 use crate::output;
 
 use super::confirm::{ConfirmationScope, UserProjectAction};
@@ -307,22 +305,10 @@ fn run_observed(
     // Consumes the owner: finishes the index, drops the last handle (and with
     // it the cooperative lock), and returns the member to attach.
     let finalized = compile_trace::finalize(trace, exit, &now);
-    let parked = finalized.plan == PlanDisposition::Discard;
-    let command_failed = finalized.original_error.is_some();
-    // The root block closes before the final human trailer, while the lease
-    // owner remains alive through final rendering as before.
-    if command_failed {
-        overall.fail("package installation failed");
-    } else if parked {
-        overall.skip("waiting for the hosting agent");
-    } else {
-        overall.finish();
-    }
-    let rendered = render_finalized(ctx, finalized);
+    // The adapter chooses one terminal event from its real result, then
+    // prints the deferred human trailer. Keep the lease through both.
+    let rendered = RegisteredReportDraft::render_install_finalized(ctx, finalized, overall);
     drop(lease_owner);
-    if rendered.is_err() && !command_failed {
-        overall.fail("package installation failed");
-    }
     rendered
 }
 
