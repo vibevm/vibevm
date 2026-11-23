@@ -519,6 +519,24 @@ impl ProgressTask {
             });
         }
     }
+
+    /// Marks the task stopped: the operation was interrupted before this
+    /// task could finish. The same outcome dropping an active task reports,
+    /// for a task whose handle is shared and so is not dropped here.
+    ///
+    /// ```
+    /// use vibe_core::progress::Progress;
+    ///
+    /// let task = Progress::default().task("wait");
+    /// task.stop();
+    /// task.finish(); // a later outcome is ignored
+    /// ```
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-060#OBSERVATION")]
+    pub fn stop(&self) {
+        if let Some(state) = &self.state {
+            state.terminate(ProgressEventKind::Stopped);
+        }
+    }
 }
 
 impl Drop for ProgressTask {

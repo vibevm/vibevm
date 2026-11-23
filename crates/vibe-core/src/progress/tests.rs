@@ -70,6 +70,67 @@ fn dropped_task_is_stopped_and_never_finished() {
 }
 
 #[test]
+fn explicit_stop_emits_stopped_once() {
+    let observer = Arc::new(RecordingObserver::default());
+    let task = Arc::new(Progress::new(observer.clone()).task("wait"));
+    let shared = Arc::clone(&task);
+    task.stop();
+    shared.stop();
+    task.fail("too late");
+    shared.finish();
+    shared.skip("too late");
+    drop(task);
+    drop(shared);
+    let events = observer.0.lock().expect("events lock");
+    let stopped = events
+        .iter()
+        .filter(|event| matches!(event.kind, ProgressEventKind::Stopped))
+        .count();
+    assert_eq!(stopped, 1);
+    assert!(!events.iter().any(|event| matches!(
+        event.kind,
+        ProgressEventKind::Failed { .. }
+            | ProgressEventKind::Finished { .. }
+            | ProgressEventKind::Skipped { .. }
+    )));
+    assert_eq!(events.len(), 2);
+}
+
+#[test]
+fn explicit_stop_preserves_an_existing_terminal_outcome() {
+    for outcome in [
+        ProgressEventKind::Finished { transfer: None },
+        ProgressEventKind::Failed {
+            message: "failed first".to_string(),
+            transfer: None,
+        },
+        ProgressEventKind::Skipped {
+            reason: "skipped first".to_string(),
+        },
+    ] {
+        let observer = Arc::new(RecordingObserver::default());
+        let task = Progress::new(observer.clone()).task("already ended");
+        match &outcome {
+            ProgressEventKind::Finished { .. } => task.finish(),
+            ProgressEventKind::Failed { message, .. } => task.fail(message),
+            ProgressEventKind::Skipped { reason } => task.skip(reason),
+            _ => unreachable!(),
+        }
+        task.stop();
+        task.stop();
+        drop(task);
+        let events = observer.0.lock().expect("events lock");
+        assert_eq!(events.len(), 2);
+        assert_eq!(events[1].kind, outcome);
+        assert!(
+            !events
+                .iter()
+                .any(|event| matches!(event.kind, ProgressEventKind::Stopped))
+        );
+    }
+}
+
+#[test]
 fn terminal_outcome_is_emitted_once_and_suppresses_late_updates() {
     let observer = Arc::new(RecordingObserver::default());
     let task = Progress::new(observer.clone()).task("one outcome");
