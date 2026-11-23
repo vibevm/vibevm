@@ -250,7 +250,7 @@ fn run_with_scope_selected(
         crate::commands::app::display::LogMode::Tail => crate::cli::AppLogArg::Tail,
         crate::commands::app::display::LogMode::Quiet => crate::cli::AppLogArg::Quiet,
     });
-    let result = display.around(&scoped, || {
+    display.around(&scoped, || {
         run_observed(
             &scoped,
             args,
@@ -260,11 +260,7 @@ fn run_with_scope_selected(
             scope,
             selected,
         )
-    });
-    if result.is_err() {
-        overall.fail("package installation failed");
-    }
-    result
+    })
 }
 
 fn run_observed(
@@ -282,7 +278,21 @@ fn run_observed(
         metadata,
         selection,
         trace,
-    } = prepare_direct_install(ctx, &args, root_offline)?;
+    } = match prepare_direct_install(ctx, &args, root_offline) {
+        Ok(prepared) => prepared,
+        Err(error) => {
+            if error
+                .chain()
+                .any(|cause| cause.is::<vibe_core::cancellation::Cancelled>())
+                || crate::exit_code::is_cancelled(&error)
+            {
+                overall.stop();
+            } else {
+                overall.fail("package installation failed");
+            }
+            return Err(error);
+        }
+    };
     // The boundary's OWNER share: the executed region consumes its own clones
     // into the run and the callback, while this one lives to the end of the
     // command — through the final report and the trace finalisation.

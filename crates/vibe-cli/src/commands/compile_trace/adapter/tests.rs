@@ -424,3 +424,157 @@ fn a_silent_json_failure_still_returns_its_original_error() {
     let error = render_finalized(&json_ctx(), finalized).expect_err("failed");
     assert!(error.downcast_ref::<Sentinel>().is_some());
 }
+
+#[derive(Default)]
+struct InstallEvents(std::sync::Mutex<Vec<vibe_core::progress::ProgressEventKind>>);
+impl vibe_core::progress::ProgressObserver for InstallEvents {
+    fn observe(&self, event: vibe_core::progress::ProgressEvent) {
+        self.0.lock().unwrap().push(event.kind);
+    }
+}
+
+fn install_terminal(
+    finalized: FinalizedCommand<RegisteredReportDraft>,
+    sink: &mut dyn DiagnosticSink,
+) -> (Result<()>, Vec<vibe_core::progress::ProgressEventKind>) {
+    use vibe_core::progress::{Progress, ProgressEventKind};
+    let ctx = json_ctx();
+    // A requested stop is deliberately present even in the non-stop cases.
+    ctx.progress().cancellation().cancel();
+    let events = std::sync::Arc::new(InstallEvents::default());
+    let root = Progress::new(events.clone()).task("Installing packages");
+    let result = render_install_with_sink(&ctx, finalized, &root, sink);
+    drop(root);
+    let terminal = events
+        .0
+        .lock()
+        .unwrap()
+        .iter()
+        .filter(|event| {
+            matches!(
+                event,
+                ProgressEventKind::Stopped
+                    | ProgressEventKind::Failed { .. }
+                    | ProgressEventKind::Finished { .. }
+                    | ProgressEventKind::Skipped { .. }
+            )
+        })
+        .cloned()
+        .collect();
+    (result, terminal)
+}
+
+#[test]
+fn install_checkpoint_cancellation_stops_once_and_preserves_original_error() {
+    let token = vibe_core::cancellation::CancellationToken::new();
+    token.cancel();
+    let mut finalized = failed(None, Vec::new());
+    finalized.original_error =
+        Some(anyhow::Error::new(token.checkpoint().unwrap_err()).context("installing"));
+    let (result, terminal) = install_terminal(finalized, &mut Captured::default());
+    assert!(
+        result
+            .unwrap_err()
+            .downcast_ref::<vibe_core::cancellation::Cancelled>()
+            .is_some()
+    );
+    assert!(matches!(
+        terminal.as_slice(),
+        [vibe_core::progress::ProgressEventKind::Stopped]
+    ));
+}
+
+#[test]
+fn install_measured_interruption_with_untyped_cause_stops_once() {
+    let mut finalized = failed(None, Vec::new());
+    finalized.original_error = Some(anyhow::anyhow!("opaque original handler cause"));
+    let RegisteredReportDraft::Install(draft) = &mut finalized.report else {
+        panic!("install")
+    };
+    draft.contributions.push(
+        serde_json::from_value(serde_json::json!({
+            "key": "current-step", "phase": "install", "point": "slot:pre-install",
+            "handler": "script", "provider": "@vibe/current", "tier": "local",
+            "status": "interrupted"
+        }))
+        .unwrap(),
+    );
+    let (result, terminal) = install_terminal(finalized, &mut Captured::default());
+    assert_eq!(
+        result.unwrap_err().to_string(),
+        "opaque original handler cause"
+    );
+    assert!(matches!(
+        terminal.as_slice(),
+        [vibe_core::progress::ProgressEventKind::Stopped]
+    ));
+}
+
+#[test]
+fn install_unrelated_failure_under_requested_stop_remains_failed() {
+    let (result, terminal) = install_terminal(failed(None, Vec::new()), &mut Captured::default());
+    assert!(result.unwrap_err().downcast_ref::<Sentinel>().is_some());
+    assert!(matches!(
+        terminal.as_slice(),
+        [vibe_core::progress::ProgressEventKind::Failed { .. }]
+    ));
+}
+
+#[test]
+fn install_sink_only_refusal_under_requested_stop_remains_failed() {
+    struct Refusing;
+    impl DiagnosticSink for Refusing {
+        fn diagnostic(&mut self, _: &str) {}
+        fn render_root(
+            &mut self,
+            _: &output::Context,
+            _: RegisteredReportDraft,
+            _: Option<CompileTraceReport>,
+            _: &str,
+        ) -> Result<()> {
+            anyhow::bail!("controlled sink refusal")
+        }
+    }
+    let mut finalized = failed(None, Vec::new());
+    finalized.original_error = None;
+    let (result, terminal) = install_terminal(finalized, &mut Refusing);
+    assert_eq!(result.unwrap_err().to_string(), "controlled sink refusal");
+    assert!(matches!(
+        terminal.as_slice(),
+        [vibe_core::progress::ProgressEventKind::Failed { .. }]
+    ));
+}
+
+#[test]
+fn install_success_and_park_under_requested_stop_are_not_stopped() {
+    for parked in [false, true] {
+        let mut finalized = failed(None, Vec::new());
+        finalized.original_error = None;
+        let RegisteredReportDraft::Install(draft) = &mut finalized.report else {
+            panic!("install")
+        };
+        draft.ok = true;
+        if parked {
+            finalized.plan = PlanDisposition::Discard;
+            draft.delegation = Some(vibe_wire::generated::install_report::InstallDelegation {
+                resume: "vibe install --resume".into(),
+                run_id: "0".repeat(32),
+                tasks: Vec::new(),
+            });
+        }
+        let (result, terminal) = install_terminal(finalized, &mut Captured::default());
+        result.unwrap();
+        assert_eq!(terminal.len(), 1);
+        assert!(if parked {
+            matches!(
+                terminal[0],
+                vibe_core::progress::ProgressEventKind::Skipped { .. }
+            )
+        } else {
+            matches!(
+                terminal[0],
+                vibe_core::progress::ProgressEventKind::Finished { .. }
+            )
+        });
+    }
+}
