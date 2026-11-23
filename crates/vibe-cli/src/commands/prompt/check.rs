@@ -10,6 +10,7 @@ use vibe_workspace::system_prompt::{
 };
 
 use crate::output;
+use crate::output::language::{Block, Cell, Glyph, List, Meta, Row};
 
 use super::Selected;
 
@@ -38,57 +39,72 @@ pub(crate) fn run(
     if answer.verdict.is_equal() {
         return Ok(());
     }
-    bail!(
-        "the system prompt of `{}` is {}: {} — run `{}`",
+    bail!("{}", refusal_message(&answer))
+}
+
+fn refusal_message(answer: &PromptCheck) -> String {
+    let verdict = answer.verdict.as_str();
+    let mut message = format!(
+        "prompt_{verdict}: the system prompt of {} is {} (violates spec://org.vibevm.core/vibevm/common/PROP-076#SYS-READ-ONLY-CHECK; fix: `{}`)",
         answer.node_rel,
-        answer.verdict.as_str(),
-        answer.verdict.reasons().join("; "),
+        verdict.replace('_', " "),
         answer.remedy()
-    )
+    );
+    let reasons = answer.verdict.reasons();
+    if !reasons.is_empty() {
+        message.push_str(": ");
+        message.push_str(&reasons.join("; "));
+    }
+    message
 }
 
 fn print_text(ctx: &output::Context, answer: &PromptCheck) {
     if !answer.opted_in {
-        ctx.summary(&format!(
-            "system prompt: {} — `{}` has not opted in (no authored `{}`); run `vibe prompt init` \
-             to opt in",
-            answer.verdict.as_str(),
-            answer.node_rel,
-            vibe_workspace::path_to_slash(&vibe_core::layout::current_boot_system_template())
-        ));
+        let template =
+            vibe_workspace::path_to_slash(&vibe_core::layout::current_boot_system_template());
+        ctx.block(
+            &Block::new(Glyph::Skipped, "system prompt  not opted in")
+                .with_meta(vec![Meta::note(format!("no {template}"))])
+                .render(),
+        );
+        ctx.hint("vibe prompt init opts this project in");
         return;
     }
-    ctx.summary(&format!(
-        "system prompt: {} — `{}`",
-        answer.verdict.as_str(),
-        answer.node_rel
-    ));
     if ctx.is_quiet() {
+        if answer.verdict.is_equal() {
+            ctx.summary(&format!("system prompt equal · {}", answer.node_rel));
+        }
         return;
     }
-    for reason in answer.verdict.reasons() {
-        println!("  reason: {reason}");
+    if answer.verdict.is_equal() {
+        ctx.block(
+            &Block::new(Glyph::Done, "system prompt  equal")
+                .with_meta(vec![Meta::note(&answer.node_rel)])
+                .render(),
+        );
     }
-    if !answer.verdict.is_equal() {
-        println!("  fix: {}", answer.remedy());
-    }
-    for facts in [&answer.system, &answer.meta, &answer.lane] {
-        println!("  {}", artifact_line(facts));
-    }
+    ctx.block(&artifact_list([&answer.system, &answer.meta, &answer.lane]).render());
     for warning in &answer.warnings {
-        println!("  note: {warning}");
+        ctx.hint(warning);
     }
 }
 
-fn artifact_line(facts: &ArtifactFacts) -> String {
-    match (facts.len, facts.sha256.as_deref()) {
-        (Some(len), Some(sha256)) => format!(
-            "{} — {len} bytes, {}",
-            facts.path.display(),
-            &sha256[..12.min(sha256.len())]
-        ),
-        _ => format!("{} — absent", facts.path.display()),
-    }
+fn artifact_list(facts: [&ArtifactFacts; 3]) -> List {
+    let rows = facts
+        .into_iter()
+        .map(|facts| {
+            let name = facts.path.file_name().unwrap_or_default().to_string_lossy();
+            let meta = match (facts.len, facts.sha256.as_deref()) {
+                (Some(len), Some(sha256)) if facts.present => vec![
+                    Meta::note(format!("{len} bytes")),
+                    Meta::note(&sha256[..12.min(sha256.len())]),
+                ],
+                _ => vec![Meta::State("absent".into())],
+            };
+            Row::new(vec![Cell::text(name)]).meta(meta)
+        })
+        .collect();
+    List::new(rows).meta_column()
 }
 
 /// Lower one answer into its registered report.
@@ -129,3 +145,7 @@ fn artifact(part: wire::Part, facts: &ArtifactFacts) -> wire::Artifact {
         sha256: facts.sha256.clone(),
     }
 }
+
+#[cfg(test)]
+#[path = "check/tests.rs"]
+mod tests;

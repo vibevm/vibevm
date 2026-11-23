@@ -9,6 +9,7 @@ use vibe_workspace::system_prompt::{ArtifactFacts, PromptCheck, check_node_promp
 
 use crate::cli::PromptPart;
 use crate::output;
+use crate::output::language::{self, Role, paint};
 
 use super::Selected;
 
@@ -38,22 +39,29 @@ pub(crate) fn run(ctx: &output::Context, selected: &Selected, part: PromptPart) 
     // usable, so it is a warning beside the path rather than a refusal.
     if !facts.present {
         bail!(
-            "`{}` has not been generated ({}) — run `{}`",
+            "prompt_not_generated: {} has not been generated (violates spec://org.vibevm.core/vibevm/common/PROP-076#SYS-OPERATIONS-PATH-AND-FLAGS; fix: `{}`): its freshness is {}",
             facts.path.display(),
-            freshness_word(&report),
-            answer.remedy()
+            answer.remedy(),
+            freshness_word(&report)
         );
     }
     if !answer.verdict.is_equal() {
-        eprintln!(
-            "warning: `{}` is {} ({}) — run `{}`",
-            facts.path.display(),
+        ctx.block_err(&stale_warning(
+            &facts.path.file_name().unwrap_or_default().to_string_lossy(),
             answer.verdict.as_str(),
-            answer.verdict.reasons().join("; "),
-            answer.remedy()
-        );
+            &answer.verdict.reasons().join("; "),
+            &answer.remedy(),
+        ));
     }
     Ok(())
+}
+
+pub(super) fn stale_warning(file: &str, verdict: &str, reasons: &str, remedy: &str) -> String {
+    format!(
+        "{}\n  {}",
+        language::warning(&format!("{file} is {verdict}: {reasons}")),
+        paint(Role::Accent, remedy)
+    )
 }
 
 fn report(answer: &PromptCheck, part: PromptPart, facts: &ArtifactFacts) -> wire::PromptPathReport {
