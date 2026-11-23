@@ -26,11 +26,10 @@ use vibe_wire::generated::prompt_request_capture as wire;
 use vibe_workspace::system_prompt::{check_node_prompt, prepare_request};
 
 use crate::output;
+use crate::output::language::{self as display};
 
 use super::Selected;
-use super::adapter::{
-    Band, CacheDiagnostics, ProviderUsage, RequestEnvelope, Role, TOOLS_POSITION,
-};
+use super::adapter::{CacheDiagnostics, ProviderUsage, RequestEnvelope, TOOLS_POSITION};
 
 /// The protocol tag `vibe-prompt-capture/1`.
 pub(crate) const PROTOCOL: &str = "vibe-prompt-capture/1";
@@ -114,58 +113,71 @@ pub(crate) fn run(ctx: &output::Context, selected: &Selected, request: Request<'
     if ctx.is_json() {
         return ctx.emit_json(&report);
     }
-    ctx.summary(&format!(
-        "system prompt: envelope for `{}` — {} instruction block(s) in the {} role, {} tool(s) \
-         {}, {} band-T message(s), {} bytes of instructions",
-        selected.node_rel,
-        envelope.instruction_blocks.len(),
-        Role::Instruction.as_str(),
-        envelope.tools.len(),
-        TOOLS_POSITION,
-        envelope.messages.len(),
-        envelope.instruction_len()
-    ));
+    let blocks = envelope.instruction_blocks.len();
+    let tools = envelope.tools.len();
+    let messages = envelope.messages.len();
+    let block_plural = if blocks == 1 { "" } else { "s" };
+    let tool_plural = if tools == 1 { "" } else { "s" };
+    let message_plural = if messages == 1 { "" } else { "s" };
+    let breakpoints = prepared
+        .cache_boundaries
+        .iter()
+        .map(usize::to_string)
+        .collect::<Vec<_>>()
+        .join(", ");
     if ctx.is_quiet() {
+        ctx.summary(&format!("system prompt envelope for {} · {blocks} instruction block{block_plural} · {tools} tool{tool_plural} {TOOLS_POSITION} · {messages} task message{message_plural} · {} bytes of instructions · breakpoints {breakpoints}", selected.node_rel, envelope.instruction_len()));
         return Ok(());
     }
-    for block in &envelope.instruction_blocks {
-        println!(
-            "  {} {} — {} bytes at offset {}",
-            block.band.as_str(),
-            block.path,
-            block.text.len(),
-            block.offset
-        );
-    }
-    for message in &envelope.messages {
-        println!(
-            "  {} <caller's own> — {} bytes",
-            Band::Task.as_str(),
-            message.text.len()
-        );
-    }
-    println!(
-        "  cache breakpoints at {}",
-        prepared
-            .cache_boundaries
-            .iter()
-            .map(usize::to_string)
-            .collect::<Vec<_>>()
-            .join(", ")
+    ctx.block(
+        &display::Block::new(
+            display::Glyph::Done,
+            format!("system prompt  envelope for {}", selected.node_rel),
+        )
+        .with_meta(vec![
+            display::Meta::note(format!("{blocks} instruction block{block_plural}")),
+            display::Meta::note(format!("{tools} tool{tool_plural} {TOOLS_POSITION}")),
+            display::Meta::note(format!("{messages} task message{message_plural}")),
+            display::Meta::note(format!(
+                "{} bytes of instructions",
+                envelope.instruction_len()
+            )),
+            display::Meta::note(format!("breakpoints {breakpoints}")),
+        ])
+        .render(),
     );
+    let rows = envelope
+        .instruction_blocks
+        .iter()
+        .map(|block| {
+            band_row(
+                block.band.as_str(),
+                &block.path,
+                block.text.len(),
+                Some(block.offset),
+            )
+        })
+        .chain(
+            envelope
+                .messages
+                .iter()
+                .map(|message| band_row("T", "caller's own", message.text.len(), None)),
+        )
+        .collect();
+    ctx.block(&display::List::new(rows).meta_column().render());
     match &read {
-        Some(Read::Diagnostics(diagnostics)) => println!(
-            "  provider usage ({}): write {}, read {}, uncached {}",
+        Some(Read::Diagnostics(diagnostics)) => ctx.hint(&format!(
+            "provider usage ({}): write {}, read {}, uncached {}",
             diagnostics.source(),
             reported(diagnostics.write_tokens()),
             reported(diagnostics.read_tokens()),
             reported(diagnostics.uncached_tokens())
-        ),
-        Some(Read::NoCounters(names)) => println!(
-            "  provider usage: the record carries {} and no cache counter this build knows, so \
+        )),
+        Some(Read::NoCounters(names)) => ctx.hint(&format!(
+            "provider usage: the record carries {} and no cache counter this build knows, so \
              none are reported — absence is not zero",
             names.join(", ")
-        ),
+        )),
         None => {}
     }
     Ok(())
@@ -225,4 +237,41 @@ fn truncate(value: usize) -> u32 {
 
 fn truncate64(value: u64) -> u32 {
     u32::try_from(value).unwrap_or(u32::MAX)
+}
+
+/// Keep instruction offsets separate from the caller's task-message bytes.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-076#SYS-REQUEST-ENVELOPE")]
+fn band_row(band: &str, path: &str, len: usize, offset: Option<usize>) -> display::Row {
+    let mut meta = vec![display::Meta::note(format!("{len} bytes"))];
+    if let Some(offset) = offset {
+        meta.push(display::Meta::note(format!("offset {offset}")));
+    }
+    display::Row::new(vec![
+        display::Cell::new(band, display::Role::Dim),
+        display::Cell::text(path),
+    ])
+    .meta(meta)
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn prompt_capture_rows_carry_offsets() {
+        let rows = vec![
+            band_row("P", "SYSTEM.md", 1214, Some(0)),
+            band_row("T", "caller's own", 12, None),
+        ];
+        let expected = format!(
+            "  P  {:<14}1214 bytes · offset 0\n  T  {:<14}12 bytes",
+            "SYSTEM.md", "caller's own"
+        );
+        assert_eq!(
+            crate::output::language::List::new(rows)
+                .meta_column()
+                .render_at(100),
+            expected
+        );
+    }
 }

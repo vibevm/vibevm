@@ -6,9 +6,12 @@ use anyhow::{Result, bail};
 use specmark::spec;
 use vibe_core::manifest::TargetOs;
 use vibe_wire::generated::prompt_prepare as wire;
-use vibe_workspace::system_prompt::{PreparedBand, check_node_prompt, prepare_request};
+use vibe_workspace::system_prompt::{
+    PreparedBand, PreparedRequest, check_node_prompt, prepare_request,
+};
 
 use crate::output;
+use crate::output::language::{Block, Cell, Glyph, List, Meta, Role, Row};
 
 use super::Selected;
 
@@ -58,47 +61,61 @@ pub(crate) fn run(
     if ctx.is_json() {
         return ctx.emit_json(&report);
     }
-    ctx.summary(&format!(
-        "system prompt: prepared `{}` — band P {} bytes, band U {} file(s), band G {} file(s), \
-         {} unresolved",
-        selected.node_rel,
-        prepared.prefix.len,
-        prepared.unconditional.len(),
-        prepared.gated.len(),
-        prepared.unresolved.len()
-    ));
+    let breakpoints = prepared
+        .cache_boundaries
+        .iter()
+        .map(usize::to_string)
+        .collect::<Vec<_>>()
+        .join(", ");
     if ctx.is_quiet() {
+        ctx.summary(&format!(
+            "system prompt prepared {} · {} unresolved · breakpoints {breakpoints}",
+            selected.node_rel,
+            prepared.unresolved.len()
+        ));
         return Ok(());
     }
-    println!(
-        "  P {} — {} bytes",
-        prepared.prefix.path, prepared.prefix.len
+    ctx.block(
+        &Block::new(
+            Glyph::Done,
+            format!("system prompt  prepared {}", selected.node_rel),
+        )
+        .with_meta(vec![
+            Meta::note(format!("{} unresolved", prepared.unresolved.len())),
+            Meta::note(format!("breakpoints {breakpoints}")),
+        ])
+        .render(),
     );
-    for member in &prepared.unconditional {
-        println!("  U {} — {} bytes", member.path, member.len);
+    ctx.block(&band_list(&prepared).render());
+    for warning in &prepared.warnings {
+        ctx.hint(warning);
     }
-    for member in &prepared.gated {
-        println!("  G {} — {} bytes", member.path, member.len);
+    Ok(())
+}
+
+/// Present resolved materials and unresolved conditions without rewriting either.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-076#SYS-CONTINUATION-CACHEABLE")]
+fn band_list(prepared: &PreparedRequest) -> List {
+    let mut rows = Vec::new();
+    for (name, bands) in [
+        ("P", std::slice::from_ref(&prepared.prefix)),
+        ("U", prepared.unconditional.as_slice()),
+        ("G", prepared.gated.as_slice()),
+    ] {
+        for member in bands {
+            rows.push(
+                Row::new(vec![Cell::new(name, Role::Dim), Cell::text(&member.path)])
+                    .meta(vec![Meta::note(format!("{} bytes", member.len))]),
+            );
+        }
     }
     for row in &prepared.unresolved {
-        println!("  ? {} ({}) — {}", row.path, row.when, row.reason);
+        rows.push(
+            Row::new(vec![Cell::new("?", Role::Warn), Cell::text(&row.path)])
+                .meta(vec![Meta::note(&row.when), Meta::note(&row.reason)]),
+        );
     }
-    // `note:`, the same word `check` uses for the same genre of line: an
-    // observation that changed no material above. A host mismatch never
-    // makes this a failure, so the exit status is untouched.
-    for warning in &prepared.warnings {
-        println!("  note: {warning}");
-    }
-    println!(
-        "  cache breakpoints at {}",
-        prepared
-            .cache_boundaries
-            .iter()
-            .map(usize::to_string)
-            .collect::<Vec<_>>()
-            .join(", ")
-    );
-    Ok(())
+    List::new(rows).meta_column()
 }
 
 fn band(member: &PreparedBand) -> wire::Band {
@@ -130,5 +147,37 @@ pub(super) fn parse_target(value: &str) -> Result<TargetOs> {
             "`--session-target os={other}` names no operating system this build knows; they are \
              `windows`, `macos` and `linux`"
         ),
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use vibe_workspace::system_prompt::{PreparedRequest, UnresolvedRow};
+
+    #[test]
+    fn prompt_prepare_bands_are_measured_rows() {
+        let band = |path: &str, len: usize| PreparedBand {
+            path: path.into(),
+            sha256: "0".repeat(64),
+            len,
+        };
+        let prepared = PreparedRequest {
+            prefix: band("SYSTEM.md", 1214),
+            unconditional: vec![band("vibevm/vibespecs/boot/00-core.md", 1487)],
+            gated: Vec::new(),
+            unresolved: vec![UnresolvedRow {
+                path: "vibevm/vibespecs/boot/50-os.md".into(),
+                when: "os:windows".into(),
+                reason: "no session target was given".into(),
+            }],
+            cache_boundaries: vec![1214, 2701],
+            warnings: Vec::new(),
+        };
+        let expected = format!(
+            "  P  {:<34}1214 bytes\n  U  {:<34}1487 bytes\n  ?  {:<34}os:windows · no session target was given",
+            "SYSTEM.md", "vibevm/vibespecs/boot/00-core.md", "vibevm/vibespecs/boot/50-os.md"
+        );
+        assert_eq!(band_list(&prepared).render_at(100), expected);
     }
 }
