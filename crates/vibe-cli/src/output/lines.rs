@@ -185,6 +185,11 @@ impl Context {
         }
         let line = cancelled_line();
         self.suspend_progress(|| eprintln!("{line}"));
+        // A trailer the command held back (a failed or parked app step)
+        // still closes the run, as it does after a refusal.
+        if self.mode == Mode::Human {
+            self.print_pending_trailer();
+        }
     }
 
     /// The trailer of this command (PROP-067 `#trailer`): what happened,
