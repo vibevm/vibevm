@@ -39,49 +39,49 @@ const INDEX_LIMIT: usize = 4 * 1024 * 1024;
 #[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-000#TS-USER-KEYRING")]
 pub enum Error {
     #[error(
-        "private keyring storage is unavailable or failed protection checks \
+        "keyring_unprotected: private keyring storage is unavailable or failed its protection checks \
          (violates spec://org.vibevm.core/vibevm/common/PROP-000#TS-USER-KEYRING; \
-          fix: make the user settings directory and its `secrets/` tree real directories that \
+          fix: make the user settings directory and its secrets/ tree real directories that \
            only the current user owns and can access)"
     )]
     Unavailable,
     #[error(
-        "invalid keyring identifier, metadata or bounded value \
+        "keyring_input_invalid: invalid keyring identifier, metadata or bounded value \
          (violates spec://org.vibevm.core/vibevm/common/PROP-000#TS-USER-KEYRING; \
           fix: pass a canonical item id, a nonempty bounded kind and label without control \
            characters, and a value within the size limit)"
     )]
     Invalid,
     #[error(
-        "keyring item not found \
+        "keyring_item_not_found: keyring item not found \
          (violates spec://org.vibevm.core/vibevm/common/PROP-000#TS-USER-KEYRING; \
-          fix: list the keyring and use the id of an item that exists)"
+          fix: `vibe secrets list` shows the items that exist)"
     )]
     NotFound,
     #[error(
-        "keyring revision changed; refresh metadata and retry \
+        "keyring_stale: the keyring changed since its revisions were read \
          (violates spec://org.vibevm.core/vibevm/common/PROP-000#TS-USER-KEYRING; \
-          fix: read the current revisions again and repeat the change against them)"
+          fix: `vibe secrets list` shows the current revisions to repeat the change against)"
     )]
     Conflict,
     #[error(
-        "keyring item has live consumer references \
+        "keyring_item_in_use: keyring item has live consumer references \
          (violates spec://org.vibevm.core/vibevm/common/PROP-000#TS-USER-KEYRING; \
           fix: remove or rebind every consumer that refers to the item, then remove it)"
     )]
     RefusedReferenced { consumers: Vec<String> },
     #[error(
-        "complete protected reference inventory is unavailable \
+        "keyring_inventory_unavailable: complete protected reference inventory is unavailable \
          (violates spec://org.vibevm.core/vibevm/common/PROP-000#TS-USER-KEYRING; \
           fix: restore the registered consumers' reference stores so the whole inventory \
            can be read, then retry)"
     )]
     RefusedUnknown,
     #[error(
-        "keyring publication failed; previous selected revision is retained unless the \
-         index publication completed \
+        "keyring_publication_failed: keyring publication failed; the previously selected revision \
+         is kept unless the index publication completed \
          (violates spec://org.vibevm.core/vibevm/common/PROP-000#TS-USER-KEYRING; \
-          fix: list the keyring to see which revision is selected, then retry the change)"
+          fix: `vibe secrets list` shows which revision is selected; retry the change against it)"
     )]
     Publication,
 }

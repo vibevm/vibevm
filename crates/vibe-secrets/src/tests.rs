@@ -236,3 +236,33 @@ fn fifo_index_refuses_without_waiting_for_a_writer() {
     );
     assert!(start.elapsed() < std::time::Duration::from_secs(1));
 }
+
+#[test]
+fn keyring_refusals_carry_code_and_fix() {
+    let tail = " (violates spec://org.vibevm.core/vibevm/common/PROP-000#TS-USER-KEYRING; fix: ";
+    let cases = [
+        (Error::Unavailable, "keyring_unprotected: "),
+        (Error::Invalid, "keyring_input_invalid: "),
+        (Error::NotFound, "keyring_item_not_found: "),
+        (Error::Conflict, "keyring_stale: "),
+        (
+            Error::RefusedReferenced {
+                consumers: vec!["ai:binding".into()],
+            },
+            "keyring_item_in_use: ",
+        ),
+        (Error::RefusedUnknown, "keyring_inventory_unavailable: "),
+        (Error::Publication, "keyring_publication_failed: "),
+    ];
+    for (error, code) in cases {
+        let text = error.to_string();
+        assert!(text.starts_with(code), "{text}");
+        assert!(text.contains(tail), "{text}");
+        assert!(text.ends_with(')'), "{text}");
+        assert!(!text.contains("ai:binding"), "{text}");
+    }
+    for error in [Error::NotFound, Error::Conflict, Error::Publication] {
+        let text = error.to_string();
+        assert!(text.contains("fix: `vibe secrets list`"), "{text}");
+    }
+}
