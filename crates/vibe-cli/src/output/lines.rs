@@ -142,19 +142,7 @@ impl Context {
         }
         match self.mode {
             Mode::HumanQuiet => {
-                let refusal = refusal_of(err);
-                let code = refusal
-                    .code
-                    .map(|code| format!("{code}  "))
-                    .unwrap_or_default();
-                self.suspend_progress(|| {
-                    eprintln!(
-                        "{} {}{err:#}{}",
-                        paint(Role::Alert, Glyph::Failed.text()),
-                        paint(Role::Alert, &code),
-                        suffix.unwrap_or_default()
-                    )
-                });
+                self.suspend_progress(|| eprintln!("{}", quiet_line(err, suffix)));
             }
             Mode::Human => {
                 let block = refusal_of(err).block().render();
@@ -308,18 +296,40 @@ pub(crate) fn cancelled_line() -> String {
 /// `fix`, and whatever the chain adds after the tail as `why`.
 #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-067#refusal")]
 pub(crate) fn refusal_of(err: &anyhow::Error) -> Refusal {
-    let message = format!("{err:#}");
-    let mut code = structured::app_error(err).map(|error| error.code().to_owned());
-    let mut text = message.as_str();
-    if let Some((lead, rest)) = message.split_once(": ")
-        && !lead.is_empty()
-        && lead.chars().all(|c| c.is_ascii_lowercase() || c == '_')
-        && lead.contains('_')
+    parse_refusal(
+        &format!("{err:#}"),
+        structured::app_error(err).map(|error| error.code().to_owned()),
+    )
+}
+
+/// Read the nested text shapes of a refusal without manufacturing an error.
+fn parse_refusal(text: &str, mut code: Option<String>) -> Refusal {
+    let mut text = text;
+    if let Some((lead, rest)) = text.split_once(": ")
+        && chain::is_code(lead)
     {
         code.get_or_insert_with(|| lead.to_owned());
         if code.as_deref() == Some(lead) {
             text = rest;
         }
+    }
+    let (reqs, rest) = chain::strip_req(text);
+    let mut surfaces = Vec::new();
+    let joined;
+    if !reqs.is_empty() {
+        let mut clauses = Vec::new();
+        for segment in chain::split0(chain::drop_repeat(rest)) {
+            if let Some(surface) = segment.strip_prefix("fix surface: ") {
+                let surface = surface.trim();
+                if !surfaces.contains(&surface) {
+                    surfaces.push(surface);
+                }
+            } else {
+                clauses.push(segment);
+            }
+        }
+        joined = clauses.join("; ");
+        text = &joined;
     }
     // The cause the chain appends may be nothing but a tail of its own.
     let start = if text.starts_with("(violates ") {
@@ -328,56 +338,146 @@ pub(crate) fn refusal_of(err: &anyhow::Error) -> Refusal {
         text.find(" (violates ").map(|at| at + 1)
     };
     let Some(start) = start else {
-        return Refusal {
+        let mut refusal = Refusal {
             code,
-            headline: text.to_owned(),
             ..Refusal::default()
         };
+        if reqs.is_empty() {
+            refusal.headline = text.trim().to_owned();
+        } else {
+            let segments = chain::split0(text);
+            refusal.headline = segments[0].trim().to_owned();
+            refusal.why = (!segments[1..].is_empty()).then(|| {
+                segments[1..]
+                    .iter()
+                    .map(|s| s.trim())
+                    .collect::<Vec<_>>()
+                    .join("; ")
+            });
+            refusal.fix = surfaces.first().map(|s| fix_lines(s)).unwrap_or_default();
+            refusal.see = reqs.last().map(|s| (*s).to_owned());
+        }
+        return embedded_code(refusal);
     };
     let inner_start = start + "(violates ".len();
-    let mut depth = 1usize;
-    let mut end = text.len();
-    for (offset, c) in text[inner_start..].char_indices() {
-        match c {
-            '(' => depth += 1,
-            ')' => {
-                depth -= 1;
-                if depth == 0 {
-                    end = inner_start + offset;
-                    break;
-                }
+    let end = chain::closing(text, inner_start).unwrap_or(text.len());
+    if let Some(open) = chain::unmatched_open(&text[..start])
+        && end < text.len()
+        && let Some(close) = chain::closing(text, end + 1)
+    {
+        let cause = parse_refusal(&text[open + 1..close], None);
+        let outer = format!("{}{}", text[..open].trim_end(), &text[close + 1..]);
+        let outer = parse_refusal(&outer, None);
+        let why = [Some(cause.headline), cause.why, outer.why]
+            .into_iter()
+            .flatten()
+            .map(|s| s.trim().to_owned())
+            .filter(|s| !s.is_empty())
+            .collect::<Vec<_>>()
+            .join("; ");
+        let mut fixes = cause.fix;
+        for fix in outer.fix {
+            if !fixes.contains(&fix) {
+                fixes.push(fix);
             }
-            _ => {}
         }
+        return Refusal {
+            code: code.or(outer.code),
+            headline: outer.headline,
+            why: (!why.is_empty()).then_some(why),
+            fix: fixes,
+            see: outer.see.or(cause.see),
+        };
     }
     let inner = &text[inner_start..end];
     let (see, fix) = match inner.split_once("; fix: ") {
         Some((see, fix)) => (see.trim(), Some(fix.trim())),
         None => (inner.trim(), None),
     };
+    let see = see.strip_prefix("REQ ").unwrap_or(see);
     let rest = text
         .get(end + 1..)
         .unwrap_or("")
         .trim_start_matches([':', ';', ' ']);
-    // The cause the chain adds is a refusal of its own: its sentence is the
-    // why, and its fix is the nearer one, so it comes first.
-    let cause = (!rest.is_empty()).then(|| refusal_of(&anyhow::anyhow!(rest.to_owned())));
+    // The cause's fix is the nearer one, so it comes first.
+    let (after_fix, cause) = if let Some(fix) = rest.strip_prefix("fix: ") {
+        (fix_lines(fix), None)
+    } else {
+        (
+            Vec::new(),
+            (!rest.is_empty()).then(|| parse_refusal(rest, None)),
+        )
+    };
     let mut fixes = Vec::new();
     if let Some(cause) = &cause {
         fixes.extend(cause.fix.iter().cloned());
     }
-    for line in fix.map(fix_lines).unwrap_or_default() {
+    for line in fix
+        .map(fix_lines)
+        .unwrap_or_default()
+        .into_iter()
+        .chain(after_fix)
+    {
         if !fixes.contains(&line) {
             fixes.push(line);
         }
     }
-    Refusal {
+    if fixes.is_empty()
+        && let Some(surface) = surfaces.first()
+    {
+        fixes = fix_lines(surface);
+    }
+    embedded_code(Refusal {
         code,
-        headline: text[..start].trim_end().to_owned(),
+        headline: text[..start].trim().to_owned(),
         why: cause.and_then(Refusal::into_why),
         fix: fixes,
-        see: (!see.is_empty()).then(|| see.to_owned()),
+        see: if see.is_empty() {
+            reqs.last().map(|s| (*s).to_owned())
+        } else {
+            Some(see.to_owned())
+        },
+    })
+}
+
+/// Move a coded inner error out of the outer headline into its explanation.
+fn embedded_code(mut refusal: Refusal) -> Refusal {
+    for i in chain::depth0(&refusal.headline, ": ") {
+        if let Some((word, _)) = refusal.headline[i + 2..].split_once(": ")
+            && chain::is_code(word)
+        {
+            let cause = refusal.headline[i + 2..].to_owned();
+            refusal.headline.truncate(i);
+            refusal.why = Some(match refusal.why {
+                Some(why) => format!("{cause}; {why}"),
+                None => cause,
+            });
+            break;
+        }
     }
+    refusal
+}
+
+/// Quiet's single refusal line, naming its code only once.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-067#refusal")]
+pub(crate) fn quiet_line(err: &anyhow::Error, suffix: Option<&str>) -> String {
+    let refusal = refusal_of(err);
+    let message = format!("{err:#}");
+    let message = refusal
+        .code
+        .as_ref()
+        .and_then(|code| message.strip_prefix(&format!("{code}: ")))
+        .unwrap_or(&message);
+    let code = refusal
+        .code
+        .map(|code| format!("{code}  "))
+        .unwrap_or_default();
+    format!(
+        "{} {}{message}{}",
+        paint(Role::Alert, Glyph::Failed.text()),
+        paint(Role::Alert, &code),
+        suffix.unwrap_or_default()
+    )
 }
 
 impl Refusal {
@@ -396,36 +496,30 @@ impl Refusal {
     }
 }
 
-/// A fix as lines: the fix sentence without its backticks (PROP-067
-/// `#inline`), then each `vibe …` command it names on a line of its own —
-/// the sentence says when and why, the command is what the reader types.
-/// A fix that is nothing but one command is that one line.
+/// The commands a fix names, or its sentence when it names no commands.
 fn fix_lines(fix: &str) -> Vec<String> {
-    let commands: Vec<String> = fix
+    let mut commands = Vec::new();
+    for part in fix
         .split('`')
         .skip(1)
         .step_by(2)
         .filter(|part| part.starts_with("vibe "))
-        .map(str::to_owned)
-        .collect();
-    let sentence = fix.replace('`', "");
-    // What the sentence says besides the commands and the words that join
-    // them; nothing, and the commands alone are the fix.
-    let mut remainder = sentence.clone();
-    for command in &commands {
-        remainder = remainder.replace(command.as_str(), " ");
+    {
+        let command = part.to_owned();
+        if !commands.contains(&command) {
+            commands.push(command);
+        }
     }
-    let says_more = remainder
-        .split(|c: char| c.is_whitespace() || c.is_ascii_punctuation())
-        .any(|word| !word.is_empty() && !matches!(word, "or" | "and" | "then" | "else"));
-    let mut lines = if says_more {
-        vec![sentence]
-    } else {
-        Vec::new()
-    };
-    lines.extend(commands);
-    lines
+    if commands.is_empty() {
+        let sentence = fix.replace('`', "").trim().to_owned();
+        if !sentence.is_empty() {
+            commands.push(sentence);
+        }
+    }
+    commands
 }
+
+mod chain;
 
 #[cfg(test)]
 #[path = "lines/tests.rs"]

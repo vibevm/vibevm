@@ -116,7 +116,19 @@ impl Block {
     /// the end while it does not fit — an identifier is never cut.
     fn gutter_lines(&self, width: usize) -> Vec<String> {
         let glyph = paint(self.glyph_role, self.glyph.text());
-        let mut words = wrap(&self.headline, width.saturating_sub(2).max(10));
+        let mut words: Vec<String> = self
+            .headline
+            .split('\n')
+            .enumerate()
+            .flat_map(|(index, piece)| {
+                let piece = if index == 0 {
+                    piece
+                } else {
+                    piece.trim_start()
+                };
+                wrap(piece, width.saturating_sub(2).max(10))
+            })
+            .collect();
         let mut meta = self.meta.clone();
         if let Some(last) = words.last() {
             while !meta.is_empty() && 2 + measure(last) + measure(&join_meta(&meta)) > width {
@@ -157,14 +169,21 @@ fn body_line(lines: &mut Vec<String>, line: &Line, labels: usize, width: usize) 
             let pad = " ".repeat(labels.saturating_sub(measure(label)) + 3);
             let indent = " ".repeat(labels + 3);
             for (index, value) in values.iter().enumerate() {
-                let value = match value {
-                    LabelValue::Text(text) => text.clone(),
-                    LabelValue::Command(text) => paint(Role::Accent, text),
+                let wrapped = match value {
+                    LabelValue::Text(text) => text
+                        .split('\n')
+                        .flat_map(|piece| {
+                            wrap(piece.trim(), width.saturating_sub(2 + labels + 3).max(10))
+                        })
+                        .collect(),
+                    LabelValue::Command(text) => vec![paint(Role::Accent, text)],
                 };
-                if index == 0 {
-                    lines.push(format!("{BODY}{}{pad}{value}", paint(Role::Dim, label)));
-                } else {
-                    lines.push(format!("{BODY}{indent}{value}"));
+                for (part, value) in wrapped.iter().enumerate() {
+                    if index == 0 && part == 0 {
+                        lines.push(format!("{BODY}{}{pad}{value}", paint(Role::Dim, label)));
+                    } else {
+                        lines.push(format!("{BODY}{indent}{value}"));
+                    }
                 }
             }
         }
