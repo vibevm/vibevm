@@ -51,26 +51,32 @@ pub enum Error {
           fix: `vibe ai connections list` shows the API kind of each connection)"
     )]
     BindingIncompatible,
-    #[error("{}", store_text(.0))]
+    /// The connection store changed after its revision was observed.
+    #[error(
+        "connection_store_stale: the connection store changed since its revision was read \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-000#TS-KEYRING-CONSUMER; \
+          fix: `vibe ai connections list` shows the current store revision)"
+    )]
+    ConnectionStoreStale,
+    /// A default selection or agent binding still refers to the connection.
+    #[error(
+        "connection_in_use: the connection is the default or is bound by an agent \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-000#TS-KEYRING-CONSUMER; \
+          fix: `vibe ai connections default show` and `vibe ai bindings show --help` show what uses it)"
+    )]
+    ConnectionInUse,
+    /// Another keyring refusal, delegated without adding a duplicate message.
+    #[error(transparent)]
     Store(vibe_secrets::Error),
 }
 
 impl From<vibe_secrets::Error> for Error {
     fn from(error: vibe_secrets::Error) -> Self {
-        Self::Store(error)
-    }
-}
-
-/// Name connection-store refusals without exposing consumer identifiers.
-fn store_text(error: &vibe_secrets::Error) -> String {
-    match error {
-        vibe_secrets::Error::Conflict => "connection_store_stale: the connection store changed since its revision was read \
-            (violates spec://org.vibevm.core/vibevm/common/PROP-000#TS-KEYRING-CONSUMER; \
-             fix: `vibe ai connections list` shows the current store revision)".into(),
-        vibe_secrets::Error::RefusedReferenced { .. } => "connection_in_use: the connection is the default or is bound by an agent \
-            (violates spec://org.vibevm.core/vibevm/common/PROP-000#TS-KEYRING-CONSUMER; \
-             fix: `vibe ai connections default show` and `vibe ai bindings show --help` show what uses it)".into(),
-        _ => error.to_string(),
+        match error {
+            vibe_secrets::Error::Conflict => Self::ConnectionStoreStale,
+            vibe_secrets::Error::RefusedReferenced { .. } => Self::ConnectionInUse,
+            error => Self::Store(error),
+        }
     }
 }
 
@@ -88,11 +94,11 @@ mod tests {
             (Error::BindingUnsupported, "binding_unsupported: "),
             (Error::BindingIncompatible, "binding_incompatible: "),
             (
-                Error::Store(vibe_secrets::Error::Conflict),
+                Error::from(vibe_secrets::Error::Conflict),
                 "connection_store_stale: ",
             ),
             (
-                Error::Store(vibe_secrets::Error::RefusedReferenced {
+                Error::from(vibe_secrets::Error::RefusedReferenced {
                     consumers: vec!["ai:binding".into()],
                 }),
                 "connection_in_use: ",
