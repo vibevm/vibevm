@@ -21,6 +21,7 @@ use vibe_install::{SlotConsentRequest, SlotJudgmentContext};
 use vibe_wire::generated::lifecycle::e1::context::RunAgentMode;
 
 use crate::output;
+use crate::output::language::{self, Block, Cell, Glyph, Kind, List, Role, Row, Stream};
 
 /// The user's `agents.toml`, read once: both halves of this judgment — the
 /// trusted groups and the agent selection — come out of that one file, and
@@ -86,20 +87,55 @@ fn agent_available(
     }
 }
 
-/// The one question of `##ordinary-trust`, asked once per package and only
-/// about a dependency whose group the operator has not trusted.
-fn question(request: &SlotConsentRequest) -> String {
-    format!(
-        "Run {} installation contribution{} of `{}` (group `{}` is not trusted)?",
-        request.contributions.len(),
-        if request.contributions.len() == 1 {
-            ""
-        } else {
-            "s"
-        },
-        request.package,
-        request.group,
+/// The cells of one consent line, `id (handler) title` as the plan builds
+/// it; a line of another shape is one cell.
+fn contribution_cells(line: &str) -> Vec<Cell> {
+    let parsed = line.split_once(' ').and_then(|(id, rest)| {
+        let (handler, title) = rest.strip_prefix('(')?.split_once(") ")?;
+        Some((id, handler, title))
+    });
+    match parsed {
+        Some((id, handler, title)) => vec![
+            Cell::text(id),
+            Cell::new(format!("({handler})"), Role::Dim),
+            Cell::text(title),
+        ],
+        None => vec![Cell::text(line)],
+    }
+}
+
+/// The body of the trust question (PROP-065 `##ordinary-trust`, PROP-067
+/// `#question`): the `?` line, the contributions as rows, the untrusted group.
+#[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-065#ordinary-trust")]
+fn question_body(request: &SlotConsentRequest, width: usize) -> String {
+    let count = request.contributions.len();
+    let plural = if count == 1 { "" } else { "s" };
+    let head = Block::new(
+        Glyph::Question,
+        format!(
+            "trust {}  {} runs {count} installation contribution{plural}",
+            request.group, request.package
+        ),
     )
+    .render_at(width);
+    let rows = List::new(
+        request
+            .contributions
+            .iter()
+            .map(|line| Row::new(contribution_cells(line)))
+            .collect(),
+    )
+    .render_at(width);
+    let warning = language::warning(&format!("group {} is not trusted", request.group));
+    format!("{head}\n{rows}\n  {warning}")
+}
+
+/// The yes-or-no prompt under the body; the default stays no.
+fn prompt(request: &SlotConsentRequest) -> String {
+    match request.contributions.len() {
+        1 => "Run this contribution?".to_owned(),
+        count => format!("Run these {count} contributions?"),
+    }
 }
 
 /// The host facts and the trust policy of one install pass.
@@ -139,10 +175,22 @@ pub(crate) fn judgment(
                 // package-authored code runs.
                 notice
                     .with_terminal_released(|| {
-                        for line in &request.contributions {
-                            notice.step(&format!("contribution: {line}"));
-                        }
-                        crate::output::prompts::confirm(&question(request), false)
+                        let gap = language::before(Stream::Err, Kind::Block);
+                        eprintln!("{gap}{}", question_body(request, language::viewport()));
+                        // The prompt is the last line of this block.
+                        language::mark(Stream::Err, Kind::Row("answers"));
+                        crate::output::prompts::confirm_then(
+                            &prompt(request),
+                            false,
+                            &format!("trust {}", request.group),
+                            |allowed| {
+                                if allowed {
+                                    "allowed for this run".to_owned()
+                                } else {
+                                    "declined".to_owned()
+                                }
+                            },
+                        )
                     })
                     .map_err(|error| error.to_string())
             });
@@ -218,6 +266,59 @@ mod tests {
         assert!(
             !policy.trusts("org.vibevm.ai-native"),
             "a deny entry wins over the base list",
+        );
+    }
+    fn request(lines: &[&str]) -> SlotConsentRequest {
+        SlotConsentRequest {
+            package: "org.example/hooked@0.1.0".into(),
+            group: "org.example".into(),
+            contributions: lines.iter().map(|line| (*line).to_owned()).collect(),
+        }
+    }
+
+    #[test]
+    fn trust_question_lists_contributions_as_rows() {
+        let asked = request(&[
+            "judged (script) Write the hook order marker",
+            "maybe (script) Optional step that only runs with git present",
+        ]);
+        assert_eq!(
+            question_body(&asked, 100),
+            "? trust org.example  org.example/hooked@0.1.0 runs 2 installation contributions\n  judged  (script)  Write the hook order marker\n  maybe   (script)  Optional step that only runs with git present\n  ! group org.example is not trusted"
+        );
+    }
+
+    #[test]
+    fn trust_question_prompt_counts_the_contributions() {
+        assert_eq!(
+            prompt(&request(&["a (script) A"])),
+            "Run this contribution?"
+        );
+        assert_eq!(
+            prompt(&request(&["a (script) A", "b (script) B"])),
+            "Run these 2 contributions?"
+        );
+        // A line of another shape is still shown, as one cell.
+        assert!(question_body(&request(&["odd"]), 100).contains("\n  odd\n"));
+    }
+
+    #[test]
+    fn install_refusals_read_with_their_codes() {
+        let need =
+            crate::output::refusal_of(&anyhow::Error::from(vibe_install::Error::SlotNeedUnmet {
+                package: "org.example/needy@1.0.0".into(),
+                contribution: "must".into(),
+                point: "slot:post-install".into(),
+                need: "command:nosuchtool".into(),
+            }));
+        assert_eq!(need.code.as_deref(), Some("slot_need_unmet"));
+        assert_eq!(
+            need.see.as_deref(),
+            Some("spec://org.vibevm.core/vibevm/common/PROP-065#needs")
+        );
+        assert_eq!(
+            need.headline,
+            "contribution must of org.example/needy@1.0.0 at slot:post-install needs command:nosuchtool, which this host does not provide; nothing was installed"
         );
     }
 }
