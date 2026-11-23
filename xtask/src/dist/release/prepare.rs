@@ -40,6 +40,9 @@ pub(super) fn prepare_with(
                 if !release.as_ref().is_some_and(|release| release.draft) {
                     return Err(mismatch);
                 }
+                // GitHub refs have no compare-and-swap: a draft published
+                // between this lookup and the move would see its tag moved.
+                // The delete below already had the same window.
                 looked_up = Some(release);
                 host.move_tag_ref(tag, commit)?
             }

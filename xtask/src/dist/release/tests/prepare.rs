@@ -114,3 +114,24 @@ fn prepare_refuses_a_foreign_tag_without_a_release() {
     assert!(!host.operations.borrow().iter().any(|op| op == "tag-move"));
     assert_eq!(host.operations.borrow().as_slice(), ["tag-find", "find"]);
 }
+
+#[test]
+fn prepare_refuses_a_moved_tag_response_with_wrong_provenance() {
+    let host = MockHost::draft();
+    *host.moved_to.borrow_mut() = Some(TREE.to_string());
+    *host.tag_kind.borrow_mut() = "tag".to_string();
+
+    let error = prepare(&host)
+        .expect_err("a moved tag that is not a direct commit ref must be refused")
+        .to_string();
+
+    assert!(error.contains("tag provenance mismatch"));
+    assert!(
+        host.release.borrow().as_ref().is_some_and(|r| r.draft),
+        "the draft must survive a refused move"
+    );
+    assert_eq!(
+        host.operations.borrow().as_slice(),
+        ["tag-find", "find", "tag-move"]
+    );
+}
