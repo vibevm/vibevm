@@ -123,35 +123,7 @@ impl SlotLifecyclePlan {
         if judgment.assume_yes {
             return Ok(());
         }
-        for request in self.consent_requests(judgment) {
-            let granted = match &judgment.confirm {
-                Some(ask) => ask(&request).map_err(|reason| Error::SlotConsentRequired {
-                    package: request.package.clone(),
-                    group: request.group.clone(),
-                    contributions: request.contributions.join("; "),
-                    reason: format!("the question failed: {reason}"),
-                })?,
-                None => {
-                    return Err(Error::SlotConsentRequired {
-                        package: request.package,
-                        group: request.group,
-                        contributions: request.contributions.join("; "),
-                        reason: "an unattended run proceeds only with --assume-yes (or \
-                                 --unattended)"
-                            .into(),
-                    });
-                }
-            };
-            if !granted {
-                return Err(Error::SlotConsentRequired {
-                    package: request.package,
-                    group: request.group,
-                    contributions: request.contributions.join("; "),
-                    reason: "the contributions were declined".into(),
-                });
-            }
-        }
-        Ok(())
+        admit_consent_requests(self.consent_requests(judgment), judgment)
     }
 
     /// One request per untrusted dependency with running contributions, in
@@ -188,6 +160,54 @@ impl SlotLifecyclePlan {
             }
         }
         requests
+    }
+}
+
+/// Ask the prepared requests without granting consent on absence or failure.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-065#ordinary-trust")]
+fn admit_consent_requests(
+    requests: Vec<SlotConsentRequest>,
+    judgment: &SlotJudgmentContext,
+) -> Result<()> {
+    for request in requests {
+        let granted = match &judgment.confirm {
+            Some(ask) => ask(&request).map_err(|reason| {
+                consent_refusal(&request, &format!("the question failed: {reason}"))
+            })?,
+            None => return Err(consent_refusal(&request, "this run has nobody to ask")),
+        };
+        if !granted {
+            return Err(consent_refusal(&request, "the contributions were declined"));
+        }
+    }
+    Ok(())
+}
+
+/// The trust refusal of one consent request: its contribution ids, the
+/// reason the question did not grant it, and the agents.toml that would.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-065#ordinary-trust")]
+fn consent_refusal(request: &SlotConsentRequest, reason: &str) -> Error {
+    let ids: Vec<&str> = request
+        .contributions
+        .iter()
+        .map(|line| line.split(' ').next().unwrap_or(line.as_str()))
+        .collect();
+    let exact_package = request
+        .package
+        .rsplit_once('@')
+        .map(|(name, version)| format!("{name}@={}", version.trim_start_matches('=')))
+        .unwrap_or_else(|| request.package.clone());
+    Error::SlotConsentRequired {
+        package: request.package.clone(),
+        group: request.group.clone(),
+        contributions: ids.join(", "),
+        reason: reason.to_owned(),
+        diagnostic: Box::new(crate::error::SlotConsentDiagnostic {
+            retry: format!("vibe install {exact_package} --assume-yes"),
+            agents_file: crate::error::agents_file_in(
+                vibe_core::settings::settings_dir().as_deref(),
+            ),
+        }),
     }
 }
 
@@ -372,5 +392,123 @@ fn provider_version(provider: &ExtensionProvider) -> Option<String> {
         ExtensionProvider::Host(provider) => {
             (!provider.version.is_empty()).then(|| provider.version.clone())
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    /// A synthetic request, with prose deliberately unrelated to its package.
+    fn request(package: &str) -> SlotConsentRequest {
+        SlotConsentRequest {
+            package: package.into(),
+            group: "org.example".into(),
+            contributions: vec![
+                "judged (script) install org.other/wrong@9.9.9".into(),
+                "maybe (agent) an optional explanation".into(),
+            ],
+        }
+    }
+
+    #[test]
+    fn consent_refusal_pins_raw_and_exact_versions_without_parsing_prose() {
+        for package in ["org.example/hooked@0.1.0", "org.example/hooked@=0.1.0"] {
+            let Error::SlotConsentRequired {
+                package: actual,
+                group,
+                contributions,
+                reason,
+                diagnostic,
+            } = consent_refusal(&request(package), "synthetic refusal")
+            else {
+                panic!("expected a typed consent refusal");
+            };
+            assert_eq!(actual, package);
+            assert_eq!(group, "org.example");
+            assert_eq!(
+                diagnostic.retry,
+                "vibe install org.example/hooked@=0.1.0 --assume-yes"
+            );
+            assert_eq!(contributions, "judged, maybe");
+            assert_eq!(reason, "synthetic refusal");
+            assert_eq!(
+                diagnostic.agents_file,
+                crate::error::agents_file_in(vibe_core::settings::settings_dir().as_deref())
+            );
+        }
+    }
+
+    #[test]
+    fn consent_refusal_uses_the_last_at_and_preserves_an_unversioned_package() {
+        for (package, exact) in [
+            ("org.example/hooked", "org.example/hooked"),
+            (
+                "org.example/hooked@label@1.0.0",
+                "org.example/hooked@label@=1.0.0",
+            ),
+        ] {
+            let Error::SlotConsentRequired { diagnostic, .. } =
+                consent_refusal(&request(package), "declined")
+            else {
+                panic!("expected a typed consent refusal");
+            };
+            assert_eq!(
+                diagnostic.retry,
+                format!("vibe install {exact} --assume-yes")
+            );
+        }
+    }
+
+    #[test]
+    fn consent_question_failure_refuses_without_granting() {
+        let judgment = SlotJudgmentContext {
+            confirm: Some(std::sync::Arc::new(|_| Err("synthetic failure".into()))),
+            assume_yes: false,
+            ..SlotJudgmentContext::consenting()
+        };
+        assert_refusal(judgment, "the question failed: synthetic failure");
+    }
+
+    #[test]
+    fn consent_without_a_question_refuses_without_granting() {
+        assert_refusal(
+            SlotJudgmentContext {
+                assume_yes: false,
+                ..SlotJudgmentContext::consenting()
+            },
+            "this run has nobody to ask",
+        );
+    }
+
+    #[test]
+    fn declined_consent_refuses_without_granting() {
+        let judgment = SlotJudgmentContext {
+            confirm: Some(std::sync::Arc::new(|_| Ok(false))),
+            assume_yes: false,
+            ..SlotJudgmentContext::consenting()
+        };
+        assert_refusal(judgment, "the contributions were declined");
+    }
+
+    /// All three question outcomes retain the same typed, fail-closed refusal.
+    fn assert_refusal(judgment: SlotJudgmentContext, expected_reason: &str) {
+        let error = admit_consent_requests(vec![request("org.example/hooked@0.1.0")], &judgment)
+            .expect_err("no refusal outcome may grant consent");
+        let Error::SlotConsentRequired {
+            contributions,
+            reason,
+            diagnostic,
+            ..
+        } = error
+        else {
+            panic!("expected a typed consent refusal");
+        };
+        assert_eq!(reason, expected_reason);
+        assert_eq!(contributions, "judged, maybe");
+        assert_eq!(
+            diagnostic.retry,
+            "vibe install org.example/hooked@=0.1.0 --assume-yes"
+        );
     }
 }
