@@ -2,6 +2,7 @@
 //! connection exists before agents are configured. The key is read only
 //! through the protected hidden prompt and goes straight into the keyring.
 use crate::output;
+use crate::output::language::{Block, Glyph, Meta};
 use anyhow::{Result, anyhow, bail};
 use std::path::Path;
 use vibe_core::cancellation::CancellationToken;
@@ -13,7 +14,7 @@ pub(super) enum Next {
     Stop,
 }
 
-const SKIPPED: &str = "AI setup skipped; connections and bindings unchanged.";
+const SKIPPED: &str = "ai setup skipped; connections and bindings unchanged";
 
 /// With no default connection, offer (default No) to create one and select it.
 pub(super) fn ensure_default(
@@ -25,21 +26,26 @@ pub(super) fn ensure_default(
     if let Some(current) = store.default_selection()?.connection {
         return reuse_or_replace(ctx, settings, store, &current, cancel);
     }
-    println!("No default AI connection exists.");
+    ctx.hint("no default AI connection exists");
     if !output::prompts::confirm("Create a default AI connection now?", false)? {
-        println!("{SKIPPED}");
+        ctx.hint(SKIPPED);
         return Ok(Next::Stop);
     }
-    let Some((id, metadata)) = create(settings, store, cancel)? else {
-        println!("{SKIPPED}");
+    let Some((id, metadata)) = create(ctx, settings, store, cancel)? else {
+        ctx.hint(SKIPPED);
         return Ok(Next::Stop);
     };
     store.set_default(&id, store.list()?.store_revision)?;
-    println!(
-        "Default AI connection created: {} — {} — {}",
-        metadata.label,
-        id.as_str(),
-        metadata.endpoint
+    ctx.block(
+        &Block::new(
+            Glyph::Done,
+            format!("created default connection {}", metadata.label),
+        )
+        .with_meta(vec![
+            Meta::note(id.as_str()),
+            Meta::note(metadata.endpoint.clone()),
+        ])
+        .render(),
     );
     Ok(Next::Continue)
 }
@@ -54,24 +60,24 @@ fn reuse_or_replace(
     cancel: &CancellationToken,
 ) -> Result<Next> {
     let metadata = store.details(current)?.metadata;
-    println!(
-        "Default AI connection: {} — {} — {}",
+    ctx.hint(&format!(
+        "default connection {} · {} · {}",
         metadata.label,
         current.as_str(),
         metadata.endpoint
-    );
-    if output::prompts::confirm("Reuse this default connection?", true)? {
+    ));
+    if output::prompts::confirm("Reuse the default connection?", true)? {
         return Ok(Next::Continue);
     }
     if !output::prompts::confirm(
         "Replace the default connection? Agents that inherit the default will use the new connection",
         false,
     )? {
-        println!("Default connection unchanged.");
+        ctx.hint("default connection unchanged");
         return Ok(Next::Continue);
     }
-    let Some((id, _)) = create(settings, store, cancel)? else {
-        println!("{SKIPPED}");
+    let Some((id, _)) = create(ctx, settings, store, cancel)? else {
+        ctx.hint(SKIPPED);
         return Ok(Next::Stop);
     };
     let scopes = [
@@ -86,10 +92,10 @@ fn reuse_or_replace(
         Some(0) => vibe_connections::DefaultScope::DefaultOnly,
         Some(_) => vibe_connections::DefaultScope::ManagedOverrides,
         None => {
-            println!(
-                "Default unchanged; new connection {} kept as a non-default connection.",
+            ctx.hint(&format!(
+                "default unchanged; new connection {} kept as a non-default connection",
                 id.as_str()
-            );
+            ));
             return Ok(Next::Continue);
         }
     };
@@ -100,6 +106,7 @@ fn reuse_or_replace(
 /// Ask for a new OpenAI-compatible connection and store it; `None` when the
 /// API-kind menu is escaped. Metadata is validated before the key is read.
 fn create(
+    ctx: &output::Context,
     settings: &Path,
     store: &vibe_connections::Store,
     cancel: &CancellationToken,
@@ -107,9 +114,9 @@ fn create(
     let hints = vibe_core::site_profile::installed()?
         .map(|site| site.profile.ai)
         .unwrap_or_default();
-    let label = output::prompts::text("Connection label", "Default", false)?;
+    let label = output::prompts::text("Label", "Default", false)?;
     let endpoint = output::prompts::text(
-        "Endpoint URL",
+        "Endpoint",
         hints.default_endpoint.as_deref().unwrap_or(""),
         false,
     )?;
@@ -119,7 +126,7 @@ fn create(
     else {
         return Ok(None);
     };
-    let default_model = output::prompts::text("Default model", "", false)?;
+    let default_model = output::prompts::text("Model", "", false)?;
     let metadata = vibe_connections::Metadata {
         label,
         endpoint,
@@ -132,8 +139,8 @@ fn create(
     cancel.checkpoint()?;
     if let Some(hint) = &hints.key_hint_label {
         match &hints.key_hint_url {
-            Some(url) => println!("Get an API key: {hint} ({url})"),
-            None => println!("Get an API key: {hint}"),
+            Some(url) => ctx.hint(&format!("get an API key: {hint} · {url}")),
+            None => ctx.hint(&format!("get an API key: {hint}")),
         }
     }
     let key = output::prompts::secret("API key (hidden)")
