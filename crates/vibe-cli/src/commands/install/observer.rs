@@ -25,6 +25,18 @@ use crate::output;
 use super::events::CtxObserver;
 use super::{emit_closure_diff, evidence, lane_sizes, report};
 
+/// Human-only facts observed during this invocation, never guessed from disk.
+#[derive(Clone, Debug, Default)]
+pub(super) struct HumanTrailer {
+    /// The resolved coordinate of the sole explicit request.
+    pub root: Option<String>,
+    /// The parent of logs/ from the first successfully recorded step.
+    pub evidence_directory: Option<PathBuf>,
+}
+
+/// Shared only between this run's observer and final renderer.
+pub(super) type SharedTrailer = Arc<std::sync::Mutex<HumanTrailer>>;
+
 /// The CLI's install narration, over the two contexts it really owns.
 pub(crate) struct CliInstallObserver<'a> {
     /// The install's own context — the CHILD one under a phase verb.
@@ -35,6 +47,7 @@ pub(crate) struct CliInstallObserver<'a> {
     lifecycle_output: Option<&'a output::Context>,
     plan_events: CtxObserver<'a>,
     log_mode: Option<crate::commands::app::display::LogMode>,
+    trailer: SharedTrailer,
 }
 
 impl<'a> CliInstallObserver<'a> {
@@ -47,7 +60,13 @@ impl<'a> CliInstallObserver<'a> {
             lifecycle_output,
             plan_events: CtxObserver::new(ctx),
             log_mode: None,
+            trailer: SharedTrailer::default(),
         }
+    }
+
+    /// Share actual run observations with its final draft.
+    pub(super) fn trailer(&self) -> SharedTrailer {
+        self.trailer.clone()
     }
 
     pub(crate) fn with_log_mode(mut self, mode: crate::commands::app::display::LogMode) -> Self {
@@ -85,6 +104,17 @@ impl InstallObserver for CliInstallObserver<'_> {
                 self.ctx.heading("vibe.lock is fresh — skipping resolution");
             }
             InstallNarration::Resolution(planned) => {
+                if let Ok(mut trailer) = self.trailer.lock() {
+                    trailer.root = planned.single_explicit_root().and_then(|root| {
+                        planned
+                            .resolution
+                            .iter()
+                            .find(|row| {
+                                root.group.as_ref() == Some(&row.group) && row.name == root.name
+                            })
+                            .map(|row| format!("{}/{}@{}", row.group, row.name, row.version))
+                    });
+                }
                 report::present_resolution(self.ctx, planned);
             }
             InstallNarration::ClosureDiff {
@@ -122,7 +152,8 @@ impl InstallObserver for CliInstallObserver<'_> {
                     )
                 }))
                 .with_panel(self.plan_events.progress_handle())
-                .writing_evidence(),
+                .writing_evidence()
+                .with_trailer(self.trailer.clone()),
         )
     }
 }
@@ -156,6 +187,7 @@ pub(crate) struct LifecycleSlotObserver {
     /// resolved to write it under.
     evidence: Option<evidence::StepEvidence>,
     log_mode: crate::commands::app::display::LogMode,
+    trailer: SharedTrailer,
 }
 
 impl LifecycleSlotObserver {
@@ -167,7 +199,14 @@ impl LifecycleSlotObserver {
             rows: std::sync::Mutex::new(std::collections::BTreeMap::new()),
             evidence: None,
             log_mode: crate::commands::app::display::LogMode::Live,
+            trailer: SharedTrailer::default(),
         }
+    }
+
+    /// Carry actual evidence writes to this run's final human renderer.
+    fn with_trailer(mut self, trailer: SharedTrailer) -> Self {
+        self.trailer = trailer;
+        self
     }
 
     fn with_log_mode(mut self, mode: crate::commands::app::display::LogMode) -> Self {
@@ -289,6 +328,13 @@ impl vibe_install::SlotLifecycleObserver for LifecycleSlotObserver {
             .evidence
             .as_ref()
             .and_then(|evidence| evidence.record(report));
+        if let Some(log) = &log
+            && let Some(directory) = log.parent().and_then(Path::parent)
+            && let Ok(mut trailer) = self.trailer.lock()
+            && trailer.evidence_directory.is_none()
+        {
+            trailer.evidence_directory = Some(directory.to_path_buf());
+        }
         // `#ordinary-failure`: a failure's warning carries the contribution,
         // its captured output and **its log path**. The first two are
         // already in the row a client reads and in the error the run

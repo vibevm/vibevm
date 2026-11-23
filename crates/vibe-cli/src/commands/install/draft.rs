@@ -36,6 +36,8 @@ use super::{InstallRun, WorldCallbackSummary};
 #[derive(Debug)]
 pub(crate) struct InstallDraft {
     pub(crate) ok: bool,
+    /// Human-only observations, excluded from the wire document.
+    pub(super) human: super::observer::HumanTrailer,
     pub(crate) project_root: PathBuf,
     pub(crate) progress: InstallProgress,
     pub(crate) contributions: Vec<InstallContributionReport>,
@@ -59,6 +61,7 @@ impl InstallDraft {
         contributions.extend(report::phase_rows(&run.contributions));
         Self {
             ok: true,
+            human: super::observer::HumanTrailer::default(),
             project_root: run.project_root,
             progress: run.progress,
             contributions,
@@ -82,6 +85,7 @@ impl InstallDraft {
     ) -> Self {
         Self {
             ok: false,
+            human: super::observer::HumanTrailer::default(),
             project_root: project_root.to_path_buf(),
             contributions: report::contribution_rows(&slot_reports),
             progress,
@@ -136,6 +140,7 @@ impl InstallDraft {
         let ok = self.ok;
         let progress = self.progress.clone();
         let world_summary = self.world_summary;
+        let human = self.human.clone();
         let report = self.into_report(trace);
         if ctx.is_json() {
             return ctx.emit_json(&report);
@@ -161,7 +166,7 @@ impl InstallDraft {
             return Ok(());
         }
         render_weak_lines(ctx, &report);
-        report::render_human_progress(ctx, &progress, world_summary, quiet_suffix);
+        report::render_human_progress(ctx, &progress, world_summary, quiet_suffix, &human);
         Ok(())
     }
 }
@@ -283,6 +288,7 @@ mod refusal_tests {
         let member = refused_member();
         let draft = InstallDraft {
             ok: true,
+            human: super::super::observer::HumanTrailer::default(),
             project_root: PathBuf::from("/p"),
             progress: InstallProgress::fresh(vec![".".into()]),
             contributions: Vec::new(),

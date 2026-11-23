@@ -309,12 +309,19 @@ fn run_observed(
     let finalized = compile_trace::finalize(trace, exit, &now);
     let parked = finalized.plan == PlanDisposition::Discard;
     let command_failed = finalized.original_error.is_some();
+    // The root block closes before the final human trailer, while the lease
+    // owner remains alive through final rendering as before.
+    if command_failed {
+        overall.fail("package installation failed");
+    } else if parked {
+        overall.skip("waiting for the hosting agent");
+    } else {
+        overall.finish();
+    }
     let rendered = render_finalized(ctx, finalized);
     drop(lease_owner);
-    match (&rendered, command_failed, parked) {
-        (Err(_), _, _) | (_, true, _) => overall.fail("package installation failed"),
-        (Ok(()), false, true) => overall.skip("waiting for the hosting agent"),
-        (Ok(()), false, false) => overall.finish(),
+    if rendered.is_err() && !command_failed {
+        overall.fail("package installation failed");
     }
     rendered
 }
@@ -432,7 +439,16 @@ fn execute_after_open(
         &selected_roots,
     );
     match outcome {
-        Ok(run) => classify_success(run),
+        Ok(run) => {
+            let mut exit = classify_success(run);
+            if let CommandExit::Success(RegisteredReportDraft::Install(draft))
+            | CommandExit::Parked(RegisteredReportDraft::Install(draft)) = &mut exit
+                && let Ok(human) = install_observer.trailer().lock()
+            {
+                draft.human = human.clone();
+            }
+            exit
+        }
         // A failure the substrate MEASURED arrives carried: the slot rows and
         // progress it froze, plus its own emission policy. Anything else is a
         // generic stage failure and takes the default install draft — the same

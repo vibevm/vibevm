@@ -4,6 +4,15 @@ use super::PlannedInstall;
 use vibe_wire::generated::shared::SourceEvidence;
 
 impl PlannedInstall {
+    /// The sole explicitly submitted root, not inferred from workspace roots.
+    #[specmark::spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-067#trailer")]
+    pub fn single_explicit_root(&self) -> Option<&vibe_core::PackageRef> {
+        match self.request.roots.as_slice() {
+            [root] => Some(root),
+            _ => None,
+        }
+    }
+
     /// Observe the final acquired closure in its held order. Coordinates and
     /// facts come from the same acquisition, never a zip with mutable resolution.
     ///
