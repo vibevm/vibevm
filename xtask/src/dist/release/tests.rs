@@ -90,6 +90,19 @@ impl ReleaseHost for MockHost {
         })
     }
 
+    fn move_tag_ref(&self, tag: &str, source_commit: &str) -> Result<GithubGitRef> {
+        self.operations.borrow_mut().push("tag-move".to_string());
+        *self.moved_to.borrow_mut() = Some(source_commit.to_string());
+        Ok(GithubGitRef {
+            reference: format!("refs/tags/{tag}"),
+            object: GithubGitObject {
+                sha: source_commit.to_string(),
+                kind: self.tag_kind.borrow().clone(),
+                url: String::new(),
+            },
+        })
+    }
+
     fn create_release(&self, request: &CreateGithubRelease) -> Result<GithubRelease> {
         self.operations.borrow_mut().push("create".to_string());
         let mut value = release(request.draft);
@@ -386,87 +399,6 @@ fn local_asset_reader_bounds_metadata_before_allocating() {
 }
 
 #[test]
-fn prepare_validates_the_prepositioned_tag_before_replacing_the_release() {
-    let host = MockHost::draft();
-    host.release.borrow_mut().as_mut().unwrap().draft = false;
-    host.seed("old.zip".to_string(), b"old".to_vec());
-    let identity = GitIdentity {
-        commit: COMMIT.to_string(),
-        tree: TREE.to_string(),
-        source_date_epoch: "1".to_string(),
-    };
-    let result = prepare_with(&host, &Version::parse("1.0.0").unwrap(), &identity).unwrap();
-    assert!(result.draft);
-    assert_eq!(result.id, 8);
-    assert_eq!(host.moved_to.borrow().as_deref(), None);
-    assert!(host.assets.borrow().is_empty());
-    assert_eq!(
-        host.operations.borrow().as_slice(),
-        ["tag-find", "find", "delete:7", "create"]
-    );
-}
-
-#[test]
-fn prepare_without_a_tag_creates_it_before_the_draft() {
-    let host = MockHost::draft();
-    *host.release.borrow_mut() = None;
-    host.tag_present.set(false);
-    let identity = GitIdentity {
-        commit: COMMIT.to_string(),
-        tree: TREE.to_string(),
-        source_date_epoch: "1".to_string(),
-    };
-
-    let result = prepare_with(&host, &Version::parse("1.0.0").unwrap(), &identity).unwrap();
-
-    assert!(result.draft);
-    assert_eq!(result.id, 8);
-    assert_eq!(host.moved_to.borrow().as_deref(), Some(COMMIT));
-    assert_eq!(
-        host.operations.borrow().as_slice(),
-        ["tag-find", "tag-create", "find", "create"]
-    );
-}
-
-#[test]
-fn prepare_refuses_a_tag_update_response_with_wrong_provenance() {
-    let host = MockHost::draft();
-    *host.release.borrow_mut() = None;
-    *host.tag_kind.borrow_mut() = "tag".to_string();
-    let identity = GitIdentity {
-        commit: COMMIT.to_string(),
-        tree: TREE.to_string(),
-        source_date_epoch: "1".to_string(),
-    };
-    let error = prepare_with(&host, &Version::parse("1.0.0").unwrap(), &identity)
-        .expect_err("an indirect or wrong tag object must be refused")
-        .to_string();
-    assert!(error.contains("tag provenance mismatch"));
-    assert!(host.release.borrow().is_none());
-    assert_eq!(host.operations.borrow().as_slice(), ["tag-find"]);
-}
-
-#[test]
-fn prepare_refuses_a_moved_tag_before_deleting_the_existing_release() {
-    let host = MockHost::draft();
-    *host.moved_to.borrow_mut() = Some(TREE.to_string());
-    let identity = GitIdentity {
-        commit: COMMIT.to_string(),
-        tree: TREE.to_string(),
-        source_date_epoch: "1".to_string(),
-    };
-    let error = prepare_with(&host, &Version::parse("1.0.0").unwrap(), &identity)
-        .expect_err("a mismatched pre-positioned tag must refuse")
-        .to_string();
-    assert!(error.contains("tag provenance mismatch"));
-    assert!(
-        host.release.borrow().is_some(),
-        "release must remain untouched"
-    );
-    assert_eq!(host.operations.borrow().as_slice(), ["tag-find"]);
-}
-
-#[test]
 fn tag_ref_validation_rejects_name_and_sha_drift() {
     for (reference, sha) in [("refs/tags/v2.0.0", COMMIT), ("refs/tags/v1.0.0", TREE)] {
         let invalid = GithubGitRef {
@@ -568,6 +500,9 @@ mod companions;
 
 #[path = "tests/concurrency.rs"]
 mod concurrency;
+
+#[path = "tests/prepare.rs"]
+mod prepare;
 
 #[test]
 fn a_manifest_reads_back_equal_whatever_order_its_components_were_pushed_in() {

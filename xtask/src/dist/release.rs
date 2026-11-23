@@ -33,16 +33,19 @@ const GITHUB_REPO: &str = "vibevm";
 mod companions;
 pub(crate) mod gitverse;
 mod local;
+mod prepare;
 mod status;
 #[cfg(test)]
 use local::{LocalPlatform, read_bounded_regular_file};
 use local::{read_local_platform, upload_with};
+use prepare::prepare_with;
 pub(crate) use status::status;
 
 trait ReleaseHost {
     fn find_release(&self, tag: &str) -> Result<Option<GithubRelease>>;
     fn find_tag_ref(&self, tag: &str) -> Result<Option<GithubGitRef>>;
     fn create_tag_ref(&self, tag: &str, source_commit: &str) -> Result<GithubGitRef>;
+    fn move_tag_ref(&self, tag: &str, source_commit: &str) -> Result<GithubGitRef>;
     fn create_release(&self, request: &CreateGithubRelease) -> Result<GithubRelease>;
     fn delete_release(&self, release_id: u64) -> Result<()>;
     fn list_assets(&self, release_id: u64) -> Result<Vec<GithubReleaseAsset>>;
@@ -76,6 +79,10 @@ impl ReleaseHost for GithubReleaseClient {
             tag,
             source_commit,
         )?)
+    }
+
+    fn move_tag_ref(&self, tag: &str, source_commit: &str) -> Result<GithubGitRef> {
+        Ok(self.force_move_tag(tag, source_commit)?)
     }
 
     fn create_release(&self, request: &CreateGithubRelease) -> Result<GithubRelease> {
@@ -266,32 +273,6 @@ fn checked_version(repo_root: &Path, raw: &str, identity: &GitIdentity) -> Resul
         );
     }
     Ok(requested)
-}
-
-fn prepare_with(
-    host: &dyn ReleaseHost,
-    version: &Version,
-    identity: &GitIdentity,
-) -> Result<GithubRelease> {
-    let mut request = CreateGithubRelease::for_version(version, identity.commit.clone());
-    request.draft = true;
-    request.name = format!("vibevm {version}");
-    request.body = format!(
-        "Mutable vibevm {version} distribution. Verify downloads through \
-         `{DISTRIBUTION_AGGREGATE_MANIFEST_FILENAME}`."
-    );
-    let reference = match host.find_tag_ref(&request.tag_name)? {
-        Some(reference) => {
-            validate_tag_ref(&reference, &request.tag_name, &identity.commit)?;
-            reference
-        }
-        None => host.create_tag_ref(&request.tag_name, &identity.commit)?,
-    };
-    validate_tag_ref(&reference, &request.tag_name, &identity.commit)?;
-    if let Some(existing) = host.find_release(&request.tag_name)? {
-        host.delete_release(existing.id)?;
-    }
-    host.create_release(&request)
 }
 
 fn finalize_with(
