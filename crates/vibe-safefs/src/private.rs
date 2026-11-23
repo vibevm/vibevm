@@ -30,6 +30,49 @@ fn owner(_: &std::fs::Metadata, _: u32) -> Result<()> {
     bail!("private storage protection is unavailable until current-user ACL admission is supported")
 }
 
+/// A wrong private-directory mode witnessed on a held, current-user-owned
+/// directory. Construction is private; no raw filesystem metadata is exported.
+///
+/// ```
+/// # #[cfg(unix)]
+/// # fn main() -> anyhow::Result<()> {
+/// use std::os::unix::fs::PermissionsExt;
+/// use vibe_safefs::{PrivateDirectoryMode, Project};
+/// let directory = tempfile::tempdir()?;
+/// std::fs::set_permissions(directory.path(), std::fs::Permissions::from_mode(0o755))?;
+/// let held = Project::open(directory.path())?.root_dir()?;
+/// let refusal = held.verify_user_private().unwrap_err();
+/// assert_eq!(refusal.downcast_ref::<PrivateDirectoryMode>().unwrap().mode(), 0o755);
+/// assert_eq!(held.unix_mode()?.unwrap() & 0o7777, 0o755);
+/// # Ok(())
+/// # }
+/// # #[cfg(not(unix))]
+/// # fn main() {}
+/// ```
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct PrivateDirectoryMode {
+    mode: u32,
+}
+
+impl PrivateDirectoryMode {
+    /// The permission bits observed on the rejecting held directory.
+    pub fn mode(&self) -> u32 {
+        self.mode
+    }
+}
+
+impl std::fmt::Display for PrivateDirectoryMode {
+    fn fmt(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(
+            formatter,
+            "current-user private directory has mode {:04o}; requires 0700",
+            self.mode
+        )
+    }
+}
+
+impl std::error::Error for PrivateDirectoryMode {}
+
 impl Pinned {
     /// Check ownership/mode on this held directory, never its ambient spelling.
     pub fn verify_user_private(&self) -> Result<()> {
@@ -37,6 +80,14 @@ impl Pinned {
         let metadata = file.metadata()?;
         if !metadata.is_dir() {
             bail!("private storage is not a directory");
+        }
+        #[cfg(unix)]
+        {
+            use std::os::unix::fs::{MetadataExt, PermissionsExt};
+            let mode = metadata.permissions().mode() & 0o7777;
+            if metadata.uid() == effective_uid() && mode != 0o700 {
+                return Err(PrivateDirectoryMode { mode }.into());
+            }
         }
         owner(&metadata, 0o700)
     }

@@ -182,7 +182,21 @@ fn symlinks_unsafe_permissions_and_hardlinked_values_refuse() {
         std::fs::Permissions::from_mode(0o755),
     )
     .unwrap();
-    assert_eq!(store.list(), Err(Error::Unavailable));
+    assert_eq!(
+        store.list(),
+        Err(Error::DirectoryMode {
+            path: root.path().join("secrets").to_str().unwrap().to_owned(),
+            mode: 0o755,
+        })
+    );
+    assert_eq!(
+        std::fs::symlink_metadata(root.path().join("secrets"))
+            .unwrap()
+            .permissions()
+            .mode()
+            & 0o7777,
+        0o755
+    );
     std::fs::set_permissions(
         root.path().join("secrets"),
         std::fs::Permissions::from_mode(0o700),
@@ -198,6 +212,49 @@ fn symlinks_unsafe_permissions_and_hardlinked_values_refuse() {
         .join("value");
     std::fs::hard_link(&file, root.path().join("alias")).unwrap();
     assert_eq!(store.list(), Err(Error::Unavailable));
+}
+
+#[cfg(unix)]
+#[test]
+fn selected_root_symlink_and_wrong_type_have_no_mode_remedy_or_effects() {
+    use std::os::unix::fs::{MetadataExt, symlink};
+    for link in [false, true] {
+        let root = private_temp();
+        let outside = private_temp();
+        let marker = outside.path().join("marker");
+        std::fs::write(&marker, b"KEEP").unwrap();
+        std::fs::set_permissions(outside.path(), std::fs::Permissions::from_mode(0o755)).unwrap();
+        let occupant = root.path().join("secrets");
+        if link {
+            symlink(outside.path(), &occupant).unwrap();
+        } else {
+            std::fs::write(&occupant, b"KEEP").unwrap();
+        }
+        let before = std::fs::symlink_metadata(&occupant).unwrap();
+        let store = Store::at_settings(root.path()).unwrap();
+        let error = store.snapshot().unwrap_err();
+        assert_eq!(error, Error::Unavailable);
+        assert!(!error.to_string().contains("chmod"));
+        assert!(!error.to_string().contains("0755"));
+        assert_eq!(
+            store.create("api-key", "Synthetic", value()),
+            Err(Error::Unavailable)
+        );
+        let after = std::fs::symlink_metadata(&occupant).unwrap();
+        assert_eq!((after.ino(), after.mode()), (before.ino(), before.mode()));
+        if link {
+            assert_eq!(std::fs::read_link(&occupant).unwrap(), outside.path());
+        } else {
+            assert_eq!(std::fs::read(&occupant).unwrap(), b"KEEP");
+        }
+        assert_eq!(std::fs::read(&marker).unwrap(), b"KEEP");
+        assert_eq!(
+            std::fs::symlink_metadata(outside.path()).unwrap().mode() & 0o7777,
+            0o755
+        );
+        assert_eq!(std::fs::read_dir(root.path()).unwrap().count(), 1);
+        assert_eq!(std::fs::read_dir(outside.path()).unwrap().count(), 1);
+    }
 }
 
 #[cfg(not(unix))]

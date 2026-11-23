@@ -104,7 +104,9 @@ pub fn run(ctx: &output::Context, args: AiArgs, cancel: &CancellationToken) -> R
                     }
                     _ => bail!("binding mode requires exactly its applicable connection argument"),
                 };
-                store.set_binding(harness, binding, expected)?
+                store
+                    .set_binding(harness, binding, expected)
+                    .map_err(|error| diagnostics::binding(harness, error))?
             } else {
                 store.binding(harness)?
             };
@@ -177,7 +179,9 @@ pub fn run(ctx: &output::Context, args: AiArgs, cancel: &CancellationToken) -> R
                 );
             }
             cancel.checkpoint()?;
-            store.remove(&id, &expected)?;
+            store
+                .remove(&id, &expected)
+                .map_err(|error| diagnostics::removal(&store, &id, &expected, error))?;
             None
         }
     };
@@ -199,6 +203,7 @@ pub fn run(ctx: &output::Context, args: AiArgs, cancel: &CancellationToken) -> R
     Ok(())
 }
 
+mod diagnostics;
 mod setup;
 
 pub(crate) use setup::NativeSettingsSetFailure;
