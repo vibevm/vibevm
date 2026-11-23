@@ -454,7 +454,8 @@ mod tests {
     fn slot_outcome_flat_record_names_actual_log_once() {
         use std::fs;
         const CHILD: &str = "VIBE_TEST_FLAT_SLOT_EVIDENCE";
-        if let Some(settings) = std::env::var_os(CHILD) {
+        if std::env::var_os(CHILD).is_some() {
+            let settings = tempfile::tempdir().unwrap();
             let ctx = context(false, false);
             let metadata = RunMetadata {
                 requested: "install".into(),
@@ -470,7 +471,7 @@ mod tests {
             };
             let mut observer = LifecycleSlotObserver::new(&ctx, metadata);
             // Inject only the scratch evidence root, without mutating process settings.
-            observer.evidence = Some(evidence::StepEvidence::new(Path::new(&settings)));
+            observer.evidence = Some(evidence::StepEvidence::new(settings.path()));
             let report = vibe_install::SlotLifecycleReport {
                 key: "org.example/hooked#must@slot(org.example/hooked@0.1.0)".into(),
                 reference: "fixture".into(),
@@ -506,12 +507,22 @@ mod tests {
             let log = observer.evidence.as_ref().unwrap().record(&report).unwrap();
             assert!(log.is_file());
             observer.flat_outcome(&report, Some(&log)).unwrap();
+            let _ = settings.keep(); // Parent-owned temporary HOME removes this child scratch.
             return;
         }
         let scratch = tempfile::tempdir().unwrap();
+        let temporary = scratch.path().join("tmp");
+        fs::create_dir(&temporary).unwrap();
         let output = std::process::Command::new(std::env::current_exe().unwrap())
             .args(["--exact", "commands::install::observer::tests::slot_outcome_flat_record_names_actual_log_once", "--nocapture"])
-            .env(CHILD, scratch.path())
+            .env_clear()
+            .env("PATH", "/usr/bin:/bin")
+            .env("HOME", scratch.path())
+            .env("VIBE_SETTINGS", scratch.path().join("settings"))
+            .env("TMPDIR", &temporary)
+            .env("TMP", &temporary)
+            .env("TEMP", &temporary)
+            .env(CHILD, "1")
             .output().unwrap();
         let combined = format!(
             "{}{}",
@@ -519,9 +530,13 @@ mod tests {
             String::from_utf8_lossy(&output.stderr)
         );
         assert!(output.status.success(), "{combined}");
-        let versions = scratch
-            .path()
-            .join("cache/install-steps/org.example/hooked/0.1.0");
+        let children: Vec<_> = fs::read_dir(&temporary)
+            .unwrap()
+            .map(|entry| entry.unwrap().path())
+            .filter(|path| path.join("cache/install-steps").is_dir())
+            .collect();
+        assert_eq!(children.len(), 1);
+        let versions = children[0].join("cache/install-steps/org.example/hooked/0.1.0");
         let runs: Vec<_> = fs::read_dir(versions)
             .unwrap()
             .map(|e| e.unwrap().path())
@@ -547,13 +562,17 @@ mod tests {
         );
         let displayed = line.split_once(" · log ").unwrap().1;
         let actual = log.to_string_lossy();
-        if let Some((head, tail)) = displayed.split_once('…') {
+        let normalized = displayed.strip_prefix("~/").map_or_else(
+            || displayed.to_owned(),
+            |rest| scratch.path().join(rest).display().to_string(),
+        );
+        if let Some((head, tail)) = normalized.split_once('…') {
             assert!(
                 actual.starts_with(head) && actual.ends_with(tail),
                 "{line}: {actual}"
             );
         } else {
-            assert_eq!(displayed, actual);
+            assert_eq!(normalized, actual);
         }
         assert_eq!(combined.matches(displayed).count(), 1, "{combined}");
         assert_eq!(

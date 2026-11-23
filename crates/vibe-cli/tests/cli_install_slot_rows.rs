@@ -83,6 +83,7 @@ fn failed_slot_names_its_log_once() {
     use std::fs;
 
     let (_outer, user, project, registry) = setup(Fixture::JudgmentTrust);
+    let child_home = std::env::var_os("HOME").expect("test HOME is known");
     let hooks = registry.join("org.example/hooked/v0.1.0/hooks");
     fs::write(
         hooks.join("post.sh"),
@@ -96,6 +97,7 @@ fn failed_slot_names_its_log_once() {
     .unwrap();
     let output = user
         .vibe()
+        .env("HOME", &child_home)
         .env_remove("VIBE_AGENT_COMMAND")
         .env_remove("VIBE_AGENT_ARGS")
         .env("NO_COLOR", "1")
@@ -148,13 +150,22 @@ fn failed_slot_names_its_log_once() {
     let displayed = outcome.split_once(" · log ").expect("log on failure row").1;
     // The renderer may shorten the middle, but must still name this actual file.
     let actual = log.to_string_lossy();
-    if let Some((head, tail)) = displayed.split_once('…') {
+    let normalized = displayed.strip_prefix("~/").map_or_else(
+        || displayed.to_owned(),
+        |rest| {
+            std::path::Path::new(&child_home)
+                .join(rest)
+                .display()
+                .to_string()
+        },
+    );
+    if let Some((head, tail)) = normalized.split_once('…') {
         assert!(
             actual.starts_with(head) && actual.ends_with(tail),
             "{displayed}: {actual}"
         );
     } else {
-        assert_eq!(displayed, actual);
+        assert_eq!(normalized, actual);
     }
     assert_eq!(combined.matches(displayed).count(), 1, "{combined}");
     // Counting only the shortened spelling would miss the old full-path announcements.
