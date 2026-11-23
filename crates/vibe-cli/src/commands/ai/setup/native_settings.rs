@@ -1,6 +1,7 @@
 //! Explicit persistent native setup, distinct from metadata binding setup.
 use super::*;
 use vibe_connections::NativeSettingsAdapter;
+mod render;
 mod set;
 pub(crate) use set::NativeSettingsSetFailure;
 pub(super) use set::attended;
@@ -112,20 +113,40 @@ where
     cancel.checkpoint()?;
     let metadata = store.details(&id)?.metadata;
     let preview = adapter.preview(store, &home, &id)?;
-    let summary = serde_json::json!({"agent":adapter.id(),"connection":id,"endpoint":metadata.endpoint,"model":metadata.default_model,"destination":destination,"preview_id":preview.preview_id()});
+    let summary = serde_json::json!({"agent":adapter.id(),"connection":id,"endpoint":&metadata.endpoint,"model":&metadata.default_model,"destination":destination,"preview_id":preview.preview_id()});
     let attended = !ctx.is_json()
         && !ctx.is_unattended()
         && std::io::stdin().is_terminal()
         && std::io::stderr().is_terminal();
     let mut response = response;
+    if !ctx.is_json() {
+        ctx.rule(&format!(
+            "native settings plan · connection {}",
+            metadata.label
+        ));
+        ctx.block(&render::plan_body(
+            &[render::TargetRow {
+                agent: adapter.id().to_owned(),
+                destination: destination.to_owned(),
+                state: "ready".to_owned(),
+            }],
+            id.as_str(),
+            &metadata.endpoint,
+            &metadata.default_model,
+            crate::output::language::viewport(),
+        ));
+    }
     if attended && response.is_none() {
-        println!("{}", serde_json::to_string_pretty(&summary)?);
         let choices = crate::output::prompts::named(&[
             "Keep native settings unchanged",
             "Write this connection into selected agent native settings",
         ]);
         if crate::output::prompts::choose_opt_interruptible(
-            "Explicit native settings write — Escape keeps state",
+            &format!(
+                "Write connection {} into {}'s native settings",
+                metadata.label,
+                adapter.id()
+            ),
             &choices,
             0,
         )? != Some(1)
@@ -143,8 +164,31 @@ where
     let report = serde_json::json!({"protocol":"vibe-ai-native-settings/1","ok":true,"applied":applied,"changed":changed,"preview":summary});
     if ctx.is_json() {
         ctx.emit_json(&report)?;
+    } else if applied {
+        let written = [adapter.id()];
+        let applied_agents: &[&str] = if changed { &written } else { &[] };
+        ctx.trailer(&render::written_what(
+            &metadata.label,
+            applied_agents,
+            usize::from(!changed),
+            0,
+        ));
     } else {
-        println!("{}", serde_json::to_string_pretty(&report)?);
+        let text = render::preview_trailer(
+            &[adapter.id()],
+            &render::apply_command(&[adapter.id()], id.as_str(), preview.preview_id()),
+        );
+        if ctx.is_quiet() {
+            ctx.summary(
+                &text
+                    .lines()
+                    .map(str::trim_start)
+                    .collect::<Vec<_>>()
+                    .join(" "),
+            );
+        } else {
+            ctx.block(&text);
+        }
     }
     Ok(())
 }

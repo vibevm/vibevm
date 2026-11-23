@@ -52,6 +52,8 @@ struct Plan {
     connection: SecretId,
     endpoint: String,
     model: String,
+    #[serde(skip)]
+    label: String,
     rows: Vec<Row>,
 }
 fn token(plan: &Plan) -> Result<String> {
@@ -128,6 +130,7 @@ fn plan(store: &Store, home: &Path, agents: &[String], id: &SecretId) -> Result<
         connection: id.clone(),
         endpoint: metadata.endpoint,
         model: metadata.default_model,
+        label: metadata.label.clone(),
         rows,
     })
 }
@@ -181,22 +184,39 @@ pub(super) fn run(
         && std::io::stdin().is_terminal()
         && std::io::stderr().is_terminal();
     let mut response = response;
+    if !ctx.is_json() {
+        ctx.rule(&format!(
+            "native settings plan · connection {}",
+            subject.label
+        ));
+        let rows: Vec<_> = subject
+            .rows
+            .iter()
+            .map(|row| render::TargetRow {
+                agent: row.agent.clone(),
+                destination: row.destination.to_owned(),
+                state: row.classification.to_owned(),
+            })
+            .collect();
+        ctx.block(&render::plan_body(
+            &rows,
+            subject.connection.as_str(),
+            &subject.endpoint,
+            &subject.model,
+            crate::output::language::viewport(),
+        ));
+    }
     if attended && response.is_none() {
-        println!(
-            "{}",
-            serde_json::to_string_pretty(
-                &serde_json::json!({"preview_id":preview_id,"preview":subject})
-            )?
-        );
-        println!(
-            "Incompatible agents keep native authentication. Separate native files are not one atomic transaction."
-        );
         let choices = crate::output::prompts::named(&[
             "Keep native settings unchanged",
             "Write this connection into selected compatible native settings",
         ]);
         if crate::output::prompts::choose_opt_interruptible(
-            "Explicit native settings set write — Escape keeps state",
+            &format!(
+                "Write connection {} into the native settings of {}",
+                subject.label,
+                agents.join(", ")
+            ),
             &choices,
             0,
         )? != Some(1)
@@ -234,8 +254,46 @@ pub(super) fn run(
     }
     if ctx.is_json() {
         ctx.emit_json(&report)?;
+    } else if confirmed {
+        let applied_agents: Vec<_> = subject
+            .rows
+            .iter()
+            .filter(|row| row.outcome == "applied")
+            .map(|row| row.agent.as_str())
+            .collect();
+        let matched = subject
+            .rows
+            .iter()
+            .filter(|row| row.outcome == "noop")
+            .count();
+        let skipped = subject
+            .rows
+            .iter()
+            .filter(|row| row.outcome == "skipped")
+            .count();
+        ctx.trailer(&render::written_what(
+            &subject.label,
+            &applied_agents,
+            matched,
+            skipped,
+        ));
     } else {
-        println!("{}", serde_json::to_string_pretty(&report)?);
+        let names: Vec<_> = agents.iter().map(String::as_str).collect();
+        let text = render::preview_trailer(
+            &names,
+            &render::apply_command(&names, subject.connection.as_str(), &preview_id),
+        );
+        if ctx.is_quiet() {
+            ctx.summary(
+                &text
+                    .lines()
+                    .map(str::trim_start)
+                    .collect::<Vec<_>>()
+                    .join(" "),
+            );
+        } else {
+            ctx.block(&text);
+        }
     }
     Ok(())
 }
@@ -262,7 +320,7 @@ pub(in super::super) fn attended(
     let available = store.list()?;
     let rows: Vec<_> = available.items.iter().collect();
     if rows.is_empty() {
-        println!("No existing connection available; native settings unchanged.");
+        ctx.hint("no connection exists; native settings unchanged");
         return Ok(());
     }
     let labels: Vec<_> = rows
@@ -308,6 +366,7 @@ mod tests {
                 .unwrap(),
             endpoint: "https://example.invalid/v1".into(),
             model: "synthetic".into(),
+            label: "synthetic".into(),
             rows: ["pi", "qwen", "hermes", "claude"]
                 .into_iter()
                 .map(|agent| Row {
