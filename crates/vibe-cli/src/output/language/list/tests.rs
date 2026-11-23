@@ -72,3 +72,51 @@ fn lossless_wide_output_and_default_narrow_output_are_unchanged() {
         "  1.  contribution識別子-with-a-long-name\n      metadata條件 requires a configured option…"
     );
 }
+
+#[test]
+fn lossless_multiline_fields_keep_row_association() {
+    let list = List::new(vec![
+        Row::new(vec![Cell::text("FIRST"), Cell::text("CELLONE\nCELLTWO")])
+            .meta(vec![Meta::note("METAONE\nMETATWO")])
+            .child("CHILDONE\nCHILDTWO"),
+        Row::new(vec![Cell::text("SECOND_DISTINCT"), Cell::text("TAIL")]),
+    ])
+    .meta_column();
+    for width in [32, 48] {
+        let rendered = list.render_lossless_at(width);
+        let plain = console::strip_ansi_codes(&rendered);
+        assert!(plain.lines().all(|line| measure(line) <= width), "{plain}");
+        let joined = plain.replace('\n', "");
+        for marker in [
+            "FIRST",
+            "CELLONE",
+            "CELLTWO",
+            "METAONE",
+            "METATWO",
+            "CHILDONE",
+            "CHILDTWO",
+            "SECOND_DISTINCT",
+            "TAIL",
+        ] {
+            assert_eq!(joined.matches(marker).count(), 1, "{marker}: {plain}");
+        }
+        let markers = [
+            "FIRST",
+            "CELLONE",
+            "CELLTWO",
+            "METAONE",
+            "METATWO",
+            "CHILDONE",
+            "CHILDTWO",
+            "SECOND_DISTINCT",
+            "TAIL",
+        ];
+        for pair in markers.windows(2) {
+            assert!(
+                joined.find(pair[0]).unwrap() < joined.find(pair[1]).unwrap(),
+                "wrong ownership/order: {plain}"
+            );
+        }
+    }
+    assert_eq!(list.render_lossless_at(200), list.render_at(200));
+}

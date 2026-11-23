@@ -202,24 +202,58 @@ impl List {
     #[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-067#width")]
     pub(crate) fn render_lossless_at(&self, width: usize) -> String {
         let full = self.render_at(usize::MAX / 4);
-        if full.lines().all(|line| measure(line) <= width) {
-            return self.render_at(width);
+        if full.lines().all(|line| measure(line) <= width) && self.render_at(width) == full {
+            return full;
         }
-        let mut original = full.lines();
+        let columns = self
+            .rows
+            .iter()
+            .map(|row| row.cells.len())
+            .max()
+            .unwrap_or(0);
+        let widths: Vec<_> = (0..columns)
+            .map(|column| {
+                self.rows
+                    .iter()
+                    .filter_map(|row| row.cells.get(column))
+                    .map(|cell| measure(&cell.text))
+                    .max()
+                    .unwrap_or(0)
+            })
+            .collect();
+        let child_offset = 2 + widths[..self.child_column.min(widths.len())]
+            .iter()
+            .filter(|width| **width > 0)
+            .map(|width| width + GAP)
+            .sum::<usize>();
         let mut lines = Vec::new();
         for row in &self.rows {
-            let line = original.next().unwrap_or_default();
-            if measure(line) <= width {
-                lines.push(line.to_owned());
+            let line = self.row_line(row, &widths, true, usize::MAX / 4);
+            if line.split('\n').all(|line| measure(line) <= width) {
+                lines.push(line);
             } else {
                 let mut fields = row.cells.iter();
                 if let Some(first) = fields.next() {
+                    let role = if row.dim { Role::Dim } else { first.role };
                     let lead = match row.glyph {
-                        Some((glyph, _)) => format!("{} ", glyph.text()),
+                        Some((glyph, glyph_role)) => {
+                            format!("{} ", paint(glyph_role, glyph.text()))
+                        }
                         None => "  ".to_owned(),
                     };
-                    let first = format!("{lead}{}", first.text);
-                    lossless_lines(&mut lines, &first, width, Role::Text);
+                    let first = format!("{lead}{}", paint(role, &first.text));
+                    let start = lines.len();
+                    lossless_lines(&mut lines, &first, width, role);
+                    if let Some((glyph, glyph_role)) = row.glyph {
+                        let plain = console::strip_ansi_codes(&lines[start]);
+                        if let Some(rest) = plain.strip_prefix(&format!("{} ", glyph.text())) {
+                            lines[start] = format!(
+                                "{} {}",
+                                paint(glyph_role, glyph.text()),
+                                paint(role, rest)
+                            );
+                        }
+                    }
                 }
                 for cell in fields {
                     let role = if row.dim { Role::Dim } else { cell.role };
@@ -232,9 +266,13 @@ impl List {
                     lossless_lines(&mut lines, &format!("  {meta}"), width, Role::Dim);
                 }
             }
-            for _ in &row.children {
-                let child = original.next().unwrap_or_default();
-                lossless_lines(&mut lines, child, width, Role::Text);
+            for child in &row.children {
+                let child = format!(
+                    "{}{} {child}",
+                    " ".repeat(child_offset),
+                    Glyph::Child.text()
+                );
+                lossless_lines(&mut lines, &child, width, Role::Text);
             }
         }
         lines.join("\n")
