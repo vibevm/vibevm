@@ -45,6 +45,13 @@ pub(crate) fn finish(
         if ctx.is_machine_progress() {
             eprintln!("{report}");
         }
+        if !ctx.is_json() && !ctx.is_machine_progress() {
+            let what = stop_trailer_what(
+                ctx.stopped_step().as_deref(),
+                cancellation.publication_state(),
+            );
+            ctx.trailer_on(crate::output::language::Stream::Err, false, &what);
+        }
         return ExitCode::from(130);
     }
     match result {
@@ -73,5 +80,46 @@ pub(crate) fn finish(
             ctx.error_with_suffix(&err, suffix.as_deref());
             as_exit_code(&err)
         }
+    }
+}
+
+/// What a stopped run's trailer says: where the stop caught it and what
+/// became of its changes, read from the token's publication state.
+fn stop_trailer_what(step: Option<&str>, publication: &str) -> String {
+    let head = match step {
+        Some(step) => format!("stopped at {step}"),
+        None => "stopped".to_owned(),
+    };
+    let changes = match publication {
+        "not-started" => "nothing changed",
+        "restored" => "rolled back, nothing changed",
+        "committed" => "already committed, kept",
+        _ => "recovery required, not rolled back",
+    };
+    format!("{head} · {changes}")
+}
+
+#[cfg(test)]
+mod tests {
+    use super::stop_trailer_what;
+
+    #[test]
+    fn stop_trailer_names_step_and_rollback() {
+        assert_eq!(
+            stop_trailer_what(Some("wait"), "restored"),
+            "stopped at wait · rolled back, nothing changed"
+        );
+        assert_eq!(
+            stop_trailer_what(None, "not-started"),
+            "stopped · nothing changed"
+        );
+        assert_eq!(
+            stop_trailer_what(Some("wait"), "committed"),
+            "stopped at wait · already committed, kept"
+        );
+        assert_eq!(
+            stop_trailer_what(Some("wait"), "recovery-required"),
+            "stopped at wait · recovery required, not rolled back"
+        );
     }
 }

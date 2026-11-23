@@ -457,7 +457,6 @@ impl InteractiveRenderer {
 impl super::Context {
     /// The first stopped child step that had a log in this run.
     #[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-067#collapse")]
-    #[allow(dead_code)] // read by the stop trailer
     pub(crate) fn stopped_step(&self) -> Option<String> {
         self.progress_renderer
             .as_ref()

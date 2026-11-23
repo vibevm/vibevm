@@ -107,7 +107,11 @@ impl StepLogs {
     pub(super) fn summary(&self) -> (usize, Option<PathBuf>) {
         let last = self.last.lock().ok().and_then(|last| last.clone());
         let run = last.and_then(|log| {
-            let steps = log.parent()?.parent()?;
+            let parent = log.parent()?;
+            if parent.file_name()? == "logs" {
+                return parent.parent().map(Path::to_path_buf);
+            }
+            let steps = parent.parent()?;
             (steps.file_name()? == "steps").then(|| steps.parent().map(Path::to_path_buf))?
         });
         (self.rows.load(Ordering::Relaxed), run)
@@ -196,6 +200,13 @@ pub(super) fn collapsed(
     // collapsing; every remaining row is a visible completed block, at any depth.
     logs.rows.fetch_add(1, Ordering::Relaxed);
     let log = logs.of(task_id, &headline.name);
+    // A task registration can name a merely reserved stream destination.
+    // Remember only a file that exists when this task actually ends.
+    if let Some(path) = log.as_ref().filter(|path| path.is_file())
+        && let Ok(mut last) = logs.last.lock()
+    {
+        *last = Some(path.clone());
+    }
     let (count, lines) = log.as_deref().map(read_lines).unwrap_or_default();
     let counted = |meta: &mut Vec<Meta>| {
         if count > 0 {
@@ -399,6 +410,65 @@ mod tests {
             assert_eq!(empty.stopped_at(), None);
         }
         task.finish();
+    }
+
+    #[test]
+    fn run_summary_uses_existing_completed_task_logs_in_both_layouts() {
+        let root = tempfile::tempdir().unwrap();
+        for relative in ["steps/wait/output.log", "logs/pre-install.log"] {
+            let logs = StepLogs::default();
+            let log = root.path().join(relative);
+            std::fs::create_dir_all(log.parent().unwrap()).unwrap();
+            let task = vibe_core::progress::Progress::default().task("wait");
+            logs.note_task(task.id(), &log);
+            assert_eq!(logs.summary(), (0, None), "registration is not evidence");
+            std::fs::write(&log, "actual current run output\n").unwrap();
+            collapsed(
+                &Headline::parse("wait", 1, false),
+                task.id(),
+                0,
+                &End::Stopped,
+                Duration::ZERO,
+                &logs,
+            );
+            assert_eq!(logs.summary(), (1, Some(root.path().to_path_buf())));
+            assert!(!logs.has_task_log(task.id()), "consumed task mapping");
+            task.finish();
+        }
+        let logs = StepLogs::default();
+        let log = root.path().join("steps/ordinary/output.log");
+        std::fs::create_dir_all(log.parent().unwrap()).unwrap();
+        std::fs::write(&log, "ordinary output\n").unwrap();
+        logs.note("ordinary", &log);
+        assert_eq!(logs.summary(), (0, Some(root.path().to_path_buf())));
+    }
+
+    #[test]
+    fn run_summary_never_invents_evidence_for_missing_or_discarded_logs() {
+        let root = tempfile::tempdir().unwrap();
+        for discarded in [false, true] {
+            let logs = StepLogs::default();
+            let task = vibe_core::progress::Progress::default().task("wait");
+            logs.note_task(task.id(), &root.path().join("logs/missing.log"));
+            if discarded {
+                logs.discard_task_log(task.id());
+            }
+            collapsed(
+                &Headline::parse("wait", 1, false),
+                task.id(),
+                0,
+                &End::Stopped,
+                Duration::ZERO,
+                &logs,
+            );
+            assert_eq!(logs.summary(), (1, None));
+            assert!(!logs.has_task_log(task.id()));
+            task.finish();
+        }
+        let logs = StepLogs::default();
+        logs.note("missing", &root.path().join("steps/missing/output.log"));
+        // Legacy note() registration preserves its existing summary contract.
+        assert_eq!(logs.summary(), (0, Some(root.path().to_path_buf())));
     }
 
     #[test]
