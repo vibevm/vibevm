@@ -54,8 +54,30 @@ fn with_last<R>(f: impl FnOnce(&mut [Option<Kind>; 2]) -> R) -> R {
     LAST_OF_THREAD.with(|last| f(&mut last.borrow_mut()))
 }
 
-pub(super) fn set_one_screen(one: bool) {
+/// Share one blank-line record between stdout and stderr: they land on one screen or in one file.
+pub(crate) fn set_one_screen(one: bool) {
     ONE_SCREEN.store(one, Ordering::Relaxed);
+}
+
+/// Whether stdout and stderr have the same device and inode on Unix.
+#[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-067#plain")]
+pub(crate) fn same_destination() -> bool {
+    #[cfg(unix)]
+    {
+        use std::os::unix::fs::MetadataExt;
+
+        match (
+            std::fs::metadata("/dev/fd/1"),
+            std::fs::metadata("/dev/fd/2"),
+        ) {
+            (Ok(out), Ok(err)) => out.dev() == err.dev() && out.ino() == err.ino(),
+            _ => false,
+        }
+    }
+    #[cfg(not(unix))]
+    {
+        false
+    }
 }
 
 /// Both streams on one screen share one record, so a block on stdout after

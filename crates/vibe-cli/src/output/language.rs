@@ -30,7 +30,7 @@ pub(crate) use glyphs::{
 };
 pub(crate) use list::{Cell, List, Row};
 pub(crate) use meta::{Meta, bytes, elapsed, join_meta, short_path};
-pub(crate) use page::{Kind, Stream, before, mark};
+pub(crate) use page::{Kind, Stream, before, mark, same_destination, set_one_screen};
 pub(crate) use roles::{Role, colour_on, paint, style};
 pub(crate) use rule::{rule, rule_at};
 pub(crate) use table::Table;
