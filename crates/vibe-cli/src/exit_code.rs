@@ -81,6 +81,26 @@ pub fn app_exit_code(class: vibe_app::ErrorClass) -> u8 {
     }
 }
 
+/// A command the reader stopped at a question (Escape or Ctrl-C): the
+/// shell's interrupted status, not a failure.
+pub const CANCELLED: u8 = 130;
+
+/// Whether `err` is a question the reader left with Escape or Ctrl-C: an
+/// [`std::io::ErrorKind::Interrupted`] anywhere in its chain, which is what
+/// the PROP-067 `#question` helpers return instead of an answer.
+#[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-067#question")]
+pub fn is_cancelled(err: &anyhow::Error) -> bool {
+    // `dialoguer::Error` reports no source, so its I/O error is opened here.
+    err.chain().any(|cause| {
+        let io = cause.downcast_ref::<std::io::Error>().or_else(|| {
+            cause
+                .downcast_ref::<dialoguer::Error>()
+                .map(|dialoguer::Error::IO(io)| io)
+        });
+        io.is_some_and(|io| io.kind() == std::io::ErrorKind::Interrupted)
+    })
+}
+
 #[specmark::spec(implements = "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#exit-codes")]
 pub fn as_exit_code(err: &anyhow::Error) -> ExitCode {
     // PROP-068 `#dl`: every classified `vibe dl` failure has its own status.
@@ -89,6 +109,9 @@ pub fn as_exit_code(err: &anyhow::Error) -> ExitCode {
     }
     if let Some(install_err) = err.downcast_ref::<InstallError>() {
         return ExitCode::from(install_err.exit_code());
+    }
+    if is_cancelled(err) {
+        return ExitCode::from(CANCELLED);
     }
     // PROP-066 `#consent` / `#policy`: a refusal before any effect — an
     // unanswered remap offer with nobody to ask, a named remap package the
@@ -176,6 +199,24 @@ mod tests {
         let err = anyhow::anyhow!("whoops");
         let code = as_exit_code(&err);
         assert_eq!(code, ExitCode::from(GENERAL));
+    }
+
+    #[test]
+    fn an_interrupted_question_is_a_cancellation_through_any_context() {
+        let interrupted = || {
+            dialoguer::Error::from(std::io::Error::new(
+                std::io::ErrorKind::Interrupted,
+                "the question was interrupted",
+            ))
+        };
+        let err = anyhow::Error::new(interrupted()).context("reading user confirmation");
+        assert!(is_cancelled(&err));
+        assert_eq!(as_exit_code(&err), ExitCode::from(CANCELLED));
+        let bare = anyhow::Error::new(interrupted());
+        assert_eq!(as_exit_code(&bare), ExitCode::from(CANCELLED));
+        let other = anyhow::Error::new(std::io::Error::other("disk")).context("writing");
+        assert!(!is_cancelled(&other));
+        assert_eq!(as_exit_code(&other), ExitCode::from(GENERAL));
     }
 
     #[test]

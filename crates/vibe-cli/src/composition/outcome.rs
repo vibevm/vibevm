@@ -64,6 +64,12 @@ pub(crate) fn finish(
             // object — same context chain for stderr, same downcast identity
             // for the exit code — and a suffix that only `HumanQuiet` prints.
             let (err, suffix) = commands::compile_trace::detach_quiet_suffix(err);
+            // A question left with Escape or Ctrl-C stopped the command; it
+            // did not fail (PROP-067 `#question`).
+            if crate::exit_code::is_cancelled(&err) && !ctx.is_json() {
+                ctx.cancelled();
+                return as_exit_code(&err);
+            }
             ctx.error_with_suffix(&err, suffix.as_deref());
             as_exit_code(&err)
         }

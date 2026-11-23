@@ -175,6 +175,18 @@ impl Context {
         }
     }
 
+    /// The one line of a command the reader stopped at a question with
+    /// Escape or Ctrl-C: the failed glyph and `cancelled`, not a refusal
+    /// block.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-067#question")]
+    pub(crate) fn cancelled(&self) {
+        if self.suppress_output {
+            return;
+        }
+        let line = cancelled_line();
+        self.suspend_progress(|| eprintln!("{line}"));
+    }
+
     /// The trailer of this command (PROP-067 `#trailer`): what happened,
     /// how many blocks its list holds, how long it took and the run record
     /// in full.
@@ -277,6 +289,12 @@ impl Context {
             self.suspend_progress(|| eprintln!("{gap}{trailer}"));
         }
     }
+}
+
+/// The line of a command stopped at a question: the failed glyph, then
+/// `cancelled`.
+pub(crate) fn cancelled_line() -> String {
+    format!("{} cancelled", paint(Role::Alert, Glyph::Failed.text()))
 }
 
 /// The refusal an error reads as: its code (the application's own, or a

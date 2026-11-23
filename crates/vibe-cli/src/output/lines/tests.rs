@@ -100,3 +100,10 @@ fn a_cause_behind_a_bare_tail_still_reaches_the_why_and_fixes_are_not_repeated()
         ]
     );
 }
+
+#[test]
+fn a_cancelled_question_is_one_line() {
+    let line = super::cancelled_line();
+    assert!(line.ends_with(" cancelled"), "{line}");
+    assert!(!line.contains('\n'), "{line}");
+}
