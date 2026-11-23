@@ -188,6 +188,8 @@ pub(crate) struct LifecycleSlotObserver {
     /// The run's step evidence, absent when no settings home could be
     /// resolved to write it under.
     evidence: Option<evidence::StepEvidence>,
+    /// Author labels by execution key, shared by planned skips and running rows.
+    labels: std::sync::Mutex<std::collections::BTreeMap<String, (String, Option<String>)>>,
     log_mode: crate::commands::app::display::LogMode,
     trailer: SharedTrailer,
 }
@@ -200,6 +202,7 @@ impl LifecycleSlotObserver {
             progress: vibe_core::progress::Progress::default(),
             rows: std::sync::Mutex::new(std::collections::BTreeMap::new()),
             evidence: None,
+            labels: std::sync::Mutex::new(std::collections::BTreeMap::new()),
             log_mode: crate::commands::app::display::LogMode::Live,
             trailer: SharedTrailer::default(),
         }
@@ -243,6 +246,28 @@ impl LifecycleSlotObserver {
         }
     }
 
+    /// Render the post-record outcome only when no panel row owned it.
+    #[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-067#children")]
+    fn flat_outcome(
+        &self,
+        report: &vibe_install::SlotLifecycleReport,
+        log: Option<&Path>,
+    ) -> std::result::Result<(), String> {
+        let labels = self.labels.lock().ok();
+        let label = labels
+            .as_ref()
+            .and_then(|labels| labels.get(&report.key))
+            .map(|(id, title)| (id.as_str(), title.as_deref()));
+        crate::commands::lifecycle::emit_slot_transition_outcome(
+            &self.ctx,
+            &self.metadata,
+            report,
+            label,
+            log,
+        )
+        .map_err(|error| error.to_string())
+    }
+
     /// Close this contribution's panel row, and say whether there was one —
     /// which is also the answer to "may the flat line record be skipped".
     fn close_row(&self, report: &vibe_install::SlotLifecycleReport) -> bool {
@@ -270,6 +295,13 @@ impl LifecycleSlotObserver {
 
 impl vibe_install::SlotLifecycleObserver for LifecycleSlotObserver {
     fn observe(&self, plan: &vibe_install::SlotLifecyclePlan) -> std::result::Result<(), String> {
+        if let Ok(mut labels) = self.labels.lock() {
+            labels.extend(
+                plan.entries
+                    .iter()
+                    .map(|entry| (entry.key.clone(), (entry.id.clone(), entry.title.clone()))),
+            );
+        }
         crate::commands::lifecycle::surface_slot_plan(&self.ctx, plan, &self.metadata)
             .map_err(|error| error.to_string())
     }
@@ -311,13 +343,6 @@ impl vibe_install::SlotLifecycleObserver for LifecycleSlotObserver {
         let sink = evidence.stream(entry, task.clone(), self.ctx.clone(), self.log_mode);
         if let Some(path) = evidence.stream_path(&entry.key) {
             self.ctx.note_task_log(task.id(), &path);
-            if self.log_mode == crate::commands::app::display::LogMode::Quiet
-                && !self.ctx.is_json()
-                && !self.ctx.is_quiet()
-            {
-                self.ctx
-                    .step(&format!("log of `{}`: {}", entry.key, path.display()));
-            }
         }
         sink
     }
@@ -337,24 +362,10 @@ impl vibe_install::SlotLifecycleObserver for LifecycleSlotObserver {
         {
             trailer.evidence_directory = Some(directory.to_path_buf());
         }
-        // `#ordinary-failure`: a failure's warning carries the contribution,
-        // its captured output and **its log path**. The first two are
-        // already in the row a client reads and in the error the run
-        // refuses with; the path is only knowable here, where the record
-        // was written.
-        if let Some(log) = log
-            && report.status != "ok"
-            && !self.ctx.is_json()
-            && !self.ctx.is_quiet()
-        {
-            self.ctx
-                .step(&format!("log of `{}`: {}", report.key, log.display()));
-        }
         if self.close_row(report) {
             return Ok(());
         }
-        crate::commands::lifecycle::emit_slot_transition_outcome(&self.ctx, &self.metadata, report)
-            .map_err(|error| error.to_string())
+        self.flat_outcome(report, log.as_deref())
     }
 }
 
@@ -436,5 +447,141 @@ mod tests {
             let observer = CliInstallObserver::new(&silent, None).with_progress(silent.progress());
             assert_eq!(observer.progress().task("silent install").id().get(), 0);
         }
+    }
+
+    /// Capture the post-record flat boundary in a child harness, not a full install.
+    #[test]
+    fn slot_outcome_flat_record_names_actual_log_once() {
+        use std::fs;
+        const CHILD: &str = "VIBE_TEST_FLAT_SLOT_EVIDENCE";
+        if std::env::var_os(CHILD).is_some() {
+            let settings = tempfile::tempdir().unwrap();
+            let ctx = context(false, false);
+            let metadata = RunMetadata {
+                requested: "install".into(),
+                chain: vec!["install".into()],
+                offline: true,
+                assume_yes: true,
+                agent_mode: vibe_wire::generated::lifecycle::e1::context::RunAgentMode::Cli,
+                force: false,
+                trace_compile: false,
+                run_id: "flat-test".into(),
+                started: "2026-11-24T00:00:00Z".into(),
+                selected: ".".into(),
+            };
+            let mut observer = LifecycleSlotObserver::new(&ctx, metadata);
+            // Inject only the scratch evidence root, without mutating process settings.
+            observer.evidence = Some(evidence::StepEvidence::new(settings.path()));
+            let report = vibe_install::SlotLifecycleReport {
+                key: "org.example/hooked#must@slot(org.example/hooked@0.1.0)".into(),
+                reference: "fixture".into(),
+                slot_target: Some(vibe_wire::generated::lifecycle::e1::context::SlotTarget {
+                    group: "org.example".into(),
+                    name: "hooked".into(),
+                    version: "0.1.0".into(),
+                    kind: "tool".into(),
+                    root: "/slot".into(),
+                }),
+                point: "slot:post-install".into(),
+                provider: "org.example/hooked".into(),
+                handler: "script".into(),
+                tier: "dependency".into(),
+                version: Some("0.1.0".into()),
+                status: "fail".into(),
+                flagged: true,
+                message: Some("exit 17".into()),
+                stdout: Some("synthetic captured output".into()),
+                stderr: None,
+                stdout_truncated: false,
+                stderr_truncated: false,
+            };
+            observer
+                .labels
+                .lock()
+                .unwrap()
+                .insert(report.key.clone(), ("must".into(), Some("Must run".into())));
+            assert!(
+                !observer.close_row(&report),
+                "new observer has no panel row"
+            );
+            let log = observer.evidence.as_ref().unwrap().record(&report).unwrap();
+            assert!(log.is_file());
+            observer.flat_outcome(&report, Some(&log)).unwrap();
+            let _ = settings.keep(); // Parent-owned temporary HOME removes this child scratch.
+            return;
+        }
+        let scratch = tempfile::tempdir().unwrap();
+        let temporary = scratch.path().join("tmp");
+        fs::create_dir(&temporary).unwrap();
+        let output = std::process::Command::new(std::env::current_exe().unwrap())
+            .args(["--exact", "commands::install::observer::tests::slot_outcome_flat_record_names_actual_log_once", "--nocapture"])
+            .env_clear()
+            .env("PATH", "/usr/bin:/bin")
+            .env("HOME", scratch.path())
+            .env("VIBE_SETTINGS", scratch.path().join("settings"))
+            .env("TMPDIR", &temporary)
+            .env("TMP", &temporary)
+            .env("TEMP", &temporary)
+            .env(CHILD, "1")
+            .output().unwrap();
+        let combined = format!(
+            "{}{}",
+            String::from_utf8_lossy(&output.stdout),
+            String::from_utf8_lossy(&output.stderr)
+        );
+        assert!(output.status.success(), "{combined}");
+        let children: Vec<_> = fs::read_dir(&temporary)
+            .unwrap()
+            .map(|entry| entry.unwrap().path())
+            .filter(|path| path.join("cache/install-steps").is_dir())
+            .collect();
+        assert_eq!(children.len(), 1);
+        let versions = children[0].join("cache/install-steps/org.example/hooked/0.1.0");
+        let runs: Vec<_> = fs::read_dir(versions)
+            .unwrap()
+            .map(|e| e.unwrap().path())
+            .collect();
+        assert_eq!(runs.len(), 1);
+        let document: vibe_wire::generated::install_steps::InstallSteps =
+            serde_json::from_slice(&fs::read(runs[0].join("steps.json")).unwrap()).unwrap();
+        assert_eq!(document.contributions.len(), 1);
+        let failed = &document.contributions[0];
+        assert_eq!(
+            failed.outcome,
+            vibe_wire::generated::install_steps::Outcome::Fail
+        );
+        let log = runs[0].join(failed.log.as_ref().unwrap());
+        assert!(log.is_file());
+        let line = combined
+            .lines()
+            .find(|line| line.contains("must  Must run · exit 17 · log "))
+            .expect(&combined);
+        assert!(
+            line.starts_with("✗ └ ") || line.starts_with("x ` "),
+            "{line}"
+        );
+        let displayed = line.split_once(" · log ").unwrap().1;
+        let actual = log.to_string_lossy();
+        let normalized = displayed.strip_prefix("~/").map_or_else(
+            || displayed.to_owned(),
+            |rest| scratch.path().join(rest).display().to_string(),
+        );
+        if let Some((head, tail)) = normalized.split_once('…') {
+            assert!(
+                actual.starts_with(head) && actual.ends_with(tail),
+                "{line}: {actual}"
+            );
+        } else {
+            assert_eq!(normalized, actual);
+        }
+        assert_eq!(combined.matches(displayed).count(), 1, "{combined}");
+        assert_eq!(
+            combined
+                .matches(log.file_name().unwrap().to_str().unwrap())
+                .count(),
+            1,
+            "{combined}"
+        );
+        assert!(!combined.contains("log of `"), "{combined}");
     }
 }

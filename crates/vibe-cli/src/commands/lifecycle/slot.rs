@@ -4,7 +4,9 @@ use vibe_lifecycle::RunMetadata;
 use vibe_wire::generated::lifecycle_plan::{LifecyclePlan, PlannedContribution};
 
 use crate::output;
-use crate::output::language::{Cell, List, Meta, Role, Row};
+use crate::output::language::{
+    Cell, Glyph, GlyphSet, List, Meta, Role, Row, join_meta, paint, short_path,
+};
 
 /// One row of the human slot plan, read off a plan entry.
 #[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-065#ordinary-plan")]
@@ -69,10 +71,63 @@ pub(super) fn plan_list(rows: &[PlanRow<'_>], width: usize) -> String {
     List::new(rows).meta_column().render_lossless_at(width)
 }
 
+/// The contribution id inside an execution key
+/// `<group>/<name>#<id>@slot(<target>)`; the key itself when it has no `#`.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-065#ordinary-plan")]
+pub(super) fn id_of_key(key: &str) -> &str {
+    key.split_once('#')
+        .map(|(_, rest)| rest.split_once("@slot(").map_or(rest, |(id, _)| id))
+        .unwrap_or(key)
+}
+
+/// The flat record of one contribution's outcome (PROP-067 `#block`,
+/// `#children`): the status glyph, the child branch, the id, the title, then
+/// a skip's reason, a failure's message and the log path as metadata.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-067#children")]
+pub(super) fn outcome_line(
+    set: GlyphSet,
+    status: &str,
+    id: &str,
+    title: Option<&str>,
+    message: Option<&str>,
+    log: Option<&str>,
+) -> String {
+    let plain = |text: &str| text.replace('`', "");
+    let (glyph, role) = match status {
+        "ok" | "fresh" => (Glyph::Done, Role::Ok),
+        "skip" | "cancelled" | "delegated" => (Glyph::Skipped, Role::Dim),
+        _ => (Glyph::Failed, Role::Alert),
+    };
+    let mut meta = Vec::new();
+    match status {
+        "ok" => {}
+        "fresh" => meta.push(Meta::note("fresh")),
+        "skip" => meta.push(Meta::note(format!(
+            "skipped: {}",
+            plain(message.unwrap_or("no reason recorded"))
+        ))),
+        "delegated" => meta.push(Meta::note("waiting for the hosting agent")),
+        "cancelled" => meta.push(Meta::note("cancelled")),
+        other => meta.push(Meta::Alert(plain(message.unwrap_or(other)))),
+    }
+    if let Some(log) = log {
+        meta.push(Meta::note(format!("log {}", short_path(log))));
+    }
+    let title = title.map(|title| format!("  {title}")).unwrap_or_default();
+    format!(
+        "{} {} {id}{title}{}",
+        paint(role, glyph.in_set(set)),
+        Glyph::Child.in_set(set),
+        join_meta(&meta)
+    )
+}
+
 pub(crate) fn emit_transition_outcome(
     ctx: &output::Context,
     metadata: &RunMetadata,
     report: &vibe_install::SlotLifecycleReport,
+    label: Option<(&str, Option<&str>)>,
+    log: Option<&std::path::Path>,
 ) -> Result<()> {
     if ctx.is_quiet() || ctx.suppresses_output() {
         return Ok(());
@@ -85,14 +140,21 @@ pub(crate) fn emit_transition_outcome(
     if ctx.is_json() {
         return Ok(());
     }
-    let target = report.slot_target.as_ref().map_or_else(
-        || "unknown target".into(),
-        |target| format!("{}/{}@{}", target.group, target.name, target.version),
+    let (id, title) = label.unwrap_or((id_of_key(&report.key), None));
+    let log = log.map(|path| path.display().to_string());
+    let line = outcome_line(
+        GlyphSet::detect(),
+        &report.status,
+        id,
+        title,
+        report.message.as_deref(),
+        log.as_deref(),
     );
-    ctx.step(&format!(
-        "{} `{}` — provider={} target={target}",
-        report.status, report.key, report.provider
-    ));
+    let gap = crate::output::language::before(
+        crate::output::language::Stream::Out,
+        crate::output::language::Kind::Row("slot outcomes"),
+    );
+    ctx.suspend_progress(|| println!("{gap}{line}"));
     Ok(())
 }
 

@@ -83,3 +83,52 @@ fn slot_plan_rows_fit_viewport() {
         }
     }
 }
+
+#[test]
+fn slot_outcome_rows_carry_reason_message_and_log() {
+    let set = GlyphSet::Unicode;
+    assert_eq!(
+        outcome_line(
+            set,
+            "skip",
+            "docs-only",
+            Some("Copy the docs"),
+            Some("when `command_present = \"x\"` does not hold"),
+            None
+        ),
+        "○ └ docs-only  Copy the docs · skipped: when command_present = \"x\" does not hold"
+    );
+    assert_eq!(
+        outcome_line(
+            set,
+            "ok",
+            "greet",
+            Some("Greet the project"),
+            None,
+            Some("/l/greet.log")
+        ),
+        "✓ └ greet  Greet the project · log /l/greet.log"
+    );
+    assert_eq!(
+        outcome_line(set, "fail", "must", None, Some("exit 2"), None),
+        "✗ └ must · exit 2"
+    );
+    assert_eq!(
+        outcome_line(set, "fresh", "greet", None, None, None),
+        "✓ └ greet · fresh"
+    );
+    assert_eq!(
+        outcome_line(GlyphSet::Ascii, "skip", "a", None, None, None),
+        "- ` a · skipped: no reason recorded"
+    );
+}
+
+#[test]
+fn slot_outcome_id_is_read_from_the_execution_key() {
+    assert_eq!(
+        id_of_key("org.example/x#docs-only@slot(org.example/x@1.0.0)"),
+        "docs-only"
+    );
+    assert_eq!(id_of_key("org.example/x#greet"), "greet");
+    assert_eq!(id_of_key("plain-key"), "plain-key");
+}
