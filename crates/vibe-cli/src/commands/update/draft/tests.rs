@@ -21,7 +21,8 @@ fn presentation<'a>(scoped: bool, quiet: bool, quiet_suffix: &'a str) -> Present
         scoped,
         quiet,
         count: 2,
-        bumps: 1,
+        bumps: vec!["org.demo/tools 0.1.0 -> 0.2.0".into()],
+        fresh: false,
         hooks: "",
         quiet_suffix,
     }
@@ -48,7 +49,7 @@ fn trailer(what: &str) -> Option<Closing> {
 fn a_whole_update_with_tracing_off_is_silent_in_quiet_and_ends_with_a_trailer() {
     assert_eq!(
         success_line(presentation(false, false, "")),
-        trailer("re-resolved 2 packages")
+        trailer("updated org.demo/tools 0.1.0 → 0.2.0 · 2 packages")
     );
     assert_eq!(success_line(presentation(false, true, "")), None);
 }
@@ -58,7 +59,7 @@ fn a_whole_update_with_tracing_off_is_silent_in_quiet_and_ends_with_a_trailer() 
 fn a_scoped_update_with_tracing_off_keeps_its_quiet_line() {
     assert_eq!(
         success_line(presentation(true, false, "")),
-        trailer("updated 2 packages · 1 version bump"),
+        trailer("updated org.demo/tools 0.1.0 → 0.2.0 · 2 packages"),
     );
     assert_eq!(
         success_line(presentation(true, true, "")),
@@ -76,7 +77,7 @@ fn a_traced_whole_update_gets_one_quiet_line_and_a_plain_trailer() {
     );
     assert_eq!(
         success_line(presentation(false, false, TRACE_SUFFIX)),
-        trailer("re-resolved 2 packages"),
+        trailer("updated org.demo/tools 0.1.0 → 0.2.0 · 2 packages"),
         "human mode reads the adapter's table, not a second account of it",
     );
 }
@@ -100,10 +101,9 @@ fn a_traced_scoped_update_appends_the_suffix_to_its_one_line() {
 fn the_counts_agree_with_their_nouns() {
     let mut inputs = presentation(true, false, "");
     inputs.count = 1;
-    inputs.bumps = 1;
     assert_eq!(
         success_line(inputs),
-        trailer("updated 1 package · 1 version bump"),
+        trailer("updated org.demo/tools 0.1.0 → 0.2.0 · 1 package"),
     );
 }
 
@@ -229,5 +229,33 @@ fn a_failure_is_never_complete_even_with_a_finished_materialisation() {
         report.materialised,
         ["vibedeps/org.demo.tools/0.2.0"],
         "while the durable facts are still reported",
+    );
+}
+
+/// A run that moved nothing says so instead of counting zero bumps.
+#[test]
+fn update_noop_says_up_to_date() {
+    let mut inputs = presentation(true, false, "");
+    inputs.bumps = Vec::new();
+    inputs.count = 1;
+    assert_eq!(
+        success_line(inputs),
+        trailer("up to date · 1 package re-resolved · nothing moved"),
+    );
+    let mut whole = presentation(false, false, "");
+    whole.bumps = Vec::new();
+    whole.fresh = true;
+    assert_eq!(
+        success_line(whole),
+        trailer("up to date · 2 packages re-resolved · nothing moved"),
+    );
+    let mut moved = presentation(false, false, "");
+    moved.bumps = Vec::new();
+    assert_eq!(success_line(moved), trailer("re-resolved 2 packages"));
+    let mut two = presentation(true, false, "");
+    two.bumps.push("org.demo/lib 1.0.0 -> 1.1.0".into());
+    assert_eq!(
+        success_line(two),
+        trailer("updated 2 packages · 2 version bumps"),
     );
 }

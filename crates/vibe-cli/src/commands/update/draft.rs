@@ -178,7 +178,12 @@ impl UpdateDraft {
                 vibe_wire::generated::update_report::RetainedBackupState::PublishedBackupRetained => "update published; backup retained",
                 vibe_wire::generated::update_report::RetainedBackupState::RestoredContainerRetained => "update not published; slot restored; container retained",
             };
-            ctx.summary(&format!("{outcome} for {} at {}", backup.slot, backup.path));
+            let line = format!("{outcome} for {} at {}", backup.slot, backup.path);
+            if ctx.is_quiet() {
+                ctx.summary(&line);
+            } else {
+                ctx.hint(&line);
+            }
         }
         if !ok {
             // A failed update's account on the terminal is its error; it has
@@ -194,28 +199,34 @@ impl UpdateDraft {
                 &delegation.tasks,
                 &delegation.resume,
             );
-            ctx.summary(&format!(
-                "vibe update: parked for the hosting agent — {} task(s) await it; \
-                 resume with `{}`{quiet_suffix}",
-                delegation.tasks.len(),
-                delegation.resume,
-            ));
+            if ctx.is_quiet() {
+                ctx.summary(&format!(
+                    "vibe update: parked for the hosting agent — {} task(s) await it; \
+                     resume with `{}`{quiet_suffix}",
+                    delegation.tasks.len(),
+                    delegation.resume,
+                ));
+            } else {
+                let n = delegation.tasks.len();
+                ctx.block(&crate::output::language::parked_trailer(
+                    &format!(
+                        "parked at agent tasks · {n} task{} await{} the hosting agent · resume with",
+                        if n == 1 { "" } else { "s" },
+                        if n == 1 { "s" } else { "" },
+                    ),
+                    &delegation.resume,
+                ));
+            }
             return Ok(());
         }
         let quiet = ctx.is_quiet();
-        // The bump list is prose, and only the verbose scoped shape has ever
-        // printed it.
-        if scoped && !quiet {
-            for bump in &bumps {
-                ctx.created(bump);
-            }
-        }
         let hooks = LifecycleHookView::new(&rows);
         match success_line(Presentation {
             scoped,
             quiet,
             count,
-            bumps: bumps.len(),
+            bumps: bumps.clone(),
+            fresh: report.unchanged,
             hooks: &hooks.quiet_suffix(),
             quiet_suffix,
         }) {
@@ -232,7 +243,8 @@ struct Presentation<'a> {
     scoped: bool,
     quiet: bool,
     count: usize,
-    bumps: usize,
+    bumps: Vec<String>,
+    fresh: bool,
     hooks: &'a str,
     quiet_suffix: &'a str,
 }
@@ -252,9 +264,11 @@ enum Closing {
 /// one line is a contract scripts read, and the two scopes differ there:
 ///
 /// ```text
-/// scoped, human   →  trailer "updated N package(s) · M version bump(s)"
+/// one bump, human →  trailer "updated <bump> · N package(s)"
+/// 2+ bumps, human →  trailer "updated N package(s) · M version bumps"
+/// no bumps, human →  trailer "up to date · N package(s) re-resolved · nothing moved"
+///                    when scoped or fresh, otherwise "re-resolved N package(s)"
 /// scoped, quiet   →  one line, with the hook and trace suffixes
-/// all,    human   →  trailer "re-resolved N package(s)"
 /// all,    quiet   →  nothing, UNLESS a trace suffix exists
 /// ```
 ///
@@ -270,26 +284,33 @@ fn success_line(inputs: Presentation<'_>) -> Option<Closing> {
         quiet,
         count,
         bumps,
+        fresh,
         hooks,
         quiet_suffix,
     } = inputs;
     let packages = if count == 1 { "" } else { "s" };
-    let moved = if bumps == 1 { "" } else { "s" };
+    let bump_count = bumps.len();
+    let moved = if bump_count == 1 { "" } else { "s" };
     match (scoped, quiet) {
-        (false, false) => Some(Closing::Trailer(format!(
-            "re-resolved {count} package{packages}"
-        ))),
         (false, true) if quiet_suffix.is_empty() => None,
         (false, true) => Some(Closing::Quiet(format!(
             "vibe update: {count} package{packages} re-resolved{quiet_suffix}"
         ))),
         (true, true) => Some(Closing::Quiet(format!(
-            "vibe update: {count} package{packages} re-resolved, {bumps} \
+            "vibe update: {count} package{packages} re-resolved, {bump_count} \
              bump{moved}{hooks}{quiet_suffix}"
         ))),
-        (true, false) => Some(Closing::Trailer(format!(
-            "updated {count} package{packages} · {bumps} version bump{moved}"
-        ))),
+        (_, false) => Some(Closing::Trailer(match bumps.as_slice() {
+            [bump] => format!(
+                "updated {} · {count} package{packages}",
+                bump.replace(" -> ", " → ")
+            ),
+            [] if scoped || fresh => {
+                format!("up to date · {count} package{packages} re-resolved · nothing moved")
+            }
+            [] => format!("re-resolved {count} package{packages}"),
+            _ => format!("updated {count} package{packages} · {bump_count} version bumps"),
+        })),
     }
 }
 

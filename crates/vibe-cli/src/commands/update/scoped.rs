@@ -292,8 +292,8 @@ fn run(
         }),
     };
 
-    ctx.heading(&format!(
-        "Re-resolving {} package{}…",
+    ctx.rule(&format!(
+        "re-resolving {} package{}",
         roots.len(),
         if roots.len() == 1 { "" } else { "s" },
     ));
