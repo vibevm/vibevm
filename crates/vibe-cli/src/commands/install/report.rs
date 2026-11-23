@@ -139,6 +139,7 @@ pub(super) fn render_human_progress(
     progress: &vibe_install::InstallProgress,
     world_summary: WorldCallbackSummary,
     trace_suffix: &str,
+    human: &super::observer::HumanTrailer,
 ) {
     if progress.fresh {
         let nodes = progress.nodes_regenerated.len();
@@ -149,10 +150,7 @@ pub(super) fn render_human_progress(
                 ritual_suffix(world_summary),
             ));
         } else {
-            ctx.trailer(&format!(
-                "vibe.lock unchanged · nothing to re-resolve · {nodes} up to date{}",
-                ritual_meta(world_summary),
-            ));
+            render_trailer(ctx, progress, world_summary, human);
         }
         return;
     }
@@ -165,32 +163,77 @@ pub(super) fn render_human_progress(
         ));
         return;
     }
-    // The trailer is the last block (PROP-067 `#trailer`): what the run did,
-    // then the slots it left alone, then how long it took.
-    let mut what = format!(
-        "materialised {count} package{plural} into vibedeps/ · regenerated boot for {} node(s)",
-        progress.nodes_regenerated.len(),
-    );
-    if !progress.skipped.is_empty() {
-        what.push_str(&format!(
-            " · {} slot(s) already present, re-copy skipped",
-            progress.skipped.len()
-        ));
-    }
-    if !progress.pruned.is_empty() {
-        what.push_str(&format!(
-            " · {} stale slot(s) pruned",
-            progress.pruned.len()
-        ));
-    }
-    what.push_str(&ritual_meta(world_summary));
-    ctx.trailer(&what);
+    render_trailer(ctx, progress, world_summary, human);
 }
 
-/// The lifecycle counts as trailer metadata, nothing when no contribution
-/// was selected.
-fn ritual_meta(summary: WorldCallbackSummary) -> String {
-    ritual_suffix(summary).replacen(", ", " · ", 1)
+/// Use the existing suffix-aware API to put actual evidence after elapsed time.
+fn render_trailer(
+    ctx: &output::Context,
+    progress: &vibe_install::InstallProgress,
+    summary: WorldCallbackSummary,
+    human: &super::observer::HumanTrailer,
+) {
+    let mut what = trailer_what(progress, summary);
+    if let Some(root) = &human.root {
+        what.push_str(&format!(" · {root}"));
+    }
+    if let Some(directory) = &human.evidence_directory {
+        ctx.trailer_at(&what, &format!("log {}", directory.display()));
+    } else {
+        ctx.trailer(&what);
+    }
+}
+
+/// What landed and which contributions actually ran; quiet wording is separate.
+#[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-067#trailer")]
+pub(super) fn trailer_what(
+    progress: &vibe_install::InstallProgress,
+    summary: WorldCallbackSummary,
+) -> String {
+    let count =
+        |n: usize, one: &str, many: &str| format!("{n} {}", if n == 1 { one } else { many });
+    let nodes = progress.nodes_regenerated.len();
+    let mut what = if progress.fresh {
+        format!(
+            "vibe.lock unchanged · nothing to re-resolve · {} up to date",
+            count(nodes, "node", "nodes")
+        )
+    } else {
+        let mut what = format!(
+            "installed {} · {}",
+            count(progress.materialised.len(), "package", "packages"),
+            count(nodes, "boot node", "boot nodes")
+        );
+        if !progress.skipped.is_empty() {
+            what.push_str(&format!(" · {} already present", progress.skipped.len()));
+        }
+        if !progress.pruned.is_empty() {
+            what.push_str(&format!(" · {} stale removed", progress.pruned.len()));
+        }
+        what
+    };
+    if summary != WorldCallbackSummary::default() {
+        let ran = summary.successful_contributions;
+        let fresh = summary.fresh_contributions;
+        let not_run = summary.selected_contributions.saturating_sub(ran + fresh);
+        what.push_str(&format!(
+            " · {} ran",
+            count(ran, "contribution", "contributions")
+        ));
+        if fresh > 0 {
+            what.push_str(&format!(" · {fresh} fresh"));
+        }
+        if not_run > 0 {
+            what.push_str(&format!(" · {not_run} not run"));
+        }
+        if summary.notices > 0 {
+            what.push_str(&format!(
+                " · {}",
+                count(summary.notices, "notice", "notices")
+            ));
+        }
+    }
+    what
 }
 
 fn ritual_suffix(summary: WorldCallbackSummary) -> String {
@@ -245,6 +288,10 @@ pub(crate) fn phase_rows(
         })
         .collect()
 }
+
+#[cfg(test)]
+#[path = "report/tests.rs"]
+mod tests;
 
 mod candidates;
 pub(crate) use candidates::candidate_rows;

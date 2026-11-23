@@ -40,9 +40,7 @@ use vibe_core::user_config::UserConfig;
 use vibe_lifecycle::{LifecycleLease, RunMetadata};
 
 use crate::cli::InstallArgs;
-use crate::commands::compile_trace::{
-    self, CommandExit, PlanDisposition, RegisteredReportDraft, TracePreparation, render_finalized,
-};
+use crate::commands::compile_trace::{self, CommandExit, RegisteredReportDraft, TracePreparation};
 use crate::output;
 
 use super::confirm::{ConfirmationScope, UserProjectAction};
@@ -307,15 +305,10 @@ fn run_observed(
     // Consumes the owner: finishes the index, drops the last handle (and with
     // it the cooperative lock), and returns the member to attach.
     let finalized = compile_trace::finalize(trace, exit, &now);
-    let parked = finalized.plan == PlanDisposition::Discard;
-    let command_failed = finalized.original_error.is_some();
-    let rendered = render_finalized(ctx, finalized);
+    // The adapter chooses one terminal event from its real result, then
+    // prints the deferred human trailer. Keep the lease through both.
+    let rendered = RegisteredReportDraft::render_install_finalized(ctx, finalized, overall);
     drop(lease_owner);
-    match (&rendered, command_failed, parked) {
-        (Err(_), _, _) | (_, true, _) => overall.fail("package installation failed"),
-        (Ok(()), false, true) => overall.skip("waiting for the hosting agent"),
-        (Ok(()), false, false) => overall.finish(),
-    }
     rendered
 }
 
@@ -432,7 +425,16 @@ fn execute_after_open(
         &selected_roots,
     );
     match outcome {
-        Ok(run) => classify_success(run),
+        Ok(run) => {
+            let mut exit = classify_success(run);
+            if let CommandExit::Success(RegisteredReportDraft::Install(draft))
+            | CommandExit::Parked(RegisteredReportDraft::Install(draft)) = &mut exit
+                && let Ok(human) = install_observer.trailer().lock()
+            {
+                draft.human = human.clone();
+            }
+            exit
+        }
         // A failure the substrate MEASURED arrives carried: the slot rows and
         // progress it froze, plus its own emission policy. Anything else is a
         // generic stage failure and takes the default install draft — the same
