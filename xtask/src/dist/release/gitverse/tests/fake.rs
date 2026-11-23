@@ -125,6 +125,9 @@ pub(super) struct GvState {
     pub(super) next_id: u64,
     /// Emulates a host whose by-tag route does not show drafts.
     pub(super) by_tag_hides_drafts: bool,
+    /// Emulates gitverse.ru, whose release list of a repository without a
+    /// release answers 404 `REPO_NOT_FOUND`.
+    pub(super) empty_list_is_not_found: bool,
 }
 
 pub(super) fn release_json(release: &GvRelease) -> serde_json::Value {
@@ -209,6 +212,14 @@ pub(super) fn gitverse_handler(state: Arc<Mutex<GvState>>) -> Handler {
                     Some(release) => (200, json(release_json(release))),
                     None => not_found(),
                 }
+            }
+            ("GET", ["releases"]) if state.empty_list_is_not_found && state.releases.is_empty() => {
+                (
+                    404,
+                    json(
+                        serde_json::json!({"error": {"code": "REPO_NOT_FOUND", "message": "Repository not found", "status": 404}}),
+                    ),
+                )
             }
             ("GET", ["releases"]) => {
                 let page: usize = query_value(&request.query, "page")

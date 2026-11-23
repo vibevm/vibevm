@@ -422,8 +422,21 @@ impl GitverseClient {
         }
         let mut found = None;
         for page in 1..=MAX_PAGES {
-            let releases: Vec<GitverseRelease> =
-                self.json(&self.endpoint.list_releases(page), None)?;
+            let listed = self.endpoint.list_releases(page);
+            let response = self.send(&listed, None)?;
+            // GitVerse answers the list of a repository that has no release
+            // yet with 404 `REPO_NOT_FOUND` (seen 2026-11-23 on
+            // vibevm/vibevm, whose by-tag route answered normally). An
+            // absent repository still fails, at the create that follows.
+            if page == 1 && response.status() == reqwest::StatusCode::NOT_FOUND {
+                return Ok(None);
+            }
+            if !response.status().is_success() {
+                return Err(self.fail(&listed, response));
+            }
+            let releases: Vec<GitverseRelease> = response
+                .json()
+                .with_context(|| format!("parsing GitVerse `{} {}`", listed.method, listed.url))?;
             let count = releases.len();
             for release in releases
                 .into_iter()

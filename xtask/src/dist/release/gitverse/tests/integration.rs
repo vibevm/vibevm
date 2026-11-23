@@ -291,3 +291,14 @@ fn source_mirrors_the_published_github_release() {
     .unwrap();
     assert_eq!(from_github(&github, &version()).unwrap(), fixture());
 }
+
+#[test]
+fn a_release_list_answering_not_found_on_an_empty_repository_still_creates_the_release() {
+    let (server, state) = gitverse_fake();
+    state.lock().unwrap().empty_list_is_not_found = true;
+    let source = fixture();
+    let (report, _) = mirror(&server, &source, false).unwrap();
+    assert!(report.created);
+    assert_eq!(report.uploaded.len(), source.assets.len());
+    assert_eq!(state.lock().unwrap().releases.len(), 1);
+}
