@@ -154,7 +154,7 @@ fn check_is_equal_after_a_build_and_json_carries_the_same_facts() {
         .prompt("check")
         .assert()
         .success()
-        .stdout(predicate::str::contains("system prompt: equal"));
+        .stdout(predicate::str::contains("✓ system prompt  equal"));
     let output = project
         .prompt("check")
         .arg("--json")
@@ -168,6 +168,29 @@ fn check_is_equal_after_a_build_and_json_carries_the_same_facts() {
     assert_eq!(report["verdict"], "equal");
     assert_eq!(report["opted_in"], true);
     assert_eq!(report["artifacts"].as_array().unwrap().len(), 3);
+    project
+        .prompt("check")
+        .arg("--quiet")
+        .assert()
+        .success()
+        .stdout("system prompt equal · .\n")
+        .stderr("");
+    let fresh = Project::fresh();
+    fresh
+        .prompt("check")
+        .assert()
+        .success()
+        .stdout(predicate::str::contains("○ system prompt  not opted in"))
+        .stdout(predicate::str::contains(
+            "vibe prompt init opts this project in",
+        ));
+    fresh
+        .prompt("check")
+        .arg("--quiet")
+        .assert()
+        .success()
+        .stdout("")
+        .stderr("");
 }
 
 /// C1 and C4 at the command surface, where `HARNESS-DELIVERY.md` §4 places
@@ -193,7 +216,7 @@ fn check_reports_c1_and_c4_for_a_divergent_instruction_file() {
         .prompt("check")
         .assert()
         .success()
-        .stdout(predicate::str::contains("system prompt: equal"))
+        .stdout(predicate::str::contains("✓ system prompt  equal"))
         .stdout(predicate::str::contains("C1:"))
         .stdout(predicate::str::contains("C4:"))
         .stdout(predicate::str::contains("CLAUDE.md"));
@@ -210,7 +233,7 @@ fn check_stays_equal_when_a_dynamic_boot_file_changes() {
         .prompt("check")
         .assert()
         .success()
-        .stdout(predicate::str::contains("system prompt: equal"));
+        .stdout(predicate::str::contains("✓ system prompt  equal"));
 }
 
 #[test]
@@ -222,8 +245,28 @@ fn check_is_stale_and_names_the_input_when_the_template_changes() {
         .prompt("check")
         .assert()
         .failure()
-        .stdout(predicate::str::contains("system prompt: stale"))
-        .stdout(predicate::str::contains("vibe prompt build"));
+        .stderr(predicate::str::contains("prompt_stale"))
+        .stderr(predicate::str::contains("vibe prompt build"));
+    project
+        .prompt("check")
+        .arg("--quiet")
+        .assert()
+        .failure()
+        .stdout("")
+        .stderr(predicate::str::contains("prompt_stale"));
+    let output = project
+        .prompt("path")
+        .args(["--part", "system"])
+        .assert()
+        .success()
+        .stdout(format!("{}\n", project.boot("SYSTEM.md").display()))
+        .get_output()
+        .clone();
+    let warning = String::from_utf8(output.stderr).unwrap();
+    assert!(warning.starts_with("! SYSTEM.md is stale: "), "{warning}");
+    assert!(warning.contains("the template input"), "{warning}");
+    assert!(warning.ends_with("\n  vibe prompt build\n"), "{warning}");
+    assert!(!warning.contains(&project.dir.path().display().to_string()));
 }
 
 #[test]
@@ -329,7 +372,12 @@ fn path_prints_an_absolute_path_alone_and_never_an_empty_line() {
         .prompt("path")
         .assert()
         .failure()
-        .stderr(predicate::str::contains("vibe prompt build"));
+        .stderr(predicate::str::contains("vibe prompt build"))
+        .stderr(predicate::str::contains("prompt_not_generated"))
+        .stderr(predicate::str::contains(
+            project.boot("AGENT-LANE.md").display().to_string(),
+        ))
+        .stderr(predicate::str::contains("SYS-OPERATIONS-PATH-AND-FLAGS"));
 }
 
 #[test]

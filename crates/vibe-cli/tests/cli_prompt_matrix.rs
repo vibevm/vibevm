@@ -358,7 +358,7 @@ fn a_fixed_host_this_session_is_not_warns_everywhere_and_refuses_nowhere() {
         .prompt("check")
         .assert()
         .success()
-        .stdout(predicate::str::contains("system prompt: equal"))
+        .stdout(predicate::str::contains("✓ system prompt  equal"))
         .stdout(predicate::str::contains(declares.clone()))
         .stdout(predicate::str::contains(runs_on.clone()))
         .stdout(predicate::str::contains("rather than refused"));
@@ -663,7 +663,7 @@ fn a_classic_project_gets_a_router_to_static_then_index_and_no_prefix_files() {
         .prompt("check")
         .assert()
         .success()
-        .stdout(predicate::str::contains("has not opted in"));
+        .stdout(predicate::str::contains("○ system prompt  not opted in"));
     world
         .prompt("path")
         .assert()
