@@ -180,6 +180,111 @@ fn a_failed_step_and_a_refusal_read_as_the_goldens() {
 }
 
 #[test]
+fn merged_streams_keep_the_blank_line_before_the_trailer() {
+    use std::io::{Read, Seek, SeekFrom};
+    let fixture = Fixture::new();
+    let user = user();
+    let merged = tempfile::tempfile().unwrap();
+    let mut configured = user.vibe();
+    configured
+        .current_dir(fixture.root.path())
+        .args([
+            "install",
+            "-g",
+            "org.example/noisy",
+            "--unattended",
+            "--plain",
+            "--registry",
+        ])
+        .arg(&fixture.registry);
+    for variable in [
+        "VIBE_APP_LOG",
+        "VIBE_APP_LOG_TAIL",
+        "VIBE_INVOKED_BY",
+        "VIBE_AGENT_COMMAND",
+        "NO_COLOR",
+    ] {
+        configured.env_remove(variable);
+    }
+    let mut command = std::process::Command::new(configured.get_program());
+    command.args(configured.get_args());
+    for (name, value) in configured.get_envs() {
+        match value {
+            Some(value) => command.env(name, value),
+            None => command.env_remove(name),
+        };
+    }
+    if let Some(directory) = configured.get_current_dir() {
+        command.current_dir(directory);
+    }
+    command
+        .stdout(merged.try_clone().unwrap())
+        .stderr(merged.try_clone().unwrap());
+    let status = command.status().unwrap();
+    let mut file = merged;
+    file.seek(SeekFrom::Start(0)).unwrap();
+    let mut text = String::new();
+    file.read_to_string(&mut text).unwrap();
+    assert!(status.success(), "{text}");
+    assert!(
+        text.contains(" lines\n\n✻ installed org.example/noisy@1.0.0"),
+        "{text}"
+    );
+}
+
+#[test]
+fn merged_streams_separate_pipes_do_not_share_spacing() {
+    let fixture = Fixture::new();
+    let baseline_user = user();
+    let separate_user = user();
+    let args = [
+        "install",
+        "-g",
+        "org.example/noisy",
+        "--unattended",
+        "--plain",
+    ];
+    let baseline = fixture.app(&baseline_user, &args);
+    assert!(baseline.status.success(), "{baseline:?}");
+
+    let mut command = separate_user.vibe();
+    command
+        .current_dir(fixture.root.path())
+        .args(args)
+        .arg("--registry")
+        .arg(&fixture.registry);
+    for variable in [
+        "VIBE_APP_LOG",
+        "VIBE_APP_LOG_TAIL",
+        "VIBE_INVOKED_BY",
+        "VIBE_AGENT_COMMAND",
+        "NO_COLOR",
+    ] {
+        command.env_remove(variable);
+    }
+    let separate = command.output().unwrap();
+    assert!(separate.status.success(), "{separate:?}");
+    let stream = |bytes: &[u8], user: &UserScratch| {
+        normalise(
+            &String::from_utf8_lossy(bytes),
+            &[
+                (&user.settings, "<settings>"),
+                (&fixture.registry, "<registry>"),
+            ],
+        )
+    };
+    assert_eq!(
+        stream(&separate.stdout, &separate_user),
+        stream(&baseline.stdout, &baseline_user)
+    );
+    assert_eq!(
+        stream(&separate.stderr, &separate_user),
+        stream(&baseline.stderr, &baseline_user)
+    );
+    assert!(separate.stdout.starts_with("✻ installed".as_bytes()));
+}
+
+#[test]
 fn the_remap_listing_reads_as_its_golden() {
     let fixture = Fixture::new();
     let user = user();

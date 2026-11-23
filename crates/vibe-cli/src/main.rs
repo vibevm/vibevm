@@ -110,6 +110,9 @@ fn run() -> ExitCode {
         std::io::stdout().is_terminal() && std::io::stderr().is_terminal(),
         terminal_vocabulary && !cli.plain && !cli.json && !cli.quiet,
     );
+    if output::language::same_destination() {
+        output::language::set_one_screen(true);
+    }
     let (ctx, command_activity) = command_progress::configure_context(
         output::Context::from_flags(
             cli.quiet,
