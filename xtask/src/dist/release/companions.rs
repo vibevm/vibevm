@@ -48,8 +48,10 @@ pub(super) fn upload_built(
 ) -> Result<()> {
     let px = crate::dist::px_tool::read_manifest(repo_root)?;
     let tag = format!("v{version}");
+    // A draft is visible only to an authenticated listing; the public
+    // by-tag lookup never returns one.
     let release = client
-        .find_release(&tag)?
+        .find_release_authenticated(&tag)?
         .with_context(|| format!("prepared draft `{tag}` is absent"))?;
     if upload(client, release.id, out_dir, target, &px.version)? {
         println!(
