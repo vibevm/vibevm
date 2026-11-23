@@ -60,9 +60,10 @@ pub enum Error {
     )]
     ConfigurationUnsupported { package: String },
     #[error(
-        "contribution `{contribution}` of `{package}` at `{point}` needs `{need}`, which this host does not \
-         provide, so nothing was installed (violates REQ spec://org.vibevm.core/vibevm/common/PROP-065#needs; \
-         fix: provide `{need}`, or declare the contribution `optional = true` so an unmet need skips it)"
+        "slot_need_unmet: contribution {contribution} of {package} at {point} needs {need}, which this \
+         host does not provide; nothing was installed (violates \
+         spec://org.vibevm.core/vibevm/common/PROP-065#needs; fix: provide {need}, or declare the \
+         contribution optional = true so an unmet need skips it)"
     )]
     SlotNeedUnmet {
         package: String,
@@ -71,17 +72,22 @@ pub enum Error {
         need: String,
     },
     #[error(
-        "`{package}` declares installation contributions and its group `{group}` is not trusted to run them: \
-         {reason}; nothing was run ({contributions}) (violates REQ \
-         spec://org.vibevm.core/vibevm/common/PROP-065#ordinary-trust; fix: add `{group}` to trusted_groups in \
-         <settings>/agents.toml — and check that no untrusted_groups entry of that file or of the site \
-         profile covers it — or rerun with --assume-yes)"
+        "group_untrusted: {package} may not run its installation contributions (violates \
+         spec://org.vibevm.core/vibevm/common/PROP-065#ordinary-trust; fix: add {group} to \
+         trusted_groups in {agents_file} and remove any untrusted_groups entry that covers it, or \
+         {retry}): group {group} is not trusted and {reason}; \
+         nothing was run ({contributions})",
+        agents_file = .diagnostic.agents_file,
+        retry = .diagnostic.retry,
     )]
     SlotConsentRequired {
         package: String,
         group: String,
+        /// The contribution ids, joined with `, `.
         contributions: String,
         reason: String,
+        /// Structured remediation, boxed to keep the error variant small.
+        diagnostic: Box<SlotConsentDiagnostic>,
     },
     #[error(
         "violates REQ spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#INSTALL-CONSUMER-CONSTRAINTS: \
@@ -264,4 +270,74 @@ pub enum Error {
     /// exactly the fields a caller might need to match on.
     #[error(transparent)]
     Lease(#[from] vibe_lifecycle::LifecycleLeaseError),
+}
+
+/// Structured remediation for a refused installation contribution request.
+#[derive(Debug)]
+#[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-065#ordinary-trust")]
+pub struct SlotConsentDiagnostic {
+    /// The exact-version command that requests consent for this run only.
+    pub retry: String,
+    /// The agents.toml whose `trusted_groups` would trust the group.
+    pub agents_file: String,
+}
+
+/// The agents.toml a trust refusal names: the one in the settings
+/// directory this run reads, or a description when no directory resolves.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-065#ordinary-trust")]
+pub(crate) fn agents_file_in(settings: Option<&std::path::Path>) -> String {
+    match settings {
+        Some(dir) => dir.join("agents.toml").display().to_string(),
+        None => "agents.toml in the vibe settings directory".to_owned(),
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn slot_need_unmet_reads_as_a_coded_refusal() {
+        let error = Error::SlotNeedUnmet {
+            package: "org.example/needy@1.0.0".into(),
+            contribution: "must".into(),
+            point: "slot:post-install".into(),
+            need: "command:nosuchtool".into(),
+        };
+        assert_eq!(
+            error.to_string(),
+            "slot_need_unmet: contribution must of org.example/needy@1.0.0 at slot:post-install \
+             needs command:nosuchtool, which this host does not provide; nothing was installed \
+             (violates spec://org.vibevm.core/vibevm/common/PROP-065#needs; fix: provide \
+             command:nosuchtool, or declare the contribution optional = true so an unmet need \
+             skips it)"
+        );
+    }
+
+    #[test]
+    fn group_untrusted_names_the_agents_file_it_reads() {
+        let error = Error::SlotConsentRequired {
+            package: "org.example/hooked@0.1.0".into(),
+            group: "org.example".into(),
+            contributions: "judged, maybe".into(),
+            reason: "the contributions were declined".into(),
+            diagnostic: Box::new(SlotConsentDiagnostic {
+                retry: "vibe install org.example/hooked@=0.1.0 --assume-yes".into(),
+                agents_file: agents_file_in(Some(std::path::Path::new("/home/u/.vibe"))),
+            }),
+        };
+        assert_eq!(
+            error.to_string(),
+            "group_untrusted: org.example/hooked@0.1.0 may not run its installation contributions \
+             (violates spec://org.vibevm.core/vibevm/common/PROP-065#ordinary-trust; fix: add \
+             org.example to trusted_groups in /home/u/.vibe/agents.toml and remove any \
+             untrusted_groups entry that covers it, or vibe install org.example/hooked@=0.1.0 --assume-yes): \
+             group org.example is not trusted and the contributions were declined; nothing was \
+             run (judged, maybe)"
+        );
+        assert_eq!(
+            agents_file_in(None),
+            "agents.toml in the vibe settings directory"
+        );
+    }
 }
