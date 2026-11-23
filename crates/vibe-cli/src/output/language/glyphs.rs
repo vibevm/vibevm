@@ -3,9 +3,35 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-067#gutter");
 
-use std::sync::OnceLock;
+use std::sync::atomic::{AtomicBool, Ordering};
 
-use console::TermFamily;
+static ASCII: AtomicBool = AtomicBool::new(false);
+
+/// Draw the ASCII set for the rest of the process; `main` calls it once, from
+/// TERM, before anything is drawn.
+#[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-067#plain")]
+pub(crate) fn draw_ascii(ascii: bool) {
+    ASCII.store(ascii, Ordering::Relaxed);
+}
+
+/// The rule stroke in the set this process draws with.
+#[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-067#heading")]
+pub(crate) fn rule_glyph() -> &'static str {
+    match GlyphSet::detect() {
+        GlyphSet::Ascii => "-",
+        GlyphSet::Unicode => "─",
+    }
+}
+
+/// The heading separator in the set this process draws with.
+#[allow(dead_code)] // F4a consumes this helper; existing callers stay unchanged here.
+#[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-067#heading")]
+pub(crate) fn heading_separator() -> &'static str {
+    match GlyphSet::detect() {
+        GlyphSet::Ascii => "*",
+        GlyphSet::Unicode => "·",
+    }
+}
 
 /// Every glyph the CLI may put in column 0, plus the two that draw inside
 /// a block (the fold and the child branch). The set is closed: a shape
@@ -40,16 +66,15 @@ pub(crate) enum GlyphSet {
 }
 
 impl GlyphSet {
-    /// The set this process draws with, decided once. Redirected output is
-    /// not a reason to degrade: a log keeps its glyphs and loses only its
-    /// colour (PROP-067 `#plain`). `TermFamily::Dummy` is the one family
-    /// `console` reports as having no terminal vocabulary at all.
+    /// The set this process draws with, selected by `draw_ascii`.
+    /// Redirected output is not a reason to degrade: a log keeps its glyphs
+    /// and loses only its colour (PROP-067 `#plain`).
     pub(crate) fn detect() -> Self {
-        static SET: OnceLock<GlyphSet> = OnceLock::new();
-        *SET.get_or_init(|| match console::Term::stderr().features().family() {
-            TermFamily::Dummy => GlyphSet::Ascii,
-            _ => GlyphSet::Unicode,
-        })
+        if ASCII.load(Ordering::Relaxed) {
+            GlyphSet::Ascii
+        } else {
+            GlyphSet::Unicode
+        }
     }
 }
 

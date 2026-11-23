@@ -3,6 +3,7 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-067#heading");
 
 use super::roles::{Role, paint};
+use super::rule_glyph;
 use super::width::{measure, rule_width};
 
 /// `── <label> ────…` to the viewport, dim with the label in the text
@@ -19,16 +20,18 @@ pub(crate) fn rule(label: &str, right: Option<&str>) -> String {
 }
 
 pub(crate) fn rule_at(label: &str, right: Option<&str>, width: usize) -> String {
-    let left = format!("── {label} ");
+    let g = rule_glyph();
+    let lead = format!("{g}{g} ");
+    let left = format!("{lead}{label} ");
     let right_text = right.map(|right| format!(" {right}")).unwrap_or_default();
     let fill = width
         .saturating_sub(measure(&left) + measure(&right_text))
         .max(4);
     format!(
         "{}{}{}{}",
-        paint(Role::Dim, "── "),
+        paint(Role::Dim, &lead),
         label,
-        paint(Role::Dim, &format!(" {}", "─".repeat(fill))),
+        paint(Role::Dim, &format!(" {}", g.repeat(fill))),
         paint(Role::Dim, &right_text)
     )
 }
