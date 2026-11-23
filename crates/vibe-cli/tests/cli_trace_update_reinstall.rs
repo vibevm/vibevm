@@ -381,7 +381,12 @@ fn disabled_human_and_quiet_surfaces_are_unchanged() {
             .unwrap(),
     );
     assert!(
-        !human_update.contains("Updated 0 packages") && human_update.contains("✻ re-resolved"),
+        !human_update.contains("Updated 0 packages")
+            && human_update
+                .lines()
+                .last()
+                .unwrap()
+                .starts_with("✻ up to date · 0 packages re-resolved · nothing moved"),
         "a human one ends with the trailer, not the scoped summary: {human_update:?}",
     );
 
@@ -491,4 +496,61 @@ fn each_traced_command_emits_one_root_and_no_standalone_trace() {
             "the member rides the ONE root",
         );
     }
+}
+
+/// A real hosted scoped update ends at the actual delegation's resume command.
+#[test]
+fn update_parked_output_ends_with_resume_command() {
+    use common::hosted_slot::{
+        add_version, assert_ok, project_at, publish_slot_agent, sole_document,
+        write_declared_output,
+    };
+
+    assert!(common::git_available(), "the hosted fixture requires git");
+    let outer = tempfile::tempdir().unwrap();
+    let published = publish_slot_agent(outer.path(), "slot:post-install", "0.1.0");
+    let user = UserScratch::new();
+    let project = project_at(&user, &published.registry);
+    let seed = || {
+        user.vibe()
+            .args(["install", "org.demo/tools", "--assume-yes", "--json"])
+            .args(["--agent-mode", "agent"])
+            .arg("--path")
+            .arg(project.path())
+            .output()
+            .unwrap()
+    };
+    let parked_seed = seed();
+    assert_ok(&parked_seed);
+    assert!(
+        sole_document(&parked_seed.stdout)["delegation"].is_object(),
+        "the local seed parked without a provider",
+    );
+    write_declared_output(project.path());
+    assert_ok(&seed());
+    add_version(&published, "slot:post-install", "0.1.1");
+
+    let parked = user
+        .vibe()
+        .args(["update", "org.demo/tools", "--assume-yes"])
+        .args(["--agent-mode", "agent"])
+        .arg("--path")
+        .arg(project.path())
+        .output()
+        .unwrap();
+    assert_ok(&parked);
+    let stdout = String::from_utf8(parked.stdout).unwrap();
+    let lines: Vec<_> = stdout
+        .lines()
+        .filter(|line| !line.trim().is_empty())
+        .collect();
+    assert_eq!(stdout.matches('✻').count(), 1, "{stdout}");
+    assert_eq!(
+        &lines[lines.len() - 2..],
+        [
+            "✻ parked at agent tasks · 1 task awaits the hosting agent · resume with",
+            "  vibe update",
+        ],
+        "{stdout}",
+    );
 }

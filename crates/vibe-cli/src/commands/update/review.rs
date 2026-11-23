@@ -22,10 +22,7 @@ pub(crate) struct Proposal {
     pub added_dependencies: Vec<String>,
     pub removed_dependencies: Vec<String>,
 }
-#[derive(Debug, thiserror::Error)]
-#[error(
-    "package configuration review {state}; proposal {id}: {package} {from_version} -> {to_version}, consumer {consumer}, group {group}: {from_member} -> {to_member}; added {added:?}, removed {removed:?}; explicitly respond to the current exact proposal"
-)]
+#[derive(Debug)]
 pub(crate) struct ReviewError {
     pub proposal: Box<Proposal>,
     state: &'static str,
@@ -41,6 +38,43 @@ pub(crate) struct ReviewError {
     removed: Vec<String>,
 }
 impl ReviewError {
+    /// The refusal as `refusal_of` reads it: the code, the subject as the
+    /// headline, the spec and the exact response command in the tail, and
+    /// the proposal's detail as the cause after it.
+    fn message(&self) -> String {
+        let listed = |items: &[String]| {
+            if items.is_empty() {
+                "nothing".to_owned()
+            } else {
+                items.join(", ")
+            }
+        };
+        let headline = if self.state == "stale" {
+            format!(
+                "{} {} → {}: the answered package configuration review is not the current one",
+                self.package, self.from_version, self.to_version
+            )
+        } else {
+            format!(
+                "{} {} → {} needs a package configuration review",
+                self.package, self.from_version, self.to_version
+            )
+        };
+        format!(
+            "{}: {headline} (violates spec://org.vibevm.core/vibevm/common/PROP-069#DEFAULT-CONSENT; \
+             fix: `vibe update --package-configuration-review {}`): group {} member {} → {} for \
+             consumer {}; added {}; removed {}",
+            self.code(),
+            self.id,
+            self.group,
+            self.from_member,
+            self.to_member,
+            self.consumer,
+            listed(&self.added),
+            listed(&self.removed),
+        )
+    }
+
     pub fn code(&self) -> &'static str {
         if self.state == "stale" {
             "package_configuration_review_stale"
@@ -65,6 +99,13 @@ impl ReviewError {
         }
     }
 }
+
+impl std::fmt::Display for ReviewError {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.write_str(&self.message())
+    }
+}
+impl std::error::Error for ReviewError {}
 
 #[derive(Debug, thiserror::Error)]
 #[error("package configuration review response is stale or inapplicable")]
@@ -415,6 +456,44 @@ pub(super) fn gate(
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn review_refusal_has_code_fix_and_why() {
+        let proposal = Proposal {
+            schema: 1,
+            review_id: "package-default-review/1:sha256:abc".into(),
+            package: "org.example/lib".into(),
+            from_version: "1.0.0".into(),
+            to_version: "2.0.0".into(),
+            consumer: "./vibe.toml".into(),
+            group: "storage".into(),
+            from_member: "sqlite".into(),
+            to_member: "postgres".into(),
+            added_dependencies: vec!["org.example/pg".into()],
+            removed_dependencies: vec!["org.example/sqlite".into()],
+        };
+        let error = anyhow::Error::from(ReviewError::new(proposal, false));
+        let refusal = crate::output::refusal_of(&error);
+        assert_eq!(
+            refusal.code.as_deref(),
+            Some("package_configuration_review_required")
+        );
+        assert_eq!(
+            refusal.headline,
+            "org.example/lib 1.0.0 → 2.0.0 needs a package configuration review"
+        );
+        assert_eq!(
+            refusal.fix,
+            ["vibe update --package-configuration-review package-default-review/1:sha256:abc"]
+        );
+        assert_eq!(
+            refusal.see.as_deref(),
+            Some("spec://org.vibevm.core/vibevm/common/PROP-069#DEFAULT-CONSENT")
+        );
+        let why = refusal.why.unwrap_or_default();
+        assert!(why.contains("sqlite → postgres"), "{why}");
+        assert!(why.contains("added org.example/pg"), "{why}");
+    }
+
     #[test]
     fn framed_boundaries_and_options_are_distinct() {
         let mut a = Binding::new();
