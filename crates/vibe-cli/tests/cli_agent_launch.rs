@@ -709,7 +709,8 @@ fn a_project_that_has_not_opted_in_starts_the_harness_unchanged() {
         .assert()
         .success()
         .stderr(predicate::str::contains("has not opted in"))
-        .stderr(predicate::str::contains("unchanged"));
+        .stderr(predicate::str::contains("unchanged"))
+        .stderr(predicate::str::contains("run `vibe prompt init` to opt in"));
     assert_eq!(
         machine.argv(),
         ["--no-telemetry", "--append-system-prompt-file", "mine.md"]
@@ -726,7 +727,8 @@ fn a_project_that_has_not_opted_in_starts_the_harness_unchanged() {
         .args(["prompt", "flags", "--harness", "claude"])
         .assert()
         .failure()
-        .stderr(predicate::str::contains("has not opted in"));
+        .stderr(predicate::str::contains("has not opted in"))
+        .stderr(predicate::str::contains("run `vibe prompt init` to opt in"));
 }
 
 /// C2 — `vibe agent` injects only for a harness in `launch` delivery.
