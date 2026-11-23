@@ -25,7 +25,7 @@ use vibe_workspace::system_prompt::{
 
 use crate::commands::agent::launchers;
 use crate::commands::app::global;
-use crate::output;
+use crate::output::{self, language};
 
 use super::Selected;
 
@@ -55,7 +55,7 @@ pub(crate) fn run(
     // silently into a session with no lane in it (`#SYS-SOFT-LAUNCH`).
     let composed = match composed.undeliverable {
         Some(undeliverable) if !undeliverable.printable => {
-            bail!("{}", undeliverable.sentence());
+            bail!("{}", refusal_text(&undeliverable));
         }
         Some(undeliverable) => {
             let mut flags = composed.flags;
@@ -140,9 +140,18 @@ pub(crate) fn run(
     for assignment in &composed.env {
         println!("{}={}", assignment.name, assignment.value);
     }
-    println!("{}", shell_line(&composed.flags));
-    for note in &composed.notes {
-        eprintln!("note: {note}");
+    let nothing_to_pass = composed.flags.is_empty() && composed.env.is_empty();
+    if !nothing_to_pass {
+        println!("{}", shell_line(&composed.flags));
+    }
+    let text = hints(
+        &composed.notes,
+        kind.as_str(),
+        kind.delivery(&selected.manifest).as_str(),
+        nothing_to_pass,
+    );
+    if !text.is_empty() {
+        ctx.block_err(&text);
     }
     Ok(())
 }
@@ -188,6 +197,8 @@ pub(crate) fn opted_in(selected: &Selected) -> Result<bool> {
 pub(crate) struct Undeliverable {
     /// What is wrong, as one clause.
     pub(crate) reason: String,
+    /// The stable refusal code, when this reason has one.
+    pub(crate) code: Option<&'static str>,
     /// What the reader does about it, as one imperative clause naming the
     /// exact command.
     pub(crate) fix: String,
@@ -207,6 +218,7 @@ impl Undeliverable {
     pub(crate) fn hard(reason: String, fix: String) -> Self {
         Self {
             reason,
+            code: None,
             fix,
             printable: false,
         }
@@ -217,9 +229,17 @@ impl Undeliverable {
     fn printable(reason: String, fix: String) -> Self {
         Self {
             reason,
+            code: None,
             fix,
             printable: true,
         }
+    }
+
+    /// Attach the stable code for a missing supplied base.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-076#SYS-SUPPLIED-BASE")]
+    pub(crate) fn with_code(mut self, code: &'static str) -> Self {
+        self.code = Some(code);
+        self
     }
 
     /// The one sentence both surfaces say it with.
@@ -447,3 +467,41 @@ fn shell_line(flags: &[String]) -> String {
         .collect::<Vec<_>>()
         .join(" ")
 }
+
+fn refusal_text(u: &Undeliverable) -> String {
+    let Some(code) = u.code else {
+        return u.sentence();
+    };
+    let mut text = format!(
+        "{code}: {} (violates spec://org.vibevm.core/vibevm/common/PROP-076#SYS-SUPPLIED-BASE; fix: {})",
+        u.reason, u.fix
+    );
+    if code == "prompt_base_missing" {
+        // A separate cause retains the repair sentence beside the outer fix's commands.
+        text.push_str(&format!(
+            ": an OpenCode agent's system replaces the harness's own prompt, so vibe needs that version's base (violates spec://org.vibevm.core/vibevm/common/PROP-076#SYS-SUPPLIED-BASE; fix: {})",
+            u.fix.replace('`', "")
+        ));
+    }
+    text
+}
+
+fn hints(notes: &[String], kind: &str, delivery: &str, nothing_to_pass: bool) -> String {
+    let mut lines: Vec<String> = notes.iter().map(|note| note.replace('`', "")).collect();
+    if nothing_to_pass {
+        lines.push(if delivery == "read" {
+            format!("{kind} reads its boot files itself · delivery read · no flags to pass")
+        } else {
+            format!("{kind} takes no flags here · delivery {delivery}")
+        });
+    }
+    lines
+        .iter()
+        .map(|line| format!("  {}", language::hint(line)))
+        .collect::<Vec<_>>()
+        .join("\n")
+}
+
+#[cfg(test)]
+#[path = "flags/tests.rs"]
+mod tests;
