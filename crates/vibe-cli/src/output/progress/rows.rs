@@ -186,9 +186,9 @@ pub(super) fn collapsed(
     elapsed: Duration,
     logs: &StepLogs,
 ) -> String {
-    if headline.depth == 0 {
-        logs.rows.fetch_add(1, Ordering::Relaxed);
-    }
+    // Both renderers exclude command roots and suppressed duplicates before
+    // collapsing; every remaining row is a visible completed block, at any depth.
+    logs.rows.fetch_add(1, Ordering::Relaxed);
     let log = logs.of(task_id, &headline.name);
     let (count, lines) = log.as_deref().map(read_lines).unwrap_or_default();
     let counted = |meta: &mut Vec<Meta>| {

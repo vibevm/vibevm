@@ -1,4 +1,4 @@
-//! A repeated finished child row is drawn once (PROP-067 `#collapse`).
+//! Finished rows collapse once and match the trailer (PROP-067 `#collapse`, `#trailer`).
 
 use super::*;
 use indicatif::InMemoryTerm;
@@ -113,4 +113,103 @@ fn repeated_child_rows_discard_only_the_suppressed_task_log() {
         neighbor.finish();
         parent.finish();
     }
+}
+
+/// Complete two parents, one repeated child, a distinct parent's child and a failure.
+fn trailer_walk(renderer: &Arc<ProgressRenderer>) {
+    let progress = Progress::new(renderer.clone());
+    let command = progress.task("Command install");
+    let parent = command
+        .progress()
+        .task("Discovering versions for org.example/lib");
+    let child = parent.progress().task("Reading Git metadata");
+    for completed in 1..=3 {
+        child.set_progress(completed, Some(3), "objects");
+        child.detail("live child output");
+        renderer.suspend(|| ());
+        assert_eq!(renderer.run_summary().0, 0);
+    }
+    child.finish();
+    parent.progress().task("Reading Git metadata").finish();
+    parent.finish();
+    let other = command
+        .progress()
+        .task("Discovering versions for org.example/other");
+    other.progress().task("Reading Git metadata").finish();
+    other
+        .progress()
+        .task("Reading Git metadata")
+        .fail("git exited exit status: 128");
+    other.finish();
+    command.finish();
+    renderer.suspend(|| ());
+}
+
+/// Count actual completion gutter lines, independently of the production summary.
+fn visible_finished_blocks(text: &str) -> usize {
+    let rows: Vec<_> = text
+        .lines()
+        .filter(|line| line.starts_with("✓ ") || line.starts_with("✗ "))
+        .collect();
+    assert_eq!(rows.len(), 5, "{text:?}");
+    for label in [
+        "✓ Discovering versions for org.example/lib",
+        "✓ Discovering versions for org.example/other",
+    ] {
+        assert_eq!(
+            rows.iter().filter(|row| row.starts_with(label)).count(),
+            1,
+            "{text:?}"
+        );
+    }
+    assert_eq!(
+        text.matches("✓ └ Reading Git metadata").count(),
+        2,
+        "{text:?}"
+    );
+    assert_eq!(
+        text.matches("✗ └ Reading Git metadata").count(),
+        1,
+        "{text:?}"
+    );
+    assert!(!text.contains("Command install"), "{text:?}");
+    assert_eq!(text.matches("live child output").count(), 3, "{text:?}");
+    rows.len()
+}
+
+#[test]
+fn trailer_count_matches_visible_finished_blocks() {
+    let writer = Captured::default();
+    let terminal = InMemoryTerm::new(30, 120);
+    let renderers = [
+        ProgressRenderer::plain(Box::new(writer.clone()), true),
+        ProgressRenderer::interactive_target(
+            ProgressDrawTarget::term_like(Box::new(terminal.clone())),
+            true,
+        ),
+    ];
+    let directory = tempfile::tempdir().unwrap();
+    let log = directory.path().join("steps/build/output.log");
+    let mut observed = Vec::new();
+    for (index, renderer) in renderers.iter().enumerate() {
+        renderer.note_log("build", &log);
+        trailer_walk(renderer);
+        let text = if index == 0 {
+            writer.text()
+        } else {
+            terminal.contents()
+        };
+        let visible = visible_finished_blocks(&text);
+        let (reported, run) = renderer.run_summary();
+        assert_eq!(run.as_deref(), Some(directory.path()));
+        renderer.suspend(|| ());
+        renderer.suspend(|| ());
+        assert_eq!(renderer.run_summary().0, reported);
+        observed.push((visible, reported));
+    }
+    assert_eq!(
+        observed,
+        [(5, 5), (5, 5)],
+        "(visible, reported): plain, interactive"
+    );
 }
