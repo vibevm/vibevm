@@ -35,13 +35,11 @@ exclude = [
 # the local vibevm/vibepacks/ tree. The `[[registry]]` blocks below
 # configure remote registry resolution for this project.
 #
-# Two registries by default: `vibespecs` on GitHub is the canonical
-# publish target (the only hosted organization where `vibe registry publish`
-# drives the create-repo + push-tag flow end to end today; git, monorepo and
-# localdir registries publish by plain push or copy); `vibespecs-gitverse`
-# is queried on resolve fall-through so packages that only live on
-# GitVerse install without manual setup. Publishing to GitVerse is
-# currently a stub — see `crates/vibe-cli/src/commands/registry/publish.rs`.
+# Two registries by default: `vibespecs` on GitHub and `vibespecs-gitverse`
+# on GitVerse. `vibe registry publish` drives the create-repo + push-tag flow
+# on both (`--registry vibespecs-gitverse` for GitVerse); git, monorepo and
+# localdir registries publish by plain push or copy. Resolution asks
+# `vibespecs` first and falls through to `vibespecs-gitverse`.
 #
 # Every vibevm-owned package follows the vibevm version from 1.0.12 on, so
 # the requirements above ask for at least 1.0.12.
