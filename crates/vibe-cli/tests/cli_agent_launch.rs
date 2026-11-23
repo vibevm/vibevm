@@ -317,8 +317,9 @@ const WRAPPER: &str = "[launchers.claude]\n\
                        command = [\"codex\"]\n";
 
 /// The words of `name`'s row in the human `vibe agent list`. Each launcher
-/// is one measured row (PROP-067 `#list`): name, kind, argv (with ` · config
-/// <dir>` when one is set), then the source as a bracketed state word.
+/// is one measured row (PROP-067 `#list`): name, kind, argv, then its
+/// metadata (`config <dir>` when one is set) and the source as a bracketed
+/// state word.
 fn launcher_row(machine: &Machine, name: &str) -> Vec<String> {
     let output = machine.agent(&["list"]).assert().success();
     let human = String::from_utf8_lossy(&output.get_output().stdout).into_owned();
@@ -336,19 +337,18 @@ fn a_user_launcher_overrides_the_builtin_of_the_same_name() {
     let machine = Machine::new(WRAPPER);
     let claude = launcher_row(&machine, "claude");
     assert_eq!(
-        claude[..7],
+        claude[..6],
         [
             "claude",
             "claude",
             "my-claude",
             "--no-telemetry",
-            "·",
             "config",
             "/tmp/claude-logs",
         ],
     );
     assert!(
-        claude[7].starts_with('[') && claude[7] != "[built-in]",
+        claude[6].starts_with('[') && claude[6] != "[built-in]",
         "{claude:?}"
     );
     // The built-in `codex` survives beside it, and a second launcher of

@@ -183,7 +183,7 @@ impl List {
                     .strip_prefix(&paint(Role::Dim, SEPARATOR))
                     .unwrap_or(&meta)
                     .trim_start();
-                lines.push(format!("{}{meta}", " ".repeat(title_offset)));
+                lines.push(cut(&format!("{}{meta}", " ".repeat(title_offset)), width));
             }
             for child in &row.children {
                 lines.push(format!(

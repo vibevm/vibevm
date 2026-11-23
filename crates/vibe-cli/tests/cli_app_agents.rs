@@ -645,7 +645,13 @@ fn agent_list_shows_the_effective_trust_with_each_entrys_source() {
         "{human}",
     );
     assert!(
-        row(&["written", "org.example", "[trusted_groups]"]),
+        row(&[
+            "written",
+            "org.example",
+            "trusted_groups",
+            "in",
+            "agents.toml"
+        ]),
         "{human}"
     );
 

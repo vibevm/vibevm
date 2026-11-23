@@ -7,6 +7,13 @@ use super::*;
 
 const WIDTH: usize = 80;
 
+/// The registry's own refusal for a definition naming an unknown preset
+/// (PROP-064 `#agent-definition`), as `vibe_app` writes it into `problem`.
+const BROKEN: &str = "agent `broken` cannot be used: preset `nope` is not built in; presets: \
+    claude-code, codex, opencode, qwen, hermes, pi, gemini, cursor \
+    (violates spec://org.vibevm.core/vibevm/common/PROP-064#agent-definition; \
+    fix: give the definition a command and both argument templates, or name a preset)";
+
 fn listing() -> AgentList {
     let builtin = |name: &str| {
         serde_json::json!({
@@ -34,7 +41,7 @@ fn listing() -> AgentList {
             },
             {
                 "name": "broken", "interactive": [], "unattended": [], "default": false,
-                "problem": "unknown preset `nope`",
+                "problem": BROKEN,
             },
         ],
         "launchers": [
@@ -49,15 +56,41 @@ fn listing() -> AgentList {
     .unwrap()
 }
 
-fn columns_of(line: &str, word: &str) -> usize {
-    line.find(word)
-        .map(|byte| line[..byte].chars().count())
-        .unwrap_or_else(|| panic!("`{word}` in {line:?}"))
-}
+/// `vibe agent list` of the fixture at 80 columns, exactly.
+const GOLDEN_80: &str = "\
+── launchers ───────────────────────────────────────────────────────────────────
+  claude    claude    claude    [built-in]
+  codex     codex     codex     [built-in]
+  opencode  opencode  opencode  [built-in]
+  qwen      qwen      qwen      [built-in]
+  hermes    hermes    hermes    [built-in]
+  pi        pi        pi        [built-in]
+  cc2       claude    cc2       config /u/.claude2  [/u/.vibe/agents.toml]
+  starts a launcher with this project's boot lane
+  vibe agent <name>
+
+── agent definitions ───────────────────────────────────────────────────────────
+  reviewer  preset claude-code  [default]
+  └ interactive claude
+  └ unattended  claude -p {prompt}
+✗ broken
+  └ preset `nope` is not built in
+  └ fix  give the definition a command and both argument templates, or name a
+         preset
+
+── trust ───────────────────────────────────────────────────────────────────────
+  trusted    org.vibevm.*          [base]
+  trusted    org.example           [user]
+  untrusted  org.vibevm.ai-native  overrides base  [user]
+  written    org.example           trusted_groups in agents.toml
+  package-authored code of a trusted group runs unasked unless an untrusted ent…
+
+✻ 7 launchers · 2 agent definitions · default reviewer · /u/.vibe/agents.toml";
 
 #[test]
 fn agent_list_renders_sections_as_measured_lists() {
     let out = render_list(&listing(), WIDTH, WIDTH);
+    assert_eq!(out, GOLDEN_80, "\n{out}");
     let lines: Vec<&str> = out.lines().collect();
 
     // Sections open with their rules, launchers first.
@@ -70,74 +103,103 @@ fn agent_list_renders_sections_as_measured_lists() {
     assert!(rules[0].starts_with("── launchers ─"), "{out}");
     assert!(rules[1].starts_with("── agent definitions ─"), "{out}");
     assert!(rules[2].starts_with("── trust ─"), "{out}");
-    assert!(!out.contains("external registration"), "{out}");
 
-    // The kind column starts at one offset in every launcher row, and so
-    // does the source state word.
-    let launcher_rows: Vec<&str> = lines[1..8].to_vec();
-    let kinds: Vec<usize> = launcher_rows
+    // The kind, command and metadata columns start at one offset in every
+    // launcher row.
+    for word_at in [1, 2, 3] {
+        let offsets: Vec<usize> = lines[1..8]
+            .iter()
+            .map(|line| word_offset(line, word_at))
+            .collect();
+        assert!(offsets.iter().all(|at| *at == offsets[0]), "{out}");
+    }
+
+    // A broken definition is the `✗` row and two children: what is wrong
+    // without the repeated lead or the preset roster, and the fix; no spec
+    // address.
+    let broken = lines
         .iter()
-        .map(|line| {
-            let name = line.split_whitespace().next().unwrap();
-            let rest = &line[2 + name.len()..];
-            2 + name.len() + (rest.len() - rest.trim_start().len())
-        })
-        .collect();
-    assert!(kinds.iter().all(|kind| *kind == kinds[0]), "{out}");
-    let sources: Vec<usize> = launcher_rows
+        .position(|line| *line == "✗ broken")
+        .expect("the broken row");
+    let block: Vec<&str> = lines[broken + 1..]
         .iter()
-        .map(|line| columns_of(line, "["))
+        .take_while(|line| !line.is_empty())
+        .copied()
         .collect();
-    assert!(sources.iter().all(|at| *at == sources[0]), "{out}");
-    assert!(launcher_rows[0].ends_with("[built-in]"), "{out}");
-    assert!(
-        launcher_rows[6].contains("cc2 · config /u/.claude2"),
-        "{out}"
-    );
-    assert!(
-        launcher_rows[6].ends_with("[/u/.vibe/agents.toml]"),
-        "{out}"
-    );
-    assert!(
-        lines[8].starts_with("  vibe agent <name> starts one"),
-        "{out}"
-    );
-
-    // Definitions: `[default]`, the preset, the two argvs as children, and
-    // the problem row in the failed gutter.
-    assert!(out.contains("preset claude-code  [default]"), "{out}");
-    assert!(out.contains("  └ unknown preset `nope`"), "{out}");
-    assert!(out.contains("└ interactive claude\n"), "{out}");
-    assert!(out.contains("└ unattended  claude -p {prompt}"), "{out}");
-    assert!(
-        out.lines().any(|line| line.starts_with("✗ broken")),
-        "{out}"
-    );
-
-    // Trust: one row per entry, the explanation one dim hint.
-    assert!(out.contains("org.vibevm.*"), "{out}");
-    assert!(
-        out.lines()
-            .any(|line| line.starts_with("  untrusted") && line.contains("overrides base  [user]")),
-        "{out}"
-    );
-    assert!(
-        out.lines()
-            .any(|line| line.starts_with("  written") && line.contains("org.example")),
-        "{out}"
-    );
-
-    // The trailer replaces the summary line; the path in full.
     assert_eq!(
-        lines.last().copied(),
-        Some("✻ 7 launchers · 2 agent definitions · default reviewer · /u/.vibe/agents.toml"),
+        block.iter().filter(|line| line.starts_with("  └ ")).count(),
+        2,
+        "{out}"
     );
+    assert!(!out.contains("violates"), "{out}");
+    assert!(!out.contains("cannot be used"), "{out}");
+    assert!(!out.contains("presets:"), "{out}");
+
     for line in &lines {
         assert!(
             console::measure_text_width(line) <= WIDTH,
             "{line:?} runs past {WIDTH}\n{out}"
         );
     }
+}
+
+/// The display column where the `n`th (0-based) whitespace-separated word
+/// of `line` starts.
+fn word_offset(line: &str, n: usize) -> usize {
+    let mut column = 0;
+    let mut words = 0;
+    let mut in_word = false;
+    for c in line.chars() {
+        if c != ' ' && !in_word {
+            if words == n {
+                return column;
+            }
+            words += 1;
+        }
+        in_word = c != ' ';
+        column += console::measure_text_width(c.encode_utf8(&mut [0; 4]));
+    }
+    panic!("no word {n} in {line:?}")
+}
+
+#[test]
+fn at_forty_columns_a_launchers_metadata_moves_to_its_own_line() {
+    let out = render_list(&listing(), 40, 40);
+    let lines: Vec<&str> = out.lines().collect();
+    let cc2 = lines
+        .iter()
+        .position(|line| line.starts_with("  cc2 "))
+        .expect("the cc2 row");
+    assert_eq!(lines[cc2], "  cc2       claude    cc2", "{out}");
+    assert!(
+        lines[cc2 + 1] == format!("{}config /u/.claude…", " ".repeat(22)),
+        "{out}"
+    );
+    assert_eq!(lines[1], "  claude    claude    claude", "{out}");
+    assert_eq!(lines[2], format!("{}[built-in]", " ".repeat(22)), "{out}");
+    // The fix wraps under its own text rather than running past the edge.
+    assert!(
+        out.contains("  └ fix  give the definition a command\n         and both"),
+        "{out}"
+    );
+    // Every line but the trailer, which writes its path in full.
+    assert!(
+        lines[..lines.len() - 1]
+            .iter()
+            .all(|line| console::measure_text_width(line) <= 40),
+        "{out}"
+    );
+}
+
+#[test]
+fn a_section_without_rows_says_none() {
+    let mut listing = listing();
+    listing.agents.clear();
+    listing.default = None;
+    let out = render_list(&listing, WIDTH, WIDTH);
+    assert!(out.contains("── agent definitions ─"), "{out}");
+    assert!(out.contains("─\n  none\n\n── trust ─"), "{out}");
+    assert!(out.ends_with("0 agent definitions · default none · /u/.vibe/agents.toml"));
 }
 
 #[test]
@@ -154,7 +216,7 @@ fn a_hint_is_cut_at_the_viewport_and_an_external_registration_has_its_own_rule()
         "{narrow}"
     );
     assert!(
-        narrow.contains("  vibe agent <name> starts one with thi…\n"),
+        narrow.contains("  starts a launcher with this project's…\n  vibe agent <name>\n"),
         "{narrow}"
     );
     // Every line but the trailer, which writes its path in full.
@@ -168,6 +230,12 @@ fn a_hint_is_cut_at_the_viewport_and_an_external_registration_has_its_own_rule()
     // A redirected stream is not cut.
     let wide = render_list(&listing, usize::MAX / 4, WIDTH);
     assert!(wide.contains("with this project's boot lane\n"), "{wide}");
+    assert!(
+        wide.contains(
+            "  └ fix  give the definition a command and both argument templates, or name a preset\n"
+        ),
+        "{wide}"
+    );
 }
 
 #[test]
@@ -193,5 +261,9 @@ fn agent_presets_render_as_a_list_with_a_trailer() {
         lines.last().copied(),
         Some("✻ 2 agent presets · placeholders {prompt} {cwd}"),
     );
-    assert!(lines.iter().all(|line| line.chars().count() <= WIDTH));
+    assert!(
+        lines
+            .iter()
+            .all(|line| console::measure_text_width(line) <= WIDTH)
+    );
 }

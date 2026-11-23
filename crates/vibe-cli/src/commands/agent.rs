@@ -142,10 +142,11 @@ fn list(ctx: &output::Context, settings: &SettingsRoot, config: &AgentsConfig) -
 /// rule runs to.
 ///
 /// ```text
-/// ── launchers ─────────────────────────────────────────
-///   claude  claude  claude                    [built-in]
-///   cc2     claude  cc2 · config ~/.claude2   [~/.vibe/agents.toml]
-///   vibe agent <name> starts one with this project's boot lane
+/// ── launchers ─────────────────────────────────────────────────
+///   claude  claude  claude                     [built-in]
+///   cc2     claude  cc2     config ~/.claude2  [~/.vibe/agents.toml]
+///   starts a launcher with this project's boot lane
+///   vibe agent <name>
 ///
 /// ✻ 7 launchers · 0 agent definitions · default none · /home/u/.vibe/agents.toml
 /// ```
@@ -153,10 +154,8 @@ fn list(ctx: &output::Context, settings: &SettingsRoot, config: &AgentsConfig) -
 fn render_list(listing: &AgentList, width: usize, rule: usize) -> String {
     let mut sections = vec![
         section("launchers", &launcher_list(listing).render_at(width), rule)
-            + &hint_line(
-                "vibe agent <name> starts one with this project's boot lane",
-                width,
-            ),
+            + &hint_line("starts a launcher with this project's boot lane", width)
+            + &command_line("vibe agent <name>", width),
         section(
             "agent definitions",
             &definition_list(listing, width).render_at(width),
@@ -198,6 +197,15 @@ fn hint_line(text: &str, width: usize) -> String {
     format!("\n{}", cut(&format!("  {}", hint(text)), width))
 }
 
+/// A command the reader can type, on its own accent line at column 2
+/// under the hint that introduces it (`#inline`), cut at the viewport.
+fn command_line(command: &str, width: usize) -> String {
+    format!(
+        "\n{}",
+        cut(&format!("  {}", paint(Role::Accent, command)), width)
+    )
+}
+
 /// `none`, dim, where a section has no rows.
 fn none_list() -> List {
     List::new(vec![Row::new(vec![Cell::new("none", Role::Dim)])])
@@ -217,23 +225,24 @@ fn count(n: usize, one: &str, many: &str) -> String {
     format!("{n} {}", if n == 1 { one } else { many })
 }
 
-/// The launchers: name, kind, the argv that starts it (and its config
-/// dir), the source as a state word.
+/// The launchers: name, kind, the argv that starts it, its config dir as
+/// metadata, the source as a state word.
 fn launcher_list(listing: &AgentList) -> List {
     let rows = listing
         .launchers
         .iter()
         .map(|launcher| {
-            let mut command = launcher.command.join(" ");
+            let mut meta = Vec::new();
             if let Some(dir) = &launcher.config_dir {
-                command.push_str(&paint(Role::Dim, &format!(" · config {}", short_path(dir))));
+                meta.push(Meta::note(format!("config {}", short_path(dir))));
             }
+            meta.push(Meta::State(short_path(&launcher.source)));
             Row::new(vec![
                 Cell::text(&launcher.name),
                 Cell::new(&launcher.kind, Role::Dim),
-                Cell::text(command),
+                Cell::text(launcher.command.join(" ")),
             ])
-            .meta(vec![Meta::State(short_path(&launcher.source))])
+            .meta(meta)
         })
         .collect::<Vec<_>>();
     if rows.is_empty() {
@@ -243,8 +252,11 @@ fn launcher_list(listing: &AgentList) -> List {
 }
 
 /// The agent definitions: name, preset and `[default]`, the two argvs as
-/// children; a definition that does not resolve is a `✗` row with its
-/// problem as its child, wrapped rather than cut because it says the fix.
+/// children; a definition that does not resolve is a `✗` row with two
+/// children, wrapped rather than cut: what is wrong, in the alert role,
+/// and the fix, dim (`#refusal` read short — the row already names the
+/// agent, `vibe agent presets` lists the presets, and the spec address is
+/// the JSON's).
 fn definition_list(listing: &AgentList, width: usize) -> List {
     if listing.agents.is_empty() {
         return none_list();
@@ -263,13 +275,15 @@ fn definition_list(listing: &AgentList, width: usize) -> List {
             let row = Row::new(vec![Cell::text(&agent.name)]);
             match &agent.problem {
                 Some(problem) => {
-                    let lines = wrap(problem, width.saturating_sub(CHILD).max(20))
-                        .iter()
-                        .map(|line| paint(Role::Alert, line))
-                        .collect::<Vec<_>>();
-                    row.glyph(Glyph::Failed, Role::Alert)
+                    let (headline, fix) = problem_lines(&agent.name, problem);
+                    let row = row
+                        .glyph(Glyph::Failed, Role::Alert)
                         .meta(meta)
-                        .child(lines.join(&format!("\n{}", " ".repeat(CHILD))))
+                        .child(wrapped_child("", &headline, Role::Alert, width));
+                    match fix {
+                        Some(fix) => row.child(wrapped_child("fix  ", &fix, Role::Dim, width)),
+                        None => row,
+                    }
                 }
                 None => {
                     let command = agent.command.as_deref().unwrap_or_default();
@@ -281,6 +295,39 @@ fn definition_list(listing: &AgentList, width: usize) -> List {
         })
         .collect();
     List::new(rows).meta_column()
+}
+
+/// What is wrong with a definition and how to fix it, read from the
+/// registry's refusal: the headline without the `agent `<name>` cannot be
+/// used: ` lead the row already says, and without the roster of presets
+/// `vibe agent presets` already shows; the fix sentence without its spec
+/// address.
+fn problem_lines(name: &str, problem: &str) -> (String, Option<String>) {
+    let refusal = output::refusal_of(&anyhow::anyhow!(problem.to_owned()));
+    let lead = format!("agent `{name}` cannot be used: ");
+    let headline = refusal
+        .headline
+        .strip_prefix(&lead)
+        .unwrap_or(&refusal.headline);
+    let headline = headline
+        .split_once("; presets: ")
+        .map_or(headline, |(sentence, _)| sentence);
+    (headline.to_owned(), refusal.fix.into_iter().next())
+}
+
+/// A child line `<label><text>` in `role`, wrapped at words so no line
+/// runs past `width`; a continuation starts under the text.
+fn wrapped_child(label: &str, text: &str, role: Role, width: usize) -> String {
+    let indent = CHILD + label.len();
+    wrap(text, width.saturating_sub(indent))
+        .iter()
+        .enumerate()
+        .map(|(at, line)| match at {
+            0 => paint(role, &format!("{label}{line}")),
+            _ => format!("{}{}", " ".repeat(indent), paint(role, line)),
+        })
+        .collect::<Vec<_>>()
+        .join("\n")
 }
 
 /// `interactive <cmd …>` / `unattended  <cmd …>`, the label dim and padded
@@ -340,7 +387,7 @@ fn trust_list(listing: &AgentList) -> Option<List> {
                 Cell::new("written", Role::Dim),
                 Cell::text(listing.trusted_groups.join(", ")),
             ])
-            .meta(vec![Meta::State("trusted_groups".into())]),
+            .meta(vec![Meta::note("trusted_groups in agents.toml")]),
         );
     }
     Some(List::new(rows).meta_column())
