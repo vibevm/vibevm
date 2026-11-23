@@ -50,7 +50,8 @@ pub(crate) fn run(
 fn print_text(ctx: &output::Context, answer: &PromptCheck) {
     if !answer.opted_in {
         ctx.summary(&format!(
-            "system prompt: {} — `{}` has not opted in (no authored `{}`)",
+            "system prompt: {} — `{}` has not opted in (no authored `{}`); run `vibe prompt init` \
+             to opt in",
             answer.verdict.as_str(),
             answer.node_rel,
             vibe_workspace::path_to_slash(&vibe_core::layout::current_boot_system_template())

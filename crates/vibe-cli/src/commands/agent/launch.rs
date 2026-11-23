@@ -218,7 +218,7 @@ pub(crate) fn run(ctx: &output::Context, argv: Vec<String>) -> Result<()> {
         if !ctx.is_quiet() {
             eprintln!(
                 "note: this project has not opted in to a system prompt — starting `{name}` \
-                 unchanged; the agent reads its boot lane from disk"
+                 unchanged; the agent reads its boot lane from disk; run `vibe prompt init` to opt in"
             );
         }
         let mut command: Vec<String> = launcher.command.clone();

@@ -297,7 +297,7 @@ fn compose_with_personal(
     if !answer.opted_in {
         bail!(
             "`{}` has not opted in to a system prompt (no authored `{}`), so there is no lane to \
-             deliver and no flag to pass",
+             deliver and no flag to pass; run `vibe prompt init` to opt in",
             selected.node_rel,
             vibe_workspace::path_to_slash(&vibe_core::layout::current_boot_system_template())
         );

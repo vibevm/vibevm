@@ -88,3 +88,21 @@ fn prompt_init_refuses_an_existing_template() {
     assert!(said.contains("already opted in"), "{said}");
     assert_eq!(fs::read_to_string(&template).unwrap(), "# My own frame\n");
 }
+
+#[test]
+fn prompt_build_on_an_unopted_project_names_prompt_init() {
+    let user = UserScratch::new();
+    let project = project(&user);
+    let output = user
+        .vibe()
+        .args(["prompt", "build", "--path"])
+        .arg(project.path())
+        .assert()
+        .success()
+        .get_output()
+        .stdout
+        .clone();
+    let said = String::from_utf8(output).unwrap();
+    assert!(said.contains("has not opted in"), "{said}");
+    assert!(said.contains("vibe prompt init"), "{said}");
+}

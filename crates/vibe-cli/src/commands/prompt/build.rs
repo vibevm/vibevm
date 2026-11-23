@@ -80,7 +80,8 @@ pub(crate) fn summary_line(built: &Result<PromptBuild, vibe_workspace::Workspace
     match built {
         Err(error) => format!("system prompt: build failed — {error}"),
         Ok(PromptBuild::OptedOut) => format!(
-            "system prompt: not generated — this project has not opted in (no `{}`)",
+            "system prompt: not generated — this project has not opted in (no `{}`); run `vibe \
+             prompt init` to opt in",
             vibe_workspace::path_to_slash(&vibe_core::layout::current_boot_system_template())
         ),
         Ok(PromptBuild::Removed) => format!(
