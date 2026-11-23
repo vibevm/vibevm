@@ -196,6 +196,50 @@ impl List {
         lines.join("\n")
     }
 
+    /// Preserve every field on measured continuation lines when a row cannot
+    /// fit. This is opt-in: ordinary lists retain `render_at`'s compact layout.
+    /// Rows that fit keep the existing aligned representation byte for byte.
+    #[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-067#width")]
+    pub(crate) fn render_lossless_at(&self, width: usize) -> String {
+        let full = self.render_at(usize::MAX / 4);
+        if full.lines().all(|line| measure(line) <= width) {
+            return self.render_at(width);
+        }
+        let mut original = full.lines();
+        let mut lines = Vec::new();
+        for row in &self.rows {
+            let line = original.next().unwrap_or_default();
+            if measure(line) <= width {
+                lines.push(line.to_owned());
+            } else {
+                let mut fields = row.cells.iter();
+                if let Some(first) = fields.next() {
+                    let lead = match row.glyph {
+                        Some((glyph, _)) => format!("{} ", glyph.text()),
+                        None => "  ".to_owned(),
+                    };
+                    let first = format!("{lead}{}", first.text);
+                    lossless_lines(&mut lines, &first, width, Role::Text);
+                }
+                for cell in fields {
+                    let role = if row.dim { Role::Dim } else { cell.role };
+                    lossless_lines(&mut lines, &format!("  {}", cell.text), width, role);
+                }
+                if !row.meta.is_empty() {
+                    let meta = join_meta(&row.meta);
+                    let meta = console::strip_ansi_codes(&meta);
+                    let meta = meta.strip_prefix(SEPARATOR).unwrap_or(&meta).trim_start();
+                    lossless_lines(&mut lines, &format!("  {meta}"), width, Role::Dim);
+                }
+            }
+            for _ in &row.children {
+                let child = original.next().unwrap_or_default();
+                lossless_lines(&mut lines, child, width, Role::Text);
+            }
+        }
+        lines.join("\n")
+    }
+
     fn row_line(&self, row: &Row, widths: &[usize], show_meta: bool, width: usize) -> String {
         let mut line = match row.glyph {
             Some((glyph, role)) => format!("{} ", paint(role, glyph.text())),
@@ -254,6 +298,30 @@ impl List {
             .sum::<usize>()
     }
 }
+
+/// Append lossless physical lines, measuring terminal cells rather than bytes.
+/// Styling is applied only after wrapping, so escape sequences never split.
+#[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-067#width")]
+fn lossless_lines(lines: &mut Vec<String>, text: &str, width: usize, role: Role) {
+    let plain = console::strip_ansi_codes(text);
+    for physical in plain.split('\n') {
+        let mut line = String::new();
+        for ch in physical.chars() {
+            let mut next = line.clone();
+            next.push(ch);
+            if !line.is_empty() && measure(&next) > width {
+                lines.push(paint(role, &line));
+                line.clear();
+            }
+            line.push(ch);
+        }
+        lines.push(paint(role, &line));
+    }
+}
+
+#[cfg(test)]
+#[path = "list/tests.rs"]
+mod tests;
 
 /// `line` padded with spaces to `column` display columns.
 fn pad_plain(line: &str, column: usize) -> String {
