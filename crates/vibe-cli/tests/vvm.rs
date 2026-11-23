@@ -3,6 +3,14 @@
 //! `VIBEVM_INSTALL_ROOT`, so nothing here ever touches the developer's
 //! real `~/opt` (PROP-019 §2.4), and the settings home is pinned away
 //! from `~/.vibe` by linking `vibe-test-support` (DRIFT-020).
+//!
+//! `HOME` is pinned per invocation too, and that one is not cosmetic.
+//! `self install` and `self update` activate what they build under the
+//! `Update` durable-environment policy, and activation writes the managed
+//! block into the shell rc under `$HOME` (PROP-019 `#path`). Pinning only
+//! the install root therefore left the real `~/.bashrc` as the write
+//! target: the suite rewrote the developer's own profile to point PATH and
+//! `VIBEVM_HOME` at a temp directory that vanished with the test.
 
 use std::path::Path;
 use std::process::Command as Sys;
@@ -23,19 +31,42 @@ fn fixture_process_guard() -> MutexGuard<'static, ()> {
         .unwrap_or_else(std::sync::PoisonError::into_inner)
 }
 
-/// A `vibe` invocation with the install root pinned to `base` and no
-/// ambient `VIBEVM_HOME` leaking in.
-fn vibe(base: &Path) -> Command {
+/// Point the child's `$HOME` at `home`, so every durable-profile write
+/// this test provokes lands in a directory the test owns.
+///
+/// `cargo` and `rustup` find their own homes under `$HOME` when
+/// `CARGO_HOME` / `RUSTUP_HOME` are unset, and `self install` really does
+/// run `cargo build` — so the real ones are forwarded explicitly rather
+/// than moved along with the profile target.
+fn pin_home(cmd: &mut Command, home: &Path) {
+    if let Some(real) = std::env::var_os("HOME") {
+        for (variable, directory) in [("CARGO_HOME", ".cargo"), ("RUSTUP_HOME", ".rustup")] {
+            if std::env::var_os(variable).is_none() {
+                cmd.env(variable, Path::new(&real).join(directory));
+            }
+        }
+    }
+    // A fixed shell makes the rc target deterministic (`~/.bashrc`), and
+    // `ZDOTDIR` would otherwise redirect a zsh target out of `home`.
+    cmd.env("HOME", home)
+        .env("SHELL", "/bin/bash")
+        .env_remove("ZDOTDIR");
+}
+
+/// A `vibe` invocation with the install root pinned to `base`, `HOME`
+/// pinned to `home`, and no ambient `VIBEVM_HOME` leaking in.
+fn vibe(base: &Path, home: &Path) -> Command {
     let mut cmd = vibe_test_support::vibe();
     cmd.env("VIBEVM_INSTALL_ROOT", base)
         .env_remove("VIBEVM_HOME");
+    pin_home(&mut cmd, home);
     cmd
 }
 
 /// Copy the real test binary below `source/target/` so current_exe provenance
 /// identifies that worktree rather than relying on (and accidentally trusting)
 /// `current_dir`.
-fn source_vibe(base: &Path, source: &Path) -> Command {
+fn source_vibe(base: &Path, source: &Path, home: &Path) -> Command {
     let probe = vibe_test_support::vibe();
     let destination = source.join("target").join("bootstrap").join(bin_name());
     std::fs::create_dir_all(destination.parent().unwrap()).unwrap();
@@ -44,6 +75,7 @@ fn source_vibe(base: &Path, source: &Path) -> Command {
     cmd.env("VIBEVM_INSTALL_ROOT", base)
         .env_remove("VIBEVM_HOME")
         .current_dir(source);
+    pin_home(&mut cmd, home);
     cmd
 }
 
@@ -69,9 +101,10 @@ fn proxy_bin_name() -> &'static str {
 fn ls_on_a_fresh_root_still_identifies_the_direct_source_execution() {
     let _fixture_guard = fixture_process_guard();
     let base = TempDir::new().unwrap();
+    let home = TempDir::new().unwrap();
     let src = TempDir::new().unwrap();
     write_tiny_source(src.path());
-    source_vibe(base.path(), src.path())
+    source_vibe(base.path(), src.path(), home.path())
         .args(["self", "ls"])
         .assert()
         .success()
@@ -84,9 +117,10 @@ fn ls_on_a_fresh_root_still_identifies_the_direct_source_execution() {
 fn which_reports_the_direct_source_executable_without_an_active_version() {
     let _fixture_guard = fixture_process_guard();
     let base = TempDir::new().unwrap();
+    let home = TempDir::new().unwrap();
     let src = TempDir::new().unwrap();
     write_tiny_source(src.path());
-    source_vibe(base.path(), src.path())
+    source_vibe(base.path(), src.path(), home.path())
         .args(["self", "which"])
         .assert()
         .success()
@@ -97,12 +131,13 @@ fn which_reports_the_direct_source_executable_without_an_active_version() {
 fn remove_selector_conflicts_with_all() {
     let _fixture_guard = fixture_process_guard();
     let base = TempDir::new().unwrap();
-    vibe(base.path())
+    let home = TempDir::new().unwrap();
+    vibe(base.path(), home.path())
         .args(["self", "remove", "tag:1.0.0", "--all"])
         .assert()
         .failure()
         .stderr(predicates::str::contains("cannot be used with"));
-    vibe(base.path())
+    vibe(base.path(), home.path())
         .args(["self", "remove", "--all", "--tag"])
         .assert()
         .failure()
@@ -113,7 +148,8 @@ fn remove_selector_conflicts_with_all() {
 fn doctor_exits_nonzero_when_reported_problems_remain() {
     let _fixture_guard = fixture_process_guard();
     let base = TempDir::new().unwrap();
-    vibe(base.path())
+    let home = TempDir::new().unwrap();
+    vibe(base.path(), home.path())
         .args(["--json", "self", "doctor"])
         .assert()
         .failure()
@@ -126,10 +162,11 @@ fn doctor_exits_nonzero_when_reported_problems_remain() {
 fn install_builds_publishes_and_records_under_the_temp_root() {
     let _fixture_guard = fixture_process_guard();
     let base = TempDir::new().unwrap();
+    let home = TempDir::new().unwrap();
     let src = TempDir::new().unwrap();
     write_tiny_source(src.path());
 
-    source_vibe(base.path(), src.path())
+    source_vibe(base.path(), src.path(), home.path())
         .args(["self", "install"])
         .assert()
         .success()
@@ -161,7 +198,7 @@ fn install_builds_publishes_and_records_under_the_temp_root() {
     assert!(state.contains("id = \"main\""), "records the id");
 
     // install flipped `current`, so ls marks it active with no extra env.
-    vibe(base.path())
+    vibe(base.path(), home.path())
         .args(["self", "ls"])
         .assert()
         .success()
@@ -175,16 +212,17 @@ fn update_builds_and_activates_latest_like_install() {
     // A source execution updates `latest`: it builds all essential binaries,
     // publishes, and flips `current` to the new immutable instance.
     let base = TempDir::new().unwrap();
+    let home = TempDir::new().unwrap();
     let src = TempDir::new().unwrap();
     write_tiny_source(src.path());
 
-    source_vibe(base.path(), src.path())
+    source_vibe(base.path(), src.path(), home.path())
         .args(["self", "update"])
         .assert()
         .success()
         .stdout(predicates::str::contains("installed branch:main"));
 
-    vibe(base.path())
+    vibe(base.path(), home.path())
         .args(["self", "ls"])
         .assert()
         .success()
