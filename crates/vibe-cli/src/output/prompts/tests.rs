@@ -317,3 +317,38 @@ fn starts_name(text: &str, start: usize) -> bool {
         .next_back()
         .is_none_or(|ch| !ch.is_alphanumeric() && ch != '_')
 }
+
+#[test]
+#[specmark::verifies("spec://org.vibevm.core/vibevm/common/PROP-067#question")]
+fn list_key_moves_chooses_and_cancels() {
+    use super::ask::{ListKey, list_key};
+    use console::Key;
+    // Down and up wrap around both ends.
+    assert_eq!(list_key(&Key::ArrowDown, 0, 2), ListKey::Move(1));
+    assert_eq!(list_key(&Key::ArrowDown, 1, 2), ListKey::Move(0));
+    assert_eq!(list_key(&Key::ArrowUp, 0, 2), ListKey::Move(1));
+    assert_eq!(list_key(&Key::ArrowUp, 2, 3), ListKey::Move(1));
+    assert_eq!(list_key(&Key::Tab, 0, 3), ListKey::Move(1));
+    assert_eq!(list_key(&Key::BackTab, 0, 3), ListKey::Move(2));
+    assert_eq!(list_key(&Key::Char('j'), 1, 3), ListKey::Move(2));
+    assert_eq!(list_key(&Key::Char('k'), 1, 3), ListKey::Move(0));
+    // Enter and Space choose the row the marker is on.
+    assert_eq!(list_key(&Key::Enter, 1, 2), ListKey::Choose(1));
+    assert_eq!(list_key(&Key::Char(' '), 0, 2), ListKey::Choose(0));
+    // Escape and Ctrl-C cancel rather than answer.
+    assert_eq!(list_key(&Key::Escape, 0, 2), ListKey::Cancel);
+    assert_eq!(list_key(&Key::CtrlC, 1, 2), ListKey::Cancel);
+    // No letter answers, in any layout.
+    for letter in ['y', 'n', 'Y', 'N', 'н', 'т', 'Н', 'Т'] {
+        assert_eq!(
+            list_key(&Key::Char(letter), 0, 2),
+            ListKey::Ignore,
+            "{letter}"
+        );
+        assert_eq!(
+            list_key(&Key::Char(letter), 1, 2),
+            ListKey::Ignore,
+            "{letter}"
+        );
+    }
+}

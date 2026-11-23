@@ -4,7 +4,8 @@
 //! what the machine fetches from. Before anything is removed the two
 //! blocks are shown — the rows that would stop applying, because no other
 //! accepted package offers them, and the rows that stay because one still
-//! does — and the question is `keep these N rows as local rows? (y/n)`.
+//! does — and the question is `keep these N rows as local rows?`, a
+//! list of two rows, `yes` and `no`.
 //! `yes` copies the orphans into the user home's own `[[remap]]` table
 //! with `from = "<package>@<version>"` and the original `reason`, so the
 //! machine keeps working and `remap list` still says where each row came

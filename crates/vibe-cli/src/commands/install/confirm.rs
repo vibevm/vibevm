@@ -121,18 +121,16 @@ impl ConfirmGate for CliConfirmGate<'_> {
                     "ordinary submitted install requires explicit --assume-yes or attended apply confirmation"
                 );
             }
-            let choices = crate::output::prompts::named(&["no", "yes"]);
-            let selected = self.ctx.with_terminal_released(|| {
-                crate::output::prompts::choose_opt_interruptible(
-                    &self.project_prompt(packages),
-                    &choices,
-                    0,
-                )
-            })?;
-            return if selected == Some(1) {
-                Ok(())
-            } else {
-                Err(InstallError::UserDeclined.into())
+            return match self.ask_apply(packages) {
+                Ok(true) => Ok(()),
+                // Escape or Ctrl-C on the ordinary path declines, as it did.
+                Ok(false) => Err(InstallError::UserDeclined.into()),
+                Err(dialoguer::Error::IO(error))
+                    if error.kind() == std::io::ErrorKind::Interrupted =>
+                {
+                    Err(InstallError::UserDeclined.into())
+                }
+                Err(error) => Err(anyhow::Error::new(error).context("reading user confirmation")),
             };
         }
         if !self.requires_confirmation() {
@@ -144,16 +142,36 @@ impl ConfirmGate for CliConfirmGate<'_> {
             );
         }
         let approved = self
-            .ctx
-            .suspend_progress(|| {
-                crate::output::prompts::confirm(&self.project_prompt(packages), false)
-            })
+            .ask_apply(packages)
             .context("reading user confirmation")?;
         if approved {
             Ok(())
         } else {
             Err(InstallError::UserDeclined.into())
         }
+    }
+}
+
+impl CliConfirmGate<'_> {
+    /// The one install question of both attended paths: default **yes**,
+    /// asked with the progress panel's key reader stopped so the keys
+    /// reach the question.
+    #[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-067#question")]
+    fn ask_apply(&self, packages: usize) -> dialoguer::Result<bool> {
+        self.ask_apply_with(packages, |prompt| {
+            crate::output::prompts::confirm(prompt, true)
+        })
+    }
+
+    /// [`Self::ask_apply`] over an injected question, the seam its test uses.
+    #[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-067#question")]
+    fn ask_apply_with(
+        &self,
+        packages: usize,
+        ask: impl FnOnce(&str) -> dialoguer::Result<bool>,
+    ) -> dialoguer::Result<bool> {
+        let prompt = self.project_prompt(packages);
+        self.ctx.with_terminal_released(|| ask(&prompt))
     }
 }
 
@@ -264,5 +282,41 @@ mod tests {
             );
             assert!(!CliConfirmGate::new(&ctx, true, root.path()).requires_confirmation());
         }
+    }
+
+    #[test]
+    #[specmark::verifies("spec://org.vibevm.core/vibevm/common/PROP-067#question")]
+    fn install_question_releases_the_progress_panel() {
+        use std::sync::Arc;
+        use std::sync::atomic::{AtomicUsize, Ordering};
+        #[derive(Default)]
+        struct Panel {
+            released: AtomicUsize,
+            reclaimed: AtomicUsize,
+        }
+        impl output::TerminalPanel for Panel {
+            fn release(&self) {
+                self.released.fetch_add(1, Ordering::SeqCst);
+            }
+            fn reclaim(&self) {
+                self.reclaimed.fetch_add(1, Ordering::SeqCst);
+            }
+        }
+        let root = tempfile::tempdir().unwrap();
+        let ctx = output::Context::from_flags(false, false, None, false, AgentModeArg::Cli);
+        let panel = Arc::new(Panel::default());
+        ctx.register_terminal_panel(panel.clone());
+        let gate = CliConfirmGate::new(&ctx, false, root.path());
+        let asked = gate
+            .ask_apply_with(2, |prompt| {
+                assert_eq!(prompt, gate.project_prompt(2));
+                assert_eq!(panel.released.load(Ordering::SeqCst), 1);
+                assert_eq!(panel.reclaimed.load(Ordering::SeqCst), 0);
+                Ok(true)
+            })
+            .unwrap();
+        assert!(asked);
+        assert_eq!(panel.released.load(Ordering::SeqCst), 1);
+        assert_eq!(panel.reclaimed.load(Ordering::SeqCst), 1);
     }
 }
