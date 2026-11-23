@@ -1,10 +1,5 @@
-//! `vibe agent <launcher>` — resolution by name, the argv prefix, the
-//! overrides and the refusals.
-//!
-//! **Nothing real is ever started.** The launcher's `command` points at a
-//! shim written into this test's own directory and reached through `PATH`,
-//! which records the argv it received and exits. The claim under test is
-//! about an argument vector, so the evidence is an argument vector
+//! `vibe agent`: launcher resolution, argv, overrides and refusals.
+//! Synthetic PATH shims record argv/carriers without starting real harnesses
 //! (PROP-076 `#SYS-HARNESS-EXECUTABLE`).
 
 #![cfg(unix)]
@@ -56,21 +51,7 @@ impl Machine {
         machine
     }
 
-    /// A shim that records its argv and its carrier environment, and exits
-    /// — never a real harness.
-    ///
-    /// It answers two questions **without** recording, because both are
-    /// probes the carrier gates make and both must be answerable by a shim:
-    /// a test that let a gate fall through to the real `codex` or
-    /// `opencode` on `PATH` would be measuring this machine rather than the
-    /// code.
-    ///
-    /// - `--version`, from `$SHIM_VERSION`. The Codex carrier is gated on
-    ///   the installed version, and OpenCode's prompt-base set is recorded
-    ///   per harness version.
-    /// - any argv containing `debug`, from `$SHIM_DEBUG_CONFIG`. That is
-    ///   OpenCode's own answer about its own configuration, which is where
-    ///   a launch with no `-m` of its own learns the model.
+    /// Records argv/carriers; answers version and debug probes without a real harness.
     fn shim(&self, name: &str) {
         let path = self.bin.path().join(name);
         fs::write(
@@ -165,14 +146,7 @@ impl Machine {
             .join("AGENT-LANE.md")
     }
 
-    /// Write a prompt-base set shaped like a real one, into a directory the
-    /// launch is pointed at with `VIBE_PROMPT_BASES_DIR`.
-    ///
-    /// **The fixture's text is nobody else's.** A test that asserted over
-    /// vendored third-party prose would fail the day upstream edits a
-    /// sentence, which is that package's business; what is pinned here is
-    /// the mechanism — the lookup, the digest gate, the `verified` gate, and
-    /// the shape of the document that reaches the harness.
+    /// Synthetic base data tests lookup, digest, verification and delivery, not upstream prose.
     fn bases(&self, set: &Set) -> PathBuf {
         let root = self.bin.path().join("bases");
         let dir = root.join("prompt-bases").join(SHIM_OPENCODE_VERSION);
@@ -785,9 +759,7 @@ fn c2_read_delivery_writes_no_codex_carrier_and_is_not_version_gated() {
     );
 }
 
-/// C2 through the printing path, which `vibe agent` is a thin layer over:
-/// one code path decides what a kind takes, so `read` prints no flag there
-/// too — and does so without a generated lane on disk.
+/// C2 printing needs no lane; read delivery emits no flags or assignments.
 #[test]
 fn c2_printing_flags_for_a_read_harness_prints_none_and_needs_no_lane() {
     let machine = Machine::new(WRAPPER);
@@ -798,12 +770,38 @@ fn c2_printing_flags_for_a_read_harness_prints_none_and_needs_no_lane() {
         .args(["prompt", "flags", "--harness", "claude"])
         .assert()
         .success()
-        .stdout(predicate::str::is_empty().or(predicate::str::contains("\n")))
+        .stdout("")
         .stderr(predicate::str::contains("no slot flag is passed"));
-    assert!(
-        !machine.lane().exists(),
-        "printing read-delivery flags composed a lane"
-    );
+    for mode in ["", "--quiet", "--json"] {
+        let mut command = machine.user.vibe();
+        machine
+            .harnessed(&mut command, VERIFIED)
+            .args(["prompt", "flags", "--harness", "pi"]);
+        if !mode.is_empty() {
+            command.arg(mode);
+        }
+        let printed = command.assert().success();
+        let output = printed.get_output();
+        if mode == "--json" {
+            let report: serde_json::Value = serde_json::from_slice(&output.stdout).unwrap();
+            assert_eq!(report["flags"], serde_json::json!([]));
+            assert_eq!(report["env"], serde_json::json!([]));
+        } else {
+            assert!(output.stdout.is_empty());
+        }
+        let stderr = String::from_utf8_lossy(&output.stderr);
+        if mode.is_empty() {
+            assert!(
+                stderr.contains(
+                    "  pi reads its boot files itself · delivery read · no flags to pass"
+                )
+            );
+            assert!(!stderr.contains('`') && !stderr.contains("note:"));
+        } else {
+            assert!(stderr.is_empty(), "{stderr}");
+        }
+    }
+    assert!(!machine.lane().exists(), "printing composed a lane");
 }
 
 #[test]
@@ -905,9 +903,6 @@ fn a_launch_whose_own_argument_names_the_model_does_not_ask_the_harness() {
 
 #[test]
 fn a_machine_with_no_set_for_its_opencode_launches_softly_and_names_both_places() {
-    // There is deliberately no fallback to another version's base, so the
-    // refusal names the two places the lookup knows and says there is no
-    // search.
     let machine = Machine::new(WRAPPER);
     machine
         .opencoded(
@@ -921,7 +916,9 @@ fn a_machine_with_no_set_for_its_opencode_launches_softly_and_names_both_places(
         .success()
         .stderr(predicate::str::contains("warning: vibe cannot deliver"))
         .stderr(predicate::str::contains(SHIM_OPENCODE_VERSION))
-        .stderr(predicate::str::contains("no fallback to another version"))
+        .stderr(predicate::str::contains(format!(
+            "no prompt-base set for opencode {SHIM_OPENCODE_VERSION} is on this machine"
+        )))
         .stderr(predicate::str::contains("org.vibevm.opencode/opencode"))
         .stderr(predicate::str::contains("VIBE_PROMPT_BASES_DIR"));
     assert_eq!(machine.argv(), [""], "a soft launch passed a flag");
@@ -1032,10 +1029,7 @@ fn a_read_delivery_opencode_starts_unchanged_and_names_the_carrier_anyway() {
 
 #[test]
 fn printing_flags_for_opencode_prints_the_assignment_first_and_the_flags_last() {
-    // **The one-line contract holds where it can and is stated where it
-    // cannot.** `NAME=value` only works as a shell *prefix*, with the
-    // program between it and the flags, so no single line can be both; the
-    // assignments come first, one per line, and the flags last.
+    // Assignments precede flags: NAME=value belongs before the program.
     let machine = Machine::new(WRAPPER);
     let root = machine.bases(&Set::good());
     machine
@@ -1059,17 +1053,12 @@ fn printing_flags_for_opencode_prints_the_assignment_first_and_the_flags_last() 
     assert_eq!(lines.len(), 2, "one assignment, then the flags: {stdout}");
     assert!(lines[0].starts_with("OPENCODE_CONFIG_CONTENT="), "{stdout}");
     assert!(lines[0].contains("default_agent"), "{stdout}");
-    // Printing writes nothing: the carrier is an environment value, so
-    // there is no file for this command to have left behind.
+    // Printing the environment carrier writes no file.
     assert!(!machine.env_path().exists());
 }
 
 #[test]
 fn printing_flags_for_an_unverified_opencode_refuses_where_a_launch_would_soften() {
-    // The two surfaces answer the same facts differently on purpose: this
-    // one prints and starts nothing, so there is no session to save, and
-    // flags for a carrier that may not arrive are the one answer a shell
-    // alias turns silently into a session with no lane in it.
     let machine = Machine::new(WRAPPER);
     let root = machine.bases(&Set {
         verified: false,
@@ -1082,15 +1071,37 @@ fn printing_flags_for_an_unverified_opencode_refuses_where_a_launch_would_soften
         .arg(machine.project.path())
         .assert()
         .success();
-    let mut command = machine.user.vibe();
-    machine.harnessed(&mut command, SHIM_OPENCODE_REPORTS);
-    command
-        .env("VIBE_PROMPT_BASES_DIR", &root)
-        .args(["prompt", "flags", "--harness", "opencode", "--path"])
-        .arg(machine.project.path())
+    let flags = |bases: &Path| {
+        let mut command = machine.user.vibe();
+        machine.harnessed(&mut command, SHIM_OPENCODE_REPORTS);
+        command
+            .env("VIBE_PROMPT_BASES_DIR", bases)
+            .args(["prompt", "flags", "--harness", "opencode", "--path"])
+            .arg(machine.project.path());
+        command
+    };
+    flags(&root)
         .assert()
         .failure()
         .stderr(predicate::str::contains("is not verified"));
+    // The same isolated settings/index has no installed harness package.
+    let empty = tempfile::tempdir().unwrap();
+    let refused = flags(empty.path()).assert().failure().stdout("");
+    let stderr = String::from_utf8_lossy(&refused.get_output().stderr);
+    assert_eq!(
+        stderr.lines().next().unwrap(),
+        format!(
+            "✗ prompt_base_missing  no prompt-base set for opencode {SHIM_OPENCODE_VERSION} is on this machine"
+        )
+    );
+    assert!(stderr.contains("why   an OpenCode agent's system replaces the harness's own prompt, so vibe needs that version's base"), "{stderr}");
+    for repair in [
+        "vibe install -g org.vibevm.opencode/opencode",
+        "VIBE_PROMPT_BASES_DIR",
+        "spec://org.vibevm.core/vibevm/common/PROP-076#SYS-SUPPLIED-BASE",
+    ] {
+        assert!(stderr.contains(repair), "{stderr}");
+    }
 }
 
 /// Qwen Code — a launcher whose carrier is one environment **path**.
@@ -1113,19 +1124,8 @@ fn qwen_is_a_builtin_launcher() {
 /// identity carrier is verified.
 const SHIM_QWEN_REPORTS: &str = "0.27.2";
 
-/// A fake npm package shaped like the installed Qwen Code: a `package.json`
-/// that identifies it, and a `chunks/` module exporting a
-/// `getCoreSystemPrompt` with the contract the carrier depends on — a first
-/// paragraph that varies by interaction mode and output style, and an
-/// identity override read from the environment that replaces **only** that
-/// paragraph.
-///
-/// **The fixture's text is nobody else's**, which is the same rule the
-/// OpenCode prompt-base fixture follows: a test that asserted over vendored
-/// third-party prose would fail the day upstream edits a sentence. What is
-/// pinned here is the mechanism — the session classification, the file's
-/// name, the sampling, the proof and the one environment assignment that
-/// reaches the harness.
+/// Synthetic Qwen package: the sampled first paragraph varies by mode/style,
+/// and the identity environment replaces only that paragraph.
 fn qwen_package(root: &Path) -> PathBuf {
     // Beside the shim, which is the layout a `qwen.cmd` in an npm bin
     // directory and a local `node_modules/.bin` install both have.

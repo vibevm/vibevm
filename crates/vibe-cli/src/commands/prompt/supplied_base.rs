@@ -360,17 +360,13 @@ pub(crate) fn carrier(request: &Request<'_>) -> Result<Composed, Undeliverable> 
         .find(|candidate| candidate.dir.join(PROVENANCE_FILE).is_file())
     else {
         return Err(Undeliverable::hard(
-            format!(
-                "this machine's {} is {harness_version} and no prompt-base set for that version \
-                 is on it. {} REPLACES the harness's own prompt, so a launch that delivers the \
-                 lane must supply {}'s own base prompt for exactly that version, and there is \
-                 deliberately no fallback to another version's base",
-                kind.as_str(),
-                carrier_slot_name(kind),
-                kind.as_str()
-            ),
-            looked_in(&lookup),
-        ));
+            format!("no prompt-base set for {} {harness_version} is on this machine", kind.as_str()),
+            if lookup.candidates.is_empty() {
+                looked_in(&lookup)
+            } else {
+                format!("install the harness through vibe (`vibe install -g org.vibevm.opencode/opencode`) to supply the base for {}, or {}", carrier_slot_name(kind), looked_in(&lookup))
+            },
+        ).with_code("prompt_base_missing"));
     };
     let provenance = Provenance::read(&found.dir).map_err(|error| {
         Undeliverable::hard(
