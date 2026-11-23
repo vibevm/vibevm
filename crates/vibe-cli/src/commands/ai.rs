@@ -114,8 +114,10 @@ pub fn run(ctx: &output::Context, args: AiArgs, cancel: &CancellationToken) -> R
                 serde_json::json!({"protocol":"vibe-ai-binding/1","ok":true,"binding":result});
             if ctx.is_json() {
                 ctx.emit_json(&report)?;
+            } else if ctx.is_quiet() {
+                ctx.summary(&view::binding_quiet(&result));
             } else {
-                println!("{}", serde_json::to_string_pretty(&report)?);
+                ctx.block(&view::binding_block(&result));
             }
             return Ok(());
         }
@@ -139,7 +141,16 @@ pub fn run(ctx: &output::Context, args: AiArgs, cancel: &CancellationToken) -> R
             if ctx.is_json() {
                 ctx.emit_json(&report)?;
             } else {
-                println!("{}", serde_json::to_string_pretty(&report)?);
+                let label = selection
+                    .connection
+                    .as_ref()
+                    .and_then(|id| store.details(id).ok())
+                    .map(|connection| connection.metadata.label);
+                if ctx.is_quiet() {
+                    ctx.summary(&view::default_quiet(&selection, label.as_deref()));
+                } else {
+                    ctx.block(&view::default_block(&selection, label.as_deref()));
+                }
             }
             return Ok(());
         }
@@ -197,13 +208,22 @@ pub fn run(ctx: &output::Context, args: AiArgs, cancel: &CancellationToken) -> R
     let report = serde_json::json!({"protocol":"vibe-ai-connections/1","ok":true,"store_revision":snapshot.store_revision,"items":snapshot.items});
     if ctx.is_json() {
         ctx.emit_json(&report)?;
+    } else if ctx.is_quiet() {
+        ctx.summary(&view::connections_count(
+            snapshot.items.len(),
+            snapshot.store_revision,
+        ));
     } else {
-        println!("{}", serde_json::to_string_pretty(&report)?);
+        ctx.block(&view::connections(&snapshot));
     }
     Ok(())
 }
 
 mod diagnostics;
 mod setup;
+mod view;
+
+#[cfg(test)]
+mod tests;
 
 pub(crate) use setup::NativeSettingsSetFailure;
