@@ -100,6 +100,13 @@ jobs:
             script: distribution/release/build-macos-aarch64.sh
     runs-on: ${{ matrix.runner }}
     steps:
+      # Package sources carry nested dependency copies whose paths pass the
+      # 260-character Windows limit; git needs long paths before checkout.
+      - name: Enable long paths for git on Windows
+        if: ${{ runner.os == 'Windows' }}
+        shell: pwsh
+        run: git config --system core.longpaths true
+
       - name: Check out the selected revision
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
