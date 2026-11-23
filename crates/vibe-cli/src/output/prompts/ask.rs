@@ -56,7 +56,7 @@ pub(crate) fn confirm_then(
 /// left to the caller.
 fn yes_or_no(prompt: &str, default: bool) -> dialoguer::Result<bool> {
     let rows = ["yes".to_owned(), "no".to_owned()];
-    match list_question(prompt, &rows, if default { 0 } else { 1 })? {
+    match list_question(prompt, &rows, yes_or_no_row(default))? {
         Some(index) => Ok(index == 0),
         None => Err(std::io::Error::new(
             std::io::ErrorKind::Interrupted,
@@ -64,6 +64,12 @@ fn yes_or_no(prompt: &str, default: bool) -> dialoguer::Result<bool> {
         )
         .into()),
     }
+}
+
+/// The row the marker of a yes-or-no question starts on: `yes` is row 0,
+/// `no` row 1.
+pub(super) fn yes_or_no_row(default: bool) -> usize {
+    if default { 0 } else { 1 }
 }
 
 /// A line of text, with the value it starts from.

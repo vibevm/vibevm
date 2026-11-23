@@ -352,3 +352,10 @@ fn list_key_moves_chooses_and_cancels() {
         );
     }
 }
+
+#[test]
+fn the_yes_or_no_marker_starts_on_the_default() {
+    use super::ask::yes_or_no_row;
+    assert_eq!(yes_or_no_row(true), 0, "default yes marks the `yes` row");
+    assert_eq!(yes_or_no_row(false), 1, "default no marks the `no` row");
+}

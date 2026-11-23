@@ -123,8 +123,8 @@ impl ConfirmGate for CliConfirmGate<'_> {
             }
             return match self.ask_apply(packages) {
                 Ok(true) => Ok(()),
-                // Escape or Ctrl-C on the ordinary path declines, as it did.
                 Ok(false) => Err(InstallError::UserDeclined.into()),
+                // Escape or Ctrl-C on the ordinary path declines, as it did.
                 Err(dialoguer::Error::IO(error))
                     if error.kind() == std::io::ErrorKind::Interrupted =>
                 {
@@ -152,26 +152,29 @@ impl ConfirmGate for CliConfirmGate<'_> {
     }
 }
 
+/// The install question's default: the reader ran install to install.
+const APPLY_DEFAULT: bool = true;
+
 impl CliConfirmGate<'_> {
     /// The one install question of both attended paths: default **yes**,
     /// asked with the progress panel's key reader stopped so the keys
     /// reach the question.
     #[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-067#question")]
     fn ask_apply(&self, packages: usize) -> dialoguer::Result<bool> {
-        self.ask_apply_with(packages, |prompt| {
-            crate::output::prompts::confirm(prompt, true)
-        })
+        self.ask_apply_with(packages, crate::output::prompts::confirm)
     }
 
-    /// [`Self::ask_apply`] over an injected question, the seam its test uses.
+    /// [`Self::ask_apply`] over an injected question, the seam its test uses;
+    /// the question and its default ([`APPLY_DEFAULT`]) are fixed here.
     #[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-067#question")]
     fn ask_apply_with(
         &self,
         packages: usize,
-        ask: impl FnOnce(&str) -> dialoguer::Result<bool>,
+        ask: impl FnOnce(&str, bool) -> dialoguer::Result<bool>,
     ) -> dialoguer::Result<bool> {
         let prompt = self.project_prompt(packages);
-        self.ctx.with_terminal_released(|| ask(&prompt))
+        self.ctx
+            .with_terminal_released(|| ask(&prompt, APPLY_DEFAULT))
     }
 }
 
@@ -308,8 +311,9 @@ mod tests {
         ctx.register_terminal_panel(panel.clone());
         let gate = CliConfirmGate::new(&ctx, false, root.path());
         let asked = gate
-            .ask_apply_with(2, |prompt| {
+            .ask_apply_with(2, |prompt, default| {
                 assert_eq!(prompt, gate.project_prompt(2));
+                assert!(default, "the install question defaults to yes");
                 assert_eq!(panel.released.load(Ordering::SeqCst), 1);
                 assert_eq!(panel.reclaimed.load(Ordering::SeqCst), 0);
                 Ok(true)
