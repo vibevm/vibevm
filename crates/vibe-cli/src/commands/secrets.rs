@@ -10,6 +10,7 @@ use std::io::{IsTerminal, Read};
 use vibe_core::cancellation::CancellationToken;
 use vibe_secrets::{Expected, MetadataSnapshot, ProtectedValue, SecretId, Store};
 
+mod diagnostics;
 mod human;
 
 #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-000#TS-USER-KEYRING")]
@@ -167,7 +168,10 @@ fn execute(
                 current_revision: id_value(expect_current)?,
             };
             cancel.checkpoint()?;
-            render(ctx, store.edit_label(&id, &expected, &label)?, Some(&id))
+            let snapshot = store
+                .edit_label(&id, &expected, &label)
+                .map_err(|error| diagnostics::expected(store, &id, &expected, error))?;
+            render(ctx, snapshot, Some(&id))
         }
         SecretsCommand::Rotate {
             id: raw,
@@ -200,7 +204,10 @@ fn execute(
             }
             cancel.checkpoint()?;
             // Only durable fresh-genesis protocol admission can attest inventory.
-            render(ctx, store.remove_coordinated(&id, &expected)?, None)
+            let snapshot = store
+                .remove_coordinated(&id, &expected)
+                .map_err(|error| diagnostics::expected(store, &id, &expected, error))?;
+            render(ctx, snapshot, None)
         }
     }
 }

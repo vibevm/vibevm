@@ -23,8 +23,9 @@ pub use references::{
 const VALUE_LIMIT: usize = 1024 * 1024;
 const INDEX_LIMIT: usize = 4 * 1024 * 1024;
 
-/// The keyring layer's one error enum. Every message is fixed text naming
-/// the violated rule and a fix; none carries a path, an identifier or a value.
+/// The keyring layer's one error enum. Messages name the violated rule and a
+/// fix; only a witnessed selected-root mode refusal carries a safely quoted
+/// public path. No error carries a protected value.
 ///
 /// ```
 /// use vibe_secrets::{Error, SecretId};
@@ -45,6 +46,13 @@ pub enum Error {
            only the current user owns and can access)"
     )]
     Unavailable,
+    /// Current-user directory mode witnessed by the rejecting held handle.
+    #[error(
+        "keyring_unprotected: private keyring directory {path} has mode {mode:04o}; requires 0700 \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-000#TS-USER-KEYRING; \
+          fix: `chmod 700 {path}` then inspect the selected private storage again)"
+    )]
+    DirectoryMode { path: String, mode: u32 },
     #[error(
         "keyring_input_invalid: invalid keyring identifier, metadata or bounded value \
          (violates spec://org.vibevm.core/vibevm/common/PROP-000#TS-USER-KEYRING; \
@@ -236,7 +244,11 @@ impl Store {
             .root_dir()
             .map_err(|_| Error::Unavailable)?
             .private_child_recording("secrets", create)
-            .map_err(|_| Error::Unavailable)?
+            .map_err(|error| {
+                self.selected_directory_refusal(
+                    error.downcast_ref::<vibe_safefs::PrivateDirectoryMode>(),
+                )
+            })?
         else {
             return Ok(None);
         };
@@ -247,6 +259,35 @@ impl Store {
             return Err(Error::Unavailable);
         }
         Ok(Some((project, root, created)))
+    }
+
+    fn selected_directory_refusal(
+        &self,
+        witness: Option<&vibe_safefs::PrivateDirectoryMode>,
+    ) -> Error {
+        let Some(witness) = witness else {
+            return Error::Unavailable;
+        };
+        let Some(path) = self.root.to_str() else {
+            return Error::Unavailable;
+        };
+        // Keep the inline diagnostic and its shell argument unambiguous. Reject
+        // control characters and renderer delimiters rather than guessing.
+        if path.chars().any(|c| c.is_control() || c == '`') {
+            return Error::Unavailable;
+        }
+        let path = if path
+            .bytes()
+            .all(|b| b.is_ascii_alphanumeric() || b"/_-.".contains(&b))
+        {
+            path.to_owned()
+        } else {
+            format!("'{}'", path.replace('\'', "'\\''"))
+        };
+        Error::DirectoryMode {
+            path,
+            mode: witness.mode(),
+        }
     }
 
     fn load(_project: &Project, root: &Pinned) -> Result<Index, Error> {

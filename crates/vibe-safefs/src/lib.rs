@@ -53,6 +53,7 @@ pub use file::{
 pub use file::{fail_after_publish, fail_before_publish, fail_before_stage_cleanup};
 #[cfg(any(test, feature = "inject-failures"))]
 pub use identity_hook::arm_identity_alias;
+pub use private::PrivateDirectoryMode;
 pub use project::{
     ExclusiveChildError, LockGuard, Pinned, PinnedAbsentPath, PinnedAbsoluteFile, Project,
 };
