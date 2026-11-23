@@ -59,17 +59,19 @@ fn input(
                 .ok_or_else(|| anyhow::anyhow!("missing input file"))
         };
         read()
-            .map_err(|_| anyhow::anyhow!("protected input file unavailable, unsafe or oversized"))?
+            .map_err(|_| anyhow::anyhow!("value_file_unsafe: the value file is missing, unsafe or larger than 1 MiB (violates spec://org.vibevm.core/vibevm/common/PROP-000#TS-USER-KEYRING; fix: use a 0600 file you own in a 0700 directory you own)"))?
     } else if stdin {
         if std::io::stdin().is_terminal() {
-            bail!("--value-stdin requires non-terminal input");
+            bail!(
+                "value_input_terminal: --value-stdin reads the value from a pipe, and stdin is a terminal (violates spec://org.vibevm.core/vibevm/common/PROP-000#TS-USER-KEYRING; fix: pipe the value in, or pass --value-file PATH)"
+            );
         }
         let mut bytes = Vec::new();
         std::io::stdin()
             .lock()
             .take(1024 * 1024 + 1)
             .read_to_end(&mut bytes)
-            .map_err(|_| anyhow::anyhow!("protected input could not be read"))?;
+            .map_err(|_| anyhow::anyhow!("value_input_unreadable: the value could not be read from stdin (violates spec://org.vibevm.core/vibevm/common/PROP-000#TS-USER-KEYRING; fix: pipe the value in again)"))?;
         bytes
     } else {
         attended(ctx)?;
@@ -79,7 +81,9 @@ fn input(
     };
     cancel.checkpoint()?;
     if bytes.is_empty() {
-        bail!("protected input must not be empty");
+        bail!(
+            "value_empty: the value is empty (violates spec://org.vibevm.core/vibevm/common/PROP-000#TS-USER-KEYRING; fix: pass a nonempty value)"
+        );
     }
     ProtectedValue::new(bytes).map_err(Into::into)
 }
@@ -90,7 +94,7 @@ fn attended(ctx: &output::Context) -> Result<()> {
         || !std::io::stderr().is_terminal()
     {
         bail!(
-            "interactive secrets require an attended terminal; use an explicit command and --value-stdin"
+            "attended_terminal_required: this needs an attended terminal (violates spec://org.vibevm.core/vibevm/common/PROP-000#TS-USER-KEYRING; fix: `vibe secrets create --kind KIND --label LABEL --value-stdin`)"
         );
     }
     Ok(())
@@ -161,7 +165,16 @@ fn execute(
             let value = input(ctx, value_stdin, value_file.as_deref(), cancel)?;
             cancel.checkpoint()?;
             let created = store.create(&kind, &label, value)?;
-            render(ctx, store.snapshot()?, Some(&created))
+            let snapshot = store.snapshot()?;
+            if ctx.is_json() {
+                return render(ctx, snapshot, Some(&created));
+            }
+            ctx.trailer(&format!(
+                "created keyring item {label} · {} · store revision {}",
+                created.as_str(),
+                snapshot.store_revision
+            ));
+            Ok(())
         }
         SecretsCommand::Edit {
             id: raw,
@@ -178,7 +191,15 @@ fn execute(
             let snapshot = store
                 .edit_label(&id, &expected, &label)
                 .map_err(|error| diagnostics::expected(store, &id, &expected, error))?;
-            render(ctx, snapshot, Some(&id))
+            if ctx.is_json() {
+                return render(ctx, snapshot, Some(&id));
+            }
+            ctx.trailer(&format!(
+                "renamed {} to {label} · store revision {}",
+                id.as_str(),
+                snapshot.store_revision
+            ));
+            Ok(())
         }
         SecretsCommand::Rotate {
             id: raw,
@@ -190,8 +211,18 @@ fn execute(
             let revision = id_value(expect_current)?;
             let value = input(ctx, value_stdin, value_file.as_deref(), cancel)?;
             cancel.checkpoint()?;
-            store.rotate(&id, &revision, value)?;
-            render(ctx, store.snapshot()?, Some(&id))
+            let rotated = store.rotate(&id, &revision, value)?;
+            let snapshot = store.snapshot()?;
+            if ctx.is_json() {
+                return render(ctx, snapshot, Some(&id));
+            }
+            ctx.trailer(&format!(
+                "rotated the value of {} · revision {} · store revision {}",
+                id.as_str(),
+                rotated.as_str(),
+                snapshot.store_revision
+            ));
+            Ok(())
         }
         SecretsCommand::Remove {
             id: raw,
@@ -206,7 +237,13 @@ fn execute(
             };
             if !yes {
                 bail!(
-                    "logical removal requires explicit --yes consent; retained bytes are not erased"
+                    "consent_required: removing keyring item {} needs --yes (violates spec://org.vibevm.core/vibevm/common/PROP-000#TS-USER-KEYRING; fix: \
+                     `vibe secrets remove {} --expect-store {} --expect-current {} --yes`): removal is \
+                     logical; the retained bytes are not erased",
+                    id.as_str(),
+                    id.as_str(),
+                    expected.store_revision,
+                    expected.current_revision.as_str()
                 );
             }
             cancel.checkpoint()?;
@@ -214,7 +251,15 @@ fn execute(
             let snapshot = store
                 .remove_coordinated(&id, &expected)
                 .map_err(|error| diagnostics::expected(store, &id, &expected, error))?;
-            render(ctx, snapshot, None)
+            if ctx.is_json() {
+                return render(ctx, snapshot, None);
+            }
+            ctx.trailer(&format!(
+                "removed keyring item {} · retained bytes not erased · store revision {}",
+                id.as_str(),
+                snapshot.store_revision
+            ));
+            Ok(())
         }
     }
 }
