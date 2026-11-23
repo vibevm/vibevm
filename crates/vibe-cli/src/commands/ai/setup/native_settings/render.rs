@@ -103,7 +103,9 @@ pub(super) fn written_what(
     matched: usize,
     skipped: usize,
 ) -> String {
-    let mut what = if applied.is_empty() {
+    let mut what = if applied.is_empty() && (matched == 0 || skipped > 0) {
+        "native settings unchanged · nothing written".to_owned()
+    } else if applied.is_empty() {
         format!("native settings already use connection {label} · nothing written")
     } else {
         format!(
@@ -111,7 +113,7 @@ pub(super) fn written_what(
             applied.join(", ")
         )
     };
-    if !applied.is_empty() && matched > 0 {
+    if matched > 0 && (!applied.is_empty() || skipped > 0) {
         what.push_str(&format!(" · {matched} already matched"));
     }
     if skipped > 0 {
@@ -149,6 +151,24 @@ mod tests {
         assert_eq!(
             plan_body(&rows[..1], ID, "e", "m", 100),
             format!("  pi  ~/.pi/agent/models.json  [ready]\n  connection {ID} · e · model m")
+        );
+    }
+
+    /// Skips are not evidence that native settings already match.
+    #[test]
+    #[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-067#trailer")]
+    fn confirmed_outcomes_distinguish_skipped_matched_and_written() {
+        assert_eq!(
+            written_what("D", &[], 0, 2),
+            "native settings unchanged · nothing written · 2 skipped"
+        );
+        assert_eq!(
+            written_what("D", &[], 1, 2),
+            "native settings unchanged · nothing written · 1 already matched · 2 skipped"
+        );
+        assert_eq!(
+            written_what("D", &[], 2, 0),
+            "native settings already use connection D · nothing written"
         );
     }
 

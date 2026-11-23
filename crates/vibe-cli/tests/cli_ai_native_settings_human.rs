@@ -166,6 +166,56 @@ fn native_settings_preview_prints_rows_and_apply_command_not_json() {
     );
 }
 
+/// Confirming only skipped targets must not claim that any target matched.
+#[test]
+#[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-067#trailer")]
+fn confirmed_all_skipped_preserves_native_settings() {
+    let f = F::new();
+    let id = f.connection();
+    let before = b"{\"other\":true,}";
+    f.file(".qwen/settings.json", before);
+    let args = [
+        "ai",
+        "setup",
+        "--native-settings",
+        "--agent",
+        "qwen",
+        "--agent",
+        "claude",
+        "--connection",
+        &id,
+    ];
+    let preview = f.json(&args, None);
+    assert_eq!(preview["preview"]["rows"][0]["classification"], "refused");
+    assert_eq!(
+        preview["preview"]["rows"][1]["classification"],
+        "incompatible"
+    );
+    let text = f.human(&args);
+    assert!(text.contains("[refused]"));
+    assert!(text.contains("[incompatible]"));
+    assert!(fs::read(f.0.path().join(".qwen/settings.json")).unwrap() == before);
+    assert!(!f.0.path().join(".claude").exists());
+    let argv = command(&text);
+    assert_eq!(argv.last().copied(), preview["preview_id"].as_str());
+    let result = f.json(&argv, None);
+    assert_eq!(result["confirmed"], true);
+    assert_eq!(result["changed"], false);
+    assert!(
+        result["preview"]["rows"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .all(|row| row["outcome"] == "skipped")
+    );
+    let applied = f.human(&argv);
+    assert!(fs::read(f.0.path().join(".qwen/settings.json")).unwrap() == before);
+    assert!(!f.0.path().join(".claude").exists());
+    assert!(!f.0.path().join(".pi").exists());
+    assert!(!applied.contains("already use"));
+    assert!(applied.contains("✻ native settings unchanged · nothing written · 2 skipped"));
+}
+
 /// Both selectors and set tokens survive quiet output and direct replay,
 /// with ready, refused and incompatible targets retaining their real outcomes.
 #[test]
