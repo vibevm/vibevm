@@ -13,6 +13,9 @@ use vibe_secrets::{Expected, MetadataSnapshot, ProtectedValue, SecretId, Store};
 mod diagnostics;
 mod human;
 
+#[cfg(test)]
+mod tests;
+
 #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-000#TS-USER-KEYRING")]
 pub fn run(ctx: &output::Context, args: SecretsArgs, cancel: &CancellationToken) -> Result<()> {
     let settings = admitted_settings()?;
@@ -104,24 +107,26 @@ fn render(
         return Err(vibe_secrets::Error::NotFound.into());
     }
     let report = serde_json::json!({"protocol":"vibe-secrets/1", "ok":true,"store_revision":snapshot.store_revision,"items":rows});
+    // Only metadata enters rendering; value bytes never reach this function.
+    let tuples: Vec<human::ItemRow> = snapshot
+        .items
+        .iter()
+        .filter(|(id, _)| selected.is_none_or(|s| s == *id))
+        .map(|(id, item)| {
+            (
+                id.as_str().to_owned(),
+                item.label.clone(),
+                item.kind.clone(),
+                item.current_revision.as_str().to_owned(),
+            )
+        })
+        .collect();
     if ctx.is_json() {
         ctx.emit_json(&report)?;
+    } else if ctx.is_quiet() {
+        ctx.summary(&human::count_line(tuples.len(), snapshot.store_revision));
     } else {
-        // Only metadata enters rendering; value bytes never reach this function.
-        let tuples: Vec<(String, String, String, String)> = snapshot
-            .items
-            .iter()
-            .filter(|(id, _)| selected.is_none_or(|s| s == *id))
-            .map(|(id, item)| {
-                (
-                    id.as_str().to_owned(),
-                    item.label.clone(),
-                    item.kind.clone(),
-                    item.current_revision.as_str().to_owned(),
-                )
-            })
-            .collect();
-        println!("{}", human::items(snapshot.store_revision, &tuples));
+        ctx.block(&human::items(snapshot.store_revision, &tuples));
     }
     Ok(())
 }
@@ -140,8 +145,10 @@ fn execute(
             let report = serde_json::json!({"protocol":"vibe-secrets-references/1","ok":true,"id":id.as_str(),"consumers":consumers});
             if ctx.is_json() {
                 ctx.emit_json(&report)?;
+            } else if ctx.is_quiet() {
+                ctx.summary(&human::consumers_line(id.as_str(), consumers.len()));
             } else {
-                println!("{}", human::references(id.as_str(), &consumers));
+                ctx.block(&human::references(id.as_str(), &consumers));
             }
             Ok(())
         }
@@ -221,15 +228,12 @@ fn interactive(ctx: &output::Context, store: &Store, cancel: &CancellationToken)
         cancel.checkpoint()?;
         let snapshot = store.snapshot()?;
         let mut choices = vec![vibe_app::Choice::named("Create item", "create")];
-        choices.extend(snapshot.items.iter().map(|(id, item)| {
-            vibe_app::Choice::named(&format!("{} ({})", item.label, id.as_str()), id.as_str())
+        choices.extend(snapshot.items.iter().map(|(id, item)| vibe_app::Choice {
+            name: item.label.clone(),
+            description: Some(format!("({})  {}", item.kind, id.as_str())),
+            ..vibe_app::Choice::default()
         }));
-        let Some(picked) = output::prompts::choose_opt(
-            "Local keyring — select item; Escape returns",
-            &choices,
-            0,
-        )?
-        else {
+        let Some(picked) = output::prompts::choose_opt("Keyring item", &choices, 0)? else {
             return Ok(());
         };
         if picked == 0 {
@@ -260,9 +264,7 @@ fn interactive(ctx: &output::Context, store: &Store, cancel: &CancellationToken)
             "Remove item",
             "Show references",
         ]);
-        let Some(action) =
-            output::prompts::choose_opt("Item action — Escape returns", &actions, 0)?
-        else {
+        let Some(action) = output::prompts::choose_opt("Action", &actions, 0)? else {
             continue;
         };
         let expected = Expected {
@@ -295,28 +297,28 @@ fn interactive(ctx: &output::Context, store: &Store, cancel: &CancellationToken)
                     }
                 };
                 if !consumers.is_empty() {
-                    println!(
-                        "Item is used; removal refused. Consumer IDs: {}",
-                        serde_json::to_string(&consumers)?
+                    ctx.error_with_suffix(
+                        &anyhow::anyhow!(
+                            "Item is used; removal refused. Consumers: {}",
+                            consumers.join(", ")
+                        ),
+                        None,
                     );
                     continue;
                 }
-                println!(
-                    "No registered consumers at this observation; removal rechecks under lock."
-                );
-                let choices = output::prompts::named(&["Keep item", "Remove item"]);
-                let prompt = format!(
-                    "Remove {} ({})? Private bytes remain; Escape keeps item",
-                    item.label,
+                ctx.hint(&format!(
+                    "{} · no registered consumers · private bytes remain",
                     selected.as_str()
-                );
+                ));
+                let choices = output::prompts::named(&["Keep item", "Remove item"]);
+                let prompt = format!("Remove {}?", item.label);
                 if output::prompts::choose_opt_interruptible(&prompt, &choices, 0)? == Some(1) {
                     cancel.checkpoint()?;
                     store.remove_coordinated(selected, &expected)?;
                 }
             }
             4 => match store.references(selected) {
-                Ok(consumers) => println!("{}", human::references(selected.as_str(), &consumers)),
+                Ok(consumers) => ctx.block(&human::references(selected.as_str(), &consumers)),
                 Err(_) => println!("Reference inventory unavailable or unknown."),
             },
             _ => unreachable!(),
