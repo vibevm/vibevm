@@ -64,22 +64,45 @@ pub(crate) fn native_launch_lane(
     Ok(answer.lane.path)
 }
 
-/// Run one regeneration and end it with the system-prompt summary line.
+/// Whether the operation a prompt summary follows succeeded: a failed one
+/// says nothing about the prompt, because its refusal is the account.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-076#SYS-OPERATIONS-PATH-AND-FLAGS")]
+pub(crate) trait Succeeded {
+    /// True when the operation did its work (a park counts: it regenerated).
+    fn succeeded(&self) -> bool;
+}
+
+impl<T, E> Succeeded for Result<T, E> {
+    fn succeeded(&self) -> bool {
+        self.is_ok()
+    }
+}
+
+impl<R> Succeeded for crate::commands::compile_trace::CommandExit<R> {
+    fn succeeded(&self) -> bool {
+        !matches!(self, Self::Failed { .. })
+    }
+}
+
+/// Run one regeneration and print its system-prompt step row on success.
+/// A failed operation prints no prompt row: its refusal is the account.
 ///
 /// `vibe install` and `vibe reinstall` publish an opted-in node's prefix
 /// along with its other boot artifacts, and whoever builds the artifacts
 /// says what it did and where. `None` from the snapshot is "say nothing":
 /// a project that neither had nor has a generated prefix would get noise
 /// rather than information (`#SYS-OPERATIONS-PATH-AND-FLAGS`).
-pub(crate) fn reporting_the_prompt<T>(
+pub(crate) fn reporting_the_prompt<T: Succeeded>(
     ctx: &output::Context,
     project_root: &std::path::Path,
     regenerate: impl FnOnce() -> T,
 ) -> T {
     let before = build::Snapshot::of(project_root);
     let outcome = regenerate();
-    if let Some(line) = before.summary(project_root) {
-        ctx.summary(&line);
+    if outcome.succeeded()
+        && let Some(summary) = before.summary(project_root)
+    {
+        ctx.block(&summary.row_at(crate::output::language::viewport()));
     }
     outcome
 }
