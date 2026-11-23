@@ -622,14 +622,31 @@ fn agent_list_shows_the_effective_trust_with_each_entrys_source() {
         "unchanged in meaning: the file as written",
     );
 
-    // The human report says the same, in words a reader can act on.
+    // The human report says the same, in words a reader can act on: a
+    // `trust` section of measured rows (PROP-067 `#list`), one per entry,
+    // with the layer that wrote it as the row's state word.
     let human = ok(&run(fixture.command(&["agent", "list"])));
-    assert!(human.contains("effective trust"), "{human}");
-    assert!(human.contains("trusted:   org.vibevm.* [base]"), "{human}");
-    assert!(human.contains("trusted:   org.example [user]"), "{human}");
+    let row = |words: &[&str]| {
+        human
+            .lines()
+            .any(|line| line.split_whitespace().eq(words.iter().copied()))
+    };
+    assert!(human.contains("── trust ─"), "{human}");
+    assert!(row(&["trusted", "org.vibevm.*", "[base]"]), "{human}");
+    assert!(row(&["trusted", "org.example", "[user]"]), "{human}");
     assert!(
-        human.contains("untrusted: org.vibevm.ai-native [user] — overrides base"),
+        row(&[
+            "untrusted",
+            "org.vibevm.ai-native",
+            "overrides",
+            "base",
+            "[user]"
+        ]),
         "{human}",
+    );
+    assert!(
+        row(&["written", "org.example", "[trusted_groups]"]),
+        "{human}"
     );
 
     // An entry that is not a group or a subtree is a refusal naming it.

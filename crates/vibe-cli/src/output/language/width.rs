@@ -42,7 +42,7 @@ pub(crate) fn cut(text: &str, width: usize) -> String {
 
 /// `text` wrapped at words to `width` columns. A word wider than the
 /// width stands on its own line uncut: it may be an identifier.
-pub(super) fn wrap(text: &str, width: usize) -> Vec<String> {
+pub(crate) fn wrap(text: &str, width: usize) -> Vec<String> {
     let mut lines = Vec::new();
     let mut line = String::new();
     for word in text.split(' ') {

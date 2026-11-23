@@ -28,9 +28,9 @@ pub(crate) use list::{Cell, List, Row};
 pub(crate) use meta::{Meta, bytes, elapsed, join_meta, short_path};
 pub(crate) use page::{Kind, Stream, before, mark};
 pub(crate) use roles::{Role, colour_on, paint, style};
-pub(crate) use rule::rule;
+pub(crate) use rule::{rule, rule_at};
 pub(crate) use table::Table;
-pub(crate) use width::{cut, viewport};
+pub(crate) use width::{cut, rule_width, viewport, wrap};
 
 /// What the composition root decided about this invocation's terminal,
 /// handed to the language once before anything is drawn.

@@ -18,7 +18,7 @@ pub(crate) fn rule(label: &str, right: Option<&str>) -> String {
     rule_at(label, right, rule_width())
 }
 
-pub(super) fn rule_at(label: &str, right: Option<&str>, width: usize) -> String {
+pub(crate) fn rule_at(label: &str, right: Option<&str>, width: usize) -> String {
     let left = format!("── {label} ");
     let right_text = right.map(|right| format!(" {right}")).unwrap_or_default();
     let fill = width

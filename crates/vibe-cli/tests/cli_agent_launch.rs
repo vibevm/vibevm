@@ -316,23 +316,51 @@ const WRAPPER: &str = "[launchers.claude]\n\
                        kind = \"codex\"\n\
                        command = [\"codex\"]\n";
 
+/// The words of `name`'s row in the human `vibe agent list`. Each launcher
+/// is one measured row (PROP-067 `#list`): name, kind, argv (with ` · config
+/// <dir>` when one is set), then the source as a bracketed state word.
+fn launcher_row(machine: &Machine, name: &str) -> Vec<String> {
+    let output = machine.agent(&["list"]).assert().success();
+    let human = String::from_utf8_lossy(&output.get_output().stdout).into_owned();
+    human
+        .lines()
+        .find(|line| line.split_whitespace().next() == Some(name))
+        .unwrap_or_else(|| panic!("no `{name}` row in {human}"))
+        .split_whitespace()
+        .map(str::to_owned)
+        .collect()
+}
+
 #[test]
 fn a_user_launcher_overrides_the_builtin_of_the_same_name() {
     let machine = Machine::new(WRAPPER);
-    machine
-        .agent(&["list"])
-        .assert()
-        .success()
-        .stdout(predicate::str::contains(
-            "claude (kind claude) — my-claude --no-telemetry [",
-        ))
-        // The built-in `codex` survives beside it, and a second launcher of
-        // the same kind is ordinary configuration.
-        .stdout(predicate::str::contains(
-            "codex (kind codex) — codex [built-in]",
-        ))
-        .stdout(predicate::str::contains("work-codex (kind codex)"))
-        .stdout(predicate::str::contains("config dir: /tmp/claude-logs"));
+    let claude = launcher_row(&machine, "claude");
+    assert_eq!(
+        claude[..7],
+        [
+            "claude",
+            "claude",
+            "my-claude",
+            "--no-telemetry",
+            "·",
+            "config",
+            "/tmp/claude-logs",
+        ],
+    );
+    assert!(
+        claude[7].starts_with('[') && claude[7] != "[built-in]",
+        "{claude:?}"
+    );
+    // The built-in `codex` survives beside it, and a second launcher of
+    // the same kind is ordinary configuration.
+    assert_eq!(
+        launcher_row(&machine, "codex"),
+        ["codex", "codex", "codex", "[built-in]"],
+    );
+    assert_eq!(
+        launcher_row(&machine, "work-codex")[..3],
+        ["work-codex", "codex", "codex"],
+    );
 }
 
 #[test]
@@ -805,13 +833,10 @@ fn a_resumed_claude_session_is_told_it_keeps_its_old_lane() {
 #[test]
 fn opencode_is_a_builtin_launcher() {
     let machine = Machine::new(WRAPPER);
-    machine
-        .agent(&["list"])
-        .assert()
-        .success()
-        .stdout(predicate::str::contains(
-            "opencode (kind opencode) — opencode [built-in]",
-        ));
+    assert_eq!(
+        launcher_row(&machine, "opencode"),
+        ["opencode", "opencode", "opencode", "[built-in]"],
+    );
 }
 
 #[test]
@@ -1076,13 +1101,10 @@ fn printing_flags_for_an_unverified_opencode_refuses_where_a_launch_would_soften
 #[test]
 fn qwen_is_a_builtin_launcher() {
     let machine = Machine::new(WRAPPER);
-    machine
-        .agent(&["list"])
-        .assert()
-        .success()
-        .stdout(predicate::str::contains(
-            "qwen (kind qwen) — qwen [built-in]",
-        ));
+    assert_eq!(
+        launcher_row(&machine, "qwen"),
+        ["qwen", "qwen", "qwen", "[built-in]"],
+    );
 }
 
 /// What the `qwen` shim answers `--version` with: the one version whose
