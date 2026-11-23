@@ -725,9 +725,12 @@ def until(check, what):
 until(lambda: os.path.exists(ready), "the hook")
 os.write(fd, b"\x03")
 until(lambda: b"Stop the operation?" in seen, "the question")
-os.write(fd, answer.encode())
-# The answer is read before the hook may finish.
-until(lambda: seen.rfind(b"Stop the operation?") < max(seen.rfind(b"yes"), seen.rfind(b"no")), "the answer")
+# The question is a two-row list, `yes` then `no`, its marker on the
+# default `no`: `y` moves the marker up to `yes` and chooses, `n` chooses.
+os.write(fd, b"\x1b[A\r" if answer == "y" else b"\r")
+# The answer is read before the hook may finish: the question collapses
+# to its `✓` line, the second time its prompt is written.
+until(lambda: seen.count(b"Stop the operation?") >= 2 and seen.rfind(b"Stop the operation?") < max(seen.rfind(b"yes"), seen.rfind(b"no")), "the answer")
 open(go, "w").close()
 status = None
 end = time.time() + 300

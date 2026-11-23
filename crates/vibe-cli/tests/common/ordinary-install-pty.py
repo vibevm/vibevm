@@ -40,14 +40,15 @@ while p.poll() is None:
     if stage == 1 and b'Verbose (verbose)' in seen:
         os.write(master, b'\r' if mode == 'true' else b'\x1b[B\r')
         stage = 2
-    if stage == 2 and b'packages into ' in seen and b'\xe2\x80\xba no' in seen and b'  yes' in seen:
+    # The apply question is a two-row list, `yes` first and marked (the default).
+    if stage == 2 and b'packages into ' in seen and b'\xe2\x80\xba yes' in seen and b'  no' in seen:
         if mode == 'source-drift':
             path = pathlib.Path(source)
             path.write_bytes(path.read_bytes() + b'\nSYN_SOURCE_DRIFT_AFTER_PLAN\n')
         if mode == 'root-drift':
             path = pathlib.Path(project) / 'vibe.toml'
             path.write_bytes(path.read_bytes() + b'\n# SYN_ROOT_DRIFT_AFTER_PLAN\n')
-        os.write(master, b'\x1b' if mode == 'cancel' else b'\x1b[B\r')
+        os.write(master, b'\x1b' if mode == 'cancel' else b'\r')
         stage = 3
 p.wait(timeout=3)
 while select.select([master], [], [], 0)[0]:
