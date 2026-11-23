@@ -98,8 +98,11 @@ fn rename_noreplace(
     // SAFETY: both retained directory descriptors and both NUL-terminated
     // single components are borrowed for the whole of this synchronous
     // syscall, which neither stores the pointers nor writes through them.
+    // The raw syscall is used because musl's libc binding has no
+    // `renameat2` wrapper; the kernel call is the same on glibc and musl.
     let status = unsafe {
-        libc::renameat2(
+        libc::syscall(
+            libc::SYS_renameat2,
             source_parent.dir.as_raw_fd(),
             source_name.as_ptr(),
             destination_parent.dir.as_raw_fd(),
