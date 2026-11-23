@@ -106,9 +106,19 @@ fn render_install_with_sink(
         }
         _ => None,
     };
+    // Save operation facts before consuming the draft, never the live stop flag.
+    let stopped = finalized.original_error.as_ref().is_some_and(|error| {
+        error
+            .chain()
+            .any(|cause| cause.is::<vibe_core::cancellation::Cancelled>())
+            || crate::exit_code::is_cancelled(error)
+            || matches!(&finalized.report, RegisteredReportDraft::Install(draft)
+                if !draft.ok && draft.contributions.iter().any(|row| row.status == "interrupted"))
+    });
     let parked = finalized.plan == PlanDisposition::Discard;
     let result = render_finalized_with_sink(ctx, finalized, sink);
     match &result {
+        Err(_) if stopped => overall.stop(),
         Err(_) => overall.fail("package installation failed"),
         Ok(()) if parked => overall.skip("waiting for the hosting agent"),
         Ok(()) => overall.finish(),

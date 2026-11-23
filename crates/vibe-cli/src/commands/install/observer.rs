@@ -280,6 +280,7 @@ impl LifecycleSlotObserver {
         match report.status.as_str() {
             "ok" | "fresh" => row.finish(),
             "skip" => row.skip(report.message.clone().unwrap_or_else(|| "skipped".into())),
+            "interrupted" => row.stop(),
             status => row.fail(format!(
                 "{status}{}",
                 report

@@ -215,6 +215,11 @@ impl ProgressRenderer {
         self.logs.note_task(id, log);
     }
 
+    /// The first stopped step that had a log, if a stop caught one.
+    pub(super) fn stopped_at(&self) -> Option<String> {
+        self.logs.stopped_at()
+    }
+
     /// How many finished blocks this run drew and where its run record is.
     pub(super) fn run_summary(&self) -> (usize, Option<std::path::PathBuf>) {
         self.logs.summary()
@@ -446,6 +451,17 @@ impl InteractiveRenderer {
         // newline does not return the carriage.
         let text = text.replace('\n', "\r\n");
         self.multi.suspend(|| eprint!("{text}\r\n"));
+    }
+}
+
+impl super::Context {
+    /// The first stopped child step that had a log in this run.
+    #[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-067#collapse")]
+    #[allow(dead_code)] // read by the stop trailer
+    pub(crate) fn stopped_step(&self) -> Option<String> {
+        self.progress_renderer
+            .as_ref()
+            .and_then(|renderer| renderer.stopped_at())
     }
 }
 

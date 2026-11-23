@@ -28,10 +28,16 @@ pub(super) struct StepLogs {
     tasks: Mutex<BTreeMap<vibe_core::progress::TaskId, PathBuf>>,
     rows: AtomicUsize,
     last: Mutex<Option<PathBuf>>,
+    stopped: Mutex<Option<String>>,
     seen: Mutex<std::collections::BTreeSet<ChildRowKey>>,
 }
 
 impl StepLogs {
+    /// The first stopped child step that had a log.
+    pub(super) fn stopped_at(&self) -> Option<String> {
+        self.stopped.lock().ok().and_then(|stopped| stopped.clone())
+    }
+
     /// Whether this child headline is new in this run; root rows always draw.
     pub(super) fn first_sight(&self, headline: &Headline) -> bool {
         if headline.depth == 0 {
@@ -210,7 +216,15 @@ pub(super) fn collapsed(
             vec![Meta::Note(format!("skipped: {reason}"))],
             true,
         ),
-        End::Stopped => (Glyph::Skipped, Role::Dim, vec![Meta::note("stopped")], true),
+        End::Stopped => (
+            Glyph::Skipped,
+            Role::Dim,
+            vec![Meta::Note(format!(
+                "stopped after {}",
+                language::elapsed(elapsed)
+            ))],
+            true,
+        ),
         End::Failed(message) => {
             let mut meta = vec![Meta::Time(elapsed)];
             match exit_status(message) {
@@ -232,6 +246,18 @@ pub(super) fn collapsed(
             .iter()
             .map(|line| Line::Evidence(crate::output::sanitize_progress_text(line)))
             .collect();
+    }
+    if let (End::Stopped, Some(path)) = (end, &log) {
+        meta.push(Meta::Note(format!(
+            "log {}",
+            language::short_path(&path.display().to_string())
+        )));
+        if headline.depth > 0
+            && let Ok(mut stopped) = logs.stopped.lock()
+            && stopped.is_none()
+        {
+            *stopped = Some(headline.name.clone());
+        }
     }
     let mut block = language::Block::new(glyph, text)
         .with_meta(meta)
@@ -321,6 +347,60 @@ fn read_lines(path: &Path) -> (usize, Vec<String>) {
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn stopped_row_names_elapsed_and_log() {
+        let root = tempfile::tempdir().unwrap();
+        let log = root.path().join("wait.log");
+        std::fs::write(&log, "tick 1\ntick 2\n").unwrap();
+        let logs = StepLogs::default();
+        logs.note("wait", &log);
+        let task = vibe_core::progress::Progress::default().task("wait");
+        let headline = Headline::parse("wait (script)  Wait a while", 1, false);
+        let row = strip(&collapsed(
+            &headline,
+            task.id(),
+            0,
+            &End::Stopped,
+            Duration::from_secs(2),
+            &logs,
+        ));
+        assert!(
+            row.starts_with("○ └ wait  Wait a while · stopped after 2s · log "),
+            "{row}"
+        );
+        assert!(row.ends_with("wait.log"), "{row}");
+        assert_eq!(logs.stopped_at().as_deref(), Some("wait"));
+        for (name, depth, logged) in [("root", 0, true), ("logless", 1, false), ("later", 1, true)]
+        {
+            if logged {
+                logs.note(name, &log);
+            }
+            collapsed(
+                &Headline::parse(name, depth, false),
+                task.id(),
+                0,
+                &End::Stopped,
+                Duration::ZERO,
+                &logs,
+            );
+            assert_eq!(logs.stopped_at().as_deref(), Some("wait"));
+        }
+        let empty = StepLogs::default();
+        empty.note("root", &log);
+        for (name, depth) in [("root", 0), ("logless", 1)] {
+            collapsed(
+                &Headline::parse(name, depth, false),
+                task.id(),
+                0,
+                &End::Stopped,
+                Duration::ZERO,
+                &empty,
+            );
+            assert_eq!(empty.stopped_at(), None);
+        }
+        task.finish();
+    }
+
     #[test]
     fn log_tail_memory_is_bounded_for_long_invalid_lines() {
         use std::io::Write;
