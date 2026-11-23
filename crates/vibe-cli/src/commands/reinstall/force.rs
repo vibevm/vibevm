@@ -38,6 +38,7 @@ use crate::commands::compile_trace::{RegisteredReportDraft, carry_measured};
 use crate::commands::install::LifecycleSlotObserver;
 use crate::exit_code::InstallError;
 use crate::output;
+use crate::output::language::{Cell, List, Row};
 
 use super::continuation;
 use super::draft::{ReinstallDraft, ReinstallIdentity, regenerated};
@@ -93,8 +94,8 @@ pub(super) fn run(ctx: &output::Context, inputs: Forced<'_>) -> Result<Reinstall
         lease,
     } = inputs;
 
-    ctx.heading(&format!(
-        "\nReinstall --force — re-fetch {} package{} from source:",
+    ctx.rule(&format!(
+        "reinstall --force · re-fetch {} package{}",
         lockfile.packages.len(),
         if lockfile.packages.len() == 1 {
             ""
@@ -102,9 +103,17 @@ pub(super) fn run(ctx: &output::Context, inputs: Forced<'_>) -> Result<Reinstall
             "s"
         },
     ));
-    for p in &lockfile.packages {
-        ctx.step(&format!("{}:{}@{}", p.kind, p.name, p.version));
-    }
+    let rows = lockfile
+        .packages
+        .iter()
+        .map(|p| {
+            Row::new(vec![Cell::text(format!(
+                "{}/{}@{}",
+                p.group, p.name, p.version
+            ))])
+        })
+        .collect();
+    ctx.block(&List::new(rows).render());
 
     if !confirm(
         ctx,
@@ -426,7 +435,7 @@ fn apply(ctx: &output::Context, inputs: Apply<'_>) -> Result<ReinstallDraft> {
 /// No locked packages — `--force` has nothing to re-fetch. Still regenerate
 /// boot so a stale artifact is recomputed, under the same borrowed recorder.
 fn regenerate_only(ctx: &output::Context, inputs: &Forced<'_>) -> Result<ReinstallDraft> {
-    ctx.heading("\nReinstall --force — no packages locked; regenerate boot only.");
+    ctx.rule("reinstall --force · nothing locked, boot only");
     if !confirm(
         ctx,
         inputs.args,
