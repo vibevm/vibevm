@@ -120,6 +120,18 @@ pub(super) fn resolver_args() -> InstallArgs {
     }
 }
 
+/// The coded refusal and the exact rerun that can confirm this invocation.
+pub(super) fn confirmation_refusal(force: bool) -> String {
+    let command = if force {
+        "vibe reinstall --force --assume-yes"
+    } else {
+        "vibe reinstall --assume-yes"
+    };
+    format!(
+        "confirmation_required: no TTY is available to confirm the reinstall (violates spec://org.vibevm.core/vibevm/VIBEVM-SPEC#cli-surface; fix: `{command}`)"
+    )
+}
+
 /// Interactive confirmation, matching the install / update / uninstall
 /// contract: `--assume-yes`, `--unattended`, and `--json` all imply yes;
 /// a non-TTY with none of those set is a hard error.
@@ -128,10 +140,7 @@ pub(super) fn confirm(ctx: &output::Context, args: &ReinstallArgs, prompt: &str)
         return Ok(true);
     }
     if !console::user_attended() {
-        bail!(
-            "no TTY available for confirmation; re-run with `--assume-yes` to reinstall \
-             non-interactively"
-        );
+        bail!("{}", confirmation_refusal(args.force));
     }
     crate::output::prompts::confirm(prompt, false).context("reading user confirmation")
 }

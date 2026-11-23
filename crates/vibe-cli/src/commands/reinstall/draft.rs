@@ -154,12 +154,24 @@ impl ReinstallDraft {
                 &delegation.tasks,
                 &delegation.resume,
             );
-            ctx.summary(&format!(
-                "vibe reinstall: parked for the hosting agent — {} task(s) await it; \
-                 resume with `{}`{quiet_suffix}",
-                delegation.tasks.len(),
-                delegation.resume,
-            ));
+            if ctx.is_quiet() {
+                ctx.summary(&format!(
+                    "vibe reinstall: parked for the hosting agent — {} task(s) await it; \
+                     resume with `{}`{quiet_suffix}",
+                    delegation.tasks.len(),
+                    delegation.resume,
+                ));
+            } else {
+                let n = delegation.tasks.len();
+                ctx.block(&output::language::parked_trailer(
+                    &format!(
+                        "parked at agent tasks · {n} task{} await{} the hosting agent · resume with",
+                        if n == 1 { "" } else { "s" },
+                        if n == 1 { "s" } else { "" },
+                    ),
+                    &delegation.resume,
+                ));
+            }
             return Ok(());
         }
         let nodes = report.nodes_regenerated.len();
@@ -172,19 +184,25 @@ impl ReinstallDraft {
             ));
             return Ok(());
         }
-        ctx.summary(&format!(
-            "\nReinstalled — regenerated boot artifacts for {nodes} node{plural}{}.",
-            if forced { " from a fresh fetch" } else { "" },
-        ));
-        if !report.pruned.is_empty() {
-            ctx.step(&format!(
-                "pruned {} stale vibedeps/ slot{}",
-                report.pruned.len(),
-                if report.pruned.len() == 1 { "" } else { "s" },
-            ));
-        }
+        ctx.trailer(&success_what(forced, nodes, report.pruned.len()));
         Ok(())
     }
+}
+
+fn success_what(forced: bool, nodes: usize, pruned: usize) -> String {
+    let plural = if nodes == 1 { "" } else { "s" };
+    let mut what = if forced {
+        format!("reinstalled from a fresh fetch · {nodes} boot node{plural}")
+    } else {
+        format!("regenerated boot for {nodes} node{plural}")
+    };
+    if pruned > 0 {
+        what.push_str(&format!(
+            " · pruned {pruned} stale slot{}",
+            if pruned == 1 { "" } else { "s" },
+        ));
+    }
+    what
 }
 
 /// The progress EVERY ordinary `vibe reinstall` SUCCESS reports — plain,
@@ -242,3 +260,43 @@ fn contribution_row(row: &SlotLifecycleReport) -> ReinstallContributionReport {
 #[cfg(test)]
 #[path = "draft/tests.rs"]
 mod tests;
+
+#[cfg(test)]
+mod display_tests {
+    use super::*;
+
+    #[test]
+    fn reinstall_trailer_names_a_fresh_fetch() {
+        assert_eq!(
+            success_what(true, 1, 0),
+            "reinstalled from a fresh fetch · 1 boot node"
+        );
+        assert_eq!(success_what(false, 2, 0), "regenerated boot for 2 nodes");
+        assert_eq!(
+            success_what(false, 1, 1),
+            "regenerated boot for 1 node · pruned 1 stale slot"
+        );
+        assert_eq!(
+            success_what(true, 3, 2),
+            "reinstalled from a fresh fetch · 3 boot nodes · pruned 2 stale slots"
+        );
+    }
+
+    #[test]
+    fn reinstall_confirmation_refusal_has_a_code() {
+        use crate::commands::reinstall::inputs::confirmation_refusal;
+        let refusal = crate::output::refusal_of(&anyhow::anyhow!(confirmation_refusal(false)));
+        assert_eq!(refusal.code.as_deref(), Some("confirmation_required"));
+        assert_eq!(
+            refusal.headline,
+            "no TTY is available to confirm the reinstall"
+        );
+        assert_eq!(refusal.fix, ["vibe reinstall --assume-yes"]);
+        assert_eq!(
+            refusal.see.as_deref(),
+            Some("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#cli-surface")
+        );
+        let forced = crate::output::refusal_of(&anyhow::anyhow!(confirmation_refusal(true)));
+        assert_eq!(forced.fix, ["vibe reinstall --force --assume-yes"]);
+    }
+}

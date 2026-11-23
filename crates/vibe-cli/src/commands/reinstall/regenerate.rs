@@ -77,8 +77,8 @@ pub(super) fn run(ctx: &output::Context, inputs: Plain<'_>) -> Result<ReinstallD
     let full_world = vibe_orchestrator::provisional_world(workspace, lockfile, &[])?;
     vibe_install::configuration_admission::resolved_packages(&full_world)?;
     let node_count = workspace.iter_nodes().count();
-    ctx.heading(&format!(
-        "\nReinstall — regenerate boot artifacts for {node_count} node{} from vibedeps/.",
+    ctx.rule(&format!(
+        "reinstall · regenerate boot for {node_count} node{} from vibedeps/",
         if node_count == 1 { "" } else { "s" },
     ));
 
