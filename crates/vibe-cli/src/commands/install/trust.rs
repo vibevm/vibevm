@@ -133,10 +133,17 @@ pub(crate) fn judgment(
         assume_yes: assume_yes || ctx.is_unattended(),
         confirm: attended.then(|| {
             let asker: vibe_install::SlotConsentAsk = Arc::new(move |request| {
-                for line in &request.contributions {
-                    notice.step(&format!("contribution: {line}"));
-                }
-                crate::output::prompts::confirm(&question(request), false)
+                // Asked with the progress panel's key reader stopped, as
+                // every question under a panel is (PROP-067 `#question`);
+                // the default stays no: this decides whether
+                // package-authored code runs.
+                notice
+                    .with_terminal_released(|| {
+                        for line in &request.contributions {
+                            notice.step(&format!("contribution: {line}"));
+                        }
+                        crate::output::prompts::confirm(&question(request), false)
+                    })
                     .map_err(|error| error.to_string())
             });
             asker
