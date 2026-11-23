@@ -33246,7 +33246,7 @@
       "line": 25,
       "symbol": "vibe_cli::tests::cli_default_path::default_path_installs_via_global_registry",
       "end_line": 171,
-      "fingerprint": "tok1:2bc104e93fedda79da99344a540c35048adfca02ac4fb1818c298df78dd25425"
+      "fingerprint": "tok1:d6ad0aa7cd0513b9f7064cbe1160639ae5cf11dbbd1fce88a83b1dae7c3a969a"
     },
     {
       "crate_name": "vibe-cli",
@@ -34092,7 +34092,7 @@
       "line": 82,
       "symbol": "vibe_cli::tests::cli_mutable_slot::in_project_file_registry_skips_unchanged_then_reconciles_one_changed_file",
       "end_line": 149,
-      "fingerprint": "tok1:961783297b15006965978f9061149fd0a48802746a72bc289d3581a277c2b6ef"
+      "fingerprint": "tok1:880cdefde0f770e976038f9de1da691f5386a7b2377245b184cfbb9b481f82d4"
     },
     {
       "crate_name": "vibe-cli",
@@ -34119,7 +34119,7 @@
       "line": 1022,
       "symbol": "vibe_cli::tests::cli_pkg_cycle::a_mirror_serves_install_beside_remap_and_drop_rows",
       "end_line": 1101,
-      "fingerprint": "tok1:b3ed5bda9cdb5a2b3bd93f6dfd781ec2600c7bc0a1491ccc1e68fc49d516a1dc"
+      "fingerprint": "tok1:361273424796d6270d5392550180be721c1e290b73b1581818299c3d69410be9"
     },
     {
       "crate_name": "vibe-cli",
@@ -34128,7 +34128,7 @@
       "line": 20,
       "symbol": "vibe_cli::tests::cli_pkg_cycle::full_install_cycle",
       "end_line": 226,
-      "fingerprint": "tok1:03051517cfee6013384477cf04866bc12ec3007b84e6aa51053fe5dffe8fd674"
+      "fingerprint": "tok1:e6fd068b78f7c89aeb4a3e7ddd1e2c0e3961388fc6097d271bb8ca4e39a8b4de"
     },
     {
       "crate_name": "vibe-cli",
@@ -34146,7 +34146,7 @@
       "line": 1103,
       "symbol": "vibe_cli::tests::cli_pkg_cycle::install_from_git_source_with_tag_records_source_kind_git",
       "end_line": 1208,
-      "fingerprint": "tok1:51bd03216e4cffb6d6e1455b6b6c6c34190aee05df80a9dd98d1f56ba637ea82"
+      "fingerprint": "tok1:956f6e37d9fee992f33a603ce0ebacd7fda22d9fdc1d22a00d930361eb4ace6c"
     },
     {
       "crate_name": "vibe-cli",
@@ -34155,7 +34155,7 @@
       "line": 1274,
       "symbol": "vibe_cli::tests::cli_pkg_cycle::install_git_source_then_repeat_install_no_args_is_idempotent",
       "end_line": 1346,
-      "fingerprint": "tok1:9b7d07c713946af2e6f36563afd3eb9a9b6a58bb4b50abeaa2f86fba2401f5d9"
+      "fingerprint": "tok1:ee2894c3dfcefc0fc4707c4d835dc224b33a683edb2afe991ed705fbd4b364df"
     },
     {
       "crate_name": "vibe-cli",
@@ -34164,7 +34164,7 @@
       "line": 228,
       "symbol": "vibe_cli::tests::cli_pkg_cycle::install_second_install_is_idempotent",
       "end_line": 281,
-      "fingerprint": "tok1:be0d86baaa48b07f03f58ad616bcf395fd6f77400c2d059168095aa6ea06306b"
+      "fingerprint": "tok1:b198b9933ebec6b9044cf97dc5502c8430ea6d0d9d88586d69b3dbcc1e42cf03"
     },
     {
       "crate_name": "vibe-cli",
@@ -35349,45 +35349,45 @@
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/tests/cli_workspace_publish.rs",
       "item_kind": "fn",
-      "line": 104,
+      "line": 108,
       "symbol": "vibe_cli::tests::cli_workspace_publish::publish_direct_repo_url_pushes_to_local_bare_repo",
-      "end_line": 208,
+      "end_line": 212,
       "fingerprint": "tok1:99bf55278635b4005330b010cbecf575441bb04cdf98869f3e6c5044cc9e5b45"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/tests/cli_workspace_publish.rs",
       "item_kind": "fn",
-      "line": 626,
+      "line": 630,
       "symbol": "vibe_cli::tests::cli_workspace_publish::workspace_publish_all_internal_is_a_clean_noop",
-      "end_line": 659,
+      "end_line": 663,
       "fingerprint": "tok1:7ccbc487c9f62beb9b3cdb7b35a94b4fda440fd11c6e968419828ca3c43b59e3"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/tests/cli_workspace_publish.rs",
       "item_kind": "fn",
-      "line": 409,
+      "line": 413,
       "symbol": "vibe_cli::tests::cli_workspace_publish::workspace_publish_dry_run_json_envelope",
-      "end_line": 454,
+      "end_line": 458,
       "fingerprint": "tok1:0be3160fee13ce56cb649ddb1848df338f7d0b571bde112703ed3efb398fee8c"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/tests/cli_workspace_publish.rs",
       "item_kind": "fn",
-      "line": 456,
+      "line": 460,
       "symbol": "vibe_cli::tests::cli_workspace_publish::workspace_publish_dry_run_topological_order",
-      "end_line": 493,
+      "end_line": 497,
       "fingerprint": "tok1:e016d561c72600c9cf61491d9182028cafd3be657eea079faa19573c19fb90a5"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/tests/cli_workspace_publish.rs",
       "item_kind": "fn",
-      "line": 495,
+      "line": 499,
       "symbol": "vibe_cli::tests::cli_workspace_publish::workspace_publish_member_filter_narrows",
-      "end_line": 530,
+      "end_line": 534,
       "fingerprint": "tok1:b85481a72266c8a5e54e37c0f365e9a03f93562c6cea6c40343a592110f7e7a1"
     },
     {
@@ -63204,28 +63204,28 @@
       "crate_name": "vibe-publish",
       "file": "crates/vibe-publish/src/gitverse.rs",
       "item_kind": "mod",
-      "line": 32,
+      "line": 43,
       "symbol": "vibe_publish::gitverse",
-      "end_line": 32,
+      "end_line": 43,
       "fingerprint": "tok1:41dd4777dce4aa0e9f41578d06010a34a3e5d6ecfb6cd6144200a928e359613c"
     },
     {
       "crate_name": "vibe-publish",
       "file": "crates/vibe-publish/src/gitverse.rs",
       "item_kind": "fn",
-      "line": 66,
+      "line": 77,
       "symbol": "vibe_publish::gitverse::GitverseRepoCreator::new",
-      "end_line": 76,
+      "end_line": 87,
       "fingerprint": "tok1:665a1927b237357d0146ee45777cfd6ca5e78094ebfdd53d6c15a45f0b8bd8ea"
     },
     {
       "crate_name": "vibe-publish",
       "file": "crates/vibe-publish/src/gitverse.rs",
       "item_kind": "fn",
-      "line": 78,
+      "line": 89,
       "symbol": "vibe_publish::gitverse::GitverseRepoCreator::with_endpoint",
-      "end_line": 106,
-      "fingerprint": "tok1:cf8fd27e09ea65a93498ac4705948d1c75b88c7d7f9dd744ba65808209100a22"
+      "end_line": 111,
+      "fingerprint": "tok1:faa4d069bbd6b33c5256d1f63457de64a326d2eb2d954654bae75780a63ce37f"
     },
     {
       "crate_name": "vibe-publish",
@@ -106731,7 +106731,7 @@
     {
       "file": "crates/vibe-cli/tests/cli_workspace_publish.rs",
       "from_symbol": "vibe_cli::tests::cli_workspace_publish::publish_direct_repo_url_pushes_to_local_bare_repo",
-      "line": 105,
+      "line": 109,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#published-repos",
       "verb": "verifies",
@@ -106740,7 +106740,7 @@
     {
       "file": "crates/vibe-cli/tests/cli_workspace_publish.rs",
       "from_symbol": "vibe_cli::tests::cli_workspace_publish::workspace_publish_all_internal_is_a_clean_noop",
-      "line": 627,
+      "line": 631,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#selective-publish",
       "verb": "verifies",
@@ -106749,7 +106749,7 @@
     {
       "file": "crates/vibe-cli/tests/cli_workspace_publish.rs",
       "from_symbol": "vibe_cli::tests::cli_workspace_publish::workspace_publish_dry_run_json_envelope",
-      "line": 410,
+      "line": 414,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#selective-publish",
       "verb": "verifies",
@@ -106758,7 +106758,7 @@
     {
       "file": "crates/vibe-cli/tests/cli_workspace_publish.rs",
       "from_symbol": "vibe_cli::tests::cli_workspace_publish::workspace_publish_dry_run_topological_order",
-      "line": 457,
+      "line": 461,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#selective-publish",
       "verb": "verifies",
@@ -106767,7 +106767,7 @@
     {
       "file": "crates/vibe-cli/tests/cli_workspace_publish.rs",
       "from_symbol": "vibe_cli::tests::cli_workspace_publish::workspace_publish_member_filter_narrows",
-      "line": 496,
+      "line": 500,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#selective-publish",
       "verb": "verifies",
@@ -131997,7 +131997,7 @@
     {
       "file": "crates/vibe-publish/src/gitverse.rs",
       "from_symbol": "vibe_publish::gitverse",
-      "line": 32,
+      "line": 43,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#publish",
       "verb": "implements"
@@ -132005,7 +132005,7 @@
     {
       "file": "crates/vibe-publish/src/gitverse.rs",
       "from_symbol": "vibe_publish::gitverse::GitverseRepoCreator::new",
-      "line": 66,
+      "line": 77,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#PUB-GITVERSE-CREATOR",
       "verb": "implements"
@@ -132013,7 +132013,7 @@
     {
       "file": "crates/vibe-publish/src/gitverse.rs",
       "from_symbol": "vibe_publish::gitverse::GitverseRepoCreator::with_endpoint",
-      "line": 78,
+      "line": 89,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#PUB-GITVERSE-CREATOR",
       "verb": "implements"
@@ -210170,7 +210170,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:1fbd60760a477e49a01e600615c0cd13dccdec8292cf9de2070a65eba75f4e9e",
+      "content_hash": "sha256:6a4b93feda7a384fa3cf98e87ed81a08b5f4d67fad4556b8b3126ba762f89e15",
       "doc_path": "modules/vibe-registry/PROP-002",
       "file": "vibevm/vibespecs/modules/vibe-registry/PROP-002-decentralized-registry.xml",
       "heading": "PROP-002: Decentralized, mirror-friendly registry with capability-based depsolver",
@@ -210332,7 +210332,7 @@
     },
     {
       "anchor": "decisions",
-      "content_hash": "sha256:5d0bb69b38c65761efa050062b62e6babf7b1075893c4c9fdaca41d1de19c8f1",
+      "content_hash": "sha256:2251bbcc090599228031bffae44a6dcd5a01603b7423c50d496149cd4b09def3",
       "doc_path": "modules/vibe-registry/PROP-002",
       "file": "vibevm/vibespecs/modules/vibe-registry/PROP-002-decentralized-registry.xml",
       "heading": "2. Decisions",
@@ -212190,7 +212190,7 @@
     },
     {
       "anchor": "publish",
-      "content_hash": "sha256:5b2aa7155d16ca8682460e617b8bdfb2478585f2fe9aea3a0ac9052d8bb4f677",
+      "content_hash": "sha256:a40e0f567f06cf59bd1d90341b05580679e510225606154a7682b47985aaa859",
       "doc_path": "modules/vibe-registry/PROP-002",
       "file": "vibevm/vibespecs/modules/vibe-registry/PROP-002-decentralized-registry.xml",
       "heading": "2.10 Publish utility: `vibe registry publish <path>`",
@@ -212300,10 +212300,10 @@
     },
     {
       "anchor": "PUB-GITVERSE-CREATOR",
-      "content_hash": "sha256:10a383d663fde9a7952da381a278de18a40f5912cad44db689fe01aeb4ce086b",
+      "content_hash": "sha256:53be55806ca5f76b03b36cff5f37b0fe377b052394bbbe11d1dd39e20274e336",
       "doc_path": "modules/vibe-registry/PROP-002",
       "file": "vibevm/vibespecs/modules/vibe-registry/PROP-002-decentralized-registry.xml",
-      "heading": "**`GitVerseCreator`** (legacy, retained): hits `https://api.gitverse.ru` with `Authorization: Bearer <T>` and `Accept: application/vnd.gitverse.object+json;version=1`. **Operationally degraded** — `POST /orgs/{org}/repos` is documented as Gitea-canonical but is not exposed by the live host (verified 2026-04-26 by curl-probing); only `GET /repos/{owner}/{repo}` works for presence checks. Repo creation requires manual web-UI pre-create. The code path remains in tree so Gitea-shape forks of GitVerse, or any future GitVerse release that exposes the org-scoped POST, work transparently with no change. @status:impl/done",
+      "heading": "**`GitVerseCreator`**: hits `https://api.gitverse.ru` with `Authorization: Bearer <T>` and `Accept: application/vnd.gitverse.object+json;version=1`, through the same cancellable HTTP client as the GitHub adapter, so a cooperative stop works the same way. `GET /repos/{org}/{name}` checks presence and `POST /orgs/{org}/repos` creates the repository; both are documented in the GitVerse public API and **verified on the live host on 2026-11-23**, when the 1.0.12 packages were published to `gitverse.ru/vibespecs` through this path (the probe of 2026-04-26 that found the org-scoped POST missing is superseded). The token needs Repository write, and its user must be allowed to create repositories in the organization; 403 is refused as missing permission, 409 as a repository that already exists. @status:impl/done",
       "line": 699,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#PUB-GITVERSE-CREATOR"
     },
