@@ -56,6 +56,20 @@ pub(super) fn bindings(count: usize) -> String {
     format!("{count} binding{}", if count == 1 { "" } else { "s" })
 }
 
+/// Quote one argv token, leaving ordinary names unchanged and apostrophes literal.
+#[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-067#trailer")]
+fn command_token(value: &str) -> String {
+    if !value.is_empty()
+        && value
+            .bytes()
+            .all(|b| b.is_ascii_alphanumeric() || b"_-./:".contains(&b))
+    {
+        value.to_owned()
+    } else {
+        format!("'{}'", value.replace('\'', "'\\''"))
+    }
+}
+
 /// The command that applies a metadata preview, flags in a fixed order.
 #[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-067#trailer")]
 pub(super) fn apply_command(
@@ -66,10 +80,10 @@ pub(super) fn apply_command(
 ) -> String {
     let mut command = String::from("vibe ai setup");
     if let Some(alias) = alias {
-        command.push_str(&format!(" --from-agent-alias {alias}"));
+        command.push_str(&format!(" --from-agent-alias {}", command_token(alias)));
     } else {
         for agent in agents {
-            command.push_str(&format!(" --agent {agent}"));
+            command.push_str(&format!(" --agent {}", command_token(agent)));
         }
     }
     match connection {
@@ -152,6 +166,21 @@ mod tests {
                 "vibe ai setup --agent pi"
             ),
             "✻ previewed 1 binding · nothing written · apply with\n  vibe ai setup --agent pi"
+        );
+    }
+
+    /// Spaces and literal apostrophes are quoted for both selection entry points.
+    #[test]
+    #[specmark::spec(verifies = "spec://org.vibevm.core/vibevm/common/PROP-067#trailer")]
+    fn command_tokens_quote_spaces_and_apostrophes() {
+        assert_eq!(command_token("pi"), "pi");
+        assert_eq!(command_token("work-pi"), "work-pi");
+        assert_eq!(command_token("work pi"), "'work pi'");
+        assert_eq!(command_token("work'pi"), "'work'\\''pi'");
+        assert!(apply_command(&["work pi"], None, None, "X").contains("--agent 'work pi' --mode"));
+        assert!(
+            apply_command(&[], Some("work'pi"), None, "X")
+                .contains("--from-agent-alias 'work'\\''pi' --mode")
         );
     }
 

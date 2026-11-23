@@ -72,8 +72,9 @@ impl F {
 
     /// Read a successful human response, never JSON.
     #[specmark::spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-067#coverage")]
-    fn human(&self, args: &[&str]) -> String {
-        let text = String::from_utf8(self.run(args, None).stdout).unwrap();
+    fn human<T: AsRef<str>>(&self, args: &[T]) -> String {
+        let args: Vec<&str> = args.iter().map(AsRef::as_ref).collect();
+        let text = String::from_utf8(self.run(&args, None).stdout).unwrap();
         assert!(!text.contains('{'), "{text}");
         text
     }
@@ -143,16 +144,44 @@ impl F {
 
 /// Extract the actual displayed argv without a shell or eval.
 #[specmark::spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-067#trailer")]
-fn displayed_argv(text: &str, quiet: bool) -> Vec<&str> {
+fn displayed_argv(text: &str, quiet: bool) -> Vec<String> {
     if quiet {
         assert_eq!(text.lines().count(), 1, "{text}");
     }
-    let line = text.lines().last().unwrap().trim();
-    let argv: Vec<_> = line.split_whitespace().collect();
-    assert_eq!(argv.first(), Some(&"vibe"));
+    let mut chars = text.lines().last().unwrap().trim().chars().peekable();
+    let mut argv = Vec::new();
+    while chars.peek().is_some() {
+        while chars.peek() == Some(&' ') {
+            chars.next();
+        }
+        if chars.peek().is_none() {
+            break;
+        }
+        let mut token = String::new();
+        let mut quoted = false;
+        while let Some(ch) = chars.next() {
+            match ch {
+                '\'' => quoted = !quoted,
+                '\\' if !quoted => {
+                    assert_eq!(
+                        chars.next(),
+                        Some('\''),
+                        "only a literal apostrophe escape is generated"
+                    );
+                    token.push('\'');
+                }
+                ' ' if !quoted => break,
+                ch => token.push(ch),
+            }
+        }
+        assert!(!quoted, "unterminated generated token");
+        argv.push(token);
+    }
+    assert_eq!(argv.first().map(String::as_str), Some("vibe"));
     assert_eq!(&argv[1..3], &["ai", "setup"]);
-    assert!(argv.contains(&"--apply-preview"));
-    argv[1..].to_vec()
+    assert!(argv.iter().any(|arg| arg == "--apply-preview"));
+    argv.remove(0);
+    argv
 }
 
 /// A measured plan ends with a directly replayable command and then a bound trailer.
@@ -265,7 +294,7 @@ fn quiet_alias_and_default_replay() {
             "--connection"
         ]
     );
-    assert!(!argv.contains(&"--agent"));
+    assert!(!argv.iter().any(|arg| arg == "--agent"));
     assert_eq!(
         fs::read(f.0.path().join("secrets/ai/index.toml")).unwrap(),
         before
@@ -357,4 +386,44 @@ fn quiet_alias_and_default_replay() {
         fs::read(f.0.path().join("secrets/index.toml")).unwrap(),
         keys
     );
+}
+
+/// A valid quoted TOML launcher name must survive displayed argv and direct replay.
+#[test]
+#[specmark::spec(verifies = "spec://org.vibevm.core/vibevm/common/PROP-067#trailer")]
+fn spaced_alias_preview_replays_original_binding() {
+    for alias in ["work pi", "work'pi"] {
+        let f = F::new();
+        fs::write(
+            f.0.path().join("agents.toml"),
+            format!("[launchers.\"{alias}\"]\nkind='pi'\ncommand=['missing-work-pi']\n"),
+        )
+        .unwrap();
+        let (cid, _) = f.connections();
+        let before = fs::read(f.0.path().join("secrets/ai/index.toml")).unwrap();
+        let text = f.human(&[
+            "ai",
+            "setup",
+            "--from-agent-alias",
+            alias,
+            "--mode",
+            "connection",
+            "--connection",
+            &cid,
+            "--quiet",
+        ]);
+        assert_eq!(
+            fs::read(f.0.path().join("secrets/ai/index.toml")).unwrap(),
+            before
+        );
+        let argv = displayed_argv(&text, true);
+        assert_eq!(argv[3], alias, "{text}");
+        assert!(!argv.iter().any(|arg| arg == "--agent"));
+        assert_eq!(&argv[4..6], &["--mode", "connection"]);
+        f.human(&argv);
+        let binding = f.binding(alias);
+        assert_eq!(binding["harness"], "pi");
+        assert_eq!(binding["mode"], "connection");
+        assert_eq!(binding["connection"], cid);
+    }
 }
