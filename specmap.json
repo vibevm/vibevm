@@ -71540,8 +71540,8 @@
       "item_kind": "fn",
       "line": 83,
       "symbol": "vibe_safefs::transaction::linux_retirement::rename_noreplace",
-      "end_line": 115,
-      "fingerprint": "tok1:278022e5aeeb70501f9f1df44516ceaba36bd6eb61a6ec85ecdce340cd6cd7a7"
+      "end_line": 118,
+      "fingerprint": "tok1:680f0e282f4e3d95c326dd82c6106fa3224c2e33752dc8fc4eb6de088cda3c98"
     },
     {
       "crate_name": "vibe-safefs",
