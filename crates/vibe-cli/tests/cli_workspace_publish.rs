@@ -17,12 +17,13 @@ use specmark::verifies;
 // today, so `vibe registry publish` cannot run end to end against a GitVerse
 // `[[registry]]`. The CLI short-circuits at the host-detection step with a
 // clear "not implemented" envelope. This test pins that contract: targeting
-// the GitVerse-shaped default registry produces the stub envelope, exits 0
-// (so the operator can script around it without `||` machinery), and never
-// reaches token loading or any HTTP call.
+// A GitVerse registry goes through the same create-repo + push-tag flow as
+// GitHub (the GitVerse API documents `POST /orgs/{org}/repos`). Without a
+// token the publish therefore stops at token loading, naming the host,
+// before any HTTP call; it no longer answers with a stub envelope.
 
 #[test]
-fn publish_against_gitverse_registry_emits_stub_envelope() {
+fn publish_against_gitverse_registry_needs_a_gitverse_token() {
     let project = tempfile::tempdir().unwrap();
     init_project(project.path());
 
@@ -40,10 +41,6 @@ fn publish_against_gitverse_registry_emits_stub_envelope() {
         .success();
 
     // Synthesize a minimal package directory the publisher can read.
-    // The stub fires before any of these bytes matter — the test
-    // would still pass with an empty file — but the manifest is what
-    // the non-stub path would consume, so writing one keeps the test
-    // honest about exercising the real argument flow.
     let pkg_dir = tempfile::tempdir().unwrap();
     fs::write(
         pkg_dir.path().join("vibe.toml"),
@@ -56,7 +53,13 @@ version = "0.0.1"
     )
     .unwrap();
 
+    let home = tempfile::tempdir().unwrap();
     let out = vibe()
+        .env("HOME", home.path())
+        .env("VIBE_SETTINGS", home.path().join(".vibe"))
+        .env_remove("VIBEVM_PUBLISH_TOKEN")
+        .env_remove("VIBEVM_PUBLISH_TOKEN_GITVERSE")
+        .env_remove("VIBEVM_PUBLISH_TOKEN_GITHUB")
         .arg("--json")
         .arg("registry")
         .arg("publish")
@@ -68,21 +71,22 @@ version = "0.0.1"
         .output()
         .unwrap();
     assert!(
-        out.status.success(),
-        "stub path returns success status; stderr: {}",
+        !out.status.success(),
+        "a GitVerse publish without a token must fail; stdout: {}",
+        String::from_utf8_lossy(&out.stdout)
+    );
+    let all = format!(
+        "{}{}",
+        String::from_utf8_lossy(&out.stdout),
         String::from_utf8_lossy(&out.stderr)
     );
-
-    let payload: serde_json::Value = serde_json::from_slice(&out.stdout).expect("valid JSON");
-    assert_eq!(payload["ok"], false);
-    assert_eq!(payload["command"], "registry:publish");
-    assert_eq!(payload["stub"], true);
-    assert_eq!(payload["host"], "gitverse.ru");
-    assert_eq!(payload["registry"], "vibespecs-gitverse");
-    let reason = payload["reason"].as_str().expect("reason is a string");
     assert!(
-        reason.contains("not implemented"),
-        "reason should call out the limitation; got: {reason}"
+        !all.contains("\"stub\""),
+        "the GitVerse publish path is no longer a stub; got: {all}"
+    );
+    assert!(
+        all.contains("token") && all.contains("gitverse"),
+        "the refusal names the missing GitVerse token; got: {all}"
     );
 }
 

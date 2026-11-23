@@ -5,9 +5,7 @@ specmark::scope!("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#registry");
 
 use anyhow::{Context, Result, anyhow, bail};
 use serde::Serialize;
-use vibe_core::manifest::{
-    DEFAULT_REGISTRY_NAME, DEFAULT_REGISTRY_URL, Manifest, NamingConvention, RegistryType,
-};
+use vibe_core::manifest::{Manifest, NamingConvention, RegistryType};
 use vibe_publish::{
     PublishConfig, Publisher, creator_for_url, extract_host_segment, extract_org_segment,
     load_token_for_host,
@@ -42,21 +40,6 @@ struct PublishReport {
     /// The local checkout of the git-hosted index this publish added the
     /// release to (PROP-005 `##INT-PUBLISH-INDEX-CHECKOUT`).
     index_checkout: IndexCheckoutReport,
-}
-
-/// Envelope emitted when the operator targets a host whose publish path
-/// is intentionally a stub (today: GitVerse — see `run_publish`). Marked
-/// `ok: false` so CI / scripting can distinguish stub-paths from a
-/// successful publish without parsing the message.
-#[derive(Debug, Serialize)]
-struct PublishStubReport {
-    ok: bool,
-    command: &'static str,
-    host: String,
-    org_url: String,
-    registry: String,
-    stub: bool,
-    reason: String,
 }
 
 /// Envelope emitted on the `--repo-url` no-API path. The shape mirrors
@@ -193,49 +176,6 @@ pub(super) fn run_publish(ctx: &output::Context, args: RegistryPublishArgs) -> R
         .map_err(|e| anyhow!("registry URL `{}`: {e}", registry_section.url))?;
     let org_segment = extract_org_segment(&registry_section.url)
         .map_err(|e| anyhow!("registry URL `{}`: {e}", registry_section.url))?;
-
-    // GitVerse publish is currently a stub. The GitVerse public REST API
-    // does not yet expose org-scoped repo creation (`POST /orgs/<org>/repos`
-    // returns no parity for the GitHub flow `vibe registry publish`
-    // depends on). Short-circuit here with a clear console message and
-    // a JSON envelope marked `stub: true`, so consumers learn the
-    // limitation before any token is loaded or any network call is made.
-    // GitHub stays the canonical publish target; resolve-time reads
-    // against GitVerse continue to work via `MultiRegistryResolver`.
-    let host_lower = host.to_ascii_lowercase();
-    if registry_section.effective_type() == RegistryType::Gitverse
-        || host_lower == "gitverse.ru"
-        || host_lower.ends_with(".gitverse.ru")
-    {
-        let reason = format!(
-            "GitVerse publishing is not implemented yet — the GitVerse public API does not \
-             expose org-scoped repository creation, so `vibe registry publish` cannot drive \
-             the create-repo + push-tag flow end to end. Publish to a GitHub `[[registry]]` \
-             instead (default: `{}` → `{}`), or run with `--registry <name>` to pick a \
-             different target. Resolve-time reads against `{}` are unaffected.",
-            DEFAULT_REGISTRY_NAME, DEFAULT_REGISTRY_URL, registry_section.name
-        );
-        if ctx.is_json() {
-            ctx.emit_json(&PublishStubReport {
-                ok: false,
-                command: "registry:publish",
-                host: host.clone(),
-                org_url: registry_section.url.clone(),
-                registry: registry_section.name.clone(),
-                stub: true,
-                reason,
-            })?;
-        } else {
-            ctx.heading(&format!(
-                "Publishing {} → registry `{}` (`{}`)",
-                source_dir.display(),
-                registry_section.name,
-                registry_section.url,
-            ));
-            ctx.summary(&format!("\nvibe registry publish: {reason}"));
-        }
-        return Ok(());
-    }
 
     ctx.heading(&format!(
         "Publishing {} → registry `{}` (`{}`){}",
