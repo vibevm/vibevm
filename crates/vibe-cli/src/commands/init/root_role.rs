@@ -41,7 +41,7 @@ pub(super) fn plan(
     // would be silently dropped; refuse it while nothing exists yet.
     if args.link.is_some() {
         bail!(
-            "`--link` sets the boot snippet of a nested package, and a root declaration writes \
+            "link_on_root: --link sets the boot snippet of a nested package, and a root declaration writes \
              none (violates spec://org.vibevm.core/vibevm/common/PROP-024#INIT-ROOT-ROLE; \
              fix: `vibe init package <group>/<name> --link static|dynamic`)"
         );

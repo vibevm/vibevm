@@ -85,7 +85,7 @@ pub(super) fn prepare_package(
     // dropped without a word; refuse it before the container exists.
     if args.link.is_some() && matches!(kind, PackageKind::Doc | PackageKind::Remap) {
         bail!(
-            "`--link` sets a boot snippet, and a `{kind}` package carries none \
+            "link_without_boot_snippet: --link sets a boot snippet, and a {kind} package carries none \
              (violates spec://org.vibevm.core/vibevm/common/PROP-024#INIT-ROOT-ROLE; \
              fix: drop `--link`, or pick a kind with a boot lane such as `--kind tool`)",
             kind = kind.as_str(),

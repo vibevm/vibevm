@@ -6,7 +6,7 @@ use anyhow::Result;
 use vibe_core::{PackageKind, user_config::UserConfig};
 
 pub(super) fn identity_introduction(ctx: &crate::output::Context) {
-    ctx.hint("Your project or package will be named like org.acme/package-name: `org.acme` is the group, `package-name` is the name within the group.");
+    ctx.hint("Your project or package will be named like org.acme/package-name: org.acme is the group, package-name is the name within the group.");
 }
 
 pub(super) struct ProjectFields {
