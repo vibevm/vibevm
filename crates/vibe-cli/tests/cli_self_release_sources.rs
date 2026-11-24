@@ -18,7 +18,12 @@ use vibe_wire::generated::self_source_report::{
 
 fn vibe(user: &UserScratch, args: &[&str]) -> Output {
     let mut command = user.vibe();
-    command.env_remove("VIBEVM_RELEASE_ORIGIN").args(args);
+    command
+        .env("HOME", &user.settings)
+        .env("USERPROFILE", &user.settings)
+        .env("VIBE_SETTINGS", &user.settings)
+        .env_remove("VIBEVM_RELEASE_ORIGIN")
+        .args(args);
     command.output().unwrap()
 }
 
@@ -101,6 +106,52 @@ fn a_local_release_drop_is_chosen_listed_and_explained() {
 
     let reset = json(&vibe(&user, &["--json", "self", "source", "reset"]));
     assert_eq!(reset["source"], "github");
+}
+
+#[test]
+fn self_source_set_prints_trailer() {
+    let user = UserScratch::new();
+    let drop = tempfile::tempdir().unwrap();
+    let version = drop.path().join("v1.0.13");
+    fs::create_dir_all(&version).unwrap();
+    fs::write(version.join("DISTRIBUTIONS.json"), b"{}").unwrap();
+    let path = drop.path().to_str().unwrap();
+    let config = user.settings.join("config.toml");
+    let config = config.to_str().unwrap();
+    let set = ok(&vibe(&user, &["--plain", "self", "source", "set", "localdir", "--path", path]));
+    let trailer = set.lines().last().unwrap();
+    assert!(trailer.contains("release source set to localdir"), "{set}");
+    assert!(trailer.ends_with(config), "{set}");
+    assert!(set.contains("release source  localdir"), "{set}");
+    assert!(set.contains("\n  vibe remap explain\n"), "{set}");
+    let quiet = ok(&vibe(&user, &["--plain", "--quiet", "self", "source", "set", "localdir", "--path", path]));
+    assert_eq!(quiet.lines().count(), 1, "{quiet}");
+    assert!(quiet.ends_with(&format!("{config}\n")), "{quiet}");
+    assert!(quiet.contains("release source set to localdir"), "{quiet}");
+    let show = ok(&vibe(&user, &["--plain", "self", "source", "show"]));
+    assert!(!show.contains("release source set") && !show.contains("release source reset"), "{show}");
+    assert!(!show.contains('✻') && !show.contains("\u{1b}["), "{show}");
+    let quiet_show = ok(&vibe(&user, &["--plain", "--quiet", "self", "source", "show"]));
+    assert_eq!(quiet_show, show, "quiet inspection keeps the requested source report");
+    let listed = ok(&vibe(&user, &["--plain", "self", "releases"]));
+    assert!(listed.starts_with("── releases at localdir ") || listed.starts_with("-- releases at localdir "), "{listed}");
+    assert!(listed.contains("[self] in"), "{listed}");
+    assert!(listed.contains("\n\n  1.0.13\n"), "{listed}");
+    let quiet_listed = ok(&vibe(&user, &["--plain", "--quiet", "self", "releases"]));
+    assert_eq!(quiet_listed, listed, "quiet inspection keeps the requested release list");
+    let reset = ok(&vibe(&user, &["--plain", "self", "source", "reset"]));
+    let trailer = reset.lines().last().unwrap();
+    assert!(trailer.contains("release source reset"), "{reset}");
+    assert!(trailer.ends_with(config), "{reset}");
+    let quiet_reset = ok(&vibe(&user, &["--plain", "--quiet", "self", "source", "reset"]));
+    assert_eq!(quiet_reset.lines().count(), 1, "{quiet_reset}");
+    assert!(quiet_reset.contains("release source reset"), "{quiet_reset}");
+    assert!(quiet_reset.ends_with(&format!("{config}\n")), "{quiet_reset}");
+    assert!(!quiet_reset.contains("release source  "), "{quiet_reset}");
+    assert!(!quiet.contains("release source  "), "{quiet}");
+    let document = json(&vibe(&user, &["--json", "self", "source", "reset"]));
+    assert_eq!(document["protocol"], "vibe-self-source/1");
+    assert_eq!(document["source"], "github");
 }
 
 #[test]
