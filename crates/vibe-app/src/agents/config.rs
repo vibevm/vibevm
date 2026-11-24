@@ -17,6 +17,7 @@ use vibe_wire::generated::agent_presets as presets_wire;
 
 use crate::settings::{SettingsRoot, write_atomic};
 
+use super::error::{CLAUDE_PRESET_HINT, QWEN_PRESET_HINT};
 use super::presets::{PLACEHOLDERS, preset, presets};
 use super::{AgentError, ExternalAgent, ResolvedAgent, io};
 
@@ -199,10 +200,14 @@ impl AgentsConfig {
         let base = match definition.preset.as_deref() {
             Some(id) => Some(preset(id).ok_or_else(|| AgentError::Definition {
                 name: name.into(),
-                reason: format!(
-                    "preset `{id}` is not built in; presets: {}",
-                    presets().iter().map(|p| p.name).collect::<Vec<_>>().join(", ")
-                ),
+                reason: match id {
+                    "claude" => CLAUDE_PRESET_HINT.to_owned(),
+                    "qwen" => QWEN_PRESET_HINT.to_owned(),
+                    _ => format!(
+                        "preset `{id}` is not built in; presets: {}",
+                        presets().iter().map(|p| p.name).collect::<Vec<_>>().join(", ")
+                    ),
+                },
             })?),
             None => None,
         };
@@ -420,6 +425,9 @@ pub fn preset_table() -> presets_wire::AgentPresets {
             .collect(),
     }
 }
+
+#[cfg(test)]
+mod refusal_tests;
 
 #[cfg(test)]
 mod tests {

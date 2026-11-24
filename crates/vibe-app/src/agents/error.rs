@@ -5,15 +5,56 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-064#selection");
 use specmark::spec;
 use thiserror::Error;
 
+/// Exact launcher-spelling refusal under `PROP-064#presets`, not an alias.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-064#presets")]
+pub(super) const CLAUDE_PRESET_HINT: &str =
+    "preset claude is not built in · did you mean claude-code?";
+/// Exact launcher-spelling refusal under `PROP-064#presets`, not an alias.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-064#presets")]
+pub(super) const QWEN_PRESET_HINT: &str = "preset qwen is not built in · did you mean qwen-code?";
+
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-064#selection")]
+fn unknown_headline(name: &str, known: &str) -> String {
+    if known.is_empty() {
+        format!("agent {name} is not defined in agents.toml")
+    } else {
+        format!(
+            "agent `{name}` is neither defined in agents.toml nor a built-in preset; known: {known}"
+        )
+    }
+}
+
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-064#agent-definition")]
+fn definition_headline(name: &str, reason: &str) -> String {
+    match reason {
+        CLAUDE_PRESET_HINT | QWEN_PRESET_HINT => reason.to_owned(),
+        _ => format!("agent `{name}` cannot be used: {reason}"),
+    }
+}
+
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-064#presets")]
+fn definition_fix(reason: &str) -> &'static str {
+    match reason {
+        CLAUDE_PRESET_HINT => "name preset `claude-code`",
+        QWEN_PRESET_HINT => "name preset `qwen-code`",
+        _ => "give the definition a command and both argument templates, or name a preset",
+    }
+}
+
 /// The agent registry, a hook's consent, its run and its parking.
 #[derive(Debug, Error)]
 #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-064#selection")]
 #[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-064#consent")]
 pub enum AgentError {
     #[error(
-        "agent `{name}` is neither defined in agents.toml nor a built-in preset; known: {known} \
-         (violates spec://org.vibevm.core/vibevm/common/PROP-064#selection; fix: name a listed agent, \
-         see `vibe agent list` and `vibe agent presets`)"
+        "{headline} (violates spec://org.vibevm.core/vibevm/common/PROP-064#selection; fix: {fix}){cause}",
+        headline = unknown_headline(.name, .known),
+        fix = if .known.is_empty() {
+            "`vibe agent list` or `vibe agent presets`"
+        } else {
+            "name a listed agent, see `vibe agent list` and `vibe agent presets`"
+        },
+        cause = if .known.is_empty() { ": no agent is defined there" } else { "" }
     )]
     Unknown { name: String, known: String },
     #[error(
@@ -27,8 +68,9 @@ pub enum AgentError {
     )]
     Config { path: String, reason: String },
     #[error(
-        "agent `{name}` cannot be used: {reason} (violates spec://org.vibevm.core/vibevm/common/PROP-064#agent-definition; \
-         fix: give the definition a command and both argument templates, or name a preset)"
+        "{headline} (violates spec://org.vibevm.core/vibevm/common/PROP-064#agent-definition; fix: {fix})",
+        headline = definition_headline(.name, .reason),
+        fix = definition_fix(.reason)
     )]
     Definition { name: String, reason: String },
     #[error(
