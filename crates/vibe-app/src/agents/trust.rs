@@ -14,7 +14,7 @@ use std::path::Path;
 
 use specmark::spec;
 use vibe_core::site_profile::{SITE_PROFILE_FILE, installed_at};
-use vibe_core::trust::{TrustLists, TrustPolicy};
+use vibe_core::trust::{TrustError, TrustLists, TrustPolicy};
 
 use crate::settings::SettingsRoot;
 
@@ -55,9 +55,38 @@ pub fn effective_trust(
     let user = config
         .map(|config| TrustLists::new(&config.trusted_groups, &config.untrusted_groups))
         .unwrap_or_default();
-    TrustPolicy::effective(&site, &user).map_err(|error| AgentError::Trust {
-        file: settings.agents_path().display().to_string(),
-        reason: error.to_string(),
+    TrustPolicy::effective(&site, &user).map_err(|error| {
+        let TrustError::Pattern { entry, reason, .. } = &error;
+        let list = config.and_then(|config| {
+            [
+                ("trusted_groups", &config.trusted_groups),
+                ("untrusted_groups", &config.untrusted_groups),
+            ]
+            .into_iter()
+            .find_map(|(list, entries)| {
+                entries
+                    .iter()
+                    .any(|written| written.trim() == entry.trim())
+                    .then_some(list)
+            })
+        });
+        let file = settings.agents_path().display().to_string();
+        match list {
+            Some(list) => AgentError::UserTrustEntry {
+                entry: entry.trim().to_owned(),
+                list,
+                file,
+                why: if entry.trim() == "**" {
+                    "a subtree (org.example.*) already covers every depth below its root".into()
+                } else {
+                    reason.replace('`', "")
+                },
+            },
+            None => AgentError::Trust {
+                file,
+                reason: error.to_string(),
+            },
+        }
     })
 }
 
@@ -114,6 +143,68 @@ mod tests {
         assert!(!policy.trusts("org.vibevm.ai-native"));
     }
 
+    /// Registry refusals identify the list and actual repair path without
+    /// nesting the core refusal inside the application refusal.
+    #[test]
+    fn registry_trust_refusal_names_list() {
+        let dir = tempfile::tempdir().unwrap();
+        let settings = SettingsRoot::new(dir.path());
+        let file = settings.agents_path().display().to_string();
+        for list in ["trusted_groups", "untrusted_groups"] {
+            for (written, entry, why) in [
+                (
+                    "**",
+                    "**",
+                    "a subtree (org.example.*) already covers every depth below its root",
+                ),
+                (
+                    "  **  ",
+                    "**",
+                    "a subtree (org.example.*) already covers every depth below its root",
+                ),
+                (
+                    " org.*.tools ",
+                    "org.*.tools",
+                    "a wildcard is only ever the whole last label of a subtree",
+                ),
+                (
+                    " org.** ",
+                    "org.**",
+                    "** is not a pattern — a subtree already covers every depth below its root",
+                ),
+                ("   ", "", "it is empty"),
+            ] {
+                let config: AgentsConfig =
+                    toml::from_str(&format!("{list} = ['org.example.*', '{written}']\n")).unwrap();
+                let error = effective_trust(&settings, Some(&config)).unwrap_err();
+                assert!(matches!(
+                    &error,
+                    AgentError::UserTrustEntry {
+                        entry: actual_entry, list: actual_list, file: actual_file, why: actual_why,
+                    } if actual_entry == entry && *actual_list == list
+                        && actual_file == &file && actual_why == why
+                ));
+                assert_eq!(error.code(), "trusted_groups_invalid");
+                assert_eq!(
+                    error.to_string(),
+                    format!(
+                        "{entry} in {list} is neither a group nor a subtree \
+                         (violates spec://org.vibevm.core/vibevm/common/PROP-065#ordinary-trust; \
+                         fix: replace {entry} in {file} with a group (org.example) or a subtree (org.example.*)): {why}"
+                    )
+                );
+            }
+        }
+        // Both lists are invalid: the policy still validates trusted first.
+        let config: AgentsConfig =
+            toml::from_str("trusted_groups = [' ** ']\nuntrusted_groups = ['org.*.tools', '**']\n")
+                .unwrap();
+        assert!(matches!(
+            effective_trust(&settings, Some(&config)).unwrap_err(),
+            AgentError::UserTrustEntry { list: "trusted_groups", entry, .. } if entry == "**"
+        ));
+    }
+
     /// A bad entry in either file refuses with the file named, rather than
     /// being dropped into a trust answer nobody wrote.
     #[test]
@@ -132,8 +223,25 @@ mod tests {
             "schema = 1\n[trust]\nuntrusted_groups = ['**']\n",
         )
         .unwrap();
-        let error = effective_trust(&settings, None).unwrap_err().to_string();
-        assert!(error.contains(SITE_PROFILE_FILE), "{error}");
-        assert!(error.contains("trust.untrusted_groups[0]"), "{error}");
+        let path = dir.path().join(SITE_PROFILE_FILE);
+        let reason = installed_at(&path).unwrap_err().to_string();
+        for config in [None, Some(&config)] {
+            let error = effective_trust(&settings, config).unwrap_err();
+            assert!(matches!(&error, AgentError::Trust { .. }));
+            assert_eq!(error.code(), "trusted_groups_invalid");
+            let error = error.to_string();
+            assert_eq!(
+                error,
+                format!(
+                    "`{}` carries a trust entry vibe cannot read: {reason} \
+                     (violates spec://org.vibevm.core/vibevm/common/PROP-065#ordinary-trust; \
+                     fix: correct the entry — each one is a group (`org.example`) or a subtree \
+                     (`org.example.*`) in `trusted_groups` / `untrusted_groups`)",
+                    path.display()
+                )
+            );
+            assert!(error.contains(SITE_PROFILE_FILE), "{error}");
+            assert!(error.contains("trust.untrusted_groups[0]"), "{error}");
+        }
     }
 }

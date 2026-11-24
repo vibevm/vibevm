@@ -50,14 +50,14 @@ use ErrorClass::{Delegated, Failure, Refusal};
 
 macro_rules! codes {
     ($table:ident, $family:ident [$($delegate:ident),*] {
-        $($variant:ident => $code:literal, $class:ident, $meaning:literal;)*
+        $($($variant:ident)|+ => $code:literal, $class:ident, $meaning:literal;)*
     }) => {
         impl $family {
             /// The stable snake_case code of this error (`PROP-065#error-codes`).
             pub fn code(&self) -> &'static str {
                 match self {
                     $(Self::$delegate(inner) => inner.code(),)*
-                    $(Self::$variant { .. } => $code,)*
+                    $($(Self::$variant { .. })|+ => $code,)*
                 }
             }
         }
@@ -174,7 +174,7 @@ codes!(AGENT, AgentError [] {
     Unknown => "agent_unknown", Refusal, "the named agent is neither defined nor a preset";
     Exists => "agent_exists", Refusal, "an agent definition of that name already exists";
     Config => "agents_config_invalid", Refusal, "agents.toml is invalid";
-    Trust => "trusted_groups_invalid", Refusal, "a trusted_groups / untrusted_groups entry is not a group or a subtree";
+    Trust | UserTrustEntry => "trusted_groups_invalid", Refusal, "a trusted_groups / untrusted_groups entry is not a group or a subtree";
     Definition => "agent_definition_invalid", Refusal, "an agent definition lacks a command or a template";
     Registration => "agent_registration_invalid", Refusal, "VIBE_AGENT_COMMAND / VIBE_AGENT_ARGS are malformed";
     ConsentRequired => "consent_required", Refusal, "an agent prompt was not consented to";
@@ -334,6 +334,21 @@ mod tests {
     #[test]
     fn every_code_is_unique_snake_case_and_explained() {
         let codes = error_codes();
+        let trust_rows: Vec<_> = codes
+            .iter()
+            .filter(|row| row.code == "trusted_groups_invalid")
+            .collect();
+        assert_eq!(trust_rows.len(), 1);
+        assert_eq!(trust_rows[0].family, "AgentError");
+        assert_eq!(trust_rows[0].class, Refusal);
+        assert_eq!(
+            AgentError::Trust {
+                file: "x".into(),
+                reason: "invalid".into()
+            }
+            .code(),
+            "trusted_groups_invalid"
+        );
         let mut seen = BTreeSet::new();
         for row in &codes {
             assert!(seen.insert(row.code), "duplicated code `{}`", row.code);

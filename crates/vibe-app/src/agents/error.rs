@@ -80,6 +80,7 @@ fn config_parts(reason: &str) -> (&'static str, &'static str, &str) {
 #[derive(Debug, Error)]
 #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-064#selection")]
 #[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-064#consent")]
+#[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-065#ordinary-trust")]
 pub enum AgentError {
     #[error(
         "{headline} (violates spec://org.vibevm.core/vibevm/common/PROP-064#selection; fix: {fix}){cause}",
@@ -117,6 +118,23 @@ pub enum AgentError {
          (`org.example.*`) in `trusted_groups` / `untrusted_groups`)"
     )]
     Trust { file: String, reason: String },
+    /// An invalid entry in the user's registry, with its exact repair location
+    /// (`spec://org.vibevm.core/vibevm/common/PROP-065#ordinary-trust`).
+    #[error(
+        "{entry} in {list} is neither a group nor a subtree \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-065#ordinary-trust; \
+         fix: replace {entry} in {file} with a group (org.example) or a subtree (org.example.*)): {why}"
+    )]
+    UserTrustEntry {
+        /// The rejected entry, trimmed as the trust grammar reads it.
+        entry: String,
+        /// The registry list containing the entry.
+        list: &'static str,
+        /// The actual agents.toml path to repair.
+        file: String,
+        /// The typed validation reason, without markup or a second refusal.
+        why: String,
+    },
     #[error(
         "the external agent registration is invalid: {reason} (violates spec://org.vibevm.core/vibevm/common/PROP-064#external-registration; \
          fix: set VIBE_AGENT_COMMAND to an executable and VIBE_AGENT_ARGS to a JSON array of strings)"
