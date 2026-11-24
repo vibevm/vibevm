@@ -135,7 +135,7 @@ pub fn closure_diff(
 
 /// Render the diff as human lines. An empty diff is the single quiet line
 /// `closure unchanged (N packages)`; a real change renders one line per
-/// move — `+ …` / `- …` / `~ …` members first, then `lane …: A -> B B`
+/// move — `+ …` / `- …` / `~ …` members first, then `lane …: A → B B`
 /// rows for the boot lanes whose byte cost moved.
 pub fn render(diff: &ClosureDiff) -> Vec<String> {
     if diff.is_empty() {
@@ -147,10 +147,16 @@ pub fn render(diff: &ClosureDiff) -> Vec<String> {
     let mut lines: Vec<String> = Vec::new();
     lines.extend(diff.added.iter().map(|entry| format!("+ {entry}")));
     lines.extend(diff.removed.iter().map(|entry| format!("- {entry}")));
-    lines.extend(diff.changed.iter().map(|entry| format!("~ {entry}")));
+    // The stored version string is also a JSON field; translate only its
+    // separator here, leaving the structured closure record unchanged.
+    lines.extend(
+        diff.changed
+            .iter()
+            .map(|entry| format!("~ {}", entry.replace(" -> ", " → "))),
+    );
     lines.extend(diff.lane_bytes.iter().map(|(lane, before, after)| {
         format!(
-            "lane {lane}: {} -> {} B",
+            "lane {lane}: {} → {} B",
             size_text(*before),
             size_text(*after)
         )
@@ -176,8 +182,8 @@ pub fn lane_sizes(root: &Path) -> Vec<(String, Option<u64>)> {
 /// Emit the closure diff on `ctx` after a successful apply — the shared
 /// tail of `vibe install` and `vibe update` (PROP-050 ##VERIFY-LOCK-DIFF).
 ///
-/// Human mode: a real diff renders under a `closure diff:` heading, one
-/// `→` step per line, and `--quiet` stays silent (the diff is a review
+/// Human mode: a real diff renders under a `closure diff` rule as one
+/// indented block, and `--quiet` stays silent (the diff is a review
 /// surface, not a completion message). An empty diff is the single
 /// `closure unchanged` line, so a routine re-install adds no noise. JSON
 /// mode emits one `"<command>:closure-diff"` document ahead of the final
@@ -225,10 +231,18 @@ pub(crate) fn emit_closure_diff(
     }
     let lines = render(&diff);
     if !diff.is_empty() {
-        ctx.heading("closure diff:");
-    }
-    for line in &lines {
-        ctx.step(line);
+        ctx.rule("closure diff");
+        ctx.block(
+            &lines
+                .iter()
+                .map(|line| format!("  {line}"))
+                .collect::<Vec<_>>()
+                .join("\n"),
+        );
+    } else {
+        for line in &lines {
+            ctx.step(line);
+        }
     }
 }
 
@@ -358,8 +372,35 @@ mod tests {
         let diff = closure_diff(&old, &new, &lanes(&[]), &lanes(&[]));
         let lines = render(&diff);
         assert!(
-            lines.contains(&"~ org.x/wal 1.0.0 -> 1.1.0".to_string()),
+            lines.contains(&"~ org.x/wal 1.0.0 → 1.1.0".to_string()),
             "{lines:?}"
+        );
+    }
+
+    #[test]
+    fn closure_diff_renders_version_and_lane_arrows() {
+        let old = lockfile(vec![locked("org.x", "wal", "1.0.0", None)]);
+        let new = lockfile(vec![locked("org.x", "wal", "1.1.0", None)]);
+        let before = lane_samples([Some(120), None, None]);
+        let after = lane_samples([Some(240), None, None]);
+        let diff = closure_diff(&old, &new, &before, &after);
+        let lines = render(&diff);
+        assert_eq!(
+            lines,
+            [
+                "~ org.x/wal 1.0.0 → 1.1.0".to_string(),
+                format!("lane {}: 120 → 240 B", watched_lanes()[0]),
+            ]
+        );
+        // JSON consumes these original records, not the human rendering.
+        assert_eq!(diff.changed, ["org.x/wal 1.0.0 -> 1.1.0"]);
+        assert_eq!(
+            serde_json::to_value(&diff.changed).unwrap(),
+            serde_json::json!(["org.x/wal 1.0.0 -> 1.1.0"])
+        );
+        assert_eq!(
+            diff.lane_bytes,
+            [(watched_lanes()[0].clone(), Some(120), Some(240))]
         );
     }
 
@@ -388,8 +429,8 @@ mod tests {
         assert_eq!(
             lines,
             [
-                format!("lane {}: absent -> 412 B", lanes[1]),
-                format!("lane {}: 248429 -> 249001 B", lanes[2]),
+                format!("lane {}: absent → 412 B", lanes[1]),
+                format!("lane {}: 248429 → 249001 B", lanes[2]),
             ],
             "{lines:?}"
         );

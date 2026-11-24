@@ -65,9 +65,7 @@ impl PlanObserver for CtxObserver<'_> {
                 package,
                 by,
                 reason,
-            } => ctx.diagnostic(&format!(
-                "`{by}` recommends `{package}`, which is not installed — {reason}"
-            )),
+            } => ctx.diagnostic(&recommendation_skipped(&package, &by, &reason)),
             PlanEvent::FeaturesUnmatched { features } => ctx.diagnostic(&format!(
                 "requested feature{} {} not declared on any root package — silently ignored",
                 if features.len() == 1 { "" } else { "s" },
@@ -82,5 +80,39 @@ impl PlanObserver for CtxObserver<'_> {
 
     fn progress(&self) -> vibe_core::progress::Progress {
         self.progress_handle()
+    }
+}
+
+/// The warning for a recommendation the install did not follow (PROP-077
+/// `#PROJECT-RECOMMENDS`): the package first, then who recommended it and why.
+#[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-077#PROJECT-RECOMMENDS")]
+fn recommendation_skipped(package: &str, by: &str, reason: &str) -> String {
+    format!(
+        "{} not installed · recommended by {} · {}",
+        package.replace('`', ""),
+        by.replace('`', ""),
+        reason.replace('`', "")
+    )
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn recommendation_skip_names_the_package_first() {
+        assert_eq!(
+            recommendation_skipped(
+                "org.vibevm.fixture/companion",
+                "org.vibevm.fixture/recommender",
+                "declined by --no-recommends"
+            ),
+            "org.vibevm.fixture/companion not installed · recommended by \
+             org.vibevm.fixture/recommender · declined by --no-recommends"
+        );
+        assert_eq!(
+            recommendation_skipped("`a`", "`b`", "`c`"),
+            "a not installed · recommended by b · c"
+        );
     }
 }
