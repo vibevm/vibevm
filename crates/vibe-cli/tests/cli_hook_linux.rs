@@ -179,6 +179,72 @@ fn the_block_is_written_into_the_startup_file_and_nothing_outside_it_moves() {
 
 #[test]
 #[specmark::spec(verifies = "spec://org.vibevm.core/vibevm/common/PROP-075#ACTIVATION-HOOK")]
+fn hook_rerun_reports_unchanged() {
+    let scratch = vibe_test_support::UserScratch::new();
+    let home = tempfile::tempdir().unwrap();
+    let rc = home.path().join(".bashrc");
+    fs::write(&rc, "# user startup\n").unwrap();
+    let run = |args: &[&str]| {
+        let out = scratch
+            .vibe()
+            .args(args)
+            .current_dir(home.path())
+            .env("HOME", home.path())
+            .env("USERPROFILE", home.path())
+            .env("NO_COLOR", "1")
+            .output()
+            .unwrap();
+        assert!(out.status.success(), "{out:?}");
+        String::from_utf8(out.stdout).unwrap()
+    };
+    let trailer = |out: &str, verdict: &str| {
+        let last = out.lines().last().expect("hook trailer");
+        let prefix = format!("✻ hook {verdict} for bash · ");
+        let suffix = format!(" · {}", rc.display());
+        let elapsed = last
+            .strip_prefix(&prefix)
+            .and_then(|line| line.strip_suffix(&suffix))
+            .unwrap_or_else(|| panic!("wrong final trailer: {out}"));
+        assert!(!elapsed.is_empty(), "missing elapsed time: {out}");
+        assert_eq!(out.matches("✻ hook ").count(), 1, "{out}");
+    };
+    let hint = "  open a new shell, or source the file to apply it now";
+    let written = run(&["hook", "bash", "--yes"]);
+    trailer(&written, "written");
+    assert_eq!(written.lines().next(), Some(hint), "{written}");
+    let bytes = fs::read(&rc).unwrap();
+    let unchanged = run(&["hook", "bash", "--yes"]);
+    trailer(&unchanged, "unchanged");
+    assert!(!unchanged.contains("open a new shell"), "{unchanged}");
+    assert_eq!(unchanged.lines().count(), 1, "{unchanged}");
+    assert_eq!(fs::read(&rc).unwrap(), bytes);
+    let text = String::from_utf8(bytes.clone()).unwrap();
+    assert!(text.starts_with("# user startup\n"), "{text}");
+    assert_eq!(text.matches(BLOCK_BEGIN).count(), 1, "{text}");
+    assert_eq!(text.matches(BLOCK_END).count(), 1, "{text}");
+    let quiet = run(&["hook", "bash", "--yes", "--quiet"]);
+    trailer(&quiet, "unchanged");
+    assert_eq!(quiet.lines().count(), 1, "{quiet}");
+    assert!(!quiet.contains("open a new shell"), "{quiet}");
+    assert_eq!(fs::read(&rc).unwrap(), bytes);
+    let printed = run(&["hook", "bash", "--print"]);
+    assert!(printed.contains("__vibe_versions"), "{printed}");
+    assert!(!printed.contains("✻ hook "), "{printed}");
+    assert!(!printed.contains("open a new shell"), "{printed}");
+    assert!(!printed.contains(BLOCK_BEGIN), "{printed}");
+    assert_eq!(fs::read(&rc).unwrap(), bytes);
+    fs::write(&rc, "# user startup\n").unwrap();
+    let quiet_written = run(&["hook", "bash", "--yes", "--quiet"]);
+    trailer(&quiet_written, "written");
+    assert_eq!(quiet_written.lines().count(), 1, "{quiet_written}");
+    assert!(!quiet_written.contains("open a new shell"), "{quiet_written}");
+    assert_eq!(fs::read(&rc).unwrap(), bytes);
+    assert_eq!(run(&["hook", "bash", "--print", "--quiet"]), printed);
+    assert_eq!(fs::read(&rc).unwrap(), bytes);
+}
+
+#[test]
+#[specmark::spec(verifies = "spec://org.vibevm.core/vibevm/common/PROP-075#ACTIVATION-HOOK")]
 fn two_cds_switch_versions_in_a_real_bash() {
     let f = fixture();
     let block = ok(&f.r.vibe(&["hook", "bash", "--print"]));
