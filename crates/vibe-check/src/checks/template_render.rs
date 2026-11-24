@@ -147,6 +147,8 @@ fn refuse(
     message: String,
 ) {
     report.push(Finding {
+        why: None,
+        fix: None,
         check: CheckId::TemplateRender,
         severity: Severity::Error,
         path: Some(path.to_path_buf()),

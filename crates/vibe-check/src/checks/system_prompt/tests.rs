@@ -1,5 +1,5 @@
 //! The system-prompt cell: silence for a project that never opted in, a
-//! warning for a stale or missing prefix, an error for a tracked one.
+//! warning for a stale or missing prefix, silence for a tracked one.
 //!
 //! The artifacts are written by hand rather than generated: this cell's job
 //! is to *report* a verdict `vibe-workspace` computes, and composing a real
@@ -114,33 +114,14 @@ fn the_finding_points_at_the_generated_path_under_the_live_boot_directory() {
 }
 
 #[test]
-fn a_git_tracked_artifact_is_an_error_and_names_the_remedy() {
+fn tracked_prompt_reported_once_not_by_system_prompt() {
     let project = tempdir().unwrap();
     write_minimal_project(project.path());
     opt_in(project.path());
     fs::write(boot(project.path(), layout::SYSTEM_MD), "committed\n").unwrap();
-    if !git_add(project.path()) {
-        // No usable git on this machine: the cell then answers "cannot
-        // tell" by design, and there is nothing to assert.
-        return;
-    }
+    assert!(git_add(project.path()), "git init and git add must succeed");
     let found = findings(project.path());
-    assert_eq!(found.len(), 1, "{found:?}");
-    assert_eq!(
-        found[0].severity,
-        crate::Severity::Error,
-        "a tracked generated prefix is the one state the rule exists to prevent"
-    );
-    assert!(
-        found[0].message.contains("tracked by git"),
-        "{}",
-        found[0].message
-    );
-    assert!(
-        found[0].message.contains("git rm --cached"),
-        "{}",
-        found[0].message
-    );
+    assert!(found.is_empty(), "{found:?}");
 }
 
 #[test]
@@ -161,11 +142,17 @@ fn a_project_that_is_no_repository_says_nothing_about_tracking() {
     }
 }
 
-/// Initialise a repository and stage everything. `false` when git is not
-/// usable here, which the caller treats as "nothing to assert".
+/// Initialise a private fixture repository and stage everything. Callers
+/// require both git operations to succeed.
 fn git_add(root: &Path) -> bool {
+    let home = root.join(".private-home");
+    fs::create_dir_all(home.join(".vibe")).unwrap();
     let run = |args: &[&str]| {
         Command::new("git")
+            .env("HOME", &home)
+            .env("XDG_CONFIG_HOME", &home)
+            .env("GIT_CONFIG_GLOBAL", home.join(".gitconfig"))
+            .env("GIT_CONFIG_NOSYSTEM", "1")
             .arg("-C")
             .arg(root)
             .args(args)
@@ -175,4 +162,90 @@ fn git_add(root: &Path) -> bool {
             .is_ok_and(|status| status.success())
     };
     run(&["init", "-q"]) && run(&["add", "-A"])
+}
+
+/// Count tracking findings across both cells from the actual dispatcher,
+/// including old conflict wording, rather than only new-message prefixes.
+#[test]
+fn combined_check_project_reports_each_tracked_artifact_once() {
+    let project = tempdir().unwrap();
+    write_minimal_project(project.path());
+    opt_in(project.path());
+    let artifacts = layout::current_boot_prompt_artifacts();
+    for path in &artifacts {
+        fs::write(project.path().join(path), "generated\n").unwrap();
+    }
+    fs::write(
+        project.path().join(layout::current_boot_index()),
+        "generated\n",
+    )
+    .unwrap();
+    let selected = |finding: &&crate::Finding| {
+        matches!(
+            finding.check,
+            CheckId::BootDirectory | CheckId::SystemPrompt
+        )
+    };
+    let tracking = |finding: &&crate::Finding| {
+        finding.message.contains("git tracks") || finding.message.contains("tracked by git")
+    };
+    let before = crate::check_project(project.path(), &opts());
+    assert_eq!(
+        before
+            .findings
+            .iter()
+            .filter(selected)
+            .filter(tracking)
+            .count(),
+        0
+    );
+    assert!(git_add(project.path()), "fixture staging must succeed");
+    let report = crate::check_project(project.path(), &opts());
+    let tracked: Vec<_> = report
+        .findings
+        .iter()
+        .filter(selected)
+        .filter(tracking)
+        .collect();
+    assert_eq!(tracked.len(), 3, "{tracked:?}");
+    for path in &artifacts {
+        let shown = path.to_string_lossy().replace('\\', "/");
+        let about_path: Vec<_> = tracked
+            .iter()
+            .filter(|finding| {
+                finding.path.as_ref() == Some(path) || finding.message.contains(&shown)
+            })
+            .collect();
+        assert_eq!(
+            about_path.len(),
+            1,
+            "{shown}: {about_path:?}; all: {tracked:?}"
+        );
+        let finding = about_path[0];
+        assert_eq!(finding.check, CheckId::BootDirectory);
+        assert_eq!(finding.severity, crate::Severity::Error);
+        assert_eq!(finding.path.as_ref(), Some(path));
+        assert_eq!(
+            finding.message,
+            format!("git tracks the generated artifact {shown}")
+        );
+        assert_eq!(
+            finding.why.as_deref(),
+            Some(
+                "it is derived from committed inputs, so a tracked copy can go stale and be believed"
+            )
+        );
+        assert_eq!(finding.fix, Some(format!("git rm --cached {shown}")));
+    }
+    assert!(
+        !tracked
+            .iter()
+            .any(|finding| { finding.path.as_ref() == Some(&layout::current_boot_index()) })
+    );
+    assert!(
+        !report
+            .findings
+            .iter()
+            .any(|finding| finding.check == CheckId::SystemPrompt)
+    );
 }

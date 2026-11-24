@@ -69,6 +69,8 @@ impl Check for LockSlotHashCheck {
                 Some(SourceKind::Local | SourceKind::Path | SourceKind::Embedded)
             );
             report.push(Finding {
+                why: None,
+                fix: None,
                 check: CheckId::LockSlotHash,
                 severity: if in_tree {
                     Severity::Warning
