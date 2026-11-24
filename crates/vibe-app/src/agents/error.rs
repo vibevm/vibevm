@@ -41,6 +41,41 @@ fn definition_fix(reason: &str) -> &'static str {
     }
 }
 
+// Internal operation markers are stripped before displaying the cause. Only
+// these exact prefixes select a repair; arbitrary external reasons stay neutral.
+pub(super) const CONFIG_LOAD: &str = "loading agent registry: ";
+pub(super) const CONFIG_SERIALIZE: &str = "serializing agent registry: ";
+pub(super) const CONFIG_WRITE: &str = "writing agent registry: ";
+
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-064#agent-definition")]
+fn config_parts(reason: &str) -> (&'static str, &'static str, &str) {
+    if let Some(cause) = reason.strip_prefix(CONFIG_SERIALIZE) {
+        (
+            "could not serialize agent registry",
+            "check that the registry fields can be serialized",
+            cause,
+        )
+    } else if let Some(cause) = reason.strip_prefix(CONFIG_WRITE) {
+        (
+            "could not write agent registry",
+            "check write permissions and that the target can be atomically replaced",
+            cause,
+        )
+    } else if let Some(cause) = reason.strip_prefix(CONFIG_LOAD) {
+        (
+            "not a valid agent registry",
+            "correct the TOML syntax and field types in the file",
+            cause,
+        )
+    } else {
+        (
+            "agent registry operation failed",
+            "check the reported cause and registry settings",
+            reason,
+        )
+    }
+}
+
 /// The agent registry, a hook's consent, its run and its parking.
 #[derive(Debug, Error)]
 #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-064#selection")]
@@ -63,8 +98,10 @@ pub enum AgentError {
     )]
     Exists { name: String },
     #[error(
-        "`{path}` is not a valid agent registry: {reason} (violates spec://org.vibevm.core/vibevm/common/PROP-064#agent-definition; \
-         fix: correct the file, or remove it and select a preset with `vibe agent use PRESET`)"
+        "{headline}: `{path}` (violates spec://org.vibevm.core/vibevm/common/PROP-064#agent-definition; fix: {fix}): {cause}",
+        headline = config_parts(.reason).0,
+        fix = config_parts(.reason).1,
+        cause = config_parts(.reason).2
     )]
     Config { path: String, reason: String },
     #[error(
