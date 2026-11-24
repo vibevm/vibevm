@@ -41,6 +41,12 @@ impl Context {
         self.file_row(Glyph::Skipped, Role::Dim, "kept", path, Some(reason));
     }
 
+    /// A file the command wrote over, and why: a regenerated artifact.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-067#list")]
+    pub fn updated(&self, path: &str, reason: &str) {
+        self.file_row(Glyph::Done, Role::Ok, "updated", path, Some(reason));
+    }
+
     /// A file the command removed.
     #[allow(dead_code)] // used by uninstall
     pub fn removed(&self, path: &str) {

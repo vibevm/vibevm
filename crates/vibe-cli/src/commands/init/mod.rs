@@ -30,6 +30,7 @@ use vibe_core::user_config::UserConfig;
 
 use crate::cli::InitArgs;
 use crate::output;
+use crate::output::language::short_path;
 
 // Re-export items accessed from other modules (resolver.rs, install/ etc.).
 pub(crate) use helpers::{current_timestamp_utc, strip_unc_public};
@@ -242,8 +243,9 @@ fn create_project(
         "project"
     };
     ctx.rule(&format!(
-        "initializing {role} {} in {display_root}",
-        fields.name
+        "initializing {role} {} in {}",
+        fields.name,
+        short_path(&display_root)
     ));
 
     let mut outcomes = Vec::<helpers::Outcome>::new();
