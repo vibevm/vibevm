@@ -296,10 +296,16 @@ pub(crate) fn cancelled_line() -> String {
 /// `fix`, and whatever the chain adds after the tail as `why`.
 #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-067#refusal")]
 pub(crate) fn refusal_of(err: &anyhow::Error) -> Refusal {
-    parse_refusal(
+    let mut refusal = parse_refusal(
         &format!("{err:#}"),
         structured::app_error(err).map(|error| error.code().to_owned()),
-    )
+    );
+    if refusal.code.as_deref() == Some("px_no_proxy") {
+        refusal
+            .fix
+            .push("vibe tool px exec --allow-direct -- true".to_owned());
+    }
+    refusal
 }
 
 /// Read the nested text shapes of a refusal without manufacturing an error.

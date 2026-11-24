@@ -172,11 +172,13 @@ fn lend(session: &std::sync::Arc<vibe_net::NetworkSession>, allow_direct: bool) 
             no_proxy,
         });
     }
+    let config = vibe_core::user_config::UserConfig::default_path()
+        .map(|path| path.display().to_string())
+        .unwrap_or_else(|| "the user config".to_owned());
     bail!(
-        "`[proxy]` configures no proxy, so there is nothing to lend \
+        "px_no_proxy: [proxy] configures no proxy, so there is nothing to lend \
          (violates spec://org.vibevm.core/vibevm/common/PROP-068#proxy-tool; \
-          fix: set `[proxy] mode = \"px\"` with `pac` or `upstream` in ~/.vibe/config.toml or \
-          the site profile, or pass `--allow-direct` to run the command with no proxy)"
+          fix: set [proxy] mode = \"px\" with pac or upstream in {config} or the site profile)"
     )
 }
 
