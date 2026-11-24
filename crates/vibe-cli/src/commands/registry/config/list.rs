@@ -13,6 +13,10 @@ use vibe_core::{GlobalRegistryConfig, RegistryLayers, RegistryScope};
 use crate::cli::RegistryListArgs;
 use crate::commands::registry::resolve_project_root;
 use crate::output;
+use crate::output::language::{rule_width, viewport};
+
+#[path = "list/view.rs"]
+mod view;
 
 use super::scope::{ScopeFile, parse_scope};
 use super::{ListReportMirror, ListReportRegistry, adapter_for, display_segments, naming_label};
@@ -27,7 +31,7 @@ struct View {
 
 fn one_layer(file: ScopeFile) -> View {
     View {
-        label: format!("`{}`", file.path().display()),
+        label: file.path().display().to_string(),
         rows: file
             .registries()
             .iter()
@@ -46,11 +50,11 @@ fn site_layer() -> Result<View> {
     let site = vibe_core::site_profile::installed().context("reading the applied site profile")?;
     let (label, config) = match site {
         Some(site) => (
-            format!("the site profile `{}`", site.path.display()),
+            format!("the site profile {}", site.path.display()),
             site.profile.registry_layer(),
         ),
         None => (
-            "the site profile (none applied)".to_string(),
+            "the site profile · none applied".to_string(),
             GlobalRegistryConfig::default(),
         ),
     };
@@ -242,121 +246,21 @@ pub(in crate::commands::registry) fn run_list(
     }
 
     if registries.is_empty() {
-        ctx.summary(&format!(
-            "No `[[registry]]` entries in {}. Use `--registry <path>` on \
-             `vibe install` for a local-directory source, or `vibe registry add`.",
-            view.label
+        if ctx.is_quiet() {
+            ctx.summary(&format!("no registries in {}", view.label));
+        } else {
+            ctx.block(&view::render_empty(&view.label, viewport()));
+        }
+    } else if ctx.is_quiet() {
+        ctx.summary(&view::counts(&registries, &overrides));
+    } else {
+        ctx.block(&view::render(
+            &registries,
+            effective_primary.as_deref(),
+            &overrides,
+            viewport(),
+            rule_width(),
         ));
-        return Ok(());
     }
-
-    ctx.heading(&format!(
-        "Registries ({}; declared order)",
-        registries.len()
-    ));
-    for (i, reg) in registries.iter().enumerate() {
-        // The tag goes on the registry resolution actually asks first, not
-        // on whichever row happens to be declared first: tagging a row the
-        // source policy disables `(primary)` contradicts the effective
-        // primary printed below it, and the disabled row is the one a
-        // reader is already unsure about.
-        let primary_marker = match effective_primary.as_deref() {
-            Some(name) if name == reg.name => " (primary)",
-            _ => "",
-        };
-        let adapter_label = reg
-            .adapter
-            .as_deref()
-            .map(|a| format!("adapter: {a}"))
-            .unwrap_or_else(|| "adapter: none (publish unsupported)".to_string());
-        println!(
-            "  {}. {}{}\n     type:    {}\n     scope:   {}\n     url:     {}\n     org:     {}\n     host:    {} ({})\n     naming:  {}\n     ref:     {}",
-            i + 1,
-            reg.name,
-            primary_marker,
-            reg.registry_type,
-            reg.scope.as_deref().unwrap_or("-"),
-            reg.url,
-            reg.org,
-            reg.host,
-            adapter_label,
-            reg.naming,
-            reg.refname,
-        );
-        // The declaration stays; the policy switches it off. Nothing here
-        // suggests removing the row — leaving it in place is the point.
-        if reg.disabled_by_source_policy {
-            println!(
-                "     status:  {}{}",
-                vibe_registry::multi_registry_resolver::DISABLED_BY_POLICY_MARK,
-                reg.disabled_by
-                    .as_deref()
-                    .map(|selector| format!(" [{selector}]"))
-                    .unwrap_or_default(),
-            );
-        }
-        if reg.mirrors.is_empty() {
-            println!("     mirrors: (none)");
-        } else {
-            println!("     mirrors:");
-            for m in &reg.mirrors {
-                println!(
-                    "       - of=`{}` priority={} url={}",
-                    m.of, m.priority, m.url
-                );
-            }
-        }
-    }
-
-    let disabled = registries
-        .iter()
-        .filter(|reg| reg.disabled_by_source_policy)
-        .count();
-    if disabled > 0 {
-        println!(
-            "\neffective primary: {}",
-            effective_primary
-                .as_deref()
-                .unwrap_or("(none — the source policy disables every configured registry)")
-        );
-    }
-
-    if !overrides.is_empty() {
-        println!();
-        ctx.heading(&format!("Overrides ({})", overrides.len()));
-        for o in &overrides {
-            let ref_part = o
-                .refname
-                .as_deref()
-                .map(|r| format!("@{r}"))
-                .unwrap_or_default();
-            let reason_part = o
-                .reason
-                .as_deref()
-                .map(|r| format!(" — {r}"))
-                .unwrap_or_default();
-            println!(
-                "  {} → {}{}{}",
-                o.pkgref, o.source_url, ref_part, reason_part
-            );
-        }
-    }
-
-    let mirror_total = registries.iter().map(|r| r.mirrors.len()).sum::<usize>();
-    ctx.summary(&format!(
-        "\nvibe registry list: {} registries{}, {} mirror{}, {} override{}.",
-        registries.len(),
-        // Said only when the policy disabled something, so the ordinary
-        // listing reads exactly as it did before.
-        if disabled > 0 {
-            format!(" ({disabled} disabled by the source policy)")
-        } else {
-            String::new()
-        },
-        mirror_total,
-        if mirror_total == 1 { "" } else { "s" },
-        overrides.len(),
-        if overrides.len() == 1 { "" } else { "s" },
-    ));
     Ok(())
 }
