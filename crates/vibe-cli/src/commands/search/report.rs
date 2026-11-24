@@ -51,6 +51,9 @@ impl PolicySkippedRegistry {
 #[derive(Debug, Serialize, Clone)]
 pub(super) struct HitRow {
     pub(super) kind: String,
+    /// The package's group, when the registry that answered named it.
+    #[serde(skip_serializing)]
+    pub(super) group: Option<String>,
     pub(super) name: String,
     pub(super) latest_stable: Option<String>,
     pub(super) score: u32,
