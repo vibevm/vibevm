@@ -99,7 +99,7 @@ pub(super) fn run(
         ),
     };
     let root = vibe_app::SettingsRoot::new(settings);
-    let config = vibe_app::AgentsConfig::load(&root)?;
+    let config = vibe_app::AgentsConfig::load(&root).map_err(vibe_app::AppError::from)?;
     let mut aliases = BTreeMap::new();
     for name in agents {
         let launcher = super::super::agent::launchers::resolve(&root, &config, &name)?;
