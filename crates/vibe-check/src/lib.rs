@@ -58,6 +58,7 @@ use std::time::{SystemTime, UNIX_EPOCH};
 use specmark::spec;
 
 pub mod checks;
+mod report;
 
 pub use checks::{
     ActivationConflictCheck, ApplicationIconsCheck, BootDirectoryCheck, BridgeProvenanceCheck,
@@ -287,6 +288,8 @@ impl Severity {
 ///     field: None,
 ///     package: None,
 ///     message: "REVIEW marker dated 2026-04-01 is 33 days old".to_string(),
+///     why: None,
+///     fix: None,
 /// };
 /// assert_eq!(finding.check.as_str(), "review_aging");
 /// assert_eq!(finding.severity, Severity::Warning);
@@ -313,6 +316,12 @@ pub struct Finding {
     /// without decoding a slot path. Only `lock_slot_hash` sets it today.
     pub package: Option<String>,
     pub message: String,
+    /// Why the finding matters, when the message alone does not say it;
+    /// `vibe check` draws it as the `why` line under the finding.
+    pub why: Option<String>,
+    /// The one command that resolves the finding, when there is one;
+    /// `vibe check` draws it as the `fix` line under the finding.
+    pub fix: Option<String>,
 }
 
 /// The aggregate outcome of one [`check_project`] run — every
@@ -331,6 +340,8 @@ pub struct Finding {
 ///     field: None,
 ///     package: None,
 ///     message: "the boot directory is missing".to_string(),
+///     why: None,
+///     fix: None,
 /// });
 /// assert!(report.has_errors());
 /// assert_eq!(report.count(Severity::Error), 1);
@@ -339,76 +350,6 @@ pub struct Finding {
 #[derive(Debug, Default, Clone)]
 pub struct CheckReport {
     pub findings: Vec<Finding>,
-}
-
-impl CheckReport {
-    pub fn push(&mut self, f: Finding) {
-        self.findings.push(f);
-    }
-    #[spec(implements = "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#linter")]
-    pub fn count(&self, severity: Severity) -> usize {
-        self.findings
-            .iter()
-            .filter(|f| f.severity == severity)
-            .count()
-    }
-    pub fn has_errors(&self) -> bool {
-        self.findings.iter().any(|f| f.severity == Severity::Error)
-    }
-    pub(crate) fn err(
-        &mut self,
-        check: CheckId,
-        path: Option<PathBuf>,
-        line: Option<usize>,
-        msg: impl Into<String>,
-    ) {
-        self.push(Finding {
-            check,
-            severity: Severity::Error,
-            path,
-            line,
-            column: None,
-            field: None,
-            package: None,
-            message: msg.into(),
-        });
-    }
-    pub(crate) fn warn(
-        &mut self,
-        check: CheckId,
-        path: Option<PathBuf>,
-        line: Option<usize>,
-        msg: impl Into<String>,
-    ) {
-        self.push(Finding {
-            check,
-            severity: Severity::Warning,
-            path,
-            line,
-            column: None,
-            field: None,
-            package: None,
-            message: msg.into(),
-        });
-    }
-    pub(crate) fn info(
-        &mut self,
-        check: CheckId,
-        path: Option<PathBuf>,
-        line: Option<usize>,
-        msg: impl Into<String>,
-    ) {
-        self.push(Finding {
-            check,
-            severity: Severity::Info,
-            path,
-            line,
-            column: None,
-            field: None,
-            package: None,
-            message: msg.into(),
-        });
-    }
 }
 
 /// Tunable thresholds for one [`check_project`] run. `Default` carries

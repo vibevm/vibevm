@@ -18,9 +18,9 @@
 //! `#SYS-REMOVAL-AND-CONFLICT` exists to prevent.
 //!
 //! **Severities, and which of them the spec chose.** An artifact git tracks
-//! is an **error**: `#SYS-ARTIFACTS-NOT-TRACKED` says in those words that
-//! `vibe check` reports a tracked generated prefix as one, because a tracked
-//! copy is the one state the rule exists to prevent. Everything else is a
+//! is an **error**, and it is the `boot_directory`
+//! cell's finding (`#SYS-ARTIFACTS-NOT-TRACKED`), one per path; this cell says
+//! nothing about that state. Everything else is a
 //! **warning**, which PROP-076 does not state and this cell decides: a stale
 //! or missing prefix is fully derivable from committed inputs by one named
 //! command, it cannot make a build, an install or a boot wrong — nothing
@@ -104,17 +104,19 @@ impl Check for SystemPromptCheck {
                 return;
             }
         };
+        // A tracked artifact is the boot_directory cell's finding, one per
+        // path and with `git rm --cached` as its fix; a second finding here
+        // would be a second answer to one question (PROP-076
+        // `#SYS-ARTIFACTS-NOT-TRACKED`).
+        if matches!(answer.verdict, CheckVerdict::Conflict(_)) {
+            return;
+        }
         if !reportable(&answer) {
             return;
         }
         for message in messages(&answer) {
             let path = Some(boot_relative(vibe_core::layout::SYSTEM_MD));
-            match answer.verdict {
-                CheckVerdict::Conflict(_) => {
-                    report.err(CheckId::SystemPrompt, path, None, message);
-                }
-                _ => report.warn(CheckId::SystemPrompt, path, None, message),
-            }
+            report.warn(CheckId::SystemPrompt, path, None, message);
         }
     }
 }

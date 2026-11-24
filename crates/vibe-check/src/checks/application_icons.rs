@@ -40,6 +40,8 @@ impl Check for ApplicationIconsCheck {
         ) {
             // The icon's own field, so an editor can put the finding under it.
             report.push(crate::Finding {
+                why: None,
+                fix: None,
                 check: CheckId::ApplicationIcons,
                 severity: crate::Severity::Error,
                 path: finding.path.map(PathBuf::from),

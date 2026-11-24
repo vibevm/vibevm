@@ -259,6 +259,8 @@ fn append_boot_graph_findings(project_root: &Path, report: &mut CheckReport) {
         Ok(stale) => stale,
         Err(error) => {
             report.findings.push(Finding {
+                why: None,
+                fix: None,
                 check: CheckId::BootGraphIntegrity,
                 severity: Severity::Error,
                 path: None,
@@ -273,6 +275,8 @@ fn append_boot_graph_findings(project_root: &Path, report: &mut CheckReport) {
     };
     for (group, name) in stale {
         report.findings.push(Finding {
+            why: None,
+            fix: None,
             check: CheckId::BootGraphIntegrity,
             severity: Severity::Warning,
             path: None,

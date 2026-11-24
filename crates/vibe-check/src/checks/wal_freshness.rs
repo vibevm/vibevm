@@ -52,6 +52,8 @@ impl Check for WalFreshnessCheck {
             // Clock skew — WAL appears to be in the future. Don't fail
             // the check; surface as info so the operator notices.
             report.push(Finding {
+                why: None,
+                fix: None,
                 check: CheckId::WalFreshness,
                 severity: Severity::Info,
                 path: Some(wal_rel),

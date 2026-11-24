@@ -37,20 +37,21 @@ pub(super) fn report_tracked_prompt_artifacts(project_root: &Path, report: &mut 
         if !git_tracks(project_root, &shown) {
             continue;
         }
-        report.err(
-            CheckId::BootDirectory,
-            Some(relative),
-            None,
-            format!(
-                "git tracks `{shown}`, a generated system-prompt artifact. It is a \
-                 deterministic function of committed inputs, so a tracked copy duplicates \
-                 text the repository already holds, cannot usefully be merged, and lets a \
-                 stale copy be committed and then believed: run `git rm --cached {shown}` \
-                 and let the ignore file in the boot directory cover it. `STATIC.*` and \
-                 `INDEX.md` are tracked for the opposite reason — a session reads them with \
-                 nothing but a file reader."
+        report.push(crate::Finding {
+            check: CheckId::BootDirectory,
+            severity: crate::Severity::Error,
+            path: Some(relative),
+            line: None,
+            column: None,
+            field: None,
+            package: None,
+            message: format!("git tracks the generated artifact {shown}"),
+            why: Some(
+                "it is derived from committed inputs, so a tracked copy can go stale and be believed"
+                    .to_owned(),
             ),
-        );
+            fix: Some(format!("git rm --cached {shown}")),
+        });
     }
 }
 
@@ -80,7 +81,7 @@ mod tests {
     /// lane is not, for the opposite reason. A project that is no git
     /// repository is silent, because the check cannot know.
     #[test]
-    fn git_tracking_a_generated_prompt_artifact_is_an_error() {
+    fn check_tracked_prompt_reports_once_with_git_rm() {
         let project = tempdir().unwrap();
         write_minimal_project(project.path());
         let boot = project.path().join(layout::current_boot_dir());
@@ -99,31 +100,59 @@ mod tests {
             !before
                 .findings
                 .iter()
-                .any(|f| f.message.contains("a generated system-prompt artifact")),
+                .any(|f| f.message.starts_with("git tracks the generated artifact")),
             "{:?}",
             before.findings
         );
 
-        if !git_init(project.path()) {
-            eprintln!("git is unavailable; the tracked half of this test is skipped");
-            return;
-        }
+        assert!(
+            git_init(project.path()),
+            "git init and git add must succeed"
+        );
         let report = check_project(project.path(), &opts());
         let tracked = report
             .findings
             .iter()
-            .filter(|f| f.message.contains("a generated system-prompt artifact"))
+            .filter(|f| f.message.starts_with("git tracks the generated artifact"))
             .collect::<Vec<_>>();
         assert_eq!(tracked.len(), 3, "got: {tracked:?}");
         for finding in &tracked {
             assert_eq!(finding.severity, Severity::Error);
             assert_eq!(finding.check, CheckId::BootDirectory);
+            let shown = finding
+                .path
+                .as_ref()
+                .unwrap()
+                .to_string_lossy()
+                .replace('\\', "/");
+            assert_eq!(
+                finding.why.as_deref(),
+                Some(
+                    "it is derived from committed inputs, so a tracked copy can go stale and be believed"
+                )
+            );
+            assert_eq!(finding.fix, Some(format!("git rm --cached {shown}")));
             assert!(
-                finding.message.contains("git rm --cached"),
+                finding.message
+                    == format!(
+                        "git tracks the generated artifact {}",
+                        finding
+                            .path
+                            .as_ref()
+                            .unwrap()
+                            .to_string_lossy()
+                            .replace('\\', "/")
+                    ),
                 "{}",
                 finding.message
             );
         }
+        assert!(
+            !report
+                .findings
+                .iter()
+                .any(|f| f.check == CheckId::SystemPrompt)
+        );
         // INDEX.md is tracked on purpose and is never the path reported.
         assert!(
             !tracked
@@ -133,11 +162,17 @@ mod tests {
         );
     }
 
-    /// Initialise a repository and stage everything in it. `false` when git
-    /// is not available, which leaves the caller to skip rather than fail.
+    /// Initialise a fixture repository and stage everything. Callers require
+    /// both operations to succeed.
     fn git_init(root: &std::path::Path) -> bool {
+        let home = root.join(".private-home");
+        fs::create_dir_all(home.join(".vibe")).unwrap();
         let run = |args: &[&str]| {
             std::process::Command::new("git")
+                .env("HOME", &home)
+                .env("XDG_CONFIG_HOME", &home)
+                .env("GIT_CONFIG_GLOBAL", home.join(".gitconfig"))
+                .env("GIT_CONFIG_NOSYSTEM", "1")
                 .arg("-C")
                 .arg(root)
                 .args(args)

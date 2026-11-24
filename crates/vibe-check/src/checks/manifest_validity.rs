@@ -42,6 +42,8 @@ impl Check for ManifestValidityCheck {
             let source = fs::read_to_string(&manifest_path).unwrap_or_default();
             let place = place_of(&e, &source);
             report.push(Finding {
+                why: None,
+                fix: None,
                 check: CheckId::ManifestValidity,
                 severity: Severity::Error,
                 path: Some(PathBuf::from(Manifest::FILENAME)),

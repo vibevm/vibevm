@@ -83,6 +83,8 @@ impl Check for ReviewAgingCheck {
                 };
                 if date_unix > now_unix {
                     report.push(Finding {
+                        why: None,
+                        fix: None,
                         check: CheckId::ReviewAging,
                         severity: Severity::Info,
                         path: Some(rel.clone()),
