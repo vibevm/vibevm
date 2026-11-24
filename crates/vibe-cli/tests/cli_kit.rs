@@ -17,6 +17,7 @@ fn command(user: &UserScratch, cwd: &Path, args: &[&str]) -> Output {
         .current_dir(cwd)
         .env("HOME", &home)
         .env("USERPROFILE", &home)
+        .env("VIBE_SETTINGS", &user.settings)
         .args(["--unattended", "--offline"])
         .args(args)
         .output()
@@ -416,4 +417,52 @@ fn kit_init_and_validate_refuse_symlink_entries() {
         &["kit", "init", "--file", "alias/new.toml"],
     ));
     assert!(!root.join("new.toml").exists());
+}
+
+#[test]
+fn kit_refusal_names_input_path() {
+    let temp = tempfile::tempdir().unwrap();
+    let user = UserScratch::new();
+    let root = temp.path();
+    fs::create_dir(root.join("inputs")).unwrap();
+    let zero = "0".repeat(64);
+    fs::write(
+        root.join("vibe-kit.toml"),
+        format!(
+            "schema_version=1\n[kit]\nname='synthetic'\ntarget='x86_64-unknown-linux-gnu'\nversion='1.0.12'\n\
+             [bundle]\npath='inputs/bundle'\nsha256='{zero}'\n[installer]\npath='inputs/installer'\nsha256='{zero}'\n\
+             [site_profile]\npath='inputs/profile.toml'\nsha256='{zero}'\n"
+        ),
+    ).unwrap();
+    let out = command(&user, root, &["kit", "validate", "--file", "vibe-kit.toml"]);
+    let stderr = String::from_utf8_lossy(&out.stderr).into_owned();
+    bad(out);
+    assert!(stderr.contains("✗ kit_input_missing  the bundle input inputs/bundle does not exist"), "{stderr}");
+    assert!(stderr.contains("why   kit recipe paths are relative to "), "{stderr}");
+    assert!(stderr.contains("fix   put the file there, or correct its path in the recipe"), "{stderr}");
+}
+
+#[cfg(target_os = "linux")]
+#[test]
+fn kit_build_refuses_open_output_parent_with_chmod_fix() {
+    use std::os::unix::fs::PermissionsExt;
+    let temp = tempfile::tempdir().unwrap();
+    let user = UserScratch::new();
+    let recipe = temp.path().join("recipe");
+    fs::create_dir(&recipe).unwrap();
+    good(command(&user, &recipe, &["kit", "init"]));
+    let open = temp.path().join("my kit");
+    fs::create_dir(&open).unwrap();
+    fs::set_permissions(&open, fs::Permissions::from_mode(0o755)).unwrap();
+    let out_dir = open.join("kit");
+    let out = command(
+        &user,
+        &recipe,
+        &["kit", "build", "--file", "vibe-kit.toml", "--out", out_dir.to_str().unwrap()],
+    );
+    let stderr = String::from_utf8_lossy(&out.stderr).into_owned();
+    bad(out);
+    assert!(stderr.contains("✗ kit_output_unsafe  output parent "), "{stderr}");
+    assert!(stderr.contains("must be owned by you with mode 0700"), "{stderr}");
+    assert!(stderr.contains(&format!("fix   chmod 700 '{}'", open.display())), "{stderr}");
 }
