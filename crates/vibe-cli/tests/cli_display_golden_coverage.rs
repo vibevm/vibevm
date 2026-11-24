@@ -103,13 +103,136 @@ fn a_check_with_one_finding_reads_as_its_golden() {
         .output()
         .unwrap();
     assert!(
-        text(&checked.stderr).contains("vibe check: 1 error"),
-        "an error finding ends in the refusal: {}",
+        text(&checked.stderr).contains("✗ 1 error · 0 warnings · 0 info"),
+        "an error finding ends in the counts refusal: {}",
         screen(&checked)
     );
     golden(
         "check",
         &normalise(&text(&checked.stdout), &[(project.path(), "<project>")]),
+    );
+}
+
+/// Exercise the real terminal gates without inheriting the operator's HOME,
+/// settings, colour overrides or Vibe configuration. Python owns only the PTY;
+/// the command under test is the binary built for this integration test.
+fn check_pty(project: &Path, both_terminals: bool) -> String {
+    let private = tempfile::tempdir().unwrap();
+    let home = private.path().join("home");
+    let settings = private.path().join("settings");
+    fs::create_dir_all(&home).unwrap();
+    fs::create_dir_all(&settings).unwrap();
+    let script = r#"
+import errno, fcntl, os, pty, select, struct, subprocess, sys, termios, time
+binary, project, errors, both = sys.argv[1:]
+# No shell, profile or network; the empty repository makes tracked paths known.
+subprocess.run(['git', 'init', '-q', project], check=True,
+               stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+master, slave = pty.openpty()
+fcntl.ioctl(slave, termios.TIOCSWINSZ, struct.pack('HHHH', 40, 100, 0, 0))
+with open(errors, 'wb') as error_file:
+    child = subprocess.Popen([binary, 'check', '--path', project],
+                             stdin=subprocess.DEVNULL, stdout=slave,
+                             stderr=slave if both == 'both' else error_file)
+    os.close(slave)
+    captured = bytearray()
+    deadline = time.monotonic() + 30
+    try:
+        while True:
+            if time.monotonic() >= deadline:
+                raise TimeoutError('vibe check PTY capture timed out')
+            if not select.select([master], [], [], 0.1)[0]:
+                continue
+            try:
+                chunk = os.read(master, 65536)
+            except OSError as error:
+                if error.errno == errno.EIO:
+                    break
+                raise
+            if not chunk:
+                break
+            captured.extend(chunk)
+        status = child.wait(timeout=5)
+        if status != 0:
+            raise RuntimeError('vibe check failed: status=%s output=%r stderr=%r' %
+                               (status, captured, open(errors, 'rb').read()))
+    finally:
+        if child.poll() is None:
+            child.kill()
+            child.wait()
+        os.close(master)
+sys.stdout.buffer.write(captured)
+"#;
+    let captured = std::process::Command::new("python3")
+        .args(["-I", "-c", script])
+        .arg(env!("CARGO_BIN_EXE_vibe"))
+        .arg(project)
+        .arg(private.path().join("stderr"))
+        .arg(if both_terminals { "both" } else { "stdout" })
+        .current_dir(private.path())
+        .env_clear()
+        .env("PATH", std::env::var_os("PATH").unwrap_or_else(|| "/usr/bin:/bin".into()))
+        .env("HOME", &home)
+        .env("XDG_CONFIG_HOME", &home)
+        .env("VIBE_SETTINGS", &settings)
+        .env("GIT_CONFIG_NOSYSTEM", "1")
+        .env("GIT_CONFIG_GLOBAL", "/dev/null")
+        .env("TERM", "xterm-256color")
+        .env("LANG", "C.UTF-8")
+        .env("LC_ALL", "C.UTF-8")
+        .env("VIBE_NO_PROGRESS", "1")
+        .output()
+        .expect("python3 and a working PTY are required for check display coverage");
+    assert!(captured.status.success(), "{}", screen(&captured));
+    text(&captured.stdout)
+}
+
+#[test]
+fn check_terminal_width_and_warn_colour() {
+    let user = UserScratch::new();
+    let project = tempfile::tempdir().unwrap();
+    user.init_project(project.path());
+    let boot = project.path().join(vibe_core::layout::current_boot_dir());
+    fs::create_dir_all(&boot).unwrap();
+    fs::write(
+        boot.join(vibe_core::layout::SYSTEM_TEMPLATE_MD),
+        "# My frame\n\nPermanent instructions.\n",
+    )
+    .unwrap();
+    for artifact in [
+        vibe_core::layout::SYSTEM_MD,
+        vibe_core::layout::SYSTEM_META_JSON,
+        vibe_core::layout::AGENT_LANE_MD,
+    ] {
+        assert!(!boot.join(artifact).exists(), "fixture must lack {artifact}");
+    }
+
+    // stderr is a file: stdout alone must supply the rule's 100 columns.
+    let stdout_only = check_pty(project.path(), false);
+    let plain = console::strip_ansi_codes(&stdout_only);
+    assert!(plain.lines().any(|line| {
+        line.starts_with("! system_prompt  ") && line.contains("missing")
+    }), "the opted-in fixture must produce a warning: {plain}");
+    let rule = plain
+        .lines()
+        .find(|line| line.starts_with("── ") && line.contains(" findings in "))
+        .expect("the real check must draw its finding rule");
+    assert_eq!(console::measure_text_width(rule), 100, "{rule}");
+
+    // Both streams are real terminals, TERM is supported, NO_COLOR is absent,
+    // and no plain/json/quiet flag disables production's actual colour gate.
+    let coloured = check_pty(project.path(), true);
+    let warning = coloured
+        .lines()
+        .find(|line| line.contains("system_prompt") && line.contains("the generated system prompt"))
+        .expect("the colour capture must contain a system_prompt warning");
+    let after_id = warning
+        .split_once("system_prompt")
+        .expect("warning must name its check")
+        .1;
+    assert!(
+        after_id.starts_with("\u{1b}[0m  \u{1b}[33mthe generated system prompt"),
+        "the warning message must restart Warn after the accent ID/reset: {warning:?}"
     );
 }
 
