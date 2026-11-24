@@ -338,6 +338,52 @@ fn app_env_writes_the_version_file_and_moves_no_slot_default() {
 }
 
 #[test]
+#[specmark::spec(verifies = "spec://org.vibevm.core/vibevm/common/PROP-075#VERSION-FILE-WRITE")]
+fn env_write_receipt_stays_on_stderr() {
+    let r = AppRegistry::new();
+    runtime(&r, "alpha", "alpha", "1.0.0");
+    let dir = project(&r, "receipt");
+    let run = |args: &[&str]| {
+        r.user.vibe()
+            .current_dir(&dir)
+            .env("HOME", r.home())
+            .env("USERPROFILE", r.home())
+            .env("VIBE_SETTINGS", r.settings())
+            .env("NO_COLOR", "1")
+            .env_remove("VIBE_APP_USE")
+            .env_remove("VIBE_INVOKED_BY")
+            .env_remove("VIBE_AGENT_COMMAND")
+            .env_remove("VIBE_AGENT_ARGS")
+            .args(args)
+            .output()
+            .unwrap()
+    };
+    let registry = r.registry();
+    ok(&run(&[
+        "install", "-g", "org.example/alpha@1.0.0", "--registry",
+        registry.to_str().unwrap(), "--offline", "--unattended", "--json",
+    ]));
+    let out = run(&[
+        "app", "env", "--shell", "bash", "--use", "alpha==1.0.0",
+        "--write-version-file",
+    ]);
+    let stdout = ok(&out);
+    assert_eq!(stdout.lines().count(), 2, "{stdout}");
+    assert!(stdout.lines().next().unwrap().starts_with("export PATH='"));
+    assert!(stdout.lines().nth(1).unwrap().starts_with("export VIBE_APP_USE='"));
+    let path = dir.join(".alpharc");
+    assert_eq!(fs::read(&path).unwrap(), b"1.0.0\n");
+    let stderr = String::from_utf8_lossy(&out.stderr);
+    assert_eq!(stderr.trim(), format!("✓ wrote 1.0.0 to .alpharc · {}", path.display()));
+    let out = run(&[
+        "app", "env", "--json", "--use", "alpha==1.0.0", "--write-version-file",
+    ]);
+    let document = json(&out);
+    assert_eq!(document["versionFile"]["version"], "1.0.0");
+    assert!(out.stderr.is_empty(), "{out:?}");
+}
+
+#[test]
 #[specmark::spec(verifies = "spec://org.vibevm.core/vibevm/common/PROP-075#VERSION-FILE-VALUE")]
 fn a_written_version_file_pins_what_it_recorded_and_decides_a_bare_install() {
     let r = AppRegistry::new();

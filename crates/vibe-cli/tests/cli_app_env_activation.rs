@@ -400,6 +400,61 @@ fn a_version_that_is_not_installed_is_reported_with_its_install_command() {
 }
 
 #[test]
+#[specmark::spec(verifies = "spec://org.vibevm.core/vibevm/common/PROP-075#ACTIVATION-ENV-OUTPUT")]
+fn env_missing_notice_is_eval_clean() {
+    let r = AppRegistry::new();
+    runtime(&r, "1.0.0", "one");
+    let dir = project(&r, "missing");
+    let run = |args: &[&str]| {
+        r.user.vibe()
+            .current_dir(&dir)
+            .env("HOME", r.home())
+            .env("USERPROFILE", r.home())
+            .env("VIBE_SETTINGS", r.settings())
+            .env("NO_COLOR", "1")
+            .env_remove("VIBE_APP_USE")
+            .env_remove("VIBE_INVOKED_BY")
+            .env_remove("VIBE_AGENT_COMMAND")
+            .env_remove("VIBE_AGENT_ARGS")
+            .args(args)
+            .output()
+            .unwrap()
+    };
+    let registry = r.registry();
+    ok(&run(&[
+        "install", "-g", "org.example/runtime@1.0.0", "--registry",
+        registry.to_str().unwrap(), "--offline", "--unattended", "--json",
+    ]));
+    for (slot, install) in [
+        ("runtime", "vibe install -g org.example/runtime@9.9.9"),
+        ("missing", "vibe install -g missing@9.9.9"),
+    ] {
+        let choice = format!("{slot}=9.9.9");
+        let args = ["app", "env", "--shell", "bash", "--use", &choice];
+        let out = run(&args);
+        let stdout = ok(&out);
+        assert_eq!(stdout.lines().count(), 2, "{stdout}");
+        assert!(stdout.lines().next().unwrap().starts_with("export PATH='"));
+        assert_eq!(stdout.lines().nth(1), Some("unset VIBE_APP_USE;"));
+        let stderr = String::from_utf8_lossy(&out.stderr);
+        assert_eq!(stderr.trim(), format!(
+            "! {slot} wants 9.9.9, which is not installed\n  {install}"
+        ));
+        let mut write = args.to_vec();
+        write.push("--write-version-file");
+        let out = run(&write);
+        let stderr = failed(&out);
+        assert!(out.stdout.is_empty(), "{out:?}");
+        assert_eq!(stderr.matches("not_installed").count(), 1, "{stderr}");
+        assert!(stderr.contains("--write-version-file has no version to write"), "{stderr}");
+        assert!(stderr.contains(&format!("fix   {install}")), "{stderr}");
+        assert!(stderr.contains("PROP-075#VERSION-FILE-WRITE"), "{stderr}");
+        assert!(!dir.join(".runtime-version").exists());
+        assert!(!dir.join(".rtrc").exists());
+    }
+}
+
+#[test]
 #[specmark::spec(verifies = "spec://org.vibevm.core/vibevm/common/PROP-059#slot-off")]
 fn an_explicit_none_withdraws_the_slot_link_directory() {
     let r = AppRegistry::new();
