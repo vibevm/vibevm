@@ -150,8 +150,8 @@ pub(crate) fn run_project_applications(
     args: InstallArgs,
     embedded_root: Option<PathBuf>,
     root_offline: bool,
-    after: impl FnOnce() -> Result<()>,
-) -> Result<()> {
+) -> Result<Option<super::report::FinalOutput>> {
+    let output = (!ctx.is_json()).then(Default::default);
     run_with_scope_selected(
         ctx,
         args,
@@ -160,9 +160,12 @@ pub(crate) fn run_project_applications(
         ConfirmationScope::ProjectApplications,
         Completion {
             selected: None,
-            after: Some(Box::new(after)),
+            output: output.clone(),
         },
-    )
+    )?;
+    Ok(output
+        .and_then(std::sync::Arc::into_inner)
+        .and_then(std::sync::OnceLock::into_inner))
 }
 
 #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#OBS-TRACE")]
@@ -227,7 +230,7 @@ pub(crate) fn run_selected(
         ConfirmationScope::Project,
         Completion {
             selected: Some(selected),
-            after: None,
+            output: None,
         },
     )
 }
@@ -247,14 +250,14 @@ fn run_with_scope(
         scope,
         Completion {
             selected: None,
-            after: None,
+            output: None,
         },
     )
 }
-/// This invocation's selected source and fallible post-install work.
-struct Completion<'a> {
+/// This invocation's selected source and optional final-presentation handoff.
+struct Completion {
     selected: Option<SelectedRouting>,
-    after: Option<Box<dyn FnOnce() -> Result<()> + 'a>>,
+    output: Option<super::report::OutputSlot>,
 }
 
 fn run_with_scope_selected(
@@ -263,7 +266,7 @@ fn run_with_scope_selected(
     embedded_root: Option<PathBuf>,
     root_offline: bool,
     scope: ConfirmationScope<'_>,
-    completion: Completion<'_>,
+    completion: Completion,
 ) -> Result<()> {
     let overall = ctx.progress().task("Installing packages");
     let scoped = ctx.with_progress_scope(overall.progress());
@@ -294,7 +297,7 @@ fn run_observed(
     root_offline: bool,
     overall: &vibe_core::progress::ProgressTask,
     scope: ConfirmationScope<'_>,
-    completion: Completion<'_>,
+    completion: Completion,
 ) -> Result<()> {
     let PreparedInstall {
         lease,
@@ -321,10 +324,7 @@ fn run_observed(
     // into the run and the callback, while this one lives to the end of the
     // command — through the final report and the trace finalisation.
     let lease_owner = lease.clone();
-    let Completion { selected, after } = completion;
-    let prompt_before = after
-        .as_ref()
-        .map(|_| crate::commands::prompt::Snapshot::of(lease.root()));
+    let Completion { selected, output } = completion;
     let mut exit = execute_after_open(
         ctx,
         Execution {
@@ -340,32 +340,10 @@ fn run_observed(
         },
         trace.recorder(),
     );
-    // Join application materialisation and remap publication BEFORE finalization
-    // or any success output, retaining this invocation's lease throughout.
-    if matches!(exit, CommandExit::Success(_) | CommandExit::Parked(_)) {
-        let prompt = prompt_before.and_then(|before| before.summary(lease_owner.root()));
-        let result = after.map_or(Ok(()), |after| after());
-        if let Err(original_error) = result {
-            let report = match exit {
-                CommandExit::Success(mut report) | CommandExit::Parked(mut report) => {
-                    if let RegisteredReportDraft::Install(draft) = &mut report {
-                        draft.ok = false;
-                        draft.delegation = None;
-                    }
-                    report
-                }
-                CommandExit::Failed { .. } => unreachable!(),
-            };
-            exit = CommandExit::Failed {
-                report,
-                original_error,
-                emit_when_trace_disabled: false,
-            };
-        } else if let CommandExit::Success(RegisteredReportDraft::Install(draft))
-        | CommandExit::Parked(RegisteredReportDraft::Install(draft)) = &mut exit
-        {
-            draft.prompt = prompt;
-        }
+    // Only successful ordinary presentation travels outward. JSON, handoffs
+    // and errors retain the adapter's original emission and exit policies.
+    if let CommandExit::Success(RegisteredReportDraft::Install(draft)) = &mut exit {
+        draft.output = output;
     }
     // Consumes the owner: finishes the index, drops the last handle (and with
     // it the cooperative lock), and returns the member to attach.

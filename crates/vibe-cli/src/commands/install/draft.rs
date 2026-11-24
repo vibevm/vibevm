@@ -38,8 +38,8 @@ pub(crate) struct InstallDraft {
     pub(crate) ok: bool,
     /// Human-only observations, excluded from the wire document.
     pub(super) human: super::observer::HumanTrailer,
-    /// This run's measured prompt outcome, never a rendering-time disk read.
-    pub(crate) prompt: Option<crate::commands::prompt::PromptSummary>,
+    /// Ordinary successful presentation handed to this request's caller.
+    pub(crate) output: Option<report::OutputSlot>,
     pub(crate) project_root: PathBuf,
     pub(crate) progress: InstallProgress,
     pub(crate) contributions: Vec<InstallContributionReport>,
@@ -64,7 +64,7 @@ impl InstallDraft {
         Self {
             ok: true,
             human: super::observer::HumanTrailer::default(),
-            prompt: None,
+            output: None,
             project_root: run.project_root,
             progress: run.progress,
             contributions,
@@ -89,7 +89,7 @@ impl InstallDraft {
         Self {
             ok: false,
             human: super::observer::HumanTrailer::default(),
-            prompt: None,
+            output: None,
             project_root: project_root.to_path_buf(),
             contributions: report::contribution_rows(&slot_reports),
             progress,
@@ -104,12 +104,22 @@ impl InstallDraft {
     pub(crate) fn defer_trailer(&mut self) -> impl FnOnce(&output::Context) + use<> {
         self.human.defer = true;
         let progress = self.progress.clone();
-        let prompt = self.prompt.take();
+        let output = self.output.take();
         let summary = self.world_summary;
         let mut human = self.human.clone();
         human.defer = false;
         move |ctx| {
-            report::render_human_progress(ctx, &progress, summary, "", &human, prompt.as_ref());
+            let final_output = report::FinalOutput {
+                progress,
+                summary,
+                human,
+                suffix: String::new(),
+            };
+            if let Some(output) = output {
+                let _ = output.set(final_output);
+            } else {
+                final_output.print(ctx, None);
+            }
         }
     }
 
@@ -158,7 +168,7 @@ impl InstallDraft {
         let progress = self.progress.clone();
         let world_summary = self.world_summary;
         let human = self.human.clone();
-        let prompt = self.prompt.clone();
+        let output = self.output.clone();
         let report = self.into_report(trace);
         if ctx.is_json() {
             return ctx.emit_json(&report);
@@ -185,14 +195,17 @@ impl InstallDraft {
         }
         render_weak_lines(ctx, &report);
         if !human.defer {
-            report::render_human_progress(
-                ctx,
-                &progress,
-                world_summary,
-                quiet_suffix,
-                &human,
-                prompt.as_ref(),
-            );
+            let final_output = report::FinalOutput {
+                progress,
+                summary: world_summary,
+                suffix: quiet_suffix.to_owned(),
+                human,
+            };
+            if let Some(output) = output {
+                let _ = output.set(final_output);
+            } else {
+                final_output.print(ctx, None);
+            }
         }
         Ok(())
     }
@@ -316,7 +329,7 @@ mod refusal_tests {
         let draft = InstallDraft {
             ok: true,
             human: super::super::observer::HumanTrailer::default(),
-            prompt: None,
+            output: None,
             project_root: PathBuf::from("/p"),
             progress: InstallProgress::fresh(vec![".".into()]),
             contributions: Vec::new(),

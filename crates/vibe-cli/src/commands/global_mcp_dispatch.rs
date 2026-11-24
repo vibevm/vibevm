@@ -73,9 +73,13 @@ pub(crate) fn run_install(
         // its other boot artifacts, and whoever builds the artifacts says
         // what it did and where (PROP-076
         // `#SYS-OPERATIONS-PATH-AND-FLAGS`).
-        return application_project::install(ctx, args, embedded_root, offline, || {
-            pin_project_remaps(ctx, &projected, &path, offline)
-        });
+        let before = crate::commands::prompt::Snapshot::of(&path);
+        let output = application_project::install(ctx, args, embedded_root, offline)?;
+        pin_project_remaps(ctx, &projected, &path, offline)?;
+        if let Some(output) = output {
+            output.print(ctx, before.summary(&path).as_ref());
+        }
+        return Ok(());
     }
     if !args
         .packages

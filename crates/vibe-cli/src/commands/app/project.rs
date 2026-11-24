@@ -59,8 +59,7 @@ pub(crate) fn install(
     args: InstallArgs,
     embedded_root: Option<PathBuf>,
     root_offline: bool,
-    after: impl FnOnce() -> Result<()>,
-) -> Result<()> {
+) -> Result<Option<install::report::FinalOutput>> {
     home::refuse_library(args.library.as_deref())?;
     let choice = InstallChoice {
         platform: args.platform.clone(),
@@ -92,24 +91,24 @@ pub(crate) fn install(
         Vec::new()
     };
     let source_policy = args.source_policy.declaration();
-    install::run_project_applications(ctx, args, embedded_root, root_offline, || {
-        if let Some(root) = home::project_at(&path)? {
-            materialise(
-                ctx,
-                &Materialise {
-                    source_policy,
-                    verb: "install",
-                    request,
-                    display: &display,
-                    consent,
-                    offline,
-                    root: &root,
-                    hidden,
-                },
-            )?;
-        }
-        after()
-    })
+    let output = install::run_project_applications(ctx, args, embedded_root, root_offline)?;
+    let Some(root) = home::project_at(&path)? else {
+        return Ok(output);
+    };
+    materialise(
+        ctx,
+        &Materialise {
+            source_policy,
+            verb: "install",
+            request,
+            display: &display,
+            consent,
+            offline,
+            root: &root,
+            hidden,
+        },
+    )?;
+    Ok(output)
 }
 
 /// `vibe update` inside a project: the ordinary project update, then the

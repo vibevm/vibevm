@@ -113,6 +113,118 @@ fn install_prints_the_system_prompt_line_before_its_trailer() {
     }
 }
 
+/// Missing remap input refuses after regeneration, outside the direct run.
+fn require_missing_remap(project: &Path) {
+    let path = project.join("vibe.toml");
+    let manifest = std::fs::read_to_string(&path).unwrap();
+    std::fs::write(
+        path,
+        format!("{manifest}\n[requires.remaps]\n'org.example/missing'='=1.0.0'\n"),
+    )
+    .unwrap();
+}
+
+/// Public post-install refusal using only synthetic local inputs.
+fn refusing_install(user: &UserScratch, project: &Path, flags: &[&str]) -> std::process::Output {
+    user.vibe()
+        .env("HOME", &user.settings)
+        .env("VIBE_NO_DEFAULT_REGISTRY", "1")
+        .args(["install", "--offline", "--path"])
+        .arg(project)
+        .args(flags)
+        .output()
+        .unwrap()
+}
+
+#[test]
+fn remap_pin_refusal_discards_only_the_deferred_success_output() {
+    for quiet in [false, true] {
+        let (user, project) = opted_in();
+        require_missing_remap(project.path());
+        let flags = if quiet { vec!["--quiet"] } else { vec![] };
+        let output = refusing_install(&user, project.path(), &flags);
+        let stdout = String::from_utf8_lossy(&output.stdout);
+        let stderr = String::from_utf8_lossy(&output.stderr);
+        assert!(!output.status.success(), "{stdout}{stderr}");
+        assert!(stderr.contains("org.example/missing"), "{stderr}");
+        assert!(project.path().join(common::boot_rel("SYSTEM.md")).is_file());
+        assert!(!stdout.contains("system prompt"), "{stdout}");
+        assert!(!stdout.contains('✻'), "no false final success: {stdout}");
+        assert!(!stdout.contains("vibe install:"), "{stdout}");
+    }
+}
+
+#[test]
+fn json_root_is_emitted_before_a_later_remap_pin_refusal() {
+    let (user, project) = opted_in();
+    require_missing_remap(project.path());
+    let output = refusing_install(&user, project.path(), &["--json"]);
+    assert!(!output.status.success());
+    let root = common::hosted_slot::sole_root(&output.stdout, "install");
+    assert_eq!(
+        root["ok"], true,
+        "direct run completed before outer refusal"
+    );
+    assert_eq!(root["complete"], true);
+    assert!(root["delegation"].is_null());
+    assert!(String::from_utf8_lossy(&output.stderr).contains("org.example/missing"));
+}
+
+#[test]
+fn a_parked_handoff_survives_later_remap_pin_refusal() {
+    for json in [false, true] {
+        let (user, project) = opted_in();
+        let registry = tempfile::tempdir().unwrap();
+        common::hosted_slot::publish_slot_agent(registry.path(), "slot:pre-install", "0.1.0");
+        common::write_project_with_per_package_registry(
+            project.path(),
+            &common::hosted_slot::registry_url(registry.path()),
+        );
+        require_missing_remap(project.path());
+        let mut flags = vec!["org.demo/tools", "--agent-mode", "agent", "--assume-yes"];
+        if json {
+            flags.push("--json");
+        }
+        let manifest = std::fs::read_to_string(project.path().join("vibe.toml")).unwrap();
+        let registry_url = common::hosted_slot::registry_url(registry.path());
+        assert!(registry_url.starts_with("git+file:///"));
+        assert!(manifest.contains(&format!("url = \"{registry_url}\"")));
+        assert!(!manifest.contains("https://") && !manifest.contains("http://"));
+        // Initial acquisition uses the canonical hosted local-Git route, not
+        // offline catalog lookup. No provider or remote registry is configured.
+        let output = user
+            .vibe()
+            .env("HOME", &user.settings)
+            .env("VIBE_NO_DEFAULT_REGISTRY", "1")
+            .args(["install", "--path"])
+            .arg(project.path())
+            .args(&flags)
+            .output()
+            .unwrap();
+        let stdout = String::from_utf8_lossy(&output.stdout);
+        let stderr = String::from_utf8_lossy(&output.stderr);
+        assert!(!output.status.success(), "{stdout}{stderr}");
+        assert!(stderr.contains("org.example/missing"), "{stderr}");
+        if json {
+            let root = common::hosted_slot::sole_document(&output.stdout);
+            assert_eq!(root["ok"], true);
+            assert_eq!(root["complete"], false);
+            assert!(
+                root["delegation"]["resume"]
+                    .as_str()
+                    .unwrap()
+                    .contains("install")
+            );
+            assert!(!root["delegation"]["tasks"].as_array().unwrap().is_empty());
+        } else {
+            assert!(stdout.contains("parked for the hosting agent"), "{stdout}");
+            assert!(stdout.contains("resume with"), "{stdout}");
+            assert!(!stdout.contains('✻'), "{stdout}");
+        }
+        assert!(project.path().join(".vibe/lifecycle.toml").is_file());
+    }
+}
+
 #[test]
 fn quiet_install_is_one_line_with_the_prompt_status() {
     let (user, project) = opted_in();

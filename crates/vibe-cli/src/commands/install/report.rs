@@ -13,6 +13,37 @@ use crate::output;
 
 use super::WorldCallbackSummary;
 
+/// A request-local handoff, populated only after successful report emission.
+pub(crate) type OutputSlot = std::sync::Arc<std::sync::OnceLock<FinalOutput>>;
+
+/// Owned final presentation, with no lease, command exit or wire document.
+#[derive(Debug)]
+#[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-067#trailer")]
+pub(crate) struct FinalOutput {
+    pub(super) progress: vibe_install::InstallProgress,
+    pub(super) summary: WorldCallbackSummary,
+    pub(super) human: super::observer::HumanTrailer,
+    pub(super) suffix: String,
+}
+
+impl FinalOutput {
+    /// Print only after the caller's remaining fallible work has succeeded.
+    pub(crate) fn print(
+        self,
+        ctx: &output::Context,
+        prompt: Option<&crate::commands::prompt::PromptSummary>,
+    ) {
+        render_human_progress(
+            ctx,
+            &self.progress,
+            self.summary,
+            &self.suffix,
+            &self.human,
+            prompt,
+        );
+    }
+}
+
 /// The quiet-summary account of slot rows that failed without stopping the
 /// command, shared by the install-family commands that report them.
 pub(crate) struct LifecycleHookView<'a>(&'a [SlotLifecycleReport]);
