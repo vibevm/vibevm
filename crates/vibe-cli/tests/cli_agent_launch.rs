@@ -425,7 +425,9 @@ fn an_unverified_codex_version_launches_without_the_carrier_and_warns() {
         .agent_reporting(&["work-codex"], "codex-cli 0.168.0")
         .assert()
         .success()
-        .stderr(predicate::str::contains("warning: vibe cannot deliver"))
+        .stderr(predicate::str::contains(
+            "starts without this project's boot lane",
+        ))
         .stderr(predicate::str::contains("0.168.0"))
         .stderr(predicate::str::contains("0.167.0"))
         .stderr(predicate::str::contains("harness_version"))
@@ -449,8 +451,11 @@ fn the_soft_launch_warning_survives_quiet() {
         .args(["--quiet", "agent", "work-codex"])
         .assert()
         .success()
-        .stderr(predicate::str::contains("warning: vibe cannot deliver"))
-        .stderr(predicate::str::contains("`--quiet` does not suppress this"));
+        .stderr(predicate::str::contains(
+            "starts without this project's boot lane",
+        ))
+        .stderr(predicate::str::contains("warning:").not())
+        .stdout("");
     assert_eq!(machine.argv(), [""]);
 }
 
@@ -477,7 +482,9 @@ fn a_failed_build_launches_softly_and_never_delivers_the_older_lane() {
         .agent(&["claude"])
         .assert()
         .success()
-        .stderr(predicate::str::contains("warning: vibe cannot deliver"))
+        .stderr(predicate::str::contains(
+            "starts without this project's boot lane",
+        ))
         .stderr(predicate::str::contains("could not be built"))
         .stderr(predicate::str::contains("vibe prompt build"));
     assert_eq!(
@@ -503,8 +510,10 @@ fn a_directory_that_is_not_a_project_launches_softly() {
         .args(["agent", "claude", "--model", "opus"])
         .assert()
         .success()
-        .stderr(predicate::str::contains("warning: vibe cannot deliver"))
-        .stderr(predicate::str::contains("not a vibe project"));
+        .stderr(predicate::str::contains("starts without this project's boot lane"))
+        .stderr(predicate::str::contains("! claude starts without this project's boot lane: this directory is not a vibe project\n  vibe init\n"))
+        .stderr(predicate::str::contains("discovering the workspace").not())
+        .stdout("");
     assert_eq!(machine.argv(), ["--no-telemetry", "--model", "opus"]);
 }
 
@@ -548,16 +557,25 @@ fn a_user_who_verified_a_newer_codex_states_the_version_by_number() {
 
 #[test]
 fn a_codex_that_will_not_say_its_version_launches_with_a_note_and_not_a_refusal() {
-    // "Cannot tell" is not "wrong": refusing here would break every machine
-    // whose harness is reached through something that does not answer
-    // `--version`, where nothing is actually broken.
     let machine = Machine::new(WRAPPER);
-    machine
-        .agent_reporting(&["work-codex"], "")
-        .assert()
-        .success()
-        .stderr(predicate::str::contains("did not say which version"));
-    assert_eq!(machine.argv()[0], "-p");
+    for (reported, diagnosis, absent) in [
+        ("", "did not say which version", "unparsable version"),
+        (
+            "not-a-version",
+            "codex --version returned an unparsable version",
+            "did not say which version",
+        ),
+    ] {
+        machine
+            .agent_reporting(&["work-codex"], reported)
+            .assert()
+            .success()
+            .stdout("")
+            .stderr(predicate::str::contains(diagnosis))
+            .stderr(predicate::str::contains(absent).not())
+            .stderr(predicate::str::contains("could not be asked").not());
+        assert_eq!(machine.argv()[0], "-p");
+    }
 }
 
 #[test]
@@ -821,15 +839,7 @@ fn a_resumed_claude_session_is_told_it_keeps_its_old_lane() {
         .stderr(predicate::str::contains("keeps the boot lane").not());
 }
 
-/// OpenCode — a launcher whose carrier is a per-launch configuration layer
-/// declaring vibe's own primary agent (`#SYS-OPENCODE`,
-/// `#SYS-SUPPLIED-BASE`).
-///
-/// The slot's cost is that it **replaces** OpenCode's own prompt, so the
-/// launch supplies that prompt from versioned data with provenance in
-/// OpenCode's own package. Everything these tests pin follows from that: the
-/// lookup, the gates that refuse a set that has not been proved, and the one
-/// argument of the user's that would silently bypass the whole thing.
+/// OpenCode's versioned base replaces its own prompt (#SYS-SUPPLIED-BASE).
 #[test]
 fn opencode_is_a_builtin_launcher() {
     let machine = Machine::new(WRAPPER);
@@ -853,7 +863,7 @@ fn opencode_launches_with_the_carrier_in_the_environment_and_one_flag() {
         .success()
         .stderr(predicate::str::contains("OPENCODE_CONFIG_CONTENT"))
         .stderr(predicate::str::contains("qwen3.8-27b"))
-        .stderr(predicate::str::contains("warning: vibe cannot deliver").not());
+        .stderr(predicate::str::contains("starts without this project's boot lane").not());
     assert_eq!(machine.argv(), ["--standalone", "run", "hello"]);
 
     let carrier = machine.carrier();
@@ -914,7 +924,9 @@ fn a_machine_with_no_set_for_its_opencode_launches_softly_and_names_both_places(
         )
         .assert()
         .success()
-        .stderr(predicate::str::contains("warning: vibe cannot deliver"))
+        .stderr(predicate::str::contains(
+            "starts without this project's boot lane",
+        ))
         .stderr(predicate::str::contains(SHIM_OPENCODE_VERSION))
         .stderr(predicate::str::contains(format!(
             "no prompt-base set for opencode {SHIM_OPENCODE_VERSION} is on this machine"
@@ -945,7 +957,9 @@ fn an_unverified_set_launches_softly_and_points_at_the_sync_tool() {
         )
         .assert()
         .success()
-        .stderr(predicate::str::contains("warning: vibe cannot deliver"))
+        .stderr(predicate::str::contains(
+            "starts without this project's boot lane",
+        ))
         .stderr(predicate::str::contains("is not verified"))
         .stderr(predicate::str::contains("opencode-bases"))
         .stderr(predicate::str::contains("never hand-edit"));
@@ -966,7 +980,9 @@ fn a_set_that_is_not_what_its_provenance_claims_launches_softly() {
         )
         .assert()
         .success()
-        .stderr(predicate::str::contains("warning: vibe cannot deliver"))
+        .stderr(predicate::str::contains(
+            "starts without this project's boot lane",
+        ))
         .stderr(predicate::str::contains("recorded digest"))
         .stderr(predicate::str::contains("not what its provenance claims"));
     assert_eq!(machine.argv(), [""]);
@@ -989,7 +1005,9 @@ fn a_launch_whose_model_nobody_states_launches_softly_rather_than_guessing() {
         )
         .assert()
         .success()
-        .stderr(predicate::str::contains("warning: vibe cannot deliver"))
+        .stderr(predicate::str::contains(
+            "starts without this project's boot lane",
+        ))
         .stderr(predicate::str::contains("model could not be determined"))
         .stderr(predicate::str::contains("silently"));
     assert_eq!(machine.argv(), [""]);
@@ -1022,7 +1040,7 @@ fn a_read_delivery_opencode_starts_unchanged_and_names_the_carrier_anyway() {
         .success()
         .stderr(predicate::str::contains("no slot flag is passed"))
         .stderr(predicate::str::contains("OPENCODE_CONFIG_CONTENT"))
-        .stderr(predicate::str::contains("warning: vibe cannot deliver").not());
+        .stderr(predicate::str::contains("starts without this project's boot lane").not());
     assert_eq!(machine.argv(), ["run", "hello"]);
     assert!(machine.carrier().is_empty());
 }
@@ -1193,7 +1211,7 @@ fn qwen_defaults_to_launch_and_delivers_one_environment_path() {
         // The session shape this launch classified: `-p` is one
         // non-interactive turn, whatever the terminal says.
         .stderr(predicate::str::contains("headless session shape"))
-        .stderr(predicate::str::contains("warning: vibe cannot deliver").not());
+        .stderr(predicate::str::contains("starts without this project's boot lane").not());
     // No flag at all: the carrier is the variable, and the user's own
     // arguments reach the harness unchanged.
     assert_eq!(machine.argv(), ["-p", "hello"]);
@@ -1251,7 +1269,9 @@ fn an_unverified_qwen_launches_softly_naming_both_versions() {
         .agent_reporting(&["qwen", "-p", "hello"], "0.28.0")
         .assert()
         .success()
-        .stderr(predicate::str::contains("warning: vibe cannot deliver"))
+        .stderr(predicate::str::contains(
+            "starts without this project's boot lane",
+        ))
         .stderr(predicate::str::contains("0.28.0"))
         .stderr(predicate::str::contains(SHIM_QWEN_REPORTS))
         .stderr(predicate::str::contains("qwen-identity-prove.sh"));
@@ -1280,7 +1300,9 @@ fn an_argument_that_would_defeat_the_carrier_launches_softly_rather_than_refusin
         qwened(&machine, &["qwen", argument, "-p", "hello"])
             .assert()
             .success()
-            .stderr(predicate::str::contains("warning: vibe cannot deliver"))
+            .stderr(predicate::str::contains(
+                "starts without this project's boot lane",
+            ))
             .stderr(predicate::str::contains(said));
         assert_eq!(machine.argv(), [argument, "-p", "hello"]);
     }
@@ -1295,7 +1317,9 @@ fn an_argument_that_would_defeat_the_carrier_launches_softly_rather_than_refusin
         .assert()
         .success()
         .stderr(predicate::str::contains("QWEN_SYSTEM_MD"))
-        .stderr(predicate::str::contains("warning: vibe cannot deliver"));
+        .stderr(predicate::str::contains(
+            "starts without this project's boot lane",
+        ));
 }
 
 #[test]
@@ -1349,7 +1373,7 @@ fn qwen_in_read_delivery_starts_unchanged_naming_the_carrier_and_the_closed_slot
         .stderr(predicate::str::contains("128 KiB"))
         // `read` is a declaration, not a failure: the router is doing the
         // work by design, so this is a note and not a soft launch.
-        .stderr(predicate::str::contains("warning: vibe cannot deliver").not());
+        .stderr(predicate::str::contains("starts without this project's boot lane").not());
     assert_eq!(machine.argv(), ["-p", "hello"]);
 }
 
@@ -1401,26 +1425,10 @@ fn printing_flags_for_qwen_prints_the_assignment_or_the_reason() {
         ));
 }
 
-/// The real offline proof, as an **opt-in** test.
-///
-/// **Why it is gated and not simply a test.** It needs an installed OpenCode
-/// binary, a published prompt-base set outside this repository, `python3`,
-/// `bash`, a free loopback port and about five minutes; a suite that needed
-/// any of those would stop being a suite. So the mechanism is pinned by the
-/// shim tests above — over a fixture whose text nobody else owns — and *this*
-/// one exists so the real thing can be run on demand, by the one command that
-/// already knows how:
-///
-/// ```text
-/// VIBE_OPENCODE_PROVE=1 \
-/// VIBE_OPENCODE_SAMPLE=/tmp/sample \
-/// VIBE_OPENCODE_BASES=/path/to/vibe-pkg-opencode \
-///   cargo test -p vibe-cli --test cli_agent_launch -- --ignored opencode_prove
-/// ```
-///
-/// The sample is built once by `campaigns/sys-prompt-2026-11/live/
-/// make-sample.sh <dir> 202349`. The proof calls no model and reaches nothing
-/// but `127.0.0.1`.
+/// Opt-in offline OpenCode proof (no model; loopback only).
+/// Requires an installed harness, published bases, python3, bash and ~5 minutes.
+/// Set VIBE_OPENCODE_PROVE, VIBE_OPENCODE_SAMPLE and VIBE_OPENCODE_BASES;
+/// run this ignored test with the opencode_prove filter.
 #[test]
 #[ignore = "needs an installed OpenCode, a published prompt-base set and ~5 minutes"]
 fn opencode_prove_runs_the_real_offline_capture() {
@@ -1457,22 +1465,9 @@ fn opencode_prove_runs_the_real_offline_capture() {
     assert!(report.contains("VERDICT: PASS"), "{report}");
 }
 
-/// The real offline Qwen proof, as an **opt-in** test.
-///
-/// Gated for the reason the OpenCode one is: it needs an installed Qwen
-/// Code, `bwrap`, `python3`, a pseudo-terminal, a free loopback port and
-/// several minutes. The mechanism is pinned by the shim tests above — over a
-/// fixture package whose text nobody else owns — and this exists so the real
-/// thing can be run on demand, by the one command that already knows how:
-///
-/// ```text
-/// VIBE_QWEN_PROVE=1 VIBE_QWEN_SAMPLE=/tmp/sample \
-///   cargo test -p vibe-cli --test cli_agent_launch -- --ignored qwen_identity_prove
-/// ```
-///
-/// The sample is built once by `campaigns/sys-prompt-2026-11/live/
-/// make-sample.sh <dir> 202349`. The proof calls no model and reaches
-/// nothing but `127.0.0.1`.
+/// Opt-in offline Qwen proof (no model; loopback only).
+/// Requires an installed harness, bwrap, python3, a PTY and several minutes.
+/// Set VIBE_QWEN_PROVE and VIBE_QWEN_SAMPLE; run the ignored qwen_identity_prove test.
 #[test]
 #[ignore = "needs an installed Qwen Code, bubblewrap and several minutes"]
 fn qwen_identity_prove_runs_the_real_offline_capture() {

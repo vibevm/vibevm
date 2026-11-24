@@ -156,13 +156,20 @@ pub(crate) fn gate(
             CarrierVerdict::Unverified { installed } => {
                 Gate::Undeliverable(unverified(name, &installed))
             }
-            CarrierVerdict::Unknown { reason } => Gate::noting(format!(
-                "this machine's Codex did not say which version it is ({reason}), so the \
-                 profile carrier is unverified here; vibe verified it on \
-                 {CODEX_VERIFIED_VERSION}. If `codex --version` differs from that, the lane \
-                 may silently not arrive — check with `codex debug prompt-input`, which calls \
-                 no model"
-            )),
+            CarrierVerdict::Unknown { reason } => {
+                let diagnosis = if reported.trim().is_empty() {
+                    "this machine's Codex did not say which version it is"
+                } else {
+                    "codex --version returned an unparsable version"
+                };
+                Gate::noting(format!(
+                    "{diagnosis} ({reason}), so the \
+                     profile carrier is unverified here; vibe verified it on \
+                     {CODEX_VERIFIED_VERSION}. If `codex --version` differs from that, the lane \
+                     may silently not arrive — check with `codex debug prompt-input`, which calls \
+                     no model"
+                ))
+            }
         },
         Declared::Unreachable(reason) => Gate::noting(format!(
             "this machine's Codex could not be asked its version ({reason}), so the profile \
@@ -412,5 +419,47 @@ fn declared_or_probed_for(kind: HarnessKind, launcher: Option<&Launcher>) -> Dec
             }
         }
         Err(error) => Declared::Unreachable(format!("`{program} --version`: {error}")),
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn codex_probe_start_failure_is_not_a_parse_failure() {
+        let temp = tempfile::tempdir().unwrap();
+        let settings = SettingsRoot::new(&temp.path().join("settings"));
+        let program = temp.path().join("nonexistent-codex");
+        assert!(program.is_absolute() && !program.exists());
+        let launcher = Launcher {
+            name: "missing-codex".to_owned(),
+            kind: HarnessKind::Codex,
+            command: vec![program.display().to_string()],
+            config_dir: None,
+            harness_version: None,
+            source: "fixture".to_owned(),
+        };
+        let result = gate(
+            HarnessKind::Codex,
+            Some(&launcher),
+            &GateRequest {
+                settings: &settings,
+                project_root: temp.path(),
+                lane: &temp.path().join("lane.md"),
+                launch_args: &[],
+            },
+        )
+        .unwrap();
+        let Gate::Deliver { notes, .. } = result else {
+            panic!("an unreachable version probe changed the carrier verdict");
+        };
+        assert_eq!(notes.len(), 1);
+        assert!(
+            notes[0].contains("could not be asked its version"),
+            "{notes:?}"
+        );
+        assert!(!notes[0].contains("unparsable"), "{notes:?}");
+        assert!(!notes[0].contains("did not say which version"), "{notes:?}");
     }
 }
