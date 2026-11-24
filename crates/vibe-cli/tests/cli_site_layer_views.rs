@@ -157,6 +157,11 @@ fn show_config_lists_every_layer_and_the_site_profile() {
         .output()
         .unwrap();
     let text = String::from_utf8_lossy(&text.stdout);
-    assert!(text.contains("source: site-profile.toml"), "{text}");
-    assert!(text.contains("(applied: corp-site)"), "{text}");
+    assert!(text.contains("[site-profile.toml]"), "{text}");
+    assert!(
+        text.lines().any(|line| line.trim_start().starts_with("site profile")
+            && line.contains("corp-site")
+            && line.trim_end().ends_with("[applied]")),
+        "{text}"
+    );
 }
