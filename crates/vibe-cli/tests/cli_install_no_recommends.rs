@@ -174,6 +174,10 @@ fn a_recommended_package_is_installed_visible_to_its_recommender_and_never_a_roo
         "the install report names what the recommendation installed:\n{stdout}"
     );
     assert!(
+        stdout.contains("── closure diff "),
+        "the diff opens with a rule:\n{stdout}"
+    );
+    assert!(
         stdout.contains("org.vibevm.fixture/hint"),
         "and reports the suggestion it installs nowhere:\n{stdout}"
     );
@@ -226,7 +230,9 @@ fn an_unsatisfiable_or_conflicting_recommendation_warns_and_is_skipped() {
         let stdout = install(&user, project.path(), &registry, Some(&package), false);
 
         assert!(
-            stdout.contains(&format!("recommends `org.vibevm.fixture/{companion}`")),
+            stdout.contains(&format!(
+                "org.vibevm.fixture/{companion} not installed · recommended by "
+            )),
             "the skip is a named warning, not silence:\n{stdout}"
         );
         assert!(
