@@ -31,15 +31,7 @@ fn invoke(root: &Path, source: &str, target: &str, json: bool) -> Output {
     command
         .args(["registry", "mirror", source, "--into", target, "--dry-run"])
         .output()
-        .unwrap()
-}
-
-fn text(output: &Output) -> String {
-    format!(
-        "{}{}",
-        String::from_utf8_lossy(&output.stdout),
-        String::from_utf8_lossy(&output.stderr)
-    )
+        .unwrap_or_else(|_| panic!("fixture CLI could not be started"))
 }
 
 fn fixture(root: &Path, policy: &str, rows: &str) {
@@ -59,6 +51,12 @@ fn local_row(root: &Path, name: &str, directory: &str) -> String {
     format!("[[registry]]\nname='{name}'\ntype='localdir'\nurl='{address}'\n")
 }
 
+// Never include captured output or parsed response values in assertion failures.
+fn error_record(output: &Output) -> serde_json::Value {
+    serde_json::from_slice(&output.stderr)
+        .unwrap_or_else(|_| panic!("fixture error record was not valid JSON"))
+}
+
 #[test]
 #[specmark::spec(
     verifies = "spec://org.vibevm.core/vibevm/common/PROP-073#SOURCE-POLICY"
@@ -75,33 +73,34 @@ fn mirror_source_is_checked_before_target() {
     // An invalid target spelling proves admission precedes even target resolution.
     let unusable = "https://[invalid-target";
     let excluded = invoke(root, "gh", unusable, false);
-    assert_eq!(excluded.status.code(), Some(1), "{}", text(&excluded));
-    let shown = text(&excluded);
-    assert!(shown.contains("source_policy_excluded  registry gh is disabled by the source policy [hosting github]"), "{shown}");
-    assert!(shown.contains("mirroring it would read https://github.com/vibevm, which exclude_hosting forbids"), "{shown}");
-    assert!(shown.contains("vibe registry list"), "{shown}");
-    assert!(shown.contains("spec://org.vibevm.core/vibevm/common/PROP-073#SOURCE-POLICY"), "{shown}");
-    assert!(excluded.stdout.is_empty(), "{shown}");
-    assert!(!shown.contains("Reading the target"), "{shown}");
-    assert!(!root.join("target/_index").exists());
+    assert!(excluded.status.code() == Some(1), "excluded source status mismatch");
+    let shown = String::from_utf8_lossy(&excluded.stderr);
+    assert!(shown.contains("source_policy_excluded  registry gh is disabled by the source policy [hosting github]"), "missing policy refusal headline");
+    assert!(shown.contains("configured source https://github.com/vibevm is excluded by exclude_hosting selector github"), "missing configured-source explanation");
+    assert!(!shown.contains("would read"), "configured source misrepresented as transport endpoint");
+    assert!(shown.contains("vibe registry list"), "missing policy refusal fix");
+    assert!(shown.contains("spec://org.vibevm.core/vibevm/common/PROP-073#SOURCE-POLICY"), "missing policy reference");
+    assert!(excluded.stdout.is_empty(), "excluded source produced progress output");
+    assert!(!shown.contains("Reading the target"), "target was read before admission");
+    assert!(!root.join("target/_index").exists(), "target index was created");
 
     let unknown = invoke(root, "https://github.com/vibevm", unusable, false);
-    assert_eq!(unknown.status.code(), Some(1), "{}", text(&unknown));
-    let shown = text(&unknown);
-    assert!(shown.contains("registry_not_found  no registry named https://github.com/vibevm"), "{shown}");
-    assert!(shown.contains("configured: corp · mirror · gh"), "{shown}");
-    assert!(shown.contains("vibe registry add <name> https://github.com/vibevm"), "{shown}");
-    assert!(unknown.stdout.is_empty(), "{shown}");
+    assert!(unknown.status.code() == Some(1), "unknown source status mismatch");
+    let shown = String::from_utf8_lossy(&unknown.stderr);
+    assert!(shown.contains("registry_not_found  no registry named https://github.com/vibevm"), "missing unknown source headline");
+    assert!(shown.contains("configured: corp · mirror · gh"), "missing configured registry list");
+    assert!(shown.contains("vibe registry add <name> https://github.com/vibevm"), "missing unknown source fix");
+    assert!(unknown.stdout.is_empty(), "unknown source produced progress output");
 
     let hostile = invoke(root, "https://fixture:secret@example.invalid/\u{1b}[31m", unusable, true);
-    assert_eq!(hostile.status.code(), Some(1), "{}", text(&hostile));
-    let record: serde_json::Value = serde_json::from_slice(&hostile.stderr).unwrap();
-    assert_eq!(record["ok"], false);
-    let error = record["error"].as_str().unwrap();
-    assert!(error.starts_with("registry_not_found: "), "{record}");
-    assert!(!error.contains("secret"), "{record}");
-    assert!(!error.contains('\u{1b}'), "{record}");
-    assert!(hostile.stdout.is_empty());
+    assert!(hostile.status.code() == Some(1), "hostile source status mismatch");
+    let record = error_record(&hostile);
+    assert!(record["ok"] == false, "hostile source record was not a refusal");
+    let error = record["error"].as_str().unwrap_or_else(|| panic!("missing hostile source error"));
+    assert!(error.starts_with("registry_not_found: "), "hostile source error code mismatch");
+    assert!(!error.contains("secret"), "credential redaction failed");
+    assert!(!error.contains('\u{1b}'), "terminal control escaping failed");
+    assert!(hostile.stdout.is_empty(), "hostile source produced progress output");
 
     let other = format!(
         "{}[[registry]]\nname='blocked'\ntype='git'\nurl='https://fixture:secret@blocked.example.invalid/org'\n",
@@ -109,26 +108,30 @@ fn mirror_source_is_checked_before_target() {
     );
     fixture(root, "[source_policy]\nexclude_hosting=['host:blocked.example.invalid']\n", &other);
     let excluded = invoke(root, "blocked", unusable, true);
-    assert_eq!(excluded.status.code(), Some(1), "{}", text(&excluded));
-    let record: serde_json::Value = serde_json::from_slice(&excluded.stderr).unwrap();
-    assert_eq!(record["ok"], false);
-    let error = record["error"].as_str().unwrap();
-    assert!(error.starts_with("source_policy_excluded: "), "{record}");
-    assert!(error.contains("hosting host:blocked.example.invalid"), "{record}");
-    assert!(error.contains("blocked.example.invalid/org"), "{record}");
-    assert!(!error.contains("secret"), "{record}");
-    assert!(!error.contains("raw.githubusercontent.com"), "{record}");
-    assert!(excluded.stdout.is_empty());
+    assert!(excluded.status.code() == Some(1), "blocked source status mismatch");
+    let record = error_record(&excluded);
+    assert!(record["ok"] == false, "blocked source record was not a refusal");
+    let error = record["error"].as_str().unwrap_or_else(|| panic!("missing blocked source error"));
+    assert!(error.starts_with("source_policy_excluded: "), "blocked source error code mismatch");
+    assert!(error.contains("hosting host:blocked.example.invalid"), "missing exact-host rule");
+    assert!(error.contains("configured source "), "missing configured-source meaning");
+    assert!(error.contains("blocked.example.invalid/org"), "missing configured source address");
+    assert!(error.contains("is excluded by exclude_hosting selector host:blocked.example.invalid"), "missing configured-source exclusion explanation");
+    assert!(!error.contains("would read"), "configured source misrepresented as transport endpoint");
+    assert!(!error.contains("secret"), "credential redaction failed");
+    assert!(!error.contains("raw.githubusercontent.com"), "invented transport endpoint");
+    assert!(excluded.stdout.is_empty(), "blocked source produced progress output");
 
     // A local source is not hosting: the same exclusion leaves it admitted.
     fixture(root, "[source_policy]\nexclude_hosting=['github']\n", &rows);
     let permitted = invoke(root, "corp", "mirror", true);
-    assert!(permitted.status.success(), "{}", text(&permitted));
+    assert!(permitted.status.success(), "permitted local source failed");
     let report: vibe_wire::generated::registry_mirror_report::RegistryMirrorReport =
-        serde_json::from_slice(&permitted.stdout).unwrap();
-    assert!(report.ok);
-    assert_eq!(report.source, "corp");
-    assert!(report.dry_run);
-    assert!(report.versions.is_empty());
-    assert!(!root.join("target/_index").exists());
+        serde_json::from_slice(&permitted.stdout)
+            .unwrap_or_else(|_| panic!("local source report was not valid JSON"));
+    assert!(report.ok, "local source report failed");
+    assert!(report.source == "corp", "local source identity mismatch");
+    assert!(report.dry_run, "local source report was not a dry run");
+    assert!(report.versions.is_empty(), "empty local source offered versions");
+    assert!(!root.join("target/_index").exists(), "dry run created a target index");
 }

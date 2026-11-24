@@ -41,8 +41,8 @@ pub(super) fn resolve(
             "source_policy_excluded: registry {name} is disabled by the source policy \
              [hosting {selector}] \
              (violates spec://org.vibevm.core/vibevm/common/PROP-073#SOURCE-POLICY; \
-             fix: `vibe registry list`): mirroring it would read {endpoint}, \
-             which exclude_hosting forbids"
+             fix: `vibe registry list`): configured source {endpoint} is excluded by \
+             exclude_hosting selector {selector}"
         ));
     }
     Ok(source.clone())
