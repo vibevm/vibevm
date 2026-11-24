@@ -116,10 +116,13 @@ impl ConfirmGate for CliConfirmGate<'_> {
             return Ok(());
         }
         if self.ordinary_explicit && !self.assume_yes {
-            if self.ctx.is_json() || self.ctx.is_unattended() || !console::user_attended() {
+            if self.ctx.is_json() || self.ctx.is_unattended() {
                 bail!(
                     "ordinary submitted install requires explicit --assume-yes or attended apply confirmation"
                 );
+            }
+            if !console::user_attended() {
+                return Err(no_terminal_refusal());
             }
             return match self.ask_apply(packages) {
                 Ok(true) => Ok(()),
@@ -137,9 +140,7 @@ impl ConfirmGate for CliConfirmGate<'_> {
             return Ok(());
         }
         if !console::user_attended() {
-            bail!(
-                "no TTY available for confirmation; re-run with `--assume-yes` to apply this plan non-interactively"
-            );
+            return Err(no_terminal_refusal());
         }
         let approved = self
             .ask_apply(packages)
@@ -150,6 +151,17 @@ impl ConfirmGate for CliConfirmGate<'_> {
             Err(InstallError::UserDeclined.into())
         }
     }
+}
+
+/// The refusal of a run that needs a yes and has nobody to ask (PROP-067
+/// `#refusal`): a stable code, the fix, the workflow it belongs to.
+#[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-067#refusal")]
+fn no_terminal_refusal() -> anyhow::Error {
+    anyhow::anyhow!(
+        "confirmation_required: this plan needs a yes, and this run has nobody to ask (violates \
+         spec://org.vibevm.core/vibevm/VIBEVM-SPEC#install-workflow-in-detail; fix: rerun the same \
+         command with --assume-yes)"
+    )
 }
 
 /// The install question's default: the reader ran install to install.
@@ -183,6 +195,40 @@ mod tests {
     use super::*;
     use crate::cli::AgentModeArg;
     use rust_ai_native_env_audit::EnvGuard;
+
+    #[test]
+    fn no_terminal_refusal_is_confirmation_required() {
+        let refusal = crate::output::refusal_of(&no_terminal_refusal());
+        assert_eq!(refusal.code.as_deref(), Some("confirmation_required"));
+        assert_eq!(
+            refusal.headline,
+            "this plan needs a yes, and this run has nobody to ask"
+        );
+        assert_eq!(refusal.fix, ["rerun the same command with --assume-yes"]);
+        assert_eq!(
+            refusal.see.as_deref(),
+            Some("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#install-workflow-in-detail")
+        );
+    }
+
+    #[test]
+    fn ordinary_json_and_unattended_refusals_keep_their_admission_diagnostic() {
+        let mut env = EnvGuard::lock();
+        env.unset("VIBE_UNATTENDED");
+        let root = tempfile::tempdir().unwrap();
+        for (json, unattended) in [(true, false), (false, true)] {
+            let ctx = output::Context::from_flags(false, json, None, unattended, AgentModeArg::Cli);
+            let gate = CliConfirmGate::new(&ctx, false, root.path()).with_ordinary_explicit(true);
+            assert_eq!(
+                gate.confirm_install(1).unwrap_err().to_string(),
+                "ordinary submitted install requires explicit --assume-yes or attended apply confirmation"
+            );
+            CliConfirmGate::new(&ctx, true, root.path())
+                .with_ordinary_explicit(true)
+                .confirm_install(1)
+                .unwrap();
+        }
+    }
 
     #[test]
     fn personal_project_scope_does_not_enable_application_admission() {

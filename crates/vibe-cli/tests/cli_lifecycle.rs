@@ -376,7 +376,7 @@ fn outer_clean_consent_does_not_silently_approve_the_child_install() {
         .assert()
         .failure()
         .stderr(predicates::str::contains(
-            "no TTY available for confirmation",
+            "this plan needs a yes, and this run has nobody to ask",
         ));
     assert!(
         !project
@@ -385,6 +385,83 @@ fn outer_clean_consent_does_not_silently_approve_the_child_install() {
             .exists(),
         "the outer clean consent must not become install consent",
     );
+}
+
+#[test]
+#[verifies("spec://org.vibevm.core/vibevm/common/PROP-067#refusal")]
+fn direct_install_without_terminal_requires_confirmation() {
+    let user = UserScratch::new();
+    let home = tempfile::tempdir().unwrap();
+    let project = tempfile::tempdir().unwrap();
+    let registry = tempfile::tempdir().unwrap();
+    let package = registry.path().join("org.example/consent/v1.0.0");
+    fs::create_dir_all(&package).unwrap();
+    fs::write(
+        package.join("vibe.toml"),
+        "[package]\nname='consent'\ngroup='org.example'\nkind='flow'\nversion='1.0.0'\nlicense='UPL-1.0'\n",
+    ).unwrap();
+    user.vibe()
+        .env("HOME", home.path())
+        .args([
+            "init",
+            "--no-registry",
+            "--author",
+            "Consent Test",
+            "--path",
+        ])
+        .arg(project.path())
+        .assert()
+        .success();
+    fs::write(
+        user.settings.join("registry.toml"),
+        format!(
+            "[[registry]]\nname='local'\ntype='localdir'\nurl={}\n",
+            toml::Value::String(format!("file://{}", registry.path().display()))
+        ),
+    )
+    .unwrap();
+    let paths = ["vibe.toml", "vibe.lock"];
+    let before = paths.map(|path| fs::read(project.path().join(path)).ok());
+    let index_before = fs::read(project.path().join(common::index_rel())).ok();
+    let deps = project.path().join(common::deps_root());
+    let deps_before = deps.exists();
+    let assert = user
+        .vibe()
+        .env("HOME", home.path())
+        .env_remove("VIBE_UNATTENDED")
+        .args(["install", "org.example/consent", "--path"])
+        .arg(project.path())
+        .write_stdin("yes\n")
+        .assert()
+        .failure();
+    let stderr = String::from_utf8_lossy(&assert.get_output().stderr);
+    assert!(
+        stderr.contains(
+            "confirmation_required  this plan needs a yes, and this run has nobody to ask"
+        ),
+        "{stderr}"
+    );
+    assert!(
+        stderr.contains("fix   rerun the same command with --assume-yes"),
+        "{stderr}"
+    );
+    assert!(
+        stderr.contains("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#install-workflow-in-detail"),
+        "{stderr}"
+    );
+    for (path, bytes) in paths.into_iter().zip(before) {
+        assert_eq!(fs::read(project.path().join(path)).ok(), bytes, "{path}");
+    }
+    assert_eq!(
+        fs::read(project.path().join(common::index_rel())).ok(),
+        index_before
+    );
+    assert_eq!(
+        deps.exists(),
+        deps_before,
+        "refusal must not install dependencies"
+    );
+    assert!(!deps_before, "fresh fixture has no installed deps");
 }
 
 #[test]
