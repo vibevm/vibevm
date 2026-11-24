@@ -131,14 +131,27 @@ fn self_source_set_prints_trailer() {
     let show = ok(&vibe(&user, &["--plain", "self", "source", "show"]));
     assert!(!show.contains("release source set") && !show.contains("release source reset"), "{show}");
     assert!(!show.contains('✻') && !show.contains("\u{1b}["), "{show}");
+    let quiet_show = ok(&vibe(&user, &["--plain", "--quiet", "self", "source", "show"]));
+    assert_eq!(quiet_show, show, "quiet inspection keeps the requested source report");
     let listed = ok(&vibe(&user, &["--plain", "self", "releases"]));
     assert!(listed.starts_with("── releases at localdir ") || listed.starts_with("-- releases at localdir "), "{listed}");
     assert!(listed.contains("[self] in"), "{listed}");
     assert!(listed.contains("\n\n  1.0.13\n"), "{listed}");
+    let quiet_listed = ok(&vibe(&user, &["--plain", "--quiet", "self", "releases"]));
+    assert_eq!(quiet_listed, listed, "quiet inspection keeps the requested release list");
     let reset = ok(&vibe(&user, &["--plain", "self", "source", "reset"]));
     let trailer = reset.lines().last().unwrap();
     assert!(trailer.contains("release source reset"), "{reset}");
     assert!(trailer.ends_with(config), "{reset}");
+    let quiet_reset = ok(&vibe(&user, &["--plain", "--quiet", "self", "source", "reset"]));
+    assert_eq!(quiet_reset.lines().count(), 1, "{quiet_reset}");
+    assert!(quiet_reset.contains("release source reset"), "{quiet_reset}");
+    assert!(quiet_reset.ends_with(&format!("{config}\n")), "{quiet_reset}");
+    assert!(!quiet_reset.contains("release source  "), "{quiet_reset}");
+    assert!(!quiet.contains("release source  "), "{quiet}");
+    let document = json(&vibe(&user, &["--json", "self", "source", "reset"]));
+    assert_eq!(document["protocol"], "vibe-self-source/1");
+    assert_eq!(document["source"], "github");
 }
 
 #[test]

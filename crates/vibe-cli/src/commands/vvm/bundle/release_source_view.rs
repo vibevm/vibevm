@@ -103,7 +103,7 @@ fn show(ctx: &output::Context, effective: &EffectiveReleaseSource) -> Result<()>
         }
         None => {}
     }
-    ctx.block(&text);
+    ctx.summary(&text);
     Ok(())
 }
 
@@ -202,7 +202,9 @@ fn store(ctx: &output::Context, mut table: SelfConfig, action: &str) -> Result<(
             release_source::RELEASE_ORIGIN_ENV
         ));
     }
-    show(ctx, &resolved)?;
+    if ctx.is_json() || !ctx.is_quiet() {
+        show(ctx, &resolved)?;
+    }
     ctx.trailer_at(action, &path.display().to_string());
     Ok(())
 }
@@ -269,7 +271,7 @@ pub(in crate::commands::vvm) fn run_releases_cmd(
     if ctx.is_json() {
         return ctx.emit_json(&document);
     }
-    ctx.block(&releases_text(&document, total - shown));
+    ctx.summary(&releases_text(&document, total - shown));
     Ok(())
 }
 
