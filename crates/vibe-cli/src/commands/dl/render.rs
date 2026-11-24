@@ -10,13 +10,14 @@ use vibe_net::probe::{FailureClass, Hop, Probe};
 
 use super::report::Downloaded;
 use crate::output::Context;
-use crate::output::language::{self, Block, Cell, Glyph, Kind, List, Meta, Row, Stream, Table};
+use crate::output::language::{self, Block, Cell, Glyph, Kind, List, Meta, Row, Stream};
 
 const LIST: &str = "dl-phases";
 
 fn shown(phase: &str) -> &str {
     match phase {
         "TLS" => "tls",
+        "TLS trust" => "tls trust",
         other => other,
     }
 }
@@ -324,54 +325,6 @@ pub(super) fn done(ctx: &Context, download: &Downloaded, elapsed: Duration) {
         language::before(Stream::Err, Kind::Block)
     };
     ctx.suspend_progress(|| eprintln!("{gap}{line}"));
-}
-
-/// Plain `check: result — detail; cause; fix` lines (no terminal, NO_COLOR,
-/// `--plain`).
-pub(super) fn check_lines(rows: &[super::test_proxy::CheckRow]) -> String {
-    rows.iter()
-        .map(|row| {
-            let mut line = format!("{}: {} — {}", row.check, row.result, row.detail);
-            if let Some(cause) = &row.cause {
-                line.push_str(&format!("; cause {cause}"));
-            }
-            if let Some(fix) = &row.fix {
-                line.push_str(&format!("; fix: {fix}"));
-            }
-            line
-        })
-        .collect::<Vec<_>>()
-        .join("\n")
-}
-
-/// The failed and suspicious checks as a table with the columns `Check`,
-/// `Result`, `Cause` and `Fix` (drawn by `output::language`), on stderr.
-pub(super) fn check_table(ctx: &Context, rows: &[super::test_proxy::CheckRow]) {
-    if ctx.is_json() || ctx.is_quiet() || rows.is_empty() {
-        return;
-    }
-    let decorated = std::io::stderr().is_terminal() && language::colour_on();
-    let text = if decorated {
-        let mut table = Table::new(vec![
-            "Check".into(),
-            "Result".into(),
-            "Cause".into(),
-            "Fix".into(),
-        ]);
-        for row in rows {
-            table = table.row(vec![
-                row.check.clone(),
-                format!("{} — {}", row.result, row.detail),
-                row.cause.clone().unwrap_or_default(),
-                row.fix.clone().unwrap_or_default(),
-            ]);
-        }
-        table.render()
-    } else {
-        check_lines(rows)
-    };
-    let gap = language::before(Stream::Err, Kind::Block);
-    ctx.suspend_progress(|| eprintln!("{gap}{text}"));
 }
 
 #[cfg(test)]

@@ -3,7 +3,7 @@
 //! configuration and where it came from, the bypass list, px (present,
 //! started, `px --test`), the route, the proxy's `CONNECT` answer, TLS and
 //! the HTTP answer. It continues past a failure where the next step can
-//! still be judged, so the table shows every problem at once.
+//! still be judged, so the rows show every problem at once.
 
 use std::time::{Duration, Instant};
 
@@ -25,6 +25,7 @@ pub(super) struct CheckRow {
     pub(super) result: &'static str,
     pub(super) detail: String,
     pub(super) cause: Option<String>,
+    summary: Option<&'static str>,
     pub(super) fix: Option<String>,
     /// A failure of the proxy path (exit 21), not of the target (exit 22).
     proxy_side: bool,
@@ -37,6 +38,7 @@ impl CheckRow {
             result: "ok",
             detail: detail.into(),
             cause: None,
+            summary: None,
             fix: None,
             proxy_side: false,
         }
@@ -47,6 +49,7 @@ impl CheckRow {
             result: "fail",
             detail: detail.into(),
             cause: Some(class.code().to_owned()),
+            summary: Some(class.label()),
             fix: Some(class.fix().to_owned()),
             proxy_side: proxy,
         }
@@ -57,6 +60,7 @@ impl CheckRow {
             result: "warn",
             detail: detail.into(),
             cause: None,
+            summary: None,
             fix: Some(fix.to_owned()),
             proxy_side: false,
         }
@@ -65,6 +69,48 @@ impl CheckRow {
 
 const PROXY_PROBLEM: u8 = 21;
 const TARGET_PROBLEM: u8 = 22;
+
+/// The config row: the mode and the input that chose it, where the
+/// `[proxy]` table came from when that is another input, the extra CAs and
+/// a non-default revocation setting.
+fn config_detail(
+    mode: &str,
+    mode_origin: &str,
+    table_origin: &str,
+    extra_ca: &[std::path::PathBuf],
+    revocation: Option<String>,
+) -> String {
+    let mut text = format!("mode {mode} · {mode_origin}");
+    if table_origin != mode_origin {
+        text.push_str(&format!(" · {table_origin}"));
+    }
+    if !extra_ca.is_empty() {
+        let paths: Vec<String> = extra_ca
+            .iter()
+            .map(|path| language::short_path(&path.display().to_string()))
+            .collect();
+        text.push_str(&format!(" · extra_ca {}", paths.join(", ")));
+    }
+    if let Some(revocation) = revocation {
+        text.push_str(&format!(" · {revocation}"));
+    }
+    text
+}
+
+/// The refusal of a run whose checks failed: the first failed check names
+/// the problem and its detail is the cause.
+fn summary_error(rows: &[CheckRow]) -> Option<DlError> {
+    let hard: Vec<&CheckRow> = rows.iter().filter(|row| row.result == "fail").collect();
+    let first = *hard.first()?;
+    let proxy = hard.iter().any(|row| row.proxy_side);
+    Some(DlError {
+        code: if proxy { "dl_proxy_problem" } else { "dl_target_problem" },
+        exit: if proxy { PROXY_PROBLEM } else { TARGET_PROBLEM },
+        detail: format!("{} of {} checks failed: {}", hard.len(), rows.len(), first.check),
+        fix: first.fix.clone().unwrap_or_default(),
+        why: Some(first.detail.clone()),
+    })
+}
 
 /// Where the `[proxy]` table came from: the user's file, the site
 /// profile, both, or neither.
@@ -112,48 +158,35 @@ pub(super) fn run(ctx: &Context, args: &DlArgs, offline: bool) -> Result<()> {
     let session = vibe_net::current();
     let mut rows = vec![CheckRow::ok(
         "config",
-        format!(
-            "mode {} ({}) · {}{}{}",
+        config_detail(
             session.route().mode_name(),
             session.route().mode_origin().as_str(),
-            table_origin(),
-            match session.route().extra_ca() {
-                [] => String::new(),
-                paths => format!(
-                    " · extra_ca {}",
-                    paths
-                        .iter()
-                        .map(|path| path.display().to_string())
-                        .collect::<Vec<_>>()
-                        .join(", ")
-                ),
-            },
-            // Said only when a layer asked for it: the default row stays
-            // exactly as it read before the key existed.
+            &table_origin(),
+            session.route().extra_ca(),
             match session.route().revocation() {
-                vibe_core::user_config::RevocationCheck::Check => String::new(),
-                other => format!(
-                    " · revocation {} ({})",
+                vibe_core::user_config::RevocationCheck::Check => None,
+                other => Some(format!(
+                    "revocation {} ({})",
                     other.as_str(),
                     session
                         .route()
                         .revocation_origin()
                         .label(vibe_core::net::REVOCATION_ENV)
-                ),
-            }
+                )),
+            },
         ),
     )];
     let host = url.host_str().unwrap_or_default();
     if session.route().bypass().matches(host) {
         rows.push(CheckRow::warn(
             "no_proxy",
-            format!("`{host}` bypasses the proxy (no_proxy or loopback)"),
-            "test a host outside `no_proxy`",
+            format!("{host} bypasses the proxy (no_proxy or loopback)"),
+            "test a host outside no_proxy",
         ));
     } else {
         rows.push(CheckRow::ok(
             "no_proxy",
-            format!("`{host}` is not bypassed"),
+            format!("{host} is not bypassed"),
         ));
     }
     if let Some(px) = session.route().px() {
@@ -245,34 +278,7 @@ pub(super) fn run(ctx: &Context, args: &DlArgs, offline: bool) -> Result<()> {
     } else {
         None
     };
-    let failed: Vec<CheckRow> = rows
-        .iter()
-        .filter(|row| row.result == "fail" || row.result == "warn")
-        .cloned()
-        .collect();
-    let hard: Vec<&CheckRow> = failed.iter().filter(|row| row.result == "fail").collect();
-    let error = if hard.is_empty() {
-        None
-    } else {
-        let proxy = hard.iter().any(|row| row.proxy_side);
-        let first = hard[0];
-        Some(DlError {
-            code: if proxy {
-                "dl_proxy_problem"
-            } else {
-                "dl_target_problem"
-            },
-            exit: if proxy { PROXY_PROBLEM } else { TARGET_PROBLEM },
-            detail: format!(
-                "{} of {} checks failed; first: {} — {}",
-                hard.len(),
-                rows.len(),
-                first.check,
-                first.detail
-            ),
-            fix: first.fix.clone().unwrap_or_default(),
-        })
-    };
+    let error = summary_error(&rows);
     if ctx.is_json() {
         let empty = vibe_net::probe::Probe::default();
         ctx.emit_json(&super::report::build(
@@ -284,7 +290,6 @@ pub(super) fn run(ctx: &Context, args: &DlArgs, offline: bool) -> Result<()> {
         ))?;
     } else if !ctx.is_quiet() {
         render::print_rows(ctx, &rows_as_phases(&rows));
-        render::check_table(ctx, &failed);
         if error.is_none() {
             let mut meta = vec![Meta::note(vibe_net::probe::display_url(&url))];
             if let Some(probe) = &probe {
@@ -351,7 +356,7 @@ fn rows_as_phases(rows: &[CheckRow]) -> Vec<PhaseRow> {
             text: if row.result == "warn" {
                 format!("{} (warning)", row.detail)
             } else {
-                row.detail.clone()
+                row.summary.map(str::to_owned).unwrap_or_else(|| row.detail.clone())
             },
             meta: Vec::new(),
             children: Vec::new(),
@@ -380,5 +385,40 @@ fn leak_free(check: &str) -> &'static str {
         "proxy auth" => "proxy auth",
         "direct route" => "direct route",
         _ => "check",
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn dl_shape_test_proxy_names_the_first_failed_check() {
+        let cause = "connecting to the proxy http://127.0.0.1:9: Connection refused (os error 111)";
+        let rows = [
+            CheckRow::ok("config", "mode direct · default"),
+            CheckRow::failed("proxy reachable", cause, FailureClass::ConnectFailed, true),
+        ];
+        let error = summary_error(&rows).unwrap();
+        assert_eq!(error.code, "dl_proxy_problem");
+        assert_eq!(error.exit_code(), 21);
+        assert_eq!(error.detail, "1 of 2 checks failed: proxy reachable");
+        assert_eq!(error.why.as_deref(), Some(cause));
+        let phases = rows_as_phases(&rows);
+        assert!(!phases[1].ok);
+        assert_eq!(phases[1].text, FailureClass::ConnectFailed.label());
+        assert_eq!(rows[1].cause.as_deref(), Some("dl_connect_failed"));
+    }
+
+    #[test]
+    fn dl_shape_config_row_names_the_mode_once() {
+        assert_eq!(
+            config_detail("explicit", "user config", "user config", &[], None),
+            "mode explicit · user config"
+        );
+        assert_eq!(
+            config_detail("explicit", "default", "user config", &[], None),
+            "mode explicit · default · user config"
+        );
     }
 }
