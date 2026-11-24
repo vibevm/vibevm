@@ -225,3 +225,7 @@ fn human_row(outcome: &SnapshotOutcome, projection: Option<&RowProjection>) -> R
     }
     row.child(payloads)
 }
+
+#[cfg(test)]
+#[path = "report/tests.rs"]
+mod tests;
