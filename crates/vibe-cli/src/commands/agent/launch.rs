@@ -145,9 +145,9 @@ pub(crate) fn run(ctx: &output::Context, argv: Vec<String>) -> Result<()> {
         Ok(selected) => selected,
         Err(error) => {
             if let Some(selection) = native_selection {
-                eprintln!(
-                    "warning: selected Hermes project prefix unavailable; native read delivery only ({error})"
-                );
+                ctx.diagnostic(&format!(
+                    "selected Hermes project prefix unavailable; native read delivery only ({error})"
+                ));
                 std::process::exit(selection.launch(None)?);
             }
             return soft(
@@ -172,9 +172,9 @@ pub(crate) fn run(ctx: &output::Context, argv: Vec<String>) -> Result<()> {
     // this project's boot lane, which is worse than delivering none.
     if let Err(error) = built {
         if let Some(selection) = native_selection {
-            eprintln!(
-                "warning: selected Hermes project prefix could not be built; native read delivery only ({error})"
-            );
+            ctx.diagnostic(&format!(
+                "selected Hermes project prefix could not be built; native read delivery only ({error})"
+            ));
             std::process::exit(selection.launch(None)?);
         }
         agent_types::withdraw(ctx, launcher.kind, &selected);
@@ -197,9 +197,9 @@ pub(crate) fn run(ctx: &output::Context, argv: Vec<String>) -> Result<()> {
         Ok(opted_in) => opted_in,
         Err(error) => {
             if let Some(selection) = native_selection {
-                eprintln!(
-                    "warning: selected Hermes project prefix unavailable; native read delivery only ({error})"
-                );
+                ctx.diagnostic(&format!(
+                    "selected Hermes project prefix unavailable; native read delivery only ({error})"
+                ));
                 std::process::exit(selection.launch(None)?);
             }
             agent_types::withdraw(ctx, launcher.kind, &selected);
@@ -217,12 +217,12 @@ pub(crate) fn run(ctx: &output::Context, argv: Vec<String>) -> Result<()> {
         if let Some(selection) = native_selection {
             std::process::exit(selection.launch(None)?);
         }
-        if !ctx.is_quiet() {
-            eprintln!(
-                "note: this project has not opted in to a system prompt — starting `{name}` \
-                 unchanged; the agent reads its boot lane from disk; run `vibe prompt init` to opt in"
-            );
-        }
+        hints(
+            ctx,
+            &[format!(
+                "{name} starts unchanged · vibe prompt init opts this project in"
+            )],
+        );
         let mut command: Vec<String> = launcher.command.clone();
         command.extend(rest);
         agent_types::withdraw(ctx, launcher.kind, &selected);
@@ -292,10 +292,8 @@ pub(crate) fn run(ctx: &output::Context, argv: Vec<String>) -> Result<()> {
             .unwrap_or_default(),
         TargetOs::current(),
     );
-    if let Some(warning) = mismatch
-        && !ctx.is_quiet()
-    {
-        eprintln!("note: {warning}");
+    if let Some(warning) = mismatch {
+        hints(ctx, &[warning]);
     }
 
     // **Any answer but "deliver this" starts the harness bare.** The
@@ -332,14 +330,11 @@ pub(crate) fn run(ctx: &output::Context, argv: Vec<String>) -> Result<()> {
     if !composed.flags.is_empty() || !composed.env.is_empty() {
         refuse_conflicting(launcher.kind, &rest)?;
     }
-    for note in &composed.notes {
-        if !ctx.is_quiet() {
-            eprintln!("note: {note}");
-        }
+    let mut notes = composed.notes.clone();
+    if launcher.kind == HarnessKind::Claude && resumes(&rest) {
+        notes.push(RESUME_NOTE.to_owned());
     }
-    if launcher.kind == HarnessKind::Claude && resumes(&rest) && !ctx.is_quiet() {
-        eprintln!("note: {RESUME_NOTE}");
-    }
+    hints(ctx, &notes);
     if let Some(profile) = &composed.profile {
         write_profile(profile)?;
     }
@@ -545,4 +540,31 @@ fn exec(
         .status()
         .with_context(|| format!("starting `{program}`"))?;
     std::process::exit(status.code().unwrap_or(1));
+}
+
+fn hint_lines(lines: &[String]) -> String {
+    lines
+        .iter()
+        .map(|line| format!("  {}", crate::output::language::hint(line)))
+        .collect::<Vec<_>>()
+        .join("\n")
+}
+
+fn hints(ctx: &output::Context, lines: &[String]) {
+    if !lines.is_empty() {
+        ctx.block_err(&hint_lines(lines));
+    }
+}
+
+#[cfg(test)]
+mod hint_tests {
+    use super::hint_lines;
+
+    #[test]
+    fn launch_notes_are_dim_hints() {
+        assert_eq!(
+            hint_lines(&["first".to_owned(), "second".to_owned()]),
+            "  first\n  second"
+        );
+    }
 }
