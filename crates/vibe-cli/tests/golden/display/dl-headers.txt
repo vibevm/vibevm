@@ -4,13 +4,10 @@
 ✓ TLS       TLS 1.3 · trusted by extra CA: <dir>/trusted-ca.pem · CN=vibe-fixture.test · <ms>
 ✓ response  HTTP/1.1 200 OK · <ms>
 
-HTTP/1.1 200 OK
-┌────────────────┬───────────────────────────────┐
-│ Header         │ Value                         │
-├────────────────┼───────────────────────────────┤
-│ server         │ vibe-fixture/1                │
-│ date           │ Thu, 01 Jan 2026 00:00:00 GMT │
-│ content-type   │ text/plain                    │
-│ content-length │ 6                             │
-│ last-modified  │ Thu, 01 Jan 2026 00:00:00 GMT │
-└────────────────┴───────────────────────────────┘
+── response head · HTTP/1.1 200 OK ────
+
+  server          vibe-fixture/1
+  date            Thu, 01 Jan 2026 00:00:00 GMT
+  content-type    text/plain
+  content-length  6
+  last-modified   Thu, 01 Jan 2026 00:00:00 GMT

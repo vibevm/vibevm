@@ -16,6 +16,7 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-068#dl");
 
 use specmark::spec;
+use std::io::IsTerminal;
 use std::path::{Path, PathBuf};
 use std::time::{Duration, Instant};
 
@@ -37,6 +38,10 @@ use write::{write_file, write_stdout};
 
 /// The whole-request budget of the transfer.
 const TIMEOUT: Duration = Duration::from_secs(600);
+
+/// The fix of a `vibe dl` that has nowhere to put the body: the two
+/// commands that do (`refusal_of` draws each on its own line).
+const SHOW_OR_DEST_FIX: &str = "`vibe dl <url> <dest>`, or `vibe dl <url> --show`";
 
 /// A classified `vibe dl` failure: a stable code first (the refusal's
 /// headline code), what was observed, and the fix. Never a credential.
@@ -117,12 +122,10 @@ pub fn run(ctx: &Context, args: DlArgs, offline: bool, verbose: bool) -> Result<
     if args.test_proxy {
         return test_proxy::run(ctx, &args, offline);
     }
-    let raw = args.url.clone().ok_or_else(|| {
-        DlError::usage(
-            "a URL is required",
-            "run `vibe dl <url> <dest>`, or add `--show`",
-        )
-    })?;
+    let raw = args
+        .url
+        .clone()
+        .ok_or_else(|| DlError::usage("a URL is required", SHOW_OR_DEST_FIX))?;
     let url = parse_http(&raw)?;
     if offline {
         return Err(DlError::local(
@@ -153,7 +156,7 @@ pub fn run(ctx: &Context, args: DlArgs, offline: bool, verbose: bool) -> Result<
         (None, false) => {
             return Err(DlError::usage(
                 "a destination is required",
-                "run `vibe dl <url> <dest>`, or print with `--show` / `--headers`",
+                SHOW_OR_DEST_FIX,
             )
             .into());
         }
@@ -250,21 +253,40 @@ pub fn run(ctx: &Context, args: DlArgs, offline: bool, verbose: bool) -> Result<
     }
     let total = response.content_length();
     let record = TransferRecord::http(Purpose::Other, url.as_str(), Destination::Work).total(total);
-    let task = ctx
-        .progress()
-        .task_transferring(format!("transfer  {}", label_of(&url)), record.clone());
-    let reader = transfer::begin(record, Some(&task)).reader(&mut response);
+    // A body printed to a terminal is its own progress: a live row there
+    // would be drawn over the bytes (PROP-067 `#block`).
+    let body_on_terminal = destination.is_none() && std::io::stdout().is_terminal();
+    let progress = ctx.progress();
+    let task = (!body_on_terminal).then(|| {
+        progress.task_transferring(format!("transfer  {}", label_of(&url)), record.clone())
+    });
+    let reader = match &task {
+        Some(task) => transfer::begin(record, Some(task)).reader(&mut response),
+        None => {
+            let gap = crate::output::language::before(
+                crate::output::language::Stream::Out,
+                crate::output::language::Kind::Block,
+            );
+            print!("{gap}");
+            transfer::begin_beneath(record, None, progress.transfers(), Instant::now())
+                .reader(&mut response)
+        }
+    };
     let outcome = match &destination {
         Some(path) => write_file(reader, path, args.force, expected.as_deref()),
         None => write_stdout(reader, args.force, expected.as_deref()),
     };
     let (bytes, digest) = match outcome {
         Ok(done) => {
-            task.finish();
+            if let Some(task) = &task {
+                task.finish();
+            }
             done
         }
         Err(error) => {
-            task.fail(error.to_string());
+            if let Some(task) = &task {
+                task.fail(error.to_string());
+            }
             token.checkpoint()?;
             return Err(error);
         }
@@ -469,6 +491,19 @@ fn transfer_error(error: &vibe_package_source::SourceHttpError) -> anyhow::Error
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn dl_human_usage_fix_names_two_commands() {
+        let refusal = crate::output::refusal_of(&anyhow::Error::new(DlError::usage(
+            "a destination is required",
+            SHOW_OR_DEST_FIX,
+        )));
+        assert_eq!(
+            refusal.fix,
+            vec!["vibe dl <url> <dest>", "vibe dl <url> --show"]
+        );
+        assert_eq!(refusal.code, Some("dl_usage".into()));
+    }
 
     #[test]
     fn text_detection_allows_a_cut_character_and_refuses_nul() {

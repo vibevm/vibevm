@@ -1,5 +1,5 @@
 //! Golden captures of `vibe dl` on a real terminal (PROP-067 `#acceptance`,
-//! PROP-068 `#dl`): the response head as a table, a successful download, an
+//! PROP-068 `#dl`): the response head as a rule and rows, a successful download, an
 //! untrusted certificate and a proxy that wants authentication. Each run
 //! is taken under a pseudo-terminal (`pty-runner.c`), its attributes
 //! stripped and its volatile parts (ports, paths, milliseconds, times)
@@ -163,7 +163,7 @@ impl Golden {
 }
 
 #[test]
-fn the_response_head_is_a_table_on_a_terminal() {
+fn the_response_head_is_a_rule_and_rows_on_a_terminal() {
     let g = Golden::new();
     let server = HttpsServer::start(&g.ca, &g.dir.path().join("root"));
     golden(

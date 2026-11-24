@@ -1,6 +1,6 @@
 //! The human form of `vibe dl`, in the display language every command
 //! uses (PROP-067): the route's phases as one list of rows on stderr, the
-//! response head on stdout (a box-drawn table on a colour terminal, plain
+//! response head on stdout (a rule and rows on a colour terminal, plain
 //! `Name: value` lines otherwise), the closing trailer.
 
 use std::io::IsTerminal;
@@ -10,7 +10,7 @@ use vibe_net::probe::{FailureClass, Hop, Probe};
 
 use super::report::Downloaded;
 use crate::output::Context;
-use crate::output::language::{self, Block, Glyph, Kind, Meta, Stream, Table};
+use crate::output::language::{self, Block, Cell, Glyph, Kind, List, Meta, Row, Stream, Table};
 
 const LIST: &str = "dl-phases";
 
@@ -201,24 +201,34 @@ pub(super) fn headers(status_line: &str, headers: &[(String, String)]) {
     let gap = language::before(Stream::Out, Kind::Block);
     print!(
         "{gap}{}",
-        headers_text(status_line, headers, decorated_stdout())
+        headers_text(
+            status_line,
+            headers,
+            decorated_stdout(),
+            language::rule_width()
+        )
     );
 }
 
-/// The response head as text: on a colour terminal the status line and a
-/// two-column table (`Header`, `Value`) drawn by `output::language`; otherwise the status line and `Name: value`
+/// The response head as text: on a colour terminal a labelled rule and
+/// measured rows drawn by `output::language`; otherwise the status line and `Name: value`
 /// lines, then the blank line that ends an HTTP head.
 pub(super) fn headers_text(
     status_line: &str,
     headers: &[(String, String)],
     decorated: bool,
+    width: usize,
 ) -> String {
     if decorated {
-        let mut table = Table::new(vec!["Header".into(), "Value".into()]);
-        for (name, value) in headers {
-            table = table.row(vec![name.clone(), value.clone()]);
-        }
-        format!("{status_line}\n{}\n\n", table.render())
+        let rows = headers
+            .iter()
+            .map(|(name, value)| Row::new(vec![Cell::text(name), Cell::text(value)]))
+            .collect();
+        format!(
+            "{}\n\n{}\n",
+            language::rule_at(&format!("response head · {status_line}"), None, width),
+            List::new(rows).render_at(width)
+        )
     } else {
         let mut out = format!("{status_line}\n");
         for (name, value) in headers {
@@ -229,11 +239,10 @@ pub(super) fn headers_text(
     }
 }
 
-/// The closing trailer of a file download, on stderr.
-pub(super) fn done(ctx: &Context, download: &Downloaded, elapsed: Duration) {
-    if ctx.is_json() || ctx.is_quiet() {
-        return;
-    }
+/// The closing trailer of a file download: what was written, its size and
+/// the time, then the digest on a dim line of its own; quiet keeps the
+/// first line only.
+fn done_text(download: &Downloaded, elapsed: Duration, quiet: bool) -> String {
     let what = match &download.destination {
         Some(path) => format!("downloaded {}", path.display()),
         None => "downloaded".to_owned(),
@@ -243,12 +252,30 @@ pub(super) fn done(ctx: &Context, download: &Downloaded, elapsed: Duration) {
         &what,
         vec![
             Meta::Count(language::bytes(download.bytes)),
-            Meta::note(format!("sha256 {}", download.sha256)),
             Meta::Time(elapsed),
         ],
         None,
     );
-    let gap = language::before(Stream::Err, Kind::Block);
+    if quiet {
+        return line;
+    }
+    format!(
+        "{line}\n  {}",
+        language::hint(&format!("sha256 {}", download.sha256))
+    )
+}
+
+/// The closing trailer of a file download, on stderr.
+pub(super) fn done(ctx: &Context, download: &Downloaded, elapsed: Duration) {
+    if ctx.is_json() {
+        return;
+    }
+    let line = done_text(download, elapsed, ctx.is_quiet());
+    let gap = if ctx.is_quiet() {
+        ""
+    } else {
+        language::before(Stream::Err, Kind::Block)
+    };
     ctx.suspend_progress(|| eprintln!("{gap}{line}"));
 }
 
@@ -305,11 +332,57 @@ mod tests {
     use super::*;
 
     #[test]
+    fn dl_human_head_is_a_rule_and_rows() {
+        let text = headers_text(
+            "HTTP/1.1 200 OK",
+            &[
+                ("server".into(), "x".into()),
+                ("content-length".into(), "6".into()),
+            ],
+            true,
+            40,
+        );
+        assert_eq!(
+            text,
+            "── response head · HTTP/1.1 200 OK ─────\n\n  server          x\n  content-length  6\n"
+        );
+    }
+
+    #[test]
+    fn dl_human_digest_on_its_own_line() {
+        let download = Downloaded {
+            destination: Some("/o/f.txt".into()),
+            bytes: 6,
+            sha256: "ab".repeat(32),
+            status: 200,
+        };
+        assert_eq!(
+            done_text(&download, Duration::ZERO, false),
+            format!("✻ downloaded /o/f.txt · 6 B · 0s\n  sha256 {}", "ab".repeat(32))
+        );
+    }
+
+    #[test]
+    fn dl_human_quiet_trailer_is_one_line() {
+        let download = Downloaded {
+            destination: Some("/o/f.txt".into()),
+            bytes: 6,
+            sha256: "ab".repeat(32),
+            status: 200,
+        };
+        assert_eq!(
+            done_text(&download, Duration::ZERO, true),
+            "✻ downloaded /o/f.txt · 6 B · 0s"
+        );
+    }
+
+    #[test]
     fn plain_headers_are_name_value_lines_ending_in_a_blank_line() {
         let text = headers_text(
             "HTTP/1.1 200 OK",
             &[("content-type".into(), "text/plain".into())],
             false,
+            80,
         );
         assert_eq!(text, "HTTP/1.1 200 OK\ncontent-type: text/plain\n\n");
     }
