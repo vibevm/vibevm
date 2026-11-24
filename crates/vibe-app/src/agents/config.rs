@@ -164,7 +164,7 @@ fn parse_reason(input: &str, error: &toml::de::Error) -> String {
     let column = input[line_start..start].chars().count() + 1;
     let source_line = input[line_start..].lines().next().unwrap_or_default();
     let scalar_command = source_line.split_once('=').is_some_and(|(key, value)| {
-        key.trim() == "command"
+        matches!(key.trim(), "command" | "\"command\"" | "'command'")
             && (value.trim_start().starts_with('"') || value.trim_start().starts_with('\''))
     });
     let reason = if scalar_command
