@@ -29,6 +29,14 @@ struct Row {
 /// vocabulary (PROP-067 `#coverage`).
 #[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-036#OUT-PLAIN")]
 pub fn render(tree: &PackageTree) -> String {
+    let mut out = String::new();
+    header(tree, &mut out);
+    out.push_str(&rows(tree));
+    out
+}
+
+/// Render package rows and any packages not reached from a declared root.
+pub fn rows(tree: &PackageTree) -> String {
     let by_id: BTreeMap<&str, &Package> =
         tree.packages.iter().map(|p| (p.id.as_str(), p)).collect();
 
@@ -50,7 +58,6 @@ pub fn render(tree: &PackageTree) -> String {
     orphans.sort_by(|a, b| a.id.cmp(&b.id));
 
     let mut out = String::new();
-    header(tree, &mut out);
     render_rows(&rows, &mut out);
 
     if !orphans.is_empty() {
@@ -187,9 +194,37 @@ fn header(tree: &PackageTree, out: &mut String) {
         tree.packages.len(),
         tree.roots.len()
     ));
-    out.push_str(&format!(
-        "columns: load  T=transitive  C=condition  S=in {lane_name}\n\n"
-    ));
+    out.push_str(&legend(tree));
+    out.push_str("\n\n");
+}
+
+/// The column key, named for the project's static lane, without a newline.
+pub fn legend(tree: &PackageTree) -> String {
+    format!(
+        "columns: load  T=transitive  C=condition  S=in {}",
+        tree.boot.static_lane_name
+    )
+}
+
+/// Compact lane and package facts for a layer's summary line.
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-036#OUT-PLAIN")]
+pub fn layer_summary(tree: &PackageTree) -> String {
+    let lane_name = tree.boot.static_lane_name.as_str();
+    let plural = |n: usize, one: &str, many: &str| format!("{n} {}", if n == 1 { one } else { many });
+    let lane = match &tree.boot.static_md {
+        Some(lane) => format!(
+            "{lane_name} {} · {} · {}",
+            crate::output::language::bytes(lane.bytes),
+            plural(lane.lines as usize, "line", "lines"),
+            plural(lane.contributions.len(), "contribution", "contributions"),
+        ),
+        None => format!("{lane_name} (none)"),
+    };
+    format!(
+        "{lane} · {} · {}",
+        plural(tree.packages.len(), "package", "packages"),
+        plural(tree.roots.len(), "root", "roots"),
+    )
 }
 
 /// Format the collected rows with an aligned name column.

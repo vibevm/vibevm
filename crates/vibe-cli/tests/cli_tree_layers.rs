@@ -128,6 +128,52 @@ fn layered_tree_reports_disabled_and_missing_layers_without_changing_project_pro
 }
 
 #[test]
+fn layers_plain_has_rule_sections_and_one_legend() {
+    let user = UserScratch::new();
+    let scratch = tempfile::tempdir().unwrap();
+    let home = scratch.path().join("home");
+    let project = scratch.path().join("project");
+    fs::create_dir_all(&home).unwrap();
+    fs::create_dir_all(&project).unwrap();
+    let vibe = || {
+        let mut cmd = user.vibe();
+        cmd.env("HOME", &home)
+            .env("USERPROFILE", &home)
+            .env("VIBE_SETTINGS", &user.settings);
+        cmd
+    };
+    vibe()
+        .current_dir(&project)
+        .args(["init", "--name", "layer-plain"])
+        .assert()
+        .success();
+    vibe().args(["user", "init"]).assert().success();
+    let output = vibe()
+        .args(["tree", "--layers", "--plain", "--path"])
+        .arg(&project)
+        .output()
+        .unwrap();
+    assert!(output.status.success(), "layered tree command succeeds");
+    let stdout = String::from_utf8(output.stdout).unwrap();
+    for name in ["project", "personal", "override"] {
+        assert!(
+            stdout
+                .lines()
+                .any(|line| line.starts_with(&format!("── {name} layer "))),
+            "each layer has a named rule"
+        );
+    }
+    assert_eq!(stdout.matches("columns: load").count(), 1);
+    assert!(!stdout.lines().any(|line| line.starts_with("layer ")));
+    assert!(
+        stdout
+            .lines()
+            .any(|line| line.starts_with("  enabled · available"))
+    );
+    assert!(stdout.lines().any(|line| line == "  disabled · absent"));
+}
+
+#[test]
 fn identical_package_coordinates_are_kept_in_independent_layer_payloads() {
     let user = UserScratch::new();
     let project = tempfile::tempdir().unwrap();

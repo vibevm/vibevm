@@ -144,6 +144,43 @@ pub(super) fn collect(root: &Path) -> Vec<Layer> {
     layers
 }
 
+pub(super) fn layer_name(id: &str) -> &'static str {
+    match id {
+        "project" => "project",
+        "user" => "personal",
+        _ => "override",
+    }
+}
+
+fn layer_body(layer: &Layer, tree: Option<&PackageTree>) -> String {
+    let mut status = format!(
+        "  {} · {}",
+        if layer.enabled { "enabled" } else { "disabled" },
+        layer.state
+    );
+    if let Some(root) = &layer.root {
+        status.push_str(&format!(" · {}", output::language::short_path(root)));
+    }
+    let mut lines = vec![status];
+    if let Some(tree) = tree {
+        lines.push(format!("  {}", plain::layer_summary(tree)));
+        lines.extend(
+            plain::rows(tree)
+                .lines()
+                .filter(|line| !line.is_empty())
+                .map(|line| format!("  {line}")),
+        );
+    }
+    lines.extend(
+        layer
+            .relations
+            .iter()
+            .map(|relation| format!("  {}", relation.display_line())),
+    );
+    lines.extend(layer.diagnostics.iter().map(|line| format!("  {line}")));
+    lines.join("\n")
+}
+
 pub(super) fn run(
     ctx: &output::Context,
     root: &Path,
@@ -165,27 +202,25 @@ pub(super) fn run(
         return ctx.emit_json(&report);
     }
     for layer in &report.layers {
-        println!(
-            "layer {} — {} — {}",
-            layer.id,
-            if layer.enabled { "enabled" } else { "disabled" },
-            layer.state
-        );
         if ctx.is_quiet() {
+            ctx.summary(&format!(
+                "{} layer · {} · {}",
+                layer_name(layer.id),
+                if layer.enabled { "enabled" } else { "disabled" },
+                layer.state
+            ));
             continue;
         }
-        if layer.id == "project" {
-            print!("{}", plain::render(tree));
-        }
-        if let Some(tree) = &layer.tree {
-            print!("{}", plain::render(tree));
-        }
-        for relation in &layer.relations {
-            println!("  {}", relation.display_line());
-        }
-        for diagnostic in &layer.diagnostics {
-            println!("  {diagnostic}");
-        }
+        let layer_tree = if layer.id == "project" {
+            Some(tree)
+        } else {
+            layer.tree.as_ref()
+        };
+        ctx.rule(&format!("{} layer", layer_name(layer.id)));
+        ctx.block(&layer_body(layer, layer_tree));
+    }
+    if !ctx.is_quiet() {
+        ctx.block(&format!("  {}", plain::legend(tree)));
     }
     Ok(())
 }
