@@ -21,10 +21,24 @@ pub(crate) fn viewport() -> usize {
     terminal_width().unwrap_or(usize::MAX / 4)
 }
 
-/// The width a rule runs to: the viewport, or a terminal's usual width on a
-/// redirected stream.
+/// The width a rule runs to: the viewport, the stdout terminal when only
+/// stdout is one (a rule is written to stdout), or a terminal's usual width
+/// on a redirected stream.
 pub(crate) fn rule_width() -> usize {
-    terminal_width().unwrap_or(UNATTENDED_RULE)
+    first_width(terminal_width(), stdout_width()).unwrap_or(UNATTENDED_RULE)
+}
+
+/// The width of stdout's terminal, when stdout is one.
+fn stdout_width() -> Option<usize> {
+    console::Term::stdout()
+        .size_checked()
+        .map(|(_, columns)| usize::from(columns))
+        .filter(|columns| *columns >= 20)
+}
+
+/// stderr's width when it has one, else stdout's.
+fn first_width(stderr: Option<usize>, stdout: Option<usize>) -> Option<usize> {
+    stderr.or(stdout)
 }
 
 /// The display width of `text`, attributes not counted.
@@ -56,4 +70,16 @@ pub(crate) fn wrap(text: &str, width: usize) -> Vec<String> {
     }
     lines.push(line);
     lines
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn rule_width_falls_back_to_stdout() {
+        assert_eq!(first_width(None, Some(100)), Some(100));
+        assert_eq!(first_width(Some(90), Some(100)), Some(90));
+        assert_eq!(first_width(None, None), None);
+    }
 }
