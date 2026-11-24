@@ -492,8 +492,8 @@ pub enum AppError {
         owner: String,
     },
     #[error(
-        "slot `{slot}` has no installed provider (violates spec://org.vibevm.core/vibevm/common/PROP-059#alternatives; \
-         fix: check `vibe app list` for the installed slots)"
+        "slot {slot} has no installed provider in this home (violates spec://org.vibevm.core/vibevm/common/PROP-059#alternatives; \
+         fix: `vibe search {slot}` or `vibe app list`)"
     )]
     UnknownSlot { slot: String },
     #[error(
