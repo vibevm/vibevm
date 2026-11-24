@@ -16,7 +16,9 @@ use vibe_workspace::install::verify_boot_graph_with_spec_format;
 
 use crate::cli::CheckArgs;
 use crate::output;
-use crate::output::language::{Block, Glyph, LabelValue, Line, Meta, Role, join_meta, paint};
+use crate::output::language::{
+    Block, Glyph, LabelValue, Line, Meta, Role, join_meta, paint, short_path, warning,
+};
 
 #[specmark::spec(implements = "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#linter")]
 pub fn run(ctx: &output::Context, args: CheckArgs) -> Result<()> {
@@ -59,13 +61,49 @@ pub fn run(ctx: &output::Context, args: CheckArgs) -> Result<()> {
     // Exit code per VIBEVM-SPEC.md §12: 0 if no errors, 1 if errors,
     // 0 with warnings displayed if only warnings.
     if errors > 0 {
-        bail!(
-            "vibe check: {errors} error{} ({warnings} warning{})",
-            if errors == 1 { "" } else { "s" },
-            if warnings == 1 { "" } else { "s" }
-        );
+        bail!("{}", counts_line(errors, warnings, infos));
     }
     Ok(())
+}
+
+/// `3 errors · 0 warnings · 0 info`: the counts a check run closes with.
+fn counts_line(errors: usize, warnings: usize, infos: usize) -> String {
+    format!(
+        "{errors} error{} · {warnings} warning{} · {infos} info",
+        if errors == 1 { "" } else { "s" },
+        if warnings == 1 { "" } else { "s" },
+    )
+}
+
+/// The closing of a run with no finding.
+fn clean_line(project_root: &Path) -> String {
+    Block::new(Glyph::Done, "clean")
+        .with_meta(vec![
+            Meta::note("every check passed"),
+            Meta::note(short_path(&project_root.display().to_string())),
+        ])
+        .render()
+}
+
+/// Errors close with the refusal returned by `run`, not a second line.
+fn closing_line(report: &CheckReport, project_root: &Path) -> Option<String> {
+    let (errors, warnings, infos) = (
+        report.count(Severity::Error),
+        report.count(Severity::Warning),
+        report.count(Severity::Info),
+    );
+    if errors > 0 {
+        return None;
+    }
+    if report.findings.is_empty() {
+        return Some(clean_line(project_root));
+    }
+    let counts = counts_line(errors, warnings, infos);
+    Some(if warnings > 0 {
+        warning(&counts)
+    } else {
+        Block::new(Glyph::Done, counts).render()
+    })
 }
 
 #[derive(Debug, Serialize)]
@@ -103,6 +141,10 @@ struct CheckJsonFinding<'a> {
     #[serde(skip_serializing_if = "Option::is_none")]
     package: Option<&'a str>,
     message: &'a str,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    why: Option<&'a str>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    fix: Option<&'a str>,
 }
 
 fn emit_report(
@@ -126,6 +168,8 @@ fn emit_report(
                 field: f.field.as_deref(),
                 package: f.package.as_deref(),
                 message: f.message.as_str(),
+                why: f.why.as_deref(),
+                fix: f.fix.as_deref(),
             })
             .collect();
         let payload = CheckJsonReport {
@@ -143,19 +187,14 @@ fn emit_report(
         return Ok(());
     }
     if ctx.is_quiet() {
-        ctx.summary(&format!(
-            "vibe check: {errors} error{}, {warnings} warning{}, {infos} info",
-            if errors == 1 { "" } else { "s" },
-            if warnings == 1 { "" } else { "s" },
-        ));
+        if let Some(line) = closing_line(report, project_root) {
+            ctx.summary(&line);
+        }
         return Ok(());
     }
 
     if report.findings.is_empty() {
-        ctx.summary(&format!(
-            "vibe check: clean — every check passed against {}",
-            project_root.display()
-        ));
+        ctx.block(&clean_line(project_root));
         return Ok(());
     }
 
@@ -171,13 +210,9 @@ fn emit_report(
         .map(|finding| finding_block(finding).render())
         .collect();
     ctx.block(&blocks.join("\n"));
-    // `vibe check` only reports, so its count is a summary, not a trailer
-    // (PROP-067 `#trailer`); an error count also ends in the refusal below.
-    ctx.summary(&format!(
-        "\n{errors} error{}, {warnings} warning{}, {infos} info",
-        if errors == 1 { "" } else { "s" },
-        if warnings == 1 { "" } else { "s" },
-    ));
+    if let Some(line) = closing_line(report, project_root) {
+        ctx.block(&line);
+    }
     Ok(())
 }
 
@@ -200,12 +235,26 @@ fn finding_block(f: &Finding) -> Block {
         Severity::Warning => Glyph::Warning,
         Severity::Info => Glyph::Done,
     };
-    let headline = format!(
-        "{}  {}",
-        paint(Role::Accent, f.check.as_str()),
-        f.message.replace('`', "")
-    );
-    let mut block = Block::new(glyph, headline);
+    let message = f.message.replace('`', "");
+    let message = if f.severity == Severity::Warning {
+        paint(Role::Warn, &message)
+    } else {
+        message
+    };
+    let headline = format!("{}  {message}", paint(Role::Accent, f.check.as_str()));
+    let mut body = Vec::new();
+    if let Some(why) = &f.why {
+        body.push(Line::Label(
+            "why".into(),
+            vec![LabelValue::Text(why.clone())],
+        ));
+    }
+    if let Some(fix) = &f.fix {
+        body.push(Line::Label(
+            "fix".into(),
+            vec![LabelValue::Command(fix.clone())],
+        ));
+    }
     let mut at = match (&f.path, f.line) {
         (Some(p), Some(line)) => Some(format!("{}:{line}", p.to_string_lossy().replace('\\', "/"))),
         (Some(p), None) => Some(p.to_string_lossy().replace('\\', "/")),
@@ -218,9 +267,9 @@ fn finding_block(f: &Finding) -> Block {
         });
     }
     if let Some(at) = at {
-        block = block.with_body(vec![Line::Label("at".into(), vec![LabelValue::Text(at)])]);
+        body.push(Line::Label("at".into(), vec![LabelValue::Text(at)]));
     }
-    block
+    Block::new(glyph, headline).with_body(body)
 }
 
 fn resolve_project_root(path: &Path) -> Result<PathBuf> {
@@ -290,3 +339,7 @@ fn append_boot_graph_findings(project_root: &Path, report: &mut CheckReport) {
         });
     }
 }
+
+#[cfg(test)]
+#[path = "check/tests.rs"]
+mod tests;
