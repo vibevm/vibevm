@@ -74,6 +74,27 @@ description = "PROP-077 weak-dependency fixture"
     .unwrap();
 }
 
+/// Every fixture child has an explicit synthetic home as well as settings.
+fn vibe(user: &UserScratch) -> assert_cmd::Command {
+    let mut command = user.vibe();
+    command
+        .env("HOME", &user.settings)
+        .env("USERPROFILE", &user.settings)
+        .env("VIBE_SETTINGS", &user.settings);
+    command
+}
+
+fn init_project(user: &UserScratch, project: &Path) {
+    vibe(user)
+        .arg("init")
+        .arg("--path")
+        .arg(project)
+        .arg("--author")
+        .arg("vibevm test fixtures")
+        .assert()
+        .success();
+}
+
 fn lock(project: &Path) -> String {
     fs::read_to_string(project.join("vibe.lock")).unwrap()
 }
@@ -106,7 +127,7 @@ fn install(
     package: Option<&str>,
     decline: bool,
 ) -> String {
-    let mut command = user.vibe();
+    let mut command = vibe(user);
     command.arg("install");
     if decline {
         command.arg("--no-recommends");
@@ -141,7 +162,7 @@ fn a_recommended_package_is_installed_visible_to_its_recommender_and_never_a_roo
     let scratch = tempfile::tempdir().unwrap();
     let registry = registry(scratch.path());
     let project = tempfile::tempdir().unwrap();
-    common::init_project(project.path());
+    init_project(&user, project.path());
 
     let stdout = install(
         &user,
@@ -200,7 +221,7 @@ fn a_recommended_package_is_installed_visible_to_its_recommender_and_never_a_roo
 
     // And `vibe why` explains it through its recommender, in the lock's own
     // vocabulary.
-    user.vibe()
+    vibe(&user)
         .arg("why")
         .arg("org.vibevm.fixture/companion")
         .arg("--path")
@@ -225,7 +246,7 @@ fn an_unsatisfiable_or_conflicting_recommendation_warns_and_is_skipped() {
 
     for (root, companion) in [("unsatisfiable", "companion"), ("rival", "enemy")] {
         let project = tempfile::tempdir().unwrap();
-        common::init_project(project.path());
+        init_project(&user, project.path());
         let package = format!("org.vibevm.fixture/{root}");
         let stdout = install(&user, project.path(), &registry, Some(&package), false);
 
@@ -261,7 +282,7 @@ fn the_flag_declines_the_whole_expansion_and_says_so() {
     let scratch = tempfile::tempdir().unwrap();
     let registry = registry(scratch.path());
     let project = tempfile::tempdir().unwrap();
-    common::init_project(project.path());
+    init_project(&user, project.path());
 
     let stdout = install(
         &user,
@@ -299,7 +320,7 @@ fn a_locked_weak_member_is_replayed_and_only_a_re_solve_reconsiders_it() {
     let scratch = tempfile::tempdir().unwrap();
     let registry = registry(scratch.path());
     let project = tempfile::tempdir().unwrap();
-    common::init_project(project.path());
+    init_project(&user, project.path());
 
     install(
         &user,
@@ -323,7 +344,7 @@ fn a_locked_weak_member_is_replayed_and_only_a_re_solve_reconsiders_it() {
     );
 
     // `vibe reinstall` replays the lock too, and admits the flag.
-    user.vibe()
+    vibe(&user)
         .arg("reinstall")
         .arg("--no-recommends")
         .arg(project.path())
@@ -335,7 +356,7 @@ fn a_locked_weak_member_is_replayed_and_only_a_re_solve_reconsiders_it() {
     // A bare `vibe update` is a SCOPED update: it moves the roots it
     // re-resolves and removes no member outside them, so it admits the flag
     // without reconsidering a locked weak member.
-    user.vibe()
+    vibe(&user)
         .arg("update")
         .arg("--no-recommends")
         .arg("--path")
@@ -383,10 +404,9 @@ fn the_json_report_carries_a_row_per_recommendation_and_suggestion() {
     let scratch = tempfile::tempdir().unwrap();
     let registry = registry(scratch.path());
     let project = tempfile::tempdir().unwrap();
-    common::init_project(project.path());
+    init_project(&user, project.path());
 
-    let output = user
-        .vibe()
+    let output = vibe(&user)
         .arg("install")
         .arg("org.vibevm.fixture/recommender")
         .arg("--path")
@@ -432,8 +452,8 @@ fn the_json_report_carries_a_row_per_recommendation_and_suggestion() {
 fn a_command_that_neither_solves_nor_installs_refuses_the_flag_by_name() {
     let user = UserScratch::new();
     let project = tempfile::tempdir().unwrap();
-    common::init_project(project.path());
-    user.vibe()
+    init_project(&user, project.path());
+    vibe(&user)
         .arg("list")
         .arg("--no-recommends")
         .arg("--path")
@@ -441,4 +461,98 @@ fn a_command_that_neither_solves_nor_installs_refuses_the_flag_by_name() {
         .assert()
         .failure()
         .stderr(predicate::str::contains("--no-recommends"));
+}
+
+/// Credit belongs to the individual version constraint, not just the coordinate.
+#[test]
+#[specmark::verifies("spec://org.vibevm.core/vibevm/common/PROP-077#PROJECT-RECOMMENDS")]
+fn recommendation_credit_matches_selected_version() {
+    let user = UserScratch::new();
+    let scratch = tempfile::tempdir().unwrap();
+    let registry = registry(scratch.path());
+    write(
+        &registry,
+        "recommender",
+        "\n[recommends]\npackages = [\"org.vibevm.fixture/companion@^1.0.0\"]\n",
+    );
+
+    // Exercise both genuine weak admission and a matching strong dependency.
+    for strong in [false, true] {
+        let project = tempfile::tempdir().unwrap();
+        init_project(&user, project.path());
+        let companion = if strong {
+            "'org.vibevm.fixture/companion' = '=1.0.0'\n"
+        } else {
+            ""
+        };
+        fs::write(
+            project.path().join("vibe.toml"),
+            format!(
+                "[project]\nname = \"recommendation-credit\"\nversion = \"0.0.1\"\n\n\
+                 [requires.packages]\n'org.vibevm.fixture/recommender' = '=1.0.0'\n\
+                 'org.vibevm.fixture/unsatisfiable' = '=1.0.0'\n{companion}"
+            ),
+        )
+        .unwrap();
+
+        let output = vibe(&user)
+            .arg("install")
+            .arg("--path")
+            .arg(project.path())
+            .arg("--registry")
+            .arg(&registry)
+            .arg("--offline")
+            .arg("--assume-yes")
+            .arg("--json")
+            .assert()
+            .success()
+            .get_output()
+            .clone();
+        let stdout = String::from_utf8_lossy(&output.stdout);
+        let document: serde_json::Value = serde_json::Deserializer::from_str(&stdout)
+            .into_iter::<serde_json::Value>()
+            .filter_map(Result::ok)
+            .find(|value| value.get("command").and_then(|c| c.as_str()) == Some("install"))
+            .unwrap_or_else(|| panic!("no install report in:\n{stdout}"));
+        let recommended = document["recommended"].as_array().unwrap();
+        assert_eq!(recommended.len(), 2, "{document}");
+        let compatible = recommended
+            .iter()
+            .find(|row| row["by"] == "org.vibevm.fixture/recommender")
+            .unwrap();
+        let incompatible = recommended
+            .iter()
+            .find(|row| row["by"] == "org.vibevm.fixture/unsatisfiable")
+            .unwrap();
+        assert_eq!(compatible["package"], "org.vibevm.fixture/companion");
+        assert_eq!(incompatible["package"], compatible["package"]);
+        assert_eq!(
+            compatible["outcome"],
+            if strong { "satisfied" } else { "installed" },
+            "{document}"
+        );
+        assert!(compatible.get("reason").is_none(), "{document}");
+
+        let row = lock_row(project.path(), "companion");
+        assert!(row.contains("version = \"1.0.0\""), "{row}");
+        assert_eq!(
+            row.contains("admitted_by = \"weak-chain\""),
+            !strong,
+            "{row}"
+        );
+        let slot = project.path().join(common::slot_rel(
+            "org.vibevm.fixture.companion",
+            "1.0.0",
+            "vibe.toml",
+        ));
+        assert!(slot.is_file(), "the selected companion is materialised");
+        assert!(fs::read_to_string(slot).unwrap().contains("version = \"1.0.0\""));
+
+        assert_eq!(incompatible["outcome"], "skipped", "{document}");
+        assert_eq!(
+            incompatible["reason"],
+            "no version satisfies it, or it conflicts with the resolved graph",
+            "{document}"
+        );
+    }
 }
