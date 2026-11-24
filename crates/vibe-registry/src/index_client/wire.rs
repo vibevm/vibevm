@@ -114,6 +114,10 @@ pub struct SearchResults {
 #[derive(Debug, Clone, serde::Serialize, Deserialize)]
 pub struct SearchHit {
     pub kind: PackageKind,
+    /// The package's group, when the index said it; absent from a cache
+    /// entry an older vibe wrote.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub group: Option<String>,
     pub name: String,
     #[serde(default)]
     pub latest_stable: Option<Version>,
@@ -218,6 +222,36 @@ mod tests {
         assert!(parsed.latest_stable.is_none());
         assert!(parsed.matched_tokens.is_empty());
         assert!(parsed.description.is_none());
+    }
+
+    #[test]
+    fn grouped_search_hit_roundtrip() {
+        let old: SearchHit =
+            serde_json::from_str(r#"{"kind":"flow","name":"wal","latest_stable":"0.1.0"}"#)
+                .unwrap();
+        assert_eq!(old.group, None);
+        let old_json = serde_json::to_value(&old).unwrap();
+        assert!(old_json.get("group").is_none());
+        let old_roundtrip: SearchHit = serde_json::from_value(old_json).unwrap();
+        assert_eq!(old_roundtrip.group, None);
+
+        let current: SearchHit = serde_json::from_str(
+            r#"{"kind":"flow","group":"org.vibevm","name":"wal","latest_stable":"0.1.0"}"#,
+        )
+        .unwrap();
+        assert_eq!(current.group.as_deref(), Some("org.vibevm"));
+        let results = SearchResults {
+            query: "wal".into(),
+            hit_count: 1,
+            hits: vec![current],
+        };
+        let encoded = serde_json::to_string(&results).unwrap();
+        let wire: serde_json::Value = serde_json::from_str(&encoded).unwrap();
+        assert_eq!(wire["hits"][0]["group"], "org.vibevm");
+        let roundtrip: SearchResults = serde_json::from_str(&encoded).unwrap();
+        assert_eq!(roundtrip.hits[0].group.as_deref(), Some("org.vibevm"));
+        assert_eq!(roundtrip.hits[0].kind, PackageKind::Flow);
+        assert_eq!(roundtrip.hits[0].name, "wal");
     }
 
     #[test]
