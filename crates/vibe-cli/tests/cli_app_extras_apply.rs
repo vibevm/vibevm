@@ -322,10 +322,14 @@ fn a_failing_apply_never_touches_the_runtime_and_names_its_retry() {
         "the exact retry command is named: {shown}"
     );
     // The runtime is installed and is still the slot's default.
-    assert_eq!(
-        json(&isolated_vibe(&r, &["app", "list", "-g", "--json"]))["installations"][0]["default"],
-        true
-    );
+    let listed = json(&isolated_vibe(&r, &["app", "list", "-g", "--json"]));
+    let runtime = listed["installations"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .find(|row| row["key"] == "org.example/runtime@1.0.0")
+        .expect("the installed runtime is listed");
+    assert_eq!(runtime["default"], true);
     // And the record says what was not carried, so a later `describe`
     // still does.
     let record = &retained(&r, "org.example/runtime@1.0.0")["extras"][0];
