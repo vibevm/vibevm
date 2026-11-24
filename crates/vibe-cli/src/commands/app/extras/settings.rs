@@ -29,7 +29,7 @@ use vibe_core::user_config::{UserConfig, read_item_lines};
 
 use crate::cli::ExtrasTargetArgs;
 use crate::output;
-use crate::output::language::{Role, paint};
+use crate::output::language::{Role, hint, paint};
 
 /// `vibe app extras add SLOT ITEM…`.
 #[allow(clippy::too_many_arguments)]
@@ -42,7 +42,15 @@ pub(super) fn add(
     embedded_root: Option<&std::path::Path>,
     offline: bool,
 ) -> Result<Option<i32>> {
-    let ecosystem = one_ecosystem(ctx, settings, slot, target, embedded_root, offline)?;
+    let ecosystem = one_ecosystem(
+        ctx,
+        settings,
+        slot,
+        &format!("vibe app extras add {slot} --ecosystem <ecosystem> <item>"),
+        target,
+        embedded_root,
+        offline,
+    )?;
     edit(ctx, slot, &ecosystem, "add", |extras| {
         extras.add_items(items.iter().cloned())
     })
@@ -59,7 +67,15 @@ pub(super) fn drop(
     embedded_root: Option<&std::path::Path>,
     offline: bool,
 ) -> Result<Option<i32>> {
-    let ecosystem = one_ecosystem(ctx, settings, slot, target, embedded_root, offline)?;
+    let ecosystem = one_ecosystem(
+        ctx,
+        settings,
+        slot,
+        &format!("vibe app extras drop {slot} --ecosystem <ecosystem> <id>"),
+        target,
+        embedded_root,
+        offline,
+    )?;
     edit(ctx, slot, &ecosystem, "drop", |extras| {
         extras.drop_ids(ids.iter().cloned())
     })
@@ -76,18 +92,26 @@ pub(super) fn import(
     embedded_root: Option<&std::path::Path>,
     offline: bool,
 ) -> Result<Option<i32>> {
-    let ecosystem = one_ecosystem(ctx, settings, slot, target, embedded_root, offline)?;
+    let ecosystem = one_ecosystem(
+        ctx,
+        settings,
+        slot,
+        &format!("vibe app extras import {slot} --ecosystem <ecosystem> <file>"),
+        target,
+        embedded_root,
+        offline,
+    )?;
     let body = std::fs::read_to_string(file)
         .with_context(|| format!("reading the item list `{}`", file.display()))?;
     let items = read_item_lines(&body);
     if items.is_empty() {
-        ctx.summary(&format!(
-            "vibe app extras import: `{}` names no item, so nothing changed",
+        ctx.trailer(&format!(
+            "imported 0 items · {} names no item",
             file.display()
         ));
         return Ok(None);
     }
-    edit(ctx, slot, &ecosystem, "add", |extras| {
+    edit(ctx, slot, &ecosystem, "import", |extras| {
         extras.add_items(items.iter().cloned())
     })
 }
@@ -99,7 +123,7 @@ fn edit(
     ctx: &output::Context,
     slot: &str,
     ecosystem: &str,
-    list: &str,
+    verb: &str,
     change: impl FnOnce(&mut vibe_core::user_config::SlotExtras) -> usize,
 ) -> Result<Option<i32>> {
     let Some(path) = UserConfig::default_path() else {
@@ -109,35 +133,52 @@ fn edit(
         );
     };
     let mut config = UserConfig::load_own()?;
-    let added = change(config.extras_mut(slot, ecosystem));
+    let n = change(config.extras_mut(slot, ecosystem));
     config.save_to(&path)?;
-    let extras = config
+    let total = config
         .extras_of(slot, ecosystem)
-        .map(|extras| match list {
+        .map(|extras| match verb {
             "drop" => extras.drop.len(),
             _ => extras.add.len(),
         })
         .unwrap_or_default();
-    ctx.summary(&format!(
-        "vibe app extras {list}: {added} new in `[slot.{slot}.extras.{ecosystem}] {list}` ({extras} in all), in {}",
-        paint(Role::Accent, &path.display().to_string())
-    ));
-    if list == "add" {
-        ctx.summary(&format!(
-            "  the version you have now is unchanged; run {} to put the list into it",
+    let item = if n == 1 { "item" } else { "items" };
+    let what = match verb {
+        "drop" => {
+            let recommendation = if n == 1 {
+                "recommendation"
+            } else {
+                "recommendations"
+            };
+            format!(
+                "declined {n} {recommendation} of {slot}'s {ecosystem} list · {total} declined in all"
+            )
+        }
+        "import" => {
+            format!("imported {n} {item} into {slot}'s {ecosystem} list · {total} in all")
+        }
+        _ => format!("added {n} {item} to {slot}'s {ecosystem} list · {total} in all"),
+    };
+    if verb == "add" || verb == "import" {
+        ctx.block(&format!(
+            "  {}\n  {}",
+            hint("the version you have now is unchanged; to put the list into it"),
             paint(Role::Accent, &format!("vibe app extras apply {slot}"))
         ));
     }
+    ctx.trailer_at(&what, &path.display().to_string());
     Ok(None)
 }
 
 /// The one ecosystem these verbs edit: the named one, else the only one
 /// the user's own file already has for this slot, else the only one the
 /// slot's current version declares. Ambiguity is a refusal, never a guess.
+#[allow(clippy::too_many_arguments)]
 fn one_ecosystem(
     ctx: &output::Context,
     settings: &SettingsRoot,
     slot: &str,
+    fix: &str,
     target: &ExtrasTargetArgs,
     embedded_root: Option<&std::path::Path>,
     offline: bool,
@@ -165,6 +206,18 @@ fn one_ecosystem(
             "the slot `{slot}` declares several ecosystems ({}); name one with `--ecosystem ID`",
             many.join(", ")
         ),
+        Err(error)
+            if error
+                .downcast_ref::<vibe_app::AppError>()
+                .is_some_and(|error| error.code() == "unknown_slot") =>
+        {
+            bail!(
+                "unknown_slot: slot {slot} has no installed provider, so its ecosystems cannot be read \
+                 (violates spec://org.vibevm.core/vibevm/common/PROP-059#alternatives; \
+                 fix: `{fix}` or `vibe app list`): \
+                 the ecosystem is read off the installed version when --ecosystem is not given"
+            )
+        }
         Err(error) => bail!(
             "the slot `{slot}`'s ecosystems could not be read ({error}); name one with \
              `--ecosystem ID`"
