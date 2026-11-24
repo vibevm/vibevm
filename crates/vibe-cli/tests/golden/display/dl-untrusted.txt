@@ -1,7 +1,7 @@
-✓ route    https://127.0.0.1:<port>/a.txt direct · mode direct (default)
-✓ dns      127.0.0.1 · <ms>
-✓ connect  connected · <ms>
-✗ TLS      untrusted certificate
+✓ route    https://127.0.0.1:<port>/a.txt · mode direct · default  [direct]
+✓ dns      127.0.0.1 · <time>
+✓ connect  connected · <time>
+✗ tls      untrusted certificate
 
 ✗ dl_untrusted_certificate  unable to get local issuer certificate: the chain ends at `CN=Vibe Fixture untrusted CA, O=vibe-fixture`, which neither the system store nor the extra certificates trust;
   chain: `CN=vibe-fixture.test` issued by `CN=Vibe Fixture untrusted CA, O=vibe-fixture`

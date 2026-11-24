@@ -14,8 +14,15 @@ use crate::output::language::{self, Block, Cell, Glyph, Kind, List, Meta, Row, S
 
 const LIST: &str = "dl-phases";
 
-fn ms(value: Option<u64>) -> Option<Meta> {
-    value.map(|ms| Meta::note(format!("{ms} ms")))
+fn shown(phase: &str) -> &str {
+    match phase {
+        "TLS" => "tls",
+        other => other,
+    }
+}
+
+fn took(value: Option<u64>) -> Option<Meta> {
+    value.map(|ms| Meta::Time(Duration::from_millis(ms)))
 }
 
 /// Which phase a failure class stops at.
@@ -46,6 +53,23 @@ pub(super) struct PhaseRow {
 
 /// The rows of one hop.
 pub(super) fn hop_rows(probe: &Probe, index: usize, hop: &Hop, verbose: bool) -> Vec<PhaseRow> {
+    hop_rows_with_origin(
+        probe,
+        index,
+        hop,
+        verbose,
+        vibe_net::current().route().mode_origin().as_str(),
+    )
+}
+
+// Keep synthetic row tests independent of the process's installed network route.
+fn hop_rows_with_origin(
+    probe: &Probe,
+    index: usize,
+    hop: &Hop,
+    verbose: bool,
+    mode_origin: &str,
+) -> Vec<PhaseRow> {
     let mut rows = Vec::new();
     let row = |phase, text: String, meta: Vec<Option<Meta>>| PhaseRow {
         ok: true,
@@ -54,25 +78,26 @@ pub(super) fn hop_rows(probe: &Probe, index: usize, hop: &Hop, verbose: bool) ->
         meta: meta.into_iter().flatten().collect(),
         children: Vec::new(),
     };
-    let route = match (&hop.via, hop.bypassed) {
-        (Some(via), _) => format!("{} via {via}", hop.url),
-        (None, true) => format!("{} direct (no_proxy)", hop.url),
-        (None, false) => format!("{} direct", hop.url),
+    let route = match &hop.via {
+        Some(via) => format!("{} via {via}", hop.url),
+        None => hop.url.clone(),
     };
     let mut first = row(if index == 0 { "route" } else { "redirect" }, route, vec![]);
     if index == 0 {
-        first.meta.push(Meta::note(format!(
-            "mode {} ({})",
-            probe.mode,
-            vibe_net::current().route().mode_origin().as_str()
-        )));
+        first.meta.push(Meta::note(format!("mode {}", probe.mode)));
+        first.meta.push(Meta::note(mode_origin));
+    }
+    if hop.bypassed {
+        first.meta.push(Meta::State("no_proxy".into()));
+    } else if index == 0 && hop.via.is_none() {
+        first.meta.push(Meta::State("direct".into()));
     }
     rows.push(first);
     if !hop.addresses.is_empty() {
         rows.push(row(
             "dns",
             hop.addresses.join(", "),
-            vec![ms(hop.timings.dns_ms)],
+            vec![took(hop.timings.dns_ms)],
         ));
     }
     if let Some(connect) = hop.timings.connect_ms {
@@ -83,14 +108,14 @@ pub(super) fn hop_rows(probe: &Probe, index: usize, hop: &Hop, verbose: bool) ->
             } else {
                 "connected".to_owned()
             },
-            vec![ms(Some(connect))],
+            vec![took(Some(connect))],
         ));
     }
     if let Some(status) = &hop.connect_status {
         rows.push(row(
             "CONNECT",
             status.clone(),
-            vec![ms(hop.timings.proxy_ms)],
+            vec![took(hop.timings.proxy_ms)],
         ));
     }
     if let Some(tls) = &hop.tls {
@@ -108,7 +133,7 @@ pub(super) fn hop_rows(probe: &Probe, index: usize, hop: &Hop, verbose: bool) ->
                 tls.chain
                     .first()
                     .map(|leaf| Meta::note(leaf.subject.clone())),
-                ms(hop.timings.tls_ms),
+                took(hop.timings.tls_ms),
             ],
         );
         if verbose {
@@ -122,7 +147,7 @@ pub(super) fn hop_rows(probe: &Probe, index: usize, hop: &Hop, verbose: bool) ->
         rows.push(tls_row);
     }
     if let Some(status) = &hop.status_line {
-        let mut response = row("response", status.clone(), vec![ms(hop.timings.request_ms)]);
+        let mut response = row("response", status.clone(), vec![took(hop.timings.request_ms)]);
         if verbose && index + 1 < probe.hops.len() {
             response.children = hop
                 .headers
@@ -161,10 +186,10 @@ pub(super) fn probe_rows(probe: &Probe, verbose: bool) -> Vec<PhaseRow> {
 }
 
 pub(super) fn print_rows(ctx: &Context, rows: &[PhaseRow]) {
-    let width = rows.iter().map(|row| row.phase.len()).max().unwrap_or(0);
+    let width = rows.iter().map(|row| shown(row.phase).len()).max().unwrap_or(0);
     for row in rows {
         let glyph = if row.ok { Glyph::Done } else { Glyph::Failed };
-        let mut block = Block::new(glyph, format!("{:<width$}  {}", row.phase, row.text))
+        let mut block = Block::new(glyph, format!("{:<width$}  {}", shown(row.phase), row.text))
             .with_meta(row.meta.clone());
         if !row.children.is_empty() {
             block = block.with_body(
@@ -186,7 +211,29 @@ pub(super) fn phases(ctx: &Context, probe: &Probe, verbose: bool) {
     if ctx.is_json() || ctx.is_quiet() {
         return;
     }
-    print_rows(ctx, &probe_rows(probe, verbose));
+    let mut rows = probe_rows(probe, verbose);
+    let tls_hops = probe.hops.iter().filter(|hop| hop.tls.is_some());
+    for (row, hop) in rows
+        .iter_mut()
+        .filter(|row| row.phase == "TLS" && row.ok)
+        .zip(tls_hops)
+    {
+        if let Some(tls) = &hop.tls {
+            row.text = tls.version.clone();
+            row.meta = tls
+                .chain
+                .first()
+                .map(|leaf| Meta::note(leaf.subject.clone()))
+                .into_iter()
+                .chain(took(hop.timings.tls_ms))
+                .chain(Some(Meta::State(tls.trusted_by.as_ref().map_or_else(
+                    || "trust source unknown".to_owned(),
+                    |source| source.describe(),
+                ))))
+                .collect();
+        }
+    }
+    print_rows(ctx, &rows);
 }
 
 /// Whether stdout gets the decorated form: a colour terminal.
@@ -330,6 +377,65 @@ pub(super) fn check_table(ctx: &Context, rows: &[super::test_proxy::CheckRow]) {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn dl_rows_route_names_mode_and_origin() {
+        let probe = Probe {
+            mode: "direct",
+            hops: vec![Hop {
+                url: "https://h/a".into(),
+                ..Default::default()
+            }],
+            failure: None,
+        };
+        let rows = hop_rows_with_origin(&probe, 0, &probe.hops[0], false, "default");
+        assert_eq!(rows[0].text, "https://h/a");
+        assert_eq!(rows[0].meta.len(), 3);
+        assert_eq!(rows[0].meta[0], Meta::note("mode direct"));
+        assert_eq!(rows[0].meta[1], Meta::note("default"));
+        assert_eq!(rows[0].meta.last(), Some(&Meta::State("direct".into())));
+    }
+
+    #[test]
+    fn dl_rows_bypassed_route_carries_no_proxy_state() {
+        let probe = Probe {
+            mode: "explicit",
+            hops: vec![Hop {
+                url: "https://h/a".into(),
+                bypassed: true,
+                ..Default::default()
+            }],
+            failure: None,
+        };
+        let rows = hop_rows_with_origin(&probe, 0, &probe.hops[0], false, "user config");
+        assert_eq!(rows[0].meta.last(), Some(&Meta::State("no_proxy".into())));
+    }
+
+    #[test]
+    fn dl_rows_times_use_the_elapsed_form() {
+        let probe = Probe {
+            hops: vec![Hop {
+                addresses: vec!["127.0.0.1".into()],
+                timings: vibe_net::probe::Timings {
+                    dns_ms: Some(1500),
+                    ..Default::default()
+                },
+                ..Default::default()
+            }],
+            ..Default::default()
+        };
+        let rows = hop_rows_with_origin(&probe, 0, &probe.hops[0], false, "default");
+        let meta = &rows.iter().find(|row| row.phase == "dns").unwrap().meta;
+        assert_eq!(*meta, vec![Meta::Time(Duration::from_millis(1500))]);
+        assert_eq!(language::join_meta(meta), " · 1s");
+    }
+
+    #[test]
+    fn dl_rows_tls_label_is_lower_case() {
+        assert_eq!(shown("TLS"), "tls");
+        assert_eq!(shown("CONNECT"), "CONNECT");
+        assert_eq!(shown("route"), "route");
+    }
 
     #[test]
     fn dl_human_head_is_a_rule_and_rows() {
