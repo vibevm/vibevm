@@ -115,8 +115,20 @@ pub(super) fn run_mirror(
         payloads: args.prune_payloads,
         yes: args.yes,
     };
-    prune::check(pruning, &selection, args.config.as_deref())?;
-    announce(ctx, &selection);
+    let retry = prune::view::Retry {
+        source: &args.source,
+        into: &args.into,
+        config: args.config.as_deref(),
+        branch: args.branch.as_deref(),
+        name: args.name.as_deref(),
+        payloads: args.prune_payloads,
+        update_snapshots: args.update_snapshots,
+        keep_history: args.keep_history,
+        offline: root_offline,
+        path: &args.path,
+    };
+    prune::check_retry(pruning, &selection, &retry)?;
+    announce(ctx, &selection, args.config.as_deref());
 
     let reader = SourceReader::open(
         &source_reg,
@@ -318,7 +330,7 @@ pub(super) fn run_mirror(
     // Never silent, and never without a word: the plan is printed before
     // anything is removed, and an unattended run without `--yes` is
     // refused rather than left to copy against a plan it did not answer.
-    let removing = prune::answer(ctx, &pruned, pruning, args.dry_run)?;
+    let removing = prune::answer(ctx, &pruned, pruning, args.dry_run, &retry)?;
 
     if let Some(plan) = selection.payloads() {
         payloads::weigh(&projection, plan)?;
@@ -432,10 +444,17 @@ fn fact_is_new(fact: &vibe_index::journal::Event, target: &vibe_index::index::In
 /// `--config` cannot tell from the version rows alone whether the file was
 /// read, and one who ran bare cannot tell that the target's recorded
 /// selection is what narrowed the run.
-fn announce(ctx: &output::Context, selection: &Selection) {
+fn announce(ctx: &output::Context, selection: &Selection, config: Option<&Path>) {
     match selection.origin() {
         selection::Origin::Flags => {}
-        selection::Origin::Config => ctx.step("Selecting from `--config`"),
+        selection::Origin::Config => {
+            if let Some(config) = config {
+                ctx.step(&format!(
+                    "selection from {}",
+                    redact_credentials(&config.display().to_string())
+                ));
+            }
+        }
         selection::Origin::Recorded => {
             ctx.step(
                 "Selecting as the target's mirror record says, adding only what newly matches",
