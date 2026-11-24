@@ -7,14 +7,7 @@ use vibe_core::manifest::Manifest;
 use vibe_wire::generated::remap_preview_result::{RemapPreviewResult, Source, SourceKind};
 
 pub(super) fn run(ctx: &output::Context, args: RemapPreviewArgs, offline: bool) -> Result<()> {
-    ensure!(
-        offline,
-        "offline_required: remap preview reads only a verified local offer (violates \
-         spec://org.vibevm.core/vibevm/common/PROP-069#AUTHORED-DEFINITIONS; fix: `vibe remap preview {} \
-         --input {} --offline`)",
-        args.package,
-        args.input.display()
-    );
+    ensure!(offline, "{}", offline_refusal(&args.package, &args.input));
     let home = RemapHome::open()?;
     let key = args.package.strip_prefix("remap:").unwrap_or(&args.package);
     let reference = vibe_core::PackageRef::parse(key)?;
@@ -109,6 +102,30 @@ pub(super) fn run(ctx: &output::Context, args: RemapPreviewArgs, offline: bool) 
         }
         Ok(())
     }
+}
+
+/// Keep retry argv literal and never embed controls or backtick delimiters in a fix.
+pub(super) fn offline_refusal(package: &str, input: &std::path::Path) -> String {
+    let input = input.to_string_lossy();
+    let unsafe_text = |text: &str| text.chars().any(|c| c.is_control() || c == '`');
+    let command = if unsafe_text(package) || unsafe_text(&input) {
+        "vibe remap preview PACKAGE --input INPUT --offline".to_owned()
+    } else {
+        let token = |text: &str| {
+            if !text.is_empty()
+                && text.bytes().all(|b| b.is_ascii_alphanumeric() || b"_-./:".contains(&b))
+            {
+                text.to_owned()
+            } else {
+                format!("'{}'", text.replace('\'', "'\\''"))
+            }
+        };
+        format!("vibe remap preview {} --input {} --offline", token(package), token(&input))
+    };
+    format!(
+        "offline_required: remap preview reads only a verified local offer (violates \
+         spec://org.vibevm.core/vibevm/common/PROP-069#AUTHORED-DEFINITIONS; fix: `{command}`)"
+    )
 }
 
 /// Render verified local offer data as human rows without changing its wire document.
