@@ -4,6 +4,9 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-073#OPERATION-EFFECT
 use super::*;
 use specmark::spec;
 
+#[cfg(test)]
+mod tests;
+
 /// Explicit destinations selected by the preview operation, not by package data.
 /// The old store is lookup-only; missing retained metadata can acquire only into
 /// the same operation-owned scratch that the caller closes after preview.
@@ -44,6 +47,52 @@ impl InstallPreview {
                 metadata.candidate.group() == group && metadata.candidate.name() == name
             })
             .map(|metadata| metadata.observations.as_slice())
+    }
+
+    /// Declared contributions from this preview's selected metadata views.
+    ///
+    /// Rows retain the solver's package order and each manifest's declaration
+    /// order. Identity and version come from the retained selected candidate;
+    /// the remaining fields are borrowed declarations, not eligibility or an
+    /// execution plan. A missing title remains absent. Enumeration performs no
+    /// source lookup, payload acquisition, condition evaluation or execution.
+    ///
+    /// ```
+    /// # fn inspect(preview: &vibe_install::InstallPreview) {
+    /// for (group, name, version, id, handler, title) in preview.package_contributions() {
+    ///     let _declaration = (group, name, version, id, handler.kind(), title);
+    /// }
+    /// # }
+    /// ```
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-073#OPERATION-EFFECTS")]
+    pub fn package_contributions(
+        &self,
+    ) -> impl Iterator<
+        Item = (
+            &vibe_core::Group,
+            &str,
+            &semver::Version,
+            &str,
+            &vibe_core::manifest::ExtensionHandler,
+            Option<&str>,
+        ),
+    > {
+        self.selected.iter().flat_map(|metadata| {
+            let candidate = &metadata.candidate;
+            metadata.view.extensions.iter().map(move |declaration| {
+                (
+                    candidate.group(),
+                    candidate.name(),
+                    candidate.version(),
+                    declaration.id.as_str(),
+                    &declaration.handler,
+                    declaration
+                        .judgment
+                        .as_ref()
+                        .and_then(|judgment| judgment.title.as_deref()),
+                )
+            })
+        })
     }
 
     /// Selected source facts in graph order, without claiming payload acquisition.
