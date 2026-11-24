@@ -68,16 +68,60 @@ pub(super) fn run(ctx: &output::Context, mut args: AppEnvArgs) -> Result<()> {
     // Stdout carries the lines and nothing else, so what was written is a
     // notice like every other.
     if let Some(written) = &written {
-        eprintln!(
-            "vibe app env: wrote {} to {}",
+        use output::language::{Glyph, Role, paint};
+        let basename = written.path.file_name().unwrap_or_default().to_string_lossy();
+        ctx.block_err(&format!(
+            "{} wrote {} to {basename} · {}",
+            paint(Role::Ok, Glyph::Done.text()),
             written.version,
             written.path.display()
-        );
+        ));
     }
-    for notice in notices(&resolved.activation) {
+    let mut other = resolved.activation.clone();
+    other.selections.retain(|selection| {
+        if selection.state != ActivationState::NotInstalled {
+            return true;
+        }
+        emit_missing(
+            ctx,
+            &selection.slot,
+            selection.requested.as_deref().unwrap_or(""),
+            selection.install.as_deref(),
+            false,
+        );
+        false
+    });
+    for notice in notices(&other) {
         eprintln!("vibe app env: {notice}");
     }
     Ok(())
+}
+
+/// Human-only missing-version notice shared by env and shell; eval output
+/// stays on stdout (PROP-075 `#ACTIVATION-ENV-OUTPUT`).
+#[specmark::spec(
+    implements = "spec://org.vibevm.core/vibevm/common/PROP-075#ACTIVATION-ENV-OUTPUT"
+)]
+pub(crate) fn emit_missing(
+    ctx: &output::Context,
+    slot: &str,
+    requested: &str,
+    install: Option<&str>,
+    shell: bool,
+) {
+    use output::language::{self, Role, paint};
+    let install = install
+        .map(str::to_owned)
+        .unwrap_or_else(|| format!("vibe install -g {slot}@{requested}"));
+    let mut text = format!(
+        "{}\n  {}",
+        language::warning(&format!("{slot} wants {requested}, which is not installed")),
+        paint(Role::Accent, &install)
+    );
+    if shell {
+        text.push_str(&format!("\n  {}", paint(Role::Dim, "Continuing without this version.")));
+    }
+    ctx.block_err(&text);
 }
 
 /// `--write-version-file[=PATH]` on `vibe app env`: nvm's `use --save`,
@@ -124,6 +168,16 @@ fn write_version_file(
             "--write-version-file has no version to write: `--use {slot}=none` switches the \
              slot off for this shell"
         ),
+        (ActivationState::NotInstalled, _) => {
+            let install = selection.install.clone().unwrap_or_else(|| {
+                format!("vibe install -g {slot}@{}", selection.requested.as_deref().unwrap_or(""))
+            });
+            anyhow::bail!(
+                "not_installed: --write-version-file has no version to write: {slot} is not installed \
+                 (violates spec://org.vibevm.core/vibevm/common/PROP-075#VERSION-FILE-WRITE; \
+                 fix: `{install}`)"
+            );
+        }
         _ => anyhow::bail!(
             "--write-version-file has no version to write: slot `{slot}` is {}{}",
             selection.state.as_str(),
