@@ -150,13 +150,18 @@ pub(crate) fn run_project_applications(
     args: InstallArgs,
     embedded_root: Option<PathBuf>,
     root_offline: bool,
+    after: impl FnOnce() -> Result<()>,
 ) -> Result<()> {
-    run_with_scope(
+    run_with_scope_selected(
         ctx,
         args,
         embedded_root,
         root_offline,
         ConfirmationScope::ProjectApplications,
+        Completion {
+            selected: None,
+            after: Some(Box::new(after)),
+        },
     )
 }
 
@@ -220,7 +225,10 @@ pub(crate) fn run_selected(
         embedded_root,
         root_offline,
         ConfirmationScope::Project,
-        Some(selected),
+        Completion {
+            selected: Some(selected),
+            after: None,
+        },
     )
 }
 
@@ -231,15 +239,31 @@ fn run_with_scope(
     root_offline: bool,
     scope: ConfirmationScope<'_>,
 ) -> Result<()> {
-    run_with_scope_selected(ctx, args, embedded_root, root_offline, scope, None)
+    run_with_scope_selected(
+        ctx,
+        args,
+        embedded_root,
+        root_offline,
+        scope,
+        Completion {
+            selected: None,
+            after: None,
+        },
+    )
 }
+/// This invocation's selected source and fallible post-install work.
+struct Completion<'a> {
+    selected: Option<SelectedRouting>,
+    after: Option<Box<dyn FnOnce() -> Result<()> + 'a>>,
+}
+
 fn run_with_scope_selected(
     ctx: &output::Context,
     args: InstallArgs,
     embedded_root: Option<PathBuf>,
     root_offline: bool,
     scope: ConfirmationScope<'_>,
-    selected: Option<SelectedRouting>,
+    completion: Completion<'_>,
 ) -> Result<()> {
     let overall = ctx.progress().task("Installing packages");
     let scoped = ctx.with_progress_scope(overall.progress());
@@ -258,7 +282,7 @@ fn run_with_scope_selected(
             root_offline,
             &overall,
             scope,
-            selected,
+            completion,
         )
     })
 }
@@ -270,7 +294,7 @@ fn run_observed(
     root_offline: bool,
     overall: &vibe_core::progress::ProgressTask,
     scope: ConfirmationScope<'_>,
-    selected: Option<SelectedRouting>,
+    completion: Completion<'_>,
 ) -> Result<()> {
     let PreparedInstall {
         lease,
@@ -297,7 +321,11 @@ fn run_observed(
     // into the run and the callback, while this one lives to the end of the
     // command — through the final report and the trace finalisation.
     let lease_owner = lease.clone();
-    let exit = execute_after_open(
+    let Completion { selected, after } = completion;
+    let prompt_before = after
+        .as_ref()
+        .map(|_| crate::commands::prompt::Snapshot::of(lease.root()));
+    let mut exit = execute_after_open(
         ctx,
         Execution {
             args,
@@ -312,6 +340,33 @@ fn run_observed(
         },
         trace.recorder(),
     );
+    // Join application materialisation and remap publication BEFORE finalization
+    // or any success output, retaining this invocation's lease throughout.
+    if matches!(exit, CommandExit::Success(_) | CommandExit::Parked(_)) {
+        let prompt = prompt_before.and_then(|before| before.summary(lease_owner.root()));
+        let result = after.map_or(Ok(()), |after| after());
+        if let Err(original_error) = result {
+            let report = match exit {
+                CommandExit::Success(mut report) | CommandExit::Parked(mut report) => {
+                    if let RegisteredReportDraft::Install(draft) = &mut report {
+                        draft.ok = false;
+                        draft.delegation = None;
+                    }
+                    report
+                }
+                CommandExit::Failed { .. } => unreachable!(),
+            };
+            exit = CommandExit::Failed {
+                report,
+                original_error,
+                emit_when_trace_disabled: false,
+            };
+        } else if let CommandExit::Success(RegisteredReportDraft::Install(draft))
+        | CommandExit::Parked(RegisteredReportDraft::Install(draft)) = &mut exit
+        {
+            draft.prompt = prompt;
+        }
+    }
     // Consumes the owner: finishes the index, drops the last handle (and with
     // it the cooperative lock), and returns the member to attach.
     let finalized = compile_trace::finalize(trace, exit, &now);
