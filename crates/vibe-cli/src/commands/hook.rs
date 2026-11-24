@@ -18,6 +18,7 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-075#ACTIVATION-HOOK");
 
 use specmark::spec;
+use std::io::IsTerminal;
 use std::path::PathBuf;
 
 use anyhow::{Context, Result, bail};
@@ -33,9 +34,10 @@ pub fn run(ctx: &output::Context, args: HookArgs) -> Result<()> {
     let shell = Shell::parse(&args.shell)?;
     if matches!(shell, Shell::Cmd | Shell::Posix) {
         bail!(
-            "vibe hook takes bash, zsh, fish or pwsh; cmd has no prompt hook and `vibe shell` is \
-             the way there (violates \
-             spec://org.vibevm.core/vibevm/common/PROP-075#ACTIVATION-HOOK)"
+            "unsupported_shell: {} has no prompt hook; vibe hook takes bash, zsh, fish or pwsh \
+             (violates spec://org.vibevm.core/vibevm/common/PROP-075#ACTIVATION-HOOK; \
+             fix: `vibe shell`)",
+            shell.as_str()
         );
     }
     let settings = global::settings_root()?;
@@ -55,14 +57,19 @@ pub fn run(ctx: &output::Context, args: HookArgs) -> Result<()> {
         );
     };
     let rc = rc_path(shell, &home);
-    if !args.yes && ctx.is_unattended() {
+    if !args.yes
+        && (ctx.is_unattended()
+            || !std::io::stdin().is_terminal()
+            || !std::io::stdout().is_terminal())
+    {
+        let short = output::language::short_path(&rc.display().to_string());
         bail!(
-            "consent_required: `vibe hook {}` would write a managed block into `{}`, and this \
+            "consent_required: vibe hook {} would write a managed block into {short}, and this \
              run has nobody to ask (violates \
-             spec://org.vibevm.core/vibevm/common/PROP-075#ACTIVATION-HOOK; fix: rerun with \
-             --yes, or `vibe hook {} --print` and install the block yourself)",
+             spec://org.vibevm.core/vibevm/common/PROP-075#ACTIVATION-HOOK; \
+             fix: `vibe hook {} --yes`, or `vibe hook {} --print`)",
             shell.as_str(),
-            rc.display(),
+            shell.as_str(),
             shell.as_str()
         );
     }

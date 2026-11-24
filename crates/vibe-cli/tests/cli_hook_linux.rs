@@ -164,6 +164,30 @@ fn the_block_is_written_into_the_startup_file_and_nothing_outside_it_moves() {
 }
 #[test]
 #[specmark::spec(verifies = "spec://org.vibevm.core/vibevm/common/PROP-075#ACTIVATION-HOOK")]
+fn hook_pipe_requires_consent() {
+    for args in [vec!["hook", "fish"], vec!["hook", "cmd", "--print"], vec!["hook", "fish", "--print"]] {
+        let home = tempfile::tempdir().unwrap(); let settings = tempfile::tempdir().unwrap();
+        let rc = home.path().join(".config/fish/config.fish");
+        let out = Command::new(vibe_binary()).args(&args).current_dir(home.path()).env_clear()
+            .env("HOME", home.path()).env("USERPROFILE", home.path()).env("VIBE_SETTINGS", settings.path())
+            .env("NO_COLOR", "1").stdin(std::process::Stdio::null()).output().unwrap();
+        let err = String::from_utf8(out.stderr).unwrap(); let stdout = String::from_utf8(out.stdout).unwrap();
+        assert!(!rc.exists()); assert!(!err.starts_with('\n'), "{err}");
+        assert!(!err.contains("❯") && !err.contains("reading the hook consent answer"), "{err}");
+        if args == ["hook", "fish", "--print"] {
+            assert!(out.status.success(), "{err}"); assert!(err.is_empty(), "{err}");
+            assert!(stdout.contains("function __vibe_versions"), "{stdout}");
+        } else {
+            assert!(!out.status.success()); assert!(stdout.is_empty(), "{stdout}");
+            let code = if args[1] == "cmd" { "unsupported_shell" } else { "consent_required" };
+            assert!(err.starts_with(&format!("✗ {code}  ")), "{err}");
+            if args[1] == "cmd" { assert!(err.contains("cmd has no prompt hook"), "{err}"); assert_eq!(err.matches("vibe shell").count(), 1, "{err}"); }
+            else { for fix in ["vibe hook fish --yes", "vibe hook fish --print", "~/.config/fish/config.fish", "spec://org.vibevm.core/vibevm/common/PROP-075#ACTIVATION-HOOK"] { assert_eq!(err.matches(fix).count(), 1, "{err}"); } assert_eq!(err.lines().filter(|line| line.contains("--yes") || line.contains("--print")).count(), 2, "{err}"); }
+        }
+    }
+}
+#[test]
+#[specmark::spec(verifies = "spec://org.vibevm.core/vibevm/common/PROP-075#ACTIVATION-HOOK")]
 fn hook_rerun_reports_unchanged() {
     let scratch = vibe_test_support::UserScratch::new();
     let home = tempfile::tempdir().unwrap();
