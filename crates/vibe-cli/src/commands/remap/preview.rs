@@ -1,10 +1,20 @@
 //! Read-only request-local data from a verified local owned offer, not supplier provenance.
 use super::home::RemapHome;
+use crate::output::language::{Cell, List, Role, Row, rule_at, rule_width, viewport};
 use crate::{cli::RemapPreviewArgs, output};
 use anyhow::{Result, anyhow, ensure};
 use vibe_core::manifest::Manifest;
+use vibe_wire::generated::remap_preview_result::{RemapPreviewResult, Source, SourceKind};
+
 pub(super) fn run(ctx: &output::Context, args: RemapPreviewArgs, offline: bool) -> Result<()> {
-    ensure!(offline, "remap preview requires explicit offline operation");
+    ensure!(
+        offline,
+        "offline_required: remap preview reads only a verified local offer (violates \
+         spec://org.vibevm.core/vibevm/common/PROP-069#AUTHORED-DEFINITIONS; fix: `vibe remap preview {} \
+         --input {} --offline`)",
+        args.package,
+        args.input.display()
+    );
     let home = RemapHome::open()?;
     let key = args.package.strip_prefix("remap:").unwrap_or(&args.package);
     let reference = vibe_core::PackageRef::parse(key)?;
@@ -75,7 +85,6 @@ pub(super) fn run(ctx: &output::Context, args: RemapPreviewArgs, offline: bool) 
             == Some(&index),
         "local offer index changed during preview"
     );
-    use vibe_wire::generated::remap_preview_result::{RemapPreviewResult, Source, SourceKind};
     let result = RemapPreviewResult {
         protocol: "vibe-remap-preview/1".into(),
         package: key.into(),
@@ -92,7 +101,38 @@ pub(super) fn run(ctx: &output::Context, args: RemapPreviewArgs, offline: bool) 
     if args.json || ctx.is_json() {
         ctx.emit_json(&result)
     } else {
-        println!("{}", serde_json::to_string_pretty(&result)?);
+        let text = view(&result, viewport(), rule_width());
+        if ctx.is_quiet() {
+            ctx.summary(&text);
+        } else {
+            ctx.block(&text);
+        }
         Ok(())
     }
+}
+
+/// Render verified local offer data as human rows without changing its wire document.
+#[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-067#list")]
+pub(super) fn view(result: &RemapPreviewResult, width: usize, rule: usize) -> String {
+    let mut rows = vec![Row::new(vec![
+        Cell::text("content"),
+        Cell::text(&result.source.content_hash),
+    ])];
+    for (id, value) in &result.selected_values {
+        let value = match value {
+            Some(serde_json::Value::String(text)) => Cell::text(text),
+            Some(value) => Cell::text(value.to_string()),
+            None => Cell::new("none", Role::Dim),
+        };
+        rows.push(Row::new(vec![Cell::text(id), value]));
+    }
+    format!(
+        "{}\n{}",
+        rule_at(
+            &format!("preview of {}@{}", result.package, result.version),
+            Some("local owned offer"),
+            rule,
+        ),
+        List::new(rows).render_at(width)
+    )
 }

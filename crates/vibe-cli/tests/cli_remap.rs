@@ -14,7 +14,6 @@
 #![cfg(target_os = "linux")]
 
 mod common;
-
 use std::fs;
 use std::io::{Read, Write};
 use std::net::TcpListener;
@@ -22,11 +21,9 @@ use std::path::{Path, PathBuf};
 use std::process::Output;
 use std::sync::Arc;
 use std::sync::atomic::{AtomicUsize, Ordering};
-
 use common::UserScratch;
 use serde_json::Value;
 use sha2::{Digest, Sha256};
-
 /// Serve `body` on a loopback port and count every request that reached
 /// it. The count is the whole point: "no connection was made" is the
 /// claim `deny` and `sha256`-from-a-directory have to earn.
@@ -57,11 +54,9 @@ fn serve(body: Vec<u8>) -> (String, Arc<AtomicUsize>) {
     });
     (format!("http://{address}/dist/payload.txt"), hits)
 }
-
 fn sha(bytes: &[u8]) -> String {
     format!("{:x}", Sha256::digest(bytes))
 }
-
 /// A one-step application package whose single `sources` input is the
 /// declared URL, plus a recipe that copies it into the payload.
 struct Fixture {
@@ -69,7 +64,6 @@ struct Fixture {
     registry: PathBuf,
     package: PathBuf,
 }
-
 impl Fixture {
     fn new(url: &str, digest: &str) -> Self {
         let root = tempfile::tempdir().unwrap();
@@ -125,7 +119,6 @@ default = true
             package,
         }
     }
-
     fn vibe(&self, user: &UserScratch, args: &[&str]) -> Output {
         let mut command = user.vibe();
         command.current_dir(self.root.path()).args(args);
@@ -134,7 +127,6 @@ default = true
         }
         command.output().unwrap()
     }
-
     fn install(&self, user: &UserScratch, extra: &[&str]) -> Output {
         let registry = self.registry.to_str().unwrap();
         let mut args = extra.to_vec();
@@ -143,7 +135,6 @@ default = true
         self.vibe(user, &args)
     }
 }
-
 fn ok(output: &Output) -> String {
     assert!(
         output.status.success(),
@@ -154,7 +145,6 @@ fn ok(output: &Output) -> String {
     );
     String::from_utf8_lossy(&output.stdout).into_owned()
 }
-
 fn failed(output: &Output) -> String {
     assert!(
         !output.status.success(),
@@ -163,12 +153,10 @@ fn failed(output: &Output) -> String {
     );
     String::from_utf8_lossy(&output.stderr).into_owned()
 }
-
 /// Write `~/.vibe/settings.toml` with a `[[remap]]` body.
 fn settings(user: &UserScratch, body: &str) {
     fs::write(user.settings.join("settings.toml"), body).unwrap();
 }
-
 /// Lay out a download-cache-shaped directory: `<dir>/<sha256>/<filename>`.
 fn by_digest(dir: &Path, digest: &str, filename: &str, bytes: &[u8]) -> PathBuf {
     let entry = dir.join(digest);
@@ -176,7 +164,6 @@ fn by_digest(dir: &Path, digest: &str, filename: &str, bytes: &[u8]) -> PathBuf 
     fs::write(entry.join(filename), bytes).unwrap();
     dir.to_path_buf()
 }
-
 #[test]
 fn a_sha256_row_serves_an_input_from_a_directory_without_touching_the_server() {
     let payload = b"payload-bytes\n";
@@ -534,4 +521,17 @@ fn the_whole_remap_surface_is_offered() {
             "`remap {verb}` is built and must appear in the help:\n{help}"
         );
     }
+}
+#[test]
+fn remap_preview_online_is_refused_with_offline_required() {
+    let user = UserScratch::new();
+    let home = tempfile::tempdir().unwrap();
+    let output = user.vibe().env("HOME", home.path()).env("USERPROFILE", home.path())
+        .env("VIBE_SETTINGS", &user.settings)
+        .current_dir(home.path())
+        .args(["remap", "preview", "org.example/nothing", "--input", "in.toml"])
+        .output().unwrap();
+    let stderr = failed(&output);
+    assert!(stderr.contains("✗ offline_required  remap preview reads only a verified local offer"), "{stderr}");
+    assert!(stderr.contains("fix   vibe remap preview org.example/nothing --input in.toml --offline"), "{stderr}");
 }
