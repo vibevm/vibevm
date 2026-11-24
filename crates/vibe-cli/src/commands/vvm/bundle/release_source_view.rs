@@ -21,6 +21,7 @@ use super::download::{Downloader, HttpDownloader};
 use super::release_source::{self, EffectiveReleaseSource, SourceOrigin};
 use super::releases::Releases;
 use crate::cli::{VvmReleasesArgs, VvmSourceCommand, VvmSourceSetArgs};
+use crate::output::language::{self, Glyph, Role, paint};
 
 /// How many releases `self releases` shows without `--all`.
 const RECENT: usize = 10;
@@ -70,7 +71,7 @@ pub(in crate::commands::vvm) fn run_release_source_cmd(
     match command {
         VvmSourceCommand::Show => show(ctx, &release_source::active()?),
         VvmSourceCommand::Set(args) => set(ctx, env, args),
-        VvmSourceCommand::Reset => store(ctx, SelfConfig::default()),
+        VvmSourceCommand::Reset => store(ctx, SelfConfig::default(), "release source reset"),
     }
 }
 
@@ -80,25 +81,45 @@ fn show(ctx: &output::Context, effective: &EffectiveReleaseSource) -> Result<()>
         return ctx.emit_json(&shown);
     }
     let mut text = format!(
-        "release source: {} {}\n  from  {}",
+        "{} release source  {} {}\n  from   {}",
+        paint(Role::Ok, Glyph::Done.text()),
         release_source::kind_label(shown.source.clone()),
-        shown.location,
-        shown.from
+        display_path(&shown.location),
+        display_origin(&shown.from)
     );
     match &shown.row {
         Some(row) => text.push_str(&format!(
-            "\n  remap {} → {} ({} layer; `vibe remap explain` shows it)",
+            "\n  remap  {} → {}{}\n  {}",
             row.prefix,
-            row.target,
-            layer_text(&row.layer)
+            display_path(&row.target),
+            language::join_meta(&[language::Meta::note(format!(
+                "{} layer",
+                layer_text(&row.layer)
+            ))]),
+            paint(Role::Accent, "vibe remap explain")
         )),
         None if effective.source.kind() == "gitverse" => {
             text.push_str("\n  read through the GitVerse REST API")
         }
         None => {}
     }
-    ctx.summary(&text);
+    ctx.block(&text);
     Ok(())
+}
+
+fn display_path(value: &str) -> String {
+    if value.starts_with('/') || std::path::Path::new(value).is_absolute() {
+        language::short_path(value)
+    } else {
+        value.to_owned()
+    }
+}
+
+fn display_origin(value: &str) -> String {
+    match value.split_once(" in ") {
+        Some((label, path)) => format!("{label} in {}", display_path(path)),
+        None => value.to_owned(),
+    }
 }
 
 fn set(ctx: &output::Context, env: &VvmEnv, args: VvmSourceSetArgs) -> Result<()> {
@@ -122,12 +143,16 @@ fn set(ctx: &output::Context, env: &VvmEnv, args: VvmSourceSetArgs) -> Result<()
             settings_dir: None,
         },
     };
-    store(ctx, table)
+    store(
+        ctx,
+        table,
+        &format!("release source set to {}", args.kind.to_ascii_lowercase()),
+    )
 }
 
 /// Validate the new `[self]` table against the rest of the config, then
 /// write it; an unusable source is refused and nothing is written.
-fn store(ctx: &output::Context, mut table: SelfConfig) -> Result<()> {
+fn store(ctx: &output::Context, mut table: SelfConfig, action: &str) -> Result<()> {
     let path: PathBuf = UserConfig::default_path().context(
         "no user settings directory resolves (violates spec://org.vibevm.core/vibevm/common/PROP-019#release-sources; \
          fix: set VIBE_SETTINGS or make the user home resolvable)",
@@ -177,7 +202,9 @@ fn store(ctx: &output::Context, mut table: SelfConfig) -> Result<()> {
             release_source::RELEASE_ORIGIN_ENV
         ));
     }
-    show(ctx, &resolved)
+    show(ctx, &resolved)?;
+    ctx.trailer_at(action, &path.display().to_string());
+    Ok(())
 }
 
 /// One remap layer spelled for a human — `Layer::label`'s four strings,
@@ -242,12 +269,18 @@ pub(in crate::commands::vvm) fn run_releases_cmd(
     if ctx.is_json() {
         return ctx.emit_json(&document);
     }
-    let mut text = format!(
-        "releases at {} {} ({})",
+    ctx.block(&releases_text(&document, total - shown));
+    Ok(())
+}
+
+fn releases_text(document: &SelfReleasesReport, remaining: usize) -> String {
+    let label = format!(
+        "releases at {} {}",
         release_source::kind_label(document.source.source.clone()),
-        document.source.location,
-        document.source.from
+        display_path(&document.source.location)
     );
+    let mut text = language::rule(&label, Some(&display_origin(&document.source.from)));
+    text.push('\n');
     if document.releases.is_empty() {
         text.push_str("\n  none");
     }
@@ -262,18 +295,68 @@ pub(in crate::commands::vvm) fn run_releases_cmd(
         if row.installed && !row.active {
             marks.push("installed");
         }
-        let mark = if row.active { '*' } else { ' ' };
-        text.push_str(&format!("\n{mark} {}", row.version));
-        if !marks.is_empty() {
-            text.push_str(&format!("  ({})", marks.join(", ")));
+        text.push_str(&format!("\n  {}", row.version));
+        for mark in marks {
+            text.push_str(&format!("  {}", paint(Role::Dim, &format!("[{mark}]"))));
         }
     }
     if document.truncated {
         text.push_str(&format!(
             "\n  … {} more; `--all` lists every release",
-            total - shown
+            remaining
         ));
     }
-    ctx.summary(&text);
-    Ok(())
+    text
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn releases_show_state_rows() {
+        let document = SelfReleasesReport {
+            protocol: RELEASES_PROTOCOL.to_owned(),
+            source: ReleaseSourceView {
+                protocol: SOURCE_PROTOCOL.to_owned(),
+                source: vibe_wire::generated::self_source_report::ReleaseSourceKind::Localdir,
+                location: "/synthetic/drop".to_owned(),
+                from: "[self] in /synthetic/config.toml".to_owned(),
+                row: None,
+            },
+            releases: vec![
+                ReleaseRow {
+                    version: "1.0.13".to_owned(),
+                    active: false,
+                    running: false,
+                    installed: false,
+                },
+                ReleaseRow {
+                    version: "1.0.12".to_owned(),
+                    active: true,
+                    running: true,
+                    installed: true,
+                },
+                ReleaseRow {
+                    version: "1.0.11".to_owned(),
+                    active: false,
+                    running: false,
+                    installed: true,
+                },
+                ReleaseRow {
+                    version: "1.0.10".to_owned(),
+                    active: false,
+                    running: true,
+                    installed: true,
+                },
+            ],
+            truncated: false,
+        };
+        let text = releases_text(&document, 0);
+        assert!(text.contains("\n\n  1.0.13\n"), "{text}");
+        assert!(text.contains("\n  1.0.12  [active]  [running]\n"), "{text}");
+        assert!(text.contains("\n  1.0.11  [installed]\n"), "{text}");
+        assert!(text.ends_with("\n  1.0.10  [running]  [installed]"), "{text}");
+        assert!(!text.contains("(active") && !text.contains("* 1.0"), "{text}");
+    }
 }

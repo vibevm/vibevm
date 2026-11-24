@@ -43,7 +43,7 @@ impl Machine {
         let mut command = self.user.vibe();
         command
             .env("VIBEVM_INSTALL_ROOT", self.base.path())
-            .env("HOME", self.home.path())
+            .env("HOME", self.home.path()).env("USERPROFILE", self.home.path()).env("VIBE_SETTINGS", &self.user.settings)
             .env("SHELL", "/bin/bash")
             .env("PATH", "/usr/bin:/bin")
             .env_remove("VIBEVM_HOME")
@@ -556,7 +556,7 @@ fn the_user_layer_beats_the_site_and_the_site_beats_the_defaults() {
     );
     let reset_text = ok(&machine.run(&["self", "source", "reset"]));
     assert!(
-        reset_text.contains("release source: localdir") && !reset_text.contains("built-in"),
+        reset_text.contains("release source  localdir") && !reset_text.contains("built-in"),
         "{reset_text}"
     );
     let source = json(&machine.run(&["--json", "self", "source", "show"]));
