@@ -30,7 +30,6 @@ mod world;
 use world::{Recipe, World};
 
 // ---------------------------------------------------------------------------
-// Format: both lane spellings
 // ---------------------------------------------------------------------------
 
 /// The delivered lane equals the classic boot under either `STATIC`
@@ -443,8 +442,9 @@ fn a_launch_notes_the_host_mismatch_on_stderr_and_still_starts_the_harness() {
         .assert()
         .success()
         .stderr(predicate::str::contains(format!(
-            "note: `[system_prompt] host` declares `{other}`"
+            "  `[system_prompt] host` declares `{other}`"
         )))
+        .stderr(predicate::str::contains("note:").not())
         .stderr(predicate::str::contains(format!("runs on `{session}`")));
     // It really launched: the shim recorded the slot flag.
     assert!(

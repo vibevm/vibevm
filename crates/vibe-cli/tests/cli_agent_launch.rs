@@ -684,9 +684,7 @@ fn a_project_manifest_that_names_a_launcher_is_a_refusal() {
 
 #[test]
 fn a_project_that_has_not_opted_in_starts_the_harness_unchanged() {
-    // The launcher must stay usable in every project. With no template there
-    // is no lane, so the harness gets no slot flag and boots the classic way,
-    // and a user's own slot flag is then no conflict at all.
+    // No template means no slot flag; the user's slot flag remains theirs.
     let machine = Machine::new(WRAPPER);
     fs::remove_file(
         machine
@@ -700,9 +698,11 @@ fn a_project_that_has_not_opted_in_starts_the_harness_unchanged() {
         .agent(&["claude", "--append-system-prompt-file", "mine.md"])
         .assert()
         .success()
-        .stderr(predicate::str::contains("has not opted in"))
-        .stderr(predicate::str::contains("unchanged"))
-        .stderr(predicate::str::contains("run `vibe prompt init` to opt in"));
+        .stderr(predicate::str::contains("○ system prompt  not opted in"))
+        .stderr(predicate::str::contains(
+            "claude starts unchanged · vibe prompt init opts this project in",
+        ))
+        .stderr(predicate::str::contains("note:").not());
     assert_eq!(
         machine.argv(),
         ["--no-telemetry", "--append-system-prompt-file", "mine.md"]
