@@ -97,13 +97,7 @@ pub(super) fn run_mirror(
         &project_root,
         vibe_package_source::deferred_user_registry(crate::output::seeds_default_registry()),
     )?;
-    ctx.heading(&format!(
-        "Mirroring registry `{}` ({}) → {}{}",
-        source_reg.name,
-        redact_credentials(&source_reg.url),
-        target.shown,
-        if args.dry_run { " [dry-run]" } else { "" }
-    ));
+    render::heading(ctx, &source_reg.name, &target, args.dry_run);
 
     let progress = ctx.progress();
     // The target is read first because it is what carries the selection a
@@ -324,7 +318,7 @@ pub(super) fn run_mirror(
         removed: args.prune.then_some(0),
     };
     if alarms > 0 {
-        render(ctx, &report)?;
+        render(ctx, &report, &target, snapshot_count)?;
         bail!(
             "vibe registry mirror: {alarms} version(s) of `{}` differ from the copy in the target \
              in a way that may not happen (a frozen version changed, or the bytes disagree with \
@@ -360,7 +354,7 @@ pub(super) fn run_mirror(
         report.index_refreshed = recorded > 0
             || snapshot_count > 0
             || target_state != vibe_core::layout_registry::IndexState::Current;
-        return render(ctx, &report);
+        return render(ctx, &report, &target, snapshot_count);
     }
     // Payloads are projected before the batch: a target must not come to
     // advertise a version whose bytes a closed network cannot get, and the
@@ -415,7 +409,7 @@ pub(super) fn run_mirror(
         }
     }
     if unavailable > 0 {
-        render(ctx, &report)?;
+        render(ctx, &report, &target, snapshot_count)?;
         bail!(
             "vibe registry mirror: the source `{}` could not serve {unavailable} version(s); \
              everything else was copied \
@@ -425,7 +419,7 @@ pub(super) fn run_mirror(
             source_reg.name
         );
     }
-    render(ctx, &report)
+    render(ctx, &report, &target, snapshot_count)
 }
 
 /// Whether a carried fact is news to the target (the batch applies the
