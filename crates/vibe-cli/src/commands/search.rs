@@ -539,7 +539,7 @@ pub fn run(ctx: &output::Context, args: SearchArgs, env: SearchEnv) -> Result<()
         return Ok(());
     }
 
-    human::render(ctx, &report, full_scan)
+    human::render(ctx, &report)
 }
 
 mod support;
