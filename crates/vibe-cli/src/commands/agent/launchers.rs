@@ -67,12 +67,12 @@ pub(crate) fn resolve_all(settings: &SettingsRoot, config: &AgentsConfig) -> Res
     for (name, declared) in &config.launchers {
         let Some(kind) = HarnessKind::parse(&declared.kind) else {
             bail!(
-                "`[launchers.{name}] kind = \"{}\"` in `{path}` names no harness kind this \
-                 build knows; they are {}",
+                "launcher_kind_unknown: [launchers.{name}] names kind {}, which this build does not know \
+                 (violates spec://org.vibevm.core/vibevm/common/PROP-076#SYS-HARNESS-EXECUTABLE; fix: set \
+                 kind in {}): the kinds are {}",
                 declared.kind,
-                HarnessKind::ALL
-                    .map(|kind| format!("`{}`", kind.as_str()))
-                    .join(", ")
+                crate::output::language::short_path(&path),
+                HarnessKind::ALL.map(|kind| kind.as_str()).join(", ")
             );
         };
         let command = if declared.command.is_empty() {
@@ -110,14 +110,15 @@ pub(crate) fn resolve(
     match launchers.iter().find(|launcher| launcher.name == name) {
         Some(launcher) => Ok(launcher.clone()),
         None => bail!(
-            "`{name}` is not an agent launcher; this machine has {}. Declare one as \
-             `[launchers.{name}]` with `kind` and `command` in `{}`",
+            "launcher_unknown: {name} is not an agent launcher (violates \
+             spec://org.vibevm.core/vibevm/common/PROP-076#SYS-HARNESS-EXECUTABLE; fix: declare \
+             [launchers.{name}] with kind and command in {}): this machine has {}",
+            crate::output::language::short_path(&settings.agents_path().display().to_string()),
             launchers
                 .iter()
-                .map(|launcher| format!("`{}`", launcher.name))
+                .map(|launcher| launcher.name.as_str())
                 .collect::<Vec<_>>()
-                .join(", "),
-            settings.agents_path().display()
+                .join(", ")
         ),
     }
 }
