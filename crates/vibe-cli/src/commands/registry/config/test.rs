@@ -6,7 +6,7 @@ specmark::scope!("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#registry");
 use anyhow::{Context, Result, bail};
 use serde::Serialize;
 use std::path::PathBuf;
-use vibe_core::manifest::Manifest;
+use vibe_core::manifest::{Manifest, RegistryType};
 
 use crate::cli::RegistryTestArgs;
 use crate::commands::registry::resolve_project_root;
@@ -134,7 +134,9 @@ pub(in crate::commands::registry) fn run_test(
                 .map(vibe_core::manifest::AuthKind::as_str)
                 .unwrap_or("transport-default"),
         };
-        if let Some(path) = missing_root(&row_url) {
+        let kind = reg.checked_type();
+        let absent = missing_root(&row_url);
+        if let (Ok(RegistryType::Localdir), Some(path)) = (&kind, &absent) {
             probe.fail("registry root is missing");
             rows.push(TestReportRegistry {
                 name: reg.name.clone(),
@@ -142,6 +144,23 @@ pub(in crate::commands::registry) fn run_test(
                 auth: row_auth_label,
                 status: "missing",
                 note: Some(format!("registry root {} does not exist", path.display())),
+            });
+            probes.set_progress(
+                (index + 1) as u64,
+                Some(registries.len() as u64),
+                "registries",
+            );
+            continue;
+        }
+        if matches!(kind, Ok(RegistryType::Git | RegistryType::Monorepo)) && absent.is_some() {
+            let (status, note) = probe_missing_git_root(&row_url);
+            probe.fail(format!("registry probe returned {status}"));
+            rows.push(TestReportRegistry {
+                name: reg.name.clone(),
+                url: row_url,
+                auth: row_auth_label,
+                status,
+                note: Some(note),
             });
             probes.set_progress(
                 (index + 1) as u64,
@@ -282,10 +301,60 @@ pub(in crate::commands::registry) fn run_test(
     Ok(())
 }
 
-/// A file transport whose registry root no longer exists, before resolver setup.
+/// Only unescaped absolute local file URLs, never authorities or credentials.
 fn missing_root(url: &str) -> Option<PathBuf> {
-    let path = PathBuf::from(url.strip_prefix("file://")?);
-    (!path.exists()).then_some(path)
+    let local = url.strip_prefix("file://")?;
+    if !local.starts_with('/')
+        || local.starts_with("//")
+        || local.chars().any(|c| c.is_control() || "%?#\\".contains(c))
+    {
+        return None;
+    }
+    let path = PathBuf::from(local);
+    (path.is_absolute() && matches!(path.try_exists(), Ok(false))).then_some(path)
+}
+
+/// The caller has checked both the backend type and the absent local URL.
+fn probe_missing_git_root(url: &str) -> (&'static str, String) {
+    use std::process::{Command, Stdio};
+
+    let mut command = Command::new("git");
+    command
+        .args(["ls-remote", "--", url])
+        .stdin(Stdio::null())
+        .env("GIT_TERMINAL_PROMPT", "0")
+        .env("GCM_INTERACTIVE", "Never")
+        // No user URL rewrites, helpers or non-file transport can participate.
+        .env("GIT_CONFIG_NOSYSTEM", "1")
+        .env(
+            "GIT_CONFIG_GLOBAL",
+            if cfg!(windows) { "NUL" } else { "/dev/null" },
+        )
+        .env("GIT_CONFIG_COUNT", "0")
+        .env("GIT_ALLOW_PROTOCOL", "file")
+        .env_remove("GIT_CONFIG")
+        .env_remove("GIT_CONFIG_PARAMETERS")
+        .env_remove("GIT_DIR")
+        .env_remove("GIT_WORK_TREE");
+    #[cfg(windows)]
+    {
+        use std::os::windows::process::CommandExt;
+        command.creation_flags(0x08000000); // CREATE_NO_WINDOW
+    }
+    match command.output() {
+        Ok(output) if !output.status.success() => match output.status.code() {
+            Some(code) => ("unreachable", format!("git ls-remote exit {code}")),
+            None => ("unknown", "git ls-remote ended without a numeric exit".into()),
+        },
+        Ok(_) => (
+            "unknown",
+            "git ls-remote unexpectedly reached the absent root".into(),
+        ),
+        Err(error) if error.kind() == std::io::ErrorKind::NotFound => {
+            ("unknown", "`git` is not on PATH".into())
+        }
+        Err(_) => ("unknown", "git ls-remote could not be started".into()),
+    }
 }
 
 /// `index: current|stale (<why>)|absent` for a `monorepo` / `localdir`
