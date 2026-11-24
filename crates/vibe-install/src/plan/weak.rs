@@ -145,7 +145,9 @@ pub(super) fn weak_report(
                 continue;
             };
             let coordinate = format!("{target_group}/{}", reference.name);
-            let selected_target = graph.find(target_group, reference.name.as_str()).is_some();
+            let selected_target = graph
+                .find(target_group, reference.name.as_str())
+                .is_some_and(|node| reference.version.matches(&node.version));
             let weak = analysis
                 .effective
                 .get(&coordinate)
