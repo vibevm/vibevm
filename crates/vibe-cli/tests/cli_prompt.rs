@@ -16,7 +16,6 @@ use common::UserScratch;
 
 const TEMPLATE: &str = "# My frame\n\nPermanent instructions.\n";
 
-/// One initialised project that has opted in, under an isolated home.
 struct Project {
     user: UserScratch,
     dir: tempfile::TempDir,
@@ -59,17 +58,13 @@ impl Project {
     }
 
     fn boot(&self, name: &str) -> std::path::PathBuf {
-        self.dir
-            .path()
-            .join(vibe_core::layout::current_boot_dir())
-            .join(name)
+        self.boot_dir().join(name)
     }
 
     fn boot_dir(&self) -> std::path::PathBuf {
         self.dir.path().join(vibe_core::layout::current_boot_dir())
     }
 }
-
 #[test]
 fn build_reports_what_it_did_and_where_then_reports_unchanged() {
     let project = Project::opted_in();
@@ -87,8 +82,6 @@ fn build_reports_what_it_did_and_where_then_reports_unchanged() {
     assert!(project.boot("SYSTEM.md").exists());
     assert!(project.boot("SYSTEM.meta.json").exists());
     assert!(project.boot("AGENT-LANE.md").exists());
-    // The ignore file is written before the artifacts it covers, and it
-    // ignores itself, so an opted-in project's `git status` stays clean.
     let ignore = fs::read_to_string(project.boot(".gitignore")).unwrap();
     for name in [
         "/SYSTEM.md",
@@ -99,14 +92,12 @@ fn build_reports_what_it_did_and_where_then_reports_unchanged() {
         assert!(ignore.contains(name), "{ignore}");
     }
 
-    // A second build with nothing changed writes nothing and says so.
     project
         .prompt("build")
         .assert()
         .success()
         .stdout(predicate::str::contains("✻ system prompt unchanged"));
 }
-
 #[test]
 fn a_project_that_has_not_opted_in_is_told_so_rather_than_left_silent() {
     let project = Project::fresh();
@@ -120,7 +111,6 @@ fn a_project_that_has_not_opted_in_is_told_so_rather_than_left_silent() {
         ));
     assert!(!project.boot("SYSTEM.md").exists());
 }
-
 #[test]
 fn deleting_the_template_removes_exactly_the_four_owned_paths() {
     let project = Project::opted_in();
@@ -142,10 +132,8 @@ fn deleting_the_template_removes_exactly_the_four_owned_paths() {
             "`{name}` survived the opt-out"
         );
     }
-    // The authored boot sources are untouched: only what vibe owns went.
     assert!(project.boot("00-core.md").exists());
 }
-
 #[test]
 fn check_is_equal_after_a_build_and_json_carries_the_same_facts() {
     let project = Project::opted_in();
@@ -192,13 +180,6 @@ fn check_is_equal_after_a_build_and_json_carries_the_same_facts() {
         .stdout("")
         .stderr("");
 }
-
-/// C1 and C4 at the command surface, where `HARNESS-DELIVERY.md` §4 places
-/// them. Hand-editing one instruction file's managed block gives up the
-/// byte-identity the per-harness `delivery` spelling rests on, and a harness
-/// that reads more than one of them would read two different routers. The
-/// verdict stays `equal`, because a published prefix is not wrong — this is
-/// a configuration finding, not staleness.
 #[test]
 fn check_reports_c1_and_c4_for_a_divergent_instruction_file() {
     let project = Project::opted_in();
@@ -221,9 +202,6 @@ fn check_reports_c1_and_c4_for_a_divergent_instruction_file() {
         .stdout(predicate::str::contains("C4:"))
         .stdout(predicate::str::contains("CLAUDE.md"));
 }
-
-/// The assertion the band model rests on: a dynamic boot file's bytes are
-/// witnessed nowhere, so editing one leaves the prefix current.
 #[test]
 fn check_stays_equal_when_a_dynamic_boot_file_changes() {
     let project = Project::opted_in();
@@ -235,7 +213,6 @@ fn check_stays_equal_when_a_dynamic_boot_file_changes() {
         .success()
         .stdout(predicate::str::contains("✓ system prompt  equal"));
 }
-
 #[test]
 fn check_is_stale_and_names_the_input_when_the_template_changes() {
     let project = Project::opted_in();
@@ -268,7 +245,6 @@ fn check_is_stale_and_names_the_input_when_the_template_changes() {
     assert!(warning.ends_with("\n  vibe prompt build\n"), "{warning}");
     assert!(!warning.contains(&project.dir.path().display().to_string()));
 }
-
 #[test]
 fn check_writes_nothing_and_leaves_every_byte_of_the_boot_directory_alone() {
     let project = Project::opted_in();
@@ -280,8 +256,6 @@ fn check_writes_nothing_and_leaves_every_byte_of_the_boot_directory_alone() {
     assert_eq!(before, listing(&project), "a read-only verb wrote");
 }
 
-/// Every file of the boot directory with its bytes, so "wrote nothing" is
-/// asserted over content rather than over mtimes a filesystem may coarsen.
 fn listing(project: &Project) -> Vec<(String, Vec<u8>)> {
     let dir = project.boot_dir();
     let mut rows: Vec<(String, Vec<u8>)> = fs::read_dir(&dir)
@@ -298,7 +272,6 @@ fn listing(project: &Project) -> Vec<(String, Vec<u8>)> {
     rows.sort();
     rows
 }
-
 #[test]
 fn prepare_returns_the_bands_separately_and_never_concatenated() {
     let project = Project::opted_in();
@@ -320,8 +293,6 @@ fn prepare_returns_the_bands_separately_and_never_concatenated() {
     for member in band_u {
         assert!(member["sha256"].as_str().unwrap().len() == 64);
     }
-    // The breakpoints are offsets into one ordered sequence, and the last
-    // one is the end of band U.
     let boundaries = report["cache_boundaries"].as_array().unwrap();
     let band_u_total: u64 = band_u
         .iter()
@@ -332,7 +303,6 @@ fn prepare_returns_the_bands_separately_and_never_concatenated() {
         report["prefix"]["len"].as_u64().unwrap() + band_u_total
     );
 }
-
 #[test]
 fn prepare_refuses_a_stale_prefix_with_the_build_that_fixes_it() {
     let project = Project::opted_in();
@@ -345,7 +315,6 @@ fn prepare_refuses_a_stale_prefix_with_the_build_that_fixes_it() {
         .failure()
         .stderr(predicate::str::contains("vibe prompt build"));
 }
-
 #[test]
 fn path_prints_an_absolute_path_alone_and_never_an_empty_line() {
     let project = Project::opted_in();
@@ -365,8 +334,6 @@ fn path_prints_an_absolute_path_alone_and_never_an_empty_line() {
         project.boot("AGENT-LANE.md").canonicalize().unwrap()
     );
 
-    // A missing artifact is a refusal naming the build, never an empty
-    // line a shell alias turns silently into a broken launch.
     fs::remove_file(project.boot("AGENT-LANE.md")).unwrap();
     project
         .prompt("path")
@@ -379,7 +346,6 @@ fn path_prints_an_absolute_path_alone_and_never_an_empty_line() {
         ))
         .stderr(predicate::str::contains("SYS-OPERATIONS-PATH-AND-FLAGS"));
 }
-
 #[test]
 fn flags_print_flags_only_and_never_a_program_or_lane_bytes() {
     let project = Project::opted_in();
@@ -428,7 +394,6 @@ fn flags_print_flags_only_and_never_a_program_or_lane_bytes() {
         "{flags:?}"
     );
 }
-
 #[test]
 fn flags_with_workers_add_the_subagent_flag_naming_the_same_lane() {
     let project = Project::opted_in();
@@ -460,7 +425,6 @@ fn flags_with_workers_add_the_subagent_flag_naming_the_same_lane() {
         ]
     );
 }
-
 #[test]
 fn flags_with_workers_for_codex_print_no_worker_flag_and_say_so() {
     let project = Project::opted_in();
@@ -490,25 +454,20 @@ fn flags_with_workers_for_codex_print_no_worker_flag_and_say_so() {
             .contains("has no flag that appends a file to its subagents' system prompt")
     }));
 }
-
 #[test]
 fn an_unknown_harness_is_a_refusal_listing_the_launchers() {
     let project = Project::opted_in();
     project.prompt("build").assert().success();
     project
         .prompt("flags")
-        // `gemini` rather than `qwen`: the latter is a kind of its own
-        // since `#SYS-QWEN`, and a test whose fixture becomes valid stops
-        // testing.
         .args(["--harness", "gemini"])
         .assert()
         .failure()
         .stderr(predicate::str::contains("is not an agent launcher"))
-        .stderr(predicate::str::contains("`claude`"))
-        .stderr(predicate::str::contains("`codex`"))
-        .stderr(predicate::str::contains("`qwen`"));
+        .stderr(predicate::str::contains("launcher_unknown"))
+        .stderr(predicate::str::contains("codex"))
+        .stderr(predicate::str::contains("qwen"));
 }
-
 #[test]
 fn an_unknown_node_is_a_refusal_listing_the_nodes() {
     let project = Project::opted_in();
@@ -519,7 +478,6 @@ fn an_unknown_node_is_a_refusal_listing_the_nodes() {
         .failure()
         .stderr(predicate::str::contains("is not a node of this workspace"));
 }
-
 #[test]
 fn an_install_ends_with_the_same_summary_line_as_a_build() {
     let project = Project::opted_in();
@@ -534,8 +492,6 @@ fn an_install_ends_with_the_same_summary_line_as_a_build() {
             "system prompt  rebuilt · SYSTEM.md ",
         ))
         .stdout(predicate::str::contains("AGENT-LANE.md "));
-    // A second reinstall with nothing changed says `unchanged`, exactly as
-    // `vibe prompt build` does — one sentence, spelled in one place.
     project
         .user
         .vibe()
@@ -545,7 +501,6 @@ fn an_install_ends_with_the_same_summary_line_as_a_build() {
         .success()
         .stdout(predicate::str::contains("✓ system prompt  unchanged"));
 }
-
 #[test]
 fn a_failed_reinstall_prints_no_prompt_summary() {
     let project = Project::opted_in();
@@ -561,7 +516,6 @@ fn a_failed_reinstall_prints_no_prompt_summary() {
         .stdout(predicate::str::contains("system prompt").not())
         .stderr(predicate::str::contains("SYSTEM-TEMPLATE.md"));
 }
-
 #[test]
 fn an_install_of_a_project_without_the_opt_in_says_nothing_about_a_prompt() {
     let project = Project::fresh();
@@ -581,4 +535,57 @@ fn an_install_of_a_project_without_the_opt_in_says_nothing_about_a_prompt() {
         "a project that never opted in was told about a prompt: {printed}"
     );
     assert!(!project.boot("SYSTEM.md").exists());
+}
+#[test]
+fn agent_edits_reach_their_own_trailers() {
+    let user = UserScratch::new();
+    let path = user.settings.join("agents.toml");
+    for mode in ["human", "--quiet", "--json"] {
+        for (args, done) in [
+            (vec!["add", "myag", "--preset", "codex"], "added agent myag"),
+            (vec!["use", "myag"], "default agent set to myag"),
+            (vec!["remove", "myag"], "removed agent myag"),
+        ] {
+            let mut command = user.vibe();
+            command
+                .env("HOME", &user.settings)
+                .env("USERPROFILE", &user.settings);
+            command
+                .env_remove("VIBE_AGENT_COMMAND")
+                .arg("agent")
+                .args(args);
+            if mode != "human" {
+                command.arg(mode);
+            }
+            let output = command.assert().success().get_output().clone();
+            assert!(output.stderr.is_empty(), "{output:?}");
+            let text = String::from_utf8(output.stdout).unwrap();
+            if mode == "--json" {
+                let doc: serde_json::Value = serde_json::from_str(&text).unwrap();
+                assert_eq!(doc["protocol"], "vibe-agent-list/1");
+                assert_eq!(doc["path"], path.display().to_string());
+                assert_eq!(
+                    doc["agents"].as_array().unwrap().len(),
+                    usize::from(!done.starts_with("removed"))
+                );
+                assert_eq!(
+                    doc["default"].as_str(),
+                    done.starts_with("default").then_some("myag")
+                );
+                continue;
+            }
+            let trailer = format!("✻ {done} · {}", path.display());
+            assert_eq!(text.lines().last(), Some(trailer.as_str()), "{text}");
+            assert_eq!(text.matches('✻').count(), 1, "{text}");
+            if mode == "--quiet" {
+                assert_eq!(text, format!("{trailer}\n"));
+            } else {
+                let positions = ["launchers", "agent definitions", "trust"]
+                    .map(|name| text.find(&format!("── {name} ─")).expect(&text));
+                assert!(positions.windows(2).all(|pair| pair[0] < pair[1]), "{text}");
+                assert!(text.starts_with("── launchers ─"), "{text}");
+                assert!(!text.contains("vibe agent:"), "{text}");
+            }
+        }
+    }
 }

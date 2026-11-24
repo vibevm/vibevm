@@ -51,7 +51,7 @@ pub fn run(ctx: &output::Context, args: AgentArgs) -> Result<()> {
         AgentCommand::Use { name } => edit(
             ctx,
             &settings,
-            &format!("default agent is `{name}`"),
+            &format!("default agent set to {name}"),
             |config| config.use_agent(&name),
         ),
         AgentCommand::Add {
@@ -74,7 +74,7 @@ pub fn run(ctx: &output::Context, args: AgentArgs) -> Result<()> {
                 env: env.into_iter().collect(),
                 extra_args,
             };
-            edit(ctx, &settings, &format!("added agent `{name}`"), |config| {
+            edit(ctx, &settings, &format!("added agent {name}"), |config| {
                 config.add(&name, definition)?;
                 if default {
                     config.use_agent(&name)?;
@@ -83,16 +83,15 @@ pub fn run(ctx: &output::Context, args: AgentArgs) -> Result<()> {
             })
         }
         AgentCommand::Launch(argv) => launch::run(ctx, argv),
-        AgentCommand::Remove { name } => edit(
-            ctx,
-            &settings,
-            &format!("removed agent `{name}`"),
-            |config| config.remove(&name),
-        ),
+        AgentCommand::Remove { name } => {
+            edit(ctx, &settings, &format!("removed agent {name}"), |config| {
+                config.remove(&name)
+            })
+        }
     }
 }
 
-/// Apply one edit under the settings lock, save, then list.
+/// Apply one edit under the settings lock, save, then show its result.
 fn edit(
     ctx: &output::Context,
     settings: &SettingsRoot,
@@ -103,16 +102,32 @@ fn edit(
     let mut config = AgentsConfig::load(settings).map_err(AppError::from)?;
     change(&mut config).map_err(AppError::from)?;
     config.save(settings).map_err(AppError::from)?;
-    if !ctx.is_json() {
-        ctx.summary(&format!("vibe agent: {done}"));
-        if ctx.is_quiet() {
-            return Ok(());
-        }
+    let listing = listing(settings, &config)?;
+    if ctx.is_json() {
+        return ctx.emit_json(&listing);
     }
-    list(ctx, settings, &config)
+    if ctx.is_quiet() {
+        ctx.summary(&edit_trailer(done, &listing));
+    } else {
+        ctx.block(&render_edited(&listing, done, viewport(), rule_width()));
+    }
+    Ok(())
 }
 
 fn list(ctx: &output::Context, settings: &SettingsRoot, config: &AgentsConfig) -> Result<()> {
+    let listing = listing(settings, config)?;
+    if ctx.is_json() {
+        return ctx.emit_json(&listing);
+    }
+    if ctx.is_quiet() {
+        ctx.summary(&list_trailer(&listing));
+        return Ok(());
+    }
+    ctx.block(&render_list(&listing, viewport(), rule_width()));
+    Ok(())
+}
+
+fn listing(settings: &SettingsRoot, config: &AgentsConfig) -> Result<AgentList> {
     let external = crate::commands::app::agents::external_registration()?;
     // The ONE effective trust, resolved from the base list vibe ships, the
     // applied site profile and this file — the same value an agent step and
@@ -124,15 +139,7 @@ fn list(ctx: &output::Context, settings: &SettingsRoot, config: &AgentsConfig) -
     // is PROP-076's question, and the registry is PROP-064's.
     let launchers = launchers::resolve_all(settings, config)?;
     listing.launchers = launchers.iter().map(launchers::row).collect();
-    if ctx.is_json() {
-        return ctx.emit_json(&listing);
-    }
-    if ctx.is_quiet() {
-        ctx.summary(&list_trailer(&listing));
-        return Ok(());
-    }
-    ctx.block(&render_list(&listing, viewport(), rule_width()));
-    Ok(())
+    Ok(listing)
 }
 
 /// The human listing of `vibe agent list`: the launchers, the agent
@@ -152,6 +159,22 @@ fn list(ctx: &output::Context, settings: &SettingsRoot, config: &AgentsConfig) -
 /// ```
 #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-067#list")]
 fn render_list(listing: &AgentList, width: usize, rule: usize) -> String {
+    let mut sections = render_sections(listing, width, rule);
+    sections.push(list_trailer(listing));
+    sections.join("\n\n")
+}
+
+fn render_edited(listing: &AgentList, done: &str, width: usize, rule: usize) -> String {
+    let mut sections = render_sections(listing, width, rule);
+    sections.push(edit_trailer(done, listing));
+    sections.join("\n\n")
+}
+
+fn edit_trailer(done: &str, listing: &AgentList) -> String {
+    trailer(true, done, vec![Meta::note(&listing.path)], None)
+}
+
+fn render_sections(listing: &AgentList, width: usize, rule: usize) -> Vec<String> {
     let mut sections = vec![
         section("launchers", &launcher_list(listing).render_at(width), rule)
             + &hint_line("starts a launcher with this project's boot lane", width)
@@ -183,8 +206,7 @@ fn render_list(listing: &AgentList, width: usize, rule: usize) -> String {
             rule,
         ));
     }
-    sections.push(list_trailer(listing));
-    sections.join("\n\n")
+    sections
 }
 
 /// A rule and the list under it, touching.

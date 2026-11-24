@@ -626,8 +626,8 @@ fn an_unknown_launcher_name_is_a_refusal_listing_the_launchers() {
         .assert()
         .failure()
         .stderr(predicate::str::contains("is not an agent launcher"))
-        .stderr(predicate::str::contains("`claude`"))
-        .stderr(predicate::str::contains("`work-codex`"));
+        .stderr(predicate::str::contains("launcher_unknown"))
+        .stderr(predicate::str::contains("work-codex"));
 }
 
 #[test]
@@ -640,10 +640,10 @@ fn an_unknown_kind_is_a_refusal_naming_the_field() {
         .assert()
         .failure()
         .stderr(predicate::str::contains(
-            "[launchers.mine] kind = \"gemini\"",
+            "[launchers.mine] names kind gemini",
         ))
-        .stderr(predicate::str::contains("`claude`"))
-        .stderr(predicate::str::contains("`qwen`"));
+        .stderr(predicate::str::contains("launcher_kind_unknown"))
+        .stderr(predicate::str::contains("qwen"));
 }
 
 #[test]

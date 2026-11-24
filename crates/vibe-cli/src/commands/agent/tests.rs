@@ -267,3 +267,51 @@ fn agent_presets_render_as_a_list_with_a_trailer() {
             .all(|line| console::measure_text_width(line) <= WIDTH)
     );
 }
+
+#[test]
+fn agent_edit_ends_with_its_own_trailer() {
+    let out = render_edited(&listing(), "added agent myag", WIDTH, WIDTH);
+    let (body, last) = out.rsplit_once("\n\n").unwrap();
+    assert_eq!(last, "✻ added agent myag · /u/.vibe/agents.toml");
+    assert_eq!(body, GOLDEN_80.rsplit_once("\n\n").unwrap().0);
+}
+
+#[test]
+fn launcher_refusals_carry_codes() {
+    let dir = tempfile::tempdir().unwrap();
+    let settings = SettingsRoot::new(dir.path());
+    let unknown = launchers::resolve(&settings, &AgentsConfig::default(), "nosuch").unwrap_err();
+    let refusal = output::refusal_of(&unknown);
+    assert_eq!(refusal.code.as_deref(), Some("launcher_unknown"));
+    assert_eq!(refusal.headline, "nosuch is not an agent launcher");
+    assert!(
+        refusal
+            .why
+            .as_deref()
+            .unwrap_or_default()
+            .starts_with("this machine has claude, codex"),
+        "{refusal:?}"
+    );
+    assert_eq!(
+        refusal.see.as_deref(),
+        Some("spec://org.vibevm.core/vibevm/common/PROP-076#SYS-HARNESS-EXECUTABLE")
+    );
+
+    let config: AgentsConfig =
+        toml::from_str("[launchers.bad]\nkind = \"nope\"\ncommand = [\"x\"]\n").unwrap();
+    let kind = launchers::resolve_all(&settings, &config).unwrap_err();
+    let refusal = output::refusal_of(&kind);
+    assert_eq!(refusal.code.as_deref(), Some("launcher_kind_unknown"));
+    assert_eq!(
+        refusal.headline,
+        "[launchers.bad] names kind nope, which this build does not know"
+    );
+    assert!(
+        refusal
+            .why
+            .as_deref()
+            .unwrap_or_default()
+            .starts_with("the kinds are claude, codex"),
+        "{refusal:?}"
+    );
+}
