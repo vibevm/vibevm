@@ -131,6 +131,25 @@ fn registry_quoted_command_keeps_value_private() {
 }
 
 #[test]
+fn registry_unicode_command_key_keeps_value_private() {
+    let dir = tempfile::tempdir().unwrap();
+    let settings = SettingsRoot::new(dir.path());
+    fs::write(
+        settings.agents_path(),
+        "[launchers.fake]\nkind=\"pi\"\n\"comm\\u0061nd\" = \"SYNTHETIC_PRIVATE_PROGRAM\"\n",
+    )
+    .unwrap();
+    let error = AgentsConfig::load(&settings).unwrap_err();
+    assert_eq!(error.code(), "agents_config_invalid");
+    let display = error.to_string();
+    assert!(!display.contains("SYNTHETIC_PRIVATE_PROGRAM"), "{display}");
+    assert!(
+        display.ends_with("line 3, column 18: expected a list of strings, not a string"),
+        "{display}"
+    );
+}
+
+#[test]
 fn registry_external_reason_stays_neutral() {
     // Operation words inside arbitrary text must not select an internal repair.
     let reason = "external detail: writing agent registry: unexpected parse issue";

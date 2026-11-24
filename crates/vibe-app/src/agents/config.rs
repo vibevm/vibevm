@@ -155,8 +155,17 @@ pub struct LauncherDefinition {
 #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-064#agent-definition")]
 fn parse_reason(input: &str, error: &toml::de::Error) -> String {
     let message = error.message().lines().next().unwrap_or("invalid TOML");
+    let string_for_sequence =
+        message.starts_with("invalid type: string") && message.ends_with("expected a sequence");
+    // This error class includes the offending value in message(). Sanitize it
+    // even when the key spelling is unfamiliar or TOML provides no location.
+    let safe_message = if string_for_sequence {
+        "expected a list of strings, not a string"
+    } else {
+        message
+    };
     let Some(start) = error.span().map(|span| span.start) else {
-        return message.to_owned();
+        return safe_message.to_owned();
     };
     let before = &input[..start];
     let line = before.bytes().filter(|byte| *byte == b'\n').count() + 1;
@@ -167,13 +176,10 @@ fn parse_reason(input: &str, error: &toml::de::Error) -> String {
         matches!(key.trim(), "command" | "\"command\"" | "'command'")
             && (value.trim_start().starts_with('"') || value.trim_start().starts_with('\''))
     });
-    let reason = if scalar_command
-        && message.starts_with("invalid type: string")
-        && message.ends_with("expected a sequence")
-    {
+    let reason = if scalar_command && string_for_sequence {
         "command must be a list of strings, not a string"
     } else {
-        message
+        safe_message
     };
     format!("line {line}, column {column}: {reason}")
 }
