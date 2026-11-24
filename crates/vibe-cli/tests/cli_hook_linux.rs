@@ -6,20 +6,14 @@
 //!
 //! bash is assumed present on a Linux host. zsh and fish are run when they
 //! are installed and skipped, loudly, when they are not.
-
 #![cfg(all(test, target_os = "linux"))]
-
 mod common;
-
 use std::fs;
 use std::path::{Path, PathBuf};
 use std::process::Command;
-
 use common::app_registry::{AppRegistry, failed, ok};
-
 const BLOCK_BEGIN: &str = "# >>> vibe application versions (managed by vibe, do not edit) >>>";
 const BLOCK_END: &str = "# <<< vibe application versions <<<";
-
 fn runtime(r: &AppRegistry, version: &str, marker: &str) {
     let root = r.package(
         "runtime",
@@ -54,7 +48,6 @@ default=true
     .unwrap();
     r.script(&root, "rt", marker);
 }
-
 fn install(r: &AppRegistry, spelling: &str) {
     ok(&r.app(
         &["install", "-g"],
@@ -62,7 +55,6 @@ fn install(r: &AppRegistry, spelling: &str) {
         &["--offline", "--unattended", "--json"],
     ));
 }
-
 fn project(r: &AppRegistry, name: &str, version: &str) -> PathBuf {
     let dir = r.root.path().join(name);
     fs::create_dir_all(&dir).unwrap();
@@ -74,7 +66,6 @@ fn project(r: &AppRegistry, name: &str, version: &str) -> PathBuf {
     fs::write(dir.join(".runtime-version"), format!("{version}\n")).unwrap();
     dir
 }
-
 /// A home with two runtime versions installed and two projects pinning one
 /// each, plus a plain directory with no version file.
 struct Fixture {
@@ -84,7 +75,6 @@ struct Fixture {
     plain: PathBuf,
     vibe_dir: PathBuf,
 }
-
 fn fixture() -> Fixture {
     let r = AppRegistry::new();
     runtime(&r, "1.0.0", "one");
@@ -104,13 +94,11 @@ fn fixture() -> Fixture {
         vibe_dir,
     }
 }
-
 fn vibe_binary() -> PathBuf {
     // `vibe-test-support` builds the command; its program is the binary.
     let probe = vibe_test_support::vibe();
     PathBuf::from(probe.get_program())
 }
-
 /// Run `script` in `shell` with the fixture's isolated home and with the
 /// `vibe` under test on PATH.
 fn in_shell(f: &Fixture, shell: &str, script: &str) -> std::process::Output {
@@ -134,7 +122,6 @@ fn in_shell(f: &Fixture, shell: &str, script: &str) -> std::process::Output {
         );
     command.output().unwrap()
 }
-
 /// `true` when `shell` is installed on this host.
 fn available(shell: &str) -> bool {
     Command::new("sh")
@@ -143,7 +130,6 @@ fn available(shell: &str) -> bool {
         .map(|status| status.success())
         .unwrap_or(false)
 }
-
 #[test]
 #[specmark::spec(verifies = "spec://org.vibevm.core/vibevm/common/PROP-075#ACTIVATION-HOOK")]
 fn the_block_is_written_into_the_startup_file_and_nothing_outside_it_moves() {
@@ -176,7 +162,71 @@ fn the_block_is_written_into_the_startup_file_and_nothing_outside_it_moves() {
     assert!(error.contains("consent_required"), "{error}");
     assert!(error.contains("--print"), "{error}");
 }
-
+#[test]
+#[specmark::spec(verifies = "spec://org.vibevm.core/vibevm/common/PROP-075#ACTIVATION-HOOK")]
+fn hook_rerun_reports_unchanged() {
+    let scratch = vibe_test_support::UserScratch::new();
+    let home = tempfile::tempdir().unwrap();
+    let rc = home.path().join(".bashrc");
+    fs::write(&rc, "# user startup\n").unwrap();
+    let run = |args: &[&str]| {
+        let out = scratch
+            .vibe()
+            .args(args)
+            .current_dir(home.path())
+            .env("HOME", home.path())
+            .env("USERPROFILE", home.path())
+            .env("NO_COLOR", "1")
+            .output()
+            .unwrap();
+        assert!(out.status.success(), "{out:?}");
+        String::from_utf8(out.stdout).unwrap()
+    };
+    let trailer = |out: &str, verdict: &str| {
+        let last = out.lines().last().expect("hook trailer");
+        let prefix = format!("✻ hook {verdict} for bash · ");
+        let suffix = format!(" · {}", rc.display());
+        let elapsed = last
+            .strip_prefix(&prefix)
+            .and_then(|line| line.strip_suffix(&suffix))
+            .unwrap_or_else(|| panic!("wrong final trailer: {out}"));
+        assert!(!elapsed.is_empty(), "missing elapsed time: {out}");
+        assert_eq!(out.matches("✻ hook ").count(), 1, "{out}");
+    };
+    let hint = "  open a new shell, or source the file to apply it now";
+    let written = run(&["hook", "bash", "--yes"]);
+    trailer(&written, "written");
+    assert_eq!(written.lines().next(), Some(hint), "{written}");
+    let bytes = fs::read(&rc).unwrap();
+    let unchanged = run(&["hook", "bash", "--yes"]);
+    trailer(&unchanged, "unchanged");
+    assert!(!unchanged.contains("open a new shell"), "{unchanged}");
+    assert_eq!(unchanged.lines().count(), 1, "{unchanged}");
+    assert_eq!(fs::read(&rc).unwrap(), bytes);
+    let text = String::from_utf8(bytes.clone()).unwrap();
+    assert!(text.starts_with("# user startup\n"), "{text}");
+    assert_eq!(text.matches(BLOCK_BEGIN).count(), 1, "{text}");
+    assert_eq!(text.matches(BLOCK_END).count(), 1, "{text}");
+    let quiet = run(&["hook", "bash", "--yes", "--quiet"]);
+    trailer(&quiet, "unchanged");
+    assert_eq!(quiet.lines().count(), 1, "{quiet}");
+    assert!(!quiet.contains("open a new shell"), "{quiet}");
+    assert_eq!(fs::read(&rc).unwrap(), bytes);
+    let printed = run(&["hook", "bash", "--print"]);
+    assert!(printed.contains("__vibe_versions"), "{printed}");
+    assert!(!printed.contains("✻ hook "), "{printed}");
+    assert!(!printed.contains("open a new shell"), "{printed}");
+    assert!(!printed.contains(BLOCK_BEGIN), "{printed}");
+    assert_eq!(fs::read(&rc).unwrap(), bytes);
+    fs::write(&rc, "# user startup\n").unwrap();
+    let quiet_written = run(&["hook", "bash", "--yes", "--quiet"]);
+    trailer(&quiet_written, "written");
+    assert_eq!(quiet_written.lines().count(), 1, "{quiet_written}");
+    assert!(!quiet_written.contains("open a new shell"), "{quiet_written}");
+    assert_eq!(fs::read(&rc).unwrap(), bytes);
+    assert_eq!(run(&["hook", "bash", "--print", "--quiet"]), printed);
+    assert_eq!(fs::read(&rc).unwrap(), bytes);
+}
 #[test]
 #[specmark::spec(verifies = "spec://org.vibevm.core/vibevm/common/PROP-075#ACTIVATION-HOOK")]
 fn two_cds_switch_versions_in_a_real_bash() {
@@ -202,7 +252,6 @@ fn two_cds_switch_versions_in_a_real_bash() {
     // `rt` may still be found — what must be gone is the session choice.
     assert!(lines.len() >= 3, "{stdout}");
 }
-
 #[test]
 #[specmark::spec(verifies = "spec://org.vibevm.core/vibevm/common/PROP-075#ACTIVATION-HOOK")]
 fn the_hook_undoes_a_selection_when_the_project_is_left() {
@@ -223,7 +272,6 @@ fn the_hook_undoes_a_selection_when_the_project_is_left() {
     );
     assert!(stdout.contains("out=unset"), "{stdout}");
 }
-
 #[test]
 #[specmark::spec(verifies = "spec://org.vibevm.core/vibevm/common/PROP-075#ACTIVATION-HOOK")]
 fn hook_spawns_nothing_in_an_unchanged_directory() {
@@ -294,7 +342,6 @@ fn hook_spawns_nothing_in_an_unchanged_directory() {
     // A `cd` into a directory that has one calls `vibe` exactly once.
     assert_eq!(read("entered"), 1, "{stdout}");
 }
-
 #[test]
 #[specmark::spec(verifies = "spec://org.vibevm.core/vibevm/common/PROP-075#ACTIVATION-HOOK")]
 fn the_hook_never_fails_the_prompt() {
@@ -314,7 +361,6 @@ fn the_hook_never_fails_the_prompt() {
     let stdout = String::from_utf8_lossy(&out.stdout).into_owned();
     assert!(out.status.success(), "{out:?} {stdout}");
     assert!(stdout.contains("survived=1"), "{stdout}");
-
     // A corrupt index: the hook still must not fail the prompt.
     fs::write(f.r.settings().join("applications/index.json"), b"{").unwrap();
     let out = in_shell(&f, "bash", &script);
@@ -323,7 +369,6 @@ fn the_hook_never_fails_the_prompt() {
         "a broken index must not fail a cd: {out:?}"
     );
 }
-
 #[test]
 #[specmark::spec(verifies = "spec://org.vibevm.core/vibevm/common/PROP-075#ACTIVATION-HOOK")]
 fn the_hook_keeps_the_last_commands_exit_status_for_the_prompt() {
@@ -350,7 +395,6 @@ fn the_hook_keeps_the_last_commands_exit_status_for_the_prompt() {
         );
     }
 }
-
 #[test]
 #[specmark::spec(verifies = "spec://org.vibevm.core/vibevm/common/PROP-075#ACTIVATION-HOOK")]
 fn the_zsh_block_runs_in_a_real_zsh_when_one_is_installed() {
@@ -374,7 +418,6 @@ fn the_zsh_block_runs_in_a_real_zsh_when_one_is_installed() {
     assert!(lines[0].starts_with("one"), "{stdout}");
     assert!(lines[1].starts_with("two"), "{stdout}");
 }
-
 #[test]
 #[specmark::spec(verifies = "spec://org.vibevm.core/vibevm/common/PROP-075#ACTIVATION-HOOK")]
 fn the_fish_block_runs_in_a_real_fish_when_one_is_installed() {
@@ -398,7 +441,6 @@ fn the_fish_block_runs_in_a_real_fish_when_one_is_installed() {
     assert!(lines[0].starts_with("one"), "{stdout}");
     assert!(lines[1].starts_with("two"), "{stdout}");
 }
-
 #[test]
 #[specmark::spec(verifies = "spec://org.vibevm.core/vibevm/common/PROP-075#ACTIVATION-HOOK")]
 fn the_name_list_follows_what_the_installed_packages_declare() {
@@ -428,7 +470,88 @@ fn the_name_list_follows_what_the_installed_packages_declare() {
         "an empty declared set keeps no document"
     );
 }
-
+#[test]
+#[specmark::spec(verifies = "spec://org.vibevm.core/vibevm/common/PROP-075#ACTIVATION-HOOK")]
+fn hook_attended_accept_and_decline() {
+    const DRIVER: &str = r#"
+import fcntl,json,os,pty,re,select,signal,struct,subprocess,sys,termios,time
+master,slave=pty.openpty()
+fcntl.ioctl(slave,termios.TIOCSWINSZ,struct.pack('HHHH',40,100,0,0))
+original=termios.tcgetattr(slave)
+def terminal():
+    os.setsid(); fcntl.ioctl(0,termios.TIOCSCTTY,0)
+p=subprocess.Popen([sys.argv[1],'hook','bash'],stdin=slave,stdout=slave,stderr=slave,preexec_fn=terminal)
+seen=bytearray(); sent=False; started=time.monotonic()
+def screen():
+    text=seen.decode('utf-8','replace'); rows=[[]]; y=x=i=0
+    while i<len(text):
+        c=text[i]; m=re.match(r'\x1b\[([0-?]*)([ -/]*)([@-~])',text[i:])
+        if m:
+            arg,_,op=m.groups(); n=int(arg) if arg.isdigit() else 1
+            if op=='A': y=max(0,y-n)
+            elif op=='B': y+=n
+            elif op=='C': x+=n
+            elif op=='D': x=max(0,x-n)
+            elif op=='G': x=n-1
+            while len(rows)<=y: rows.append([])
+            if op=='K':
+                if arg=='2': rows[y]=[]
+                elif arg=='1': rows[y][:x+1]=[' ']*min(x+1,len(rows[y]))
+                else: del rows[y][x:]
+            elif op=='J' and arg in ('','0'): del rows[y][x:]; del rows[y+1:]
+            i+=len(m.group()); continue
+        if c=='\r': x=0
+        elif c=='\n': y+=1
+        elif c=='\b': x=max(0,x-1)
+        elif c>=' ':
+            while len(rows)<=y: rows.append([])
+            while len(rows[y])<=x: rows[y].append(' ')
+            rows[y][x]=c; x+=1
+        i+=1
+    return '\n'.join(''.join(row).rstrip() for row in rows)
+try:
+    while True:
+        if time.monotonic()-started>20: raise RuntimeError('hook PTY deadline: '+screen())
+        if select.select([master],[],[],.025)[0]:
+            data=os.read(master,65536)
+            if data: seen.extend(data)
+        visible=screen()
+        if not sent and 'write the vibe version hook into ~/.bashrc' in visible and '❯ yes' in visible and '  no' in visible:
+            os.write(master,b'\r' if sys.argv[2]=='accept' else b'\x1b[B\r'); sent=True
+        if p.poll() is not None and not select.select([master],[],[],.05)[0]: break
+    print(json.dumps(dict(status=p.returncode,sent=sent,terminal_restored=termios.tcgetattr(slave)==original,screen=screen())))
+finally:
+    if p.poll() is None: os.killpg(p.pid,signal.SIGKILL); p.wait()
+    os.close(master); os.close(slave)
+"#;
+    for answer in ["accept", "decline"] {
+        let scratch = vibe_test_support::UserScratch::new();
+        let home = tempfile::tempdir().unwrap(); let rc = home.path().join(".bashrc");
+        fs::write(&rc, b"# preserved startup\n").unwrap();
+        let out = Command::new("python3").args(["-I", "-c", DRIVER])
+            .arg(vibe_binary()).arg(answer).current_dir(home.path())
+            .env_clear().env("PATH", std::env::var_os("PATH").unwrap_or_default())
+            .env("HOME", home.path()).env("USERPROFILE", home.path())
+            .env("VIBE_SETTINGS", &scratch.settings).env("TERM", "xterm")
+            .env("LANG", "C.UTF-8").output().unwrap();
+        assert!(out.status.success(), "{}", String::from_utf8_lossy(&out.stderr));
+        let report: serde_json::Value = serde_json::from_slice(&out.stdout).unwrap();
+        assert_eq!(report["status"], 0, "{report}");
+        assert_eq!(report["sent"], true, "{report}");
+        assert_eq!(report["terminal_restored"], true, "{report}");
+        let screen = report["screen"].as_str().unwrap(); assert!(!screen.contains("❯"), "{screen}");
+        if answer == "accept" {
+            assert!(screen.lines().any(|line| line.contains("✓ hook") && line.contains("write into ~/.bashrc")), "{screen}");
+            assert!(fs::read_to_string(&rc).unwrap().contains(BLOCK_BEGIN));
+            assert_eq!(screen.matches("hook written for bash").count(), 1, "{screen}");
+            assert!(screen.lines().last().unwrap().ends_with(&rc.display().to_string()), "{screen}");
+        } else {
+            assert!(screen.lines().any(|line| line.contains("✓ hook") && line.contains("nothing written")), "{screen}");
+            assert_eq!(fs::read(&rc).unwrap(), b"# preserved startup\n");
+            assert!(!screen.contains("hook written for"), "{screen}");
+        }
+    }
+}
 /// The startup file the hook writes for each shell exists where that shell
 /// reads it.
 #[test]

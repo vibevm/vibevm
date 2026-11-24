@@ -67,14 +67,15 @@ pub fn run(ctx: &output::Context, args: HookArgs) -> Result<()> {
         );
     }
     if !args.yes {
-        let accepted = ctx.suspend_progress(|| {
+        let short = output::language::short_path(&rc.display().to_string());
+        let accepted = ctx.with_terminal_released(|| {
             crate::output::prompts::confirm_then(
-                &format!("write the vibe version hook into `{}`?", rc.display()),
+                &format!("write the vibe version hook into {short}"),
                 true,
-                "vibe hook",
+                "hook",
                 |accepted| {
                     if accepted {
-                        "writing the block".to_owned()
+                        format!("write into {short}")
                     } else {
                         "nothing written".to_owned()
                     }
@@ -87,12 +88,15 @@ pub fn run(ctx: &output::Context, args: HookArgs) -> Result<()> {
             return Ok(());
         }
     }
-    vibe_app::ensure_block(HOOK_BLOCK, &rc, &body).map_err(anyhow::Error::msg)?;
-    ctx.summary(&format!(
-        "vibe hook: {} block written into `{}`; open a new shell or source it to apply now",
-        shell.as_str(),
-        rc.display()
-    ));
+    let changed = vibe_app::ensure_block(HOOK_BLOCK, &rc, &body).map_err(anyhow::Error::msg)?;
+    if changed {
+        ctx.hint("open a new shell, or source the file to apply it now");
+    }
+    let verdict = if changed { "written" } else { "unchanged" };
+    ctx.trailer_at(
+        &format!("hook {verdict} for {}", shell.as_str()),
+        &rc.display().to_string(),
+    );
     Ok(())
 }
 
