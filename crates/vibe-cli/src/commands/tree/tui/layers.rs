@@ -1,7 +1,7 @@
 //! Layer browser over the same descriptors as plain/JSON; hiding is never disabling.
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-074#LAYERS-IN-TREE");
 use super::super::{
-    layers::{Layer, collect},
+    layers::{Layer, collect, layer_name},
     model::PackageTree,
     plain,
 };
@@ -12,6 +12,8 @@ use ratatui_core::{buffer::Buffer, layout::Rect, text::Line, widgets::Widget};
 use ratatui_crossterm::crossterm::event::{Event, KeyCode, KeyEventKind};
 use ratatui_widgets::paragraph::Paragraph;
 use std::path::{Path, PathBuf};
+
+const LEGEND: &str = "Layers: Up/Down select · Space hide/show · Enter enable/disable personal/override · PgUp/PgDn scroll · Esc quit";
 
 type Global = SalsaAppContext<AppEvent, anyhow::Error>;
 struct Browser {
@@ -39,13 +41,13 @@ impl Browser {
             theme: Theme::default(),
         }
     }
-    fn lines(&self) -> Vec<String> {
-        let mut lines = vec!["Layers: Up/Down select · Space hide/show · Enter enable/disable personal/override · PgUp/PgDn scroll · Esc quit".into()];
+    fn lines(&self, width: usize) -> Vec<String> {
+        let mut lines = vec![crate::output::language::cut(LEGEND, width)];
         for (index, layer) in self.layers.iter().enumerate() {
             lines.push(format!(
-                "{} {} [{}] {} — {}",
+                "{} {} [{}] {} · {}",
                 if index == self.selected { ">" } else { " " },
-                layer.id,
+                layer_name(layer.id),
                 if self.hidden[index] {
                     "hidden"
                 } else {
@@ -59,8 +61,8 @@ impl Browser {
         let selected = &self.layers[self.selected];
         if !self.hidden[self.selected] {
             lines.push(format!(
-                "Layer {} (independent package identities)",
-                selected.id
+                "{} layer · independent package identities",
+                layer_name(selected.id)
             ));
             let text = if selected.id == "project" {
                 Some(self.project.clone())
@@ -157,7 +159,7 @@ fn render(area: Rect, buf: &mut Buffer, app: &mut Browser, _: &mut Global) -> Re
         area.height,
         &app.theme,
     );
-    let text = app.lines().join("\n");
+    let text = app.lines(inner.width as usize).join("\n");
     Paragraph::new(text)
         .style(app.theme.text())
         .scroll((app.offset.min(u16::MAX as usize) as u16, 0))
@@ -202,6 +204,50 @@ mod tests {
     fn key(code: KeyCode) -> Event {
         Event::Key(KeyEvent::new(code, KeyModifiers::NONE))
     }
+    #[test]
+    fn legend_is_cut_at_the_width() {
+        let root = tempfile::tempdir().unwrap();
+        std::fs::write(
+            root.path().join("vibe.toml"),
+            "[project]\nname='layer-ui'\nversion='1.0.0'\n",
+        )
+        .unwrap();
+        let tree = crate::commands::tree::build::build_tree(root.path()).unwrap();
+        let layers = vec![
+            Layer {
+                id: "project",
+                enabled: true,
+                state: "available",
+                root: None,
+                tree: None,
+                diagnostics: vec![],
+                relations: vec![],
+            },
+            Layer {
+                id: "user",
+                enabled: true,
+                state: "available",
+                root: None,
+                tree: None,
+                diagnostics: vec![],
+                relations: vec![],
+            },
+            Layer {
+                id: "override",
+                enabled: false,
+                state: "absent",
+                root: None,
+                tree: None,
+                diagnostics: vec![],
+                relations: vec![],
+            },
+        ];
+        let app = Browser::new(root.path(), &tree, layers);
+        let lines = app.lines(40);
+        assert!(lines[0].ends_with('…'));
+        assert!(lines[0].chars().count() <= 40);
+    }
+
     #[test]
     fn hide_is_view_only_and_read_only_rendering_cannot_persist_controls() {
         let root = tempfile::tempdir().unwrap();
@@ -251,7 +297,7 @@ mod tests {
         let mut buf = Buffer::empty(Rect::new(0, 0, 120, 25));
         render(buf.area, &mut buf, &mut app, &mut Global::default()).unwrap();
         let text = crate::commands::tree::tui::snapshot::to_text(&buf);
-        assert!(text.contains("user [hidden] enabled"));
+        assert!(text.contains("personal [hidden] enabled"));
         let _ = app.handle(&key(KeyCode::Down), false).unwrap();
         let _ = app.handle(&key(KeyCode::Enter), false).unwrap();
         assert!(app.message.contains("read-only"));
