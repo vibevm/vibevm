@@ -55,6 +55,8 @@ use super::launchers;
 mod agent_types;
 #[path = "launch/route.rs"]
 mod route;
+#[path = "launch/soft.rs"]
+mod soft;
 #[path = "launch/worker_prefix.rs"]
 mod worker_prefix;
 use route::{admit_route_kind, route_child};
@@ -152,8 +154,8 @@ pub(crate) fn run(ctx: &output::Context, argv: Vec<String>) -> Result<()> {
                 &launcher,
                 &rest,
                 &prompt::Undeliverable::hard(
-                    format!("this directory is not a vibe project ({error:#})"),
-                    "run `vibe agent` from inside a vibe project, or `vibe init` here".to_owned(),
+                    "this directory is not a vibe project".to_owned(),
+                    "`vibe init`".to_owned(),
                 ),
             );
         }
@@ -399,14 +401,12 @@ fn soft(
     undeliverable: &prompt::Undeliverable,
 ) -> Result<()> {
     eprintln!(
-        "warning: vibe cannot deliver this project's boot lane to `{}`, so the harness starts \
-         WITHOUT it and the agent reads its boot files from disk — the classic boot the managed \
-         block's router already handles.\n\
-         warning:   reason: {}\n\
-         warning:   fix: {}\n\
-         warning: `--quiet` does not suppress this: it is about what the agent receives, not \
-         about what vibe says.",
-        launcher.name, undeliverable.reason, undeliverable.fix
+        "{}",
+        soft::soft_warning(
+            &launcher.name,
+            undeliverable,
+            crate::output::language::viewport()
+        )
     );
     let mut command: Vec<String> = launcher.command.clone();
     command.extend(rest.iter().cloned());
