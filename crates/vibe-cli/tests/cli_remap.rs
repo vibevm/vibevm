@@ -382,7 +382,7 @@ fn explain_lists_two_competing_rows_in_winning_order() {
         "{explain}"
     );
     assert!(
-        explain.contains("     origin  https://github.com/vibespecs/index"),
+        explain.contains("\n  origin  https://github.com/vibespecs/index"),
         "{explain}"
     );
 }

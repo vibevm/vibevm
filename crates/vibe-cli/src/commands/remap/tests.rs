@@ -46,6 +46,23 @@ fn remap_view_preview_draws_rows_not_json() {
     }
 }
 
+#[test]
+fn remap_view_explain_has_one_left_edge() {
+    let document = explanation(
+        &Locator::default(),
+        &Artifact::new(ArtifactKind::AppInput)
+            .with_url("https://github.com/org/repo/archive/v1.tar.gz"),
+        true,
+    );
+    let heading = crate::output::language::rule_at("explain any fetch", Some("0 matching rows"), 80);
+    assert_eq!(
+        render::explain(&document, 80),
+        format!(
+            "{heading}\n  origin  https://github.com/org/repo/archive/v1.tar.gz\n  digest  none declared\n  policy  allow\n  rows    no remap row matches this fetch\n  chosen  https://github.com/org/repo/archive/v1.tar.gz"
+        )
+    );
+}
+
 fn row(body: &str, layer: Layer, source: &str, index: usize) -> RemapRow {
     toml::from_str::<RowDecl>(body)
         .expect("row parses")
@@ -187,7 +204,7 @@ fn explain_lists_two_competing_rows_in_winning_order() {
     );
     assert!(!document.denied);
 
-    let text = render::explain(&document);
+    let text = render::explain(&document, 80);
     assert!(text.contains("origin  https://github.com/vibespecs/index"));
     assert!(text.contains("1. prefix    https://github.com/vibespecs/"));
     assert!(text.contains("2. prefix    https://github.com/"));
@@ -202,7 +219,7 @@ fn explain_reports_a_refusal_and_names_no_chosen_target() {
     let document = explanation(&locator(), &artifact, true);
     assert!(document.denied);
     assert!(document.chosen.is_none());
-    assert!(render::explain(&document).contains("remap_denied"));
+    assert!(render::explain(&document, 80).contains("remap_denied"));
 }
 
 #[test]
