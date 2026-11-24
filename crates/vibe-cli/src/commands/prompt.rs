@@ -41,7 +41,7 @@ mod resolve;
 mod supplied_base;
 mod types;
 
-pub(crate) use build::summary_line;
+pub(crate) use build::{PromptState, PromptSummary, Snapshot, summary_line};
 pub(crate) use flags::{Undeliverable, compose_for_launch as compose_launch_flags, opted_in};
 pub(crate) use qwen_identity::inherited_carrier_to_scrub;
 pub(crate) use resolve::{Selected, select};

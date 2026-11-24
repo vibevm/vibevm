@@ -150,14 +150,22 @@ pub(crate) fn run_project_applications(
     args: InstallArgs,
     embedded_root: Option<PathBuf>,
     root_offline: bool,
-) -> Result<()> {
-    run_with_scope(
+) -> Result<Option<super::report::FinalOutput>> {
+    let output = (!ctx.is_json()).then(Default::default);
+    run_with_scope_selected(
         ctx,
         args,
         embedded_root,
         root_offline,
         ConfirmationScope::ProjectApplications,
-    )
+        Completion {
+            selected: None,
+            output: output.clone(),
+        },
+    )?;
+    Ok(output
+        .and_then(std::sync::Arc::into_inner)
+        .and_then(std::sync::OnceLock::into_inner))
 }
 
 #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#OBS-TRACE")]
@@ -220,7 +228,10 @@ pub(crate) fn run_selected(
         embedded_root,
         root_offline,
         ConfirmationScope::Project,
-        Some(selected),
+        Completion {
+            selected: Some(selected),
+            output: None,
+        },
     )
 }
 
@@ -231,15 +242,31 @@ fn run_with_scope(
     root_offline: bool,
     scope: ConfirmationScope<'_>,
 ) -> Result<()> {
-    run_with_scope_selected(ctx, args, embedded_root, root_offline, scope, None)
+    run_with_scope_selected(
+        ctx,
+        args,
+        embedded_root,
+        root_offline,
+        scope,
+        Completion {
+            selected: None,
+            output: None,
+        },
+    )
 }
+/// This invocation's selected source and optional final-presentation handoff.
+struct Completion {
+    selected: Option<SelectedRouting>,
+    output: Option<super::report::OutputSlot>,
+}
+
 fn run_with_scope_selected(
     ctx: &output::Context,
     args: InstallArgs,
     embedded_root: Option<PathBuf>,
     root_offline: bool,
     scope: ConfirmationScope<'_>,
-    selected: Option<SelectedRouting>,
+    completion: Completion,
 ) -> Result<()> {
     let overall = ctx.progress().task("Installing packages");
     let scoped = ctx.with_progress_scope(overall.progress());
@@ -258,7 +285,7 @@ fn run_with_scope_selected(
             root_offline,
             &overall,
             scope,
-            selected,
+            completion,
         )
     })
 }
@@ -270,7 +297,7 @@ fn run_observed(
     root_offline: bool,
     overall: &vibe_core::progress::ProgressTask,
     scope: ConfirmationScope<'_>,
-    selected: Option<SelectedRouting>,
+    completion: Completion,
 ) -> Result<()> {
     let PreparedInstall {
         lease,
@@ -297,7 +324,8 @@ fn run_observed(
     // into the run and the callback, while this one lives to the end of the
     // command — through the final report and the trace finalisation.
     let lease_owner = lease.clone();
-    let exit = execute_after_open(
+    let Completion { selected, output } = completion;
+    let mut exit = execute_after_open(
         ctx,
         Execution {
             args,
@@ -312,6 +340,11 @@ fn run_observed(
         },
         trace.recorder(),
     );
+    // Only successful ordinary presentation travels outward. JSON, handoffs
+    // and errors retain the adapter's original emission and exit policies.
+    if let CommandExit::Success(RegisteredReportDraft::Install(draft)) = &mut exit {
+        draft.output = output;
+    }
     // Consumes the owner: finishes the index, drops the last handle (and with
     // it the cooperative lock), and returns the member to attach.
     let finalized = compile_trace::finalize(trace, exit, &now);

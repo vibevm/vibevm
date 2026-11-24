@@ -13,6 +13,37 @@ use crate::output;
 
 use super::WorldCallbackSummary;
 
+/// A request-local handoff, populated only after successful report emission.
+pub(crate) type OutputSlot = std::sync::Arc<std::sync::OnceLock<FinalOutput>>;
+
+/// Owned final presentation, with no lease, command exit or wire document.
+#[derive(Debug)]
+#[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-067#trailer")]
+pub(crate) struct FinalOutput {
+    pub(super) progress: vibe_install::InstallProgress,
+    pub(super) summary: WorldCallbackSummary,
+    pub(super) human: super::observer::HumanTrailer,
+    pub(super) suffix: String,
+}
+
+impl FinalOutput {
+    /// Print only after the caller's remaining fallible work has succeeded.
+    pub(crate) fn print(
+        self,
+        ctx: &output::Context,
+        prompt: Option<&crate::commands::prompt::PromptSummary>,
+    ) {
+        render_human_progress(
+            ctx,
+            &self.progress,
+            self.summary,
+            &self.suffix,
+            &self.human,
+            prompt,
+        );
+    }
+}
+
 /// The quiet-summary account of slot rows that failed without stopping the
 /// command, shared by the install-family commands that report them.
 pub(crate) struct LifecycleHookView<'a>(&'a [SlotLifecycleReport]);
@@ -133,13 +164,29 @@ pub(super) fn render_human_progress(
     world_summary: WorldCallbackSummary,
     trace_suffix: &str,
     human: &super::observer::HumanTrailer,
+    prompt: Option<&crate::commands::prompt::PromptSummary>,
 ) {
+    let prompt_suffix = if ctx.is_quiet() {
+        match prompt.map(|summary| &summary.state) {
+            Some(crate::commands::prompt::PromptState::Rebuilt { .. }) => {
+                " · system prompt rebuilt"
+            }
+            Some(crate::commands::prompt::PromptState::Unchanged) => " · system prompt unchanged",
+            Some(crate::commands::prompt::PromptState::Removed) => " · system prompt removed",
+            _ => "",
+        }
+    } else {
+        if let Some(prompt) = prompt {
+            ctx.block(&prompt.row_at(crate::output::language::viewport()));
+        }
+        ""
+    };
     if progress.fresh {
         let nodes = progress.nodes_regenerated.len();
         let nodes = format!("{nodes} node{}", if nodes == 1 { "" } else { "s" });
         if ctx.is_quiet() {
             ctx.summary(&format!(
-                "vibe install: vibe.lock unchanged — nothing to re-resolve ({nodes} up to date){}{trace_suffix}",
+                "vibe install: vibe.lock unchanged — nothing to re-resolve ({nodes} up to date){}{prompt_suffix}{trace_suffix}",
                 ritual_suffix(world_summary),
             ));
         } else {
@@ -151,7 +198,7 @@ pub(super) fn render_human_progress(
     let plural = if count == 1 { "" } else { "s" };
     if ctx.is_quiet() {
         ctx.summary(&format!(
-            "vibe install: {count} package{plural} materialised{}{trace_suffix}",
+            "vibe install: {count} package{plural} materialised{}{prompt_suffix}{trace_suffix}",
             ritual_suffix(world_summary),
         ));
         return;
