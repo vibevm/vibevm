@@ -523,6 +523,52 @@ fn the_whole_remap_surface_is_offered() {
     }
 }
 #[test]
+fn remap_bind_source_of_an_unheld_package_is_refused() {
+    let user = UserScratch::new();
+    let project = tempfile::tempdir().unwrap();
+    let home = tempfile::tempdir().unwrap();
+    let vibe = || {
+        let mut command = user.vibe();
+        command.current_dir(project.path()).env("HOME", home.path())
+            .env("USERPROFILE", home.path()).env("VIBE_SETTINGS", &user.settings);
+        command
+    };
+    ok(&vibe().args(["init", "--unattended"]).output().unwrap());
+    let output = vibe().args([
+        "remap", "bind-source", "org.example/nothing", "--source", "x.toml",
+    ]).output().unwrap();
+    let stderr = failed(&output);
+    assert_eq!(output.status.code(), Some(1), "{stderr}");
+    assert!(stderr.contains("✗ remap_not_held  org.example/nothing is not a held project remap"), "{stderr}");
+    assert!(stderr.contains("fix   vibe remap list"), "{stderr}");
+    assert!(stderr.contains("see   spec://org.vibevm.core/vibevm/common/PROP-073#LOCKED-SOURCE-LAW"), "{stderr}");
+    let offline = vibe().args([
+        "remap", "bind-source", "org.example/nothing", "--source", "input's file.toml", "--offline",
+    ]).output().unwrap();
+    let stderr = failed(&offline);
+    assert_eq!(offline.status.code(), Some(1), "{stderr}");
+    assert!(stderr.contains("✗ online_required  remap bind-source verifies the source at its endpoint, and --offline forbids that"), "{stderr}");
+    assert!(stderr.contains("fix   vibe remap bind-source org.example/nothing --source 'input'\\''s file.toml'"), "{stderr}");
+    assert!(!stderr.contains("remap_not_held"), "{stderr}");
+    let quoted = vibe().args([
+        "remap", "bind-source", "org.example/it's spaced", "--source", "input's file.toml", "--offline",
+    ]).output().unwrap();
+    let stderr = failed(&quoted);
+    assert!(stderr.contains("fix   vibe remap bind-source 'org.example/it'\\''s spaced' --source 'input'\\''s file.toml'"), "{stderr}");
+    for unsafe_text in ["bad\nvalue", "bad\rvalue", "bad\tvalue", "bad\u{1b}value", "bad`value"] {
+        for (package, source) in [(unsafe_text, "x.toml"), ("org.example/nothing", unsafe_text)] {
+            let output = vibe().args([
+                "remap", "bind-source", package, "--source", source, "--offline",
+            ]).output().unwrap();
+            let stderr = failed(&output);
+            assert!(stderr.contains("online_required"), "{stderr}");
+            assert!(stderr.contains("fix   vibe remap bind-source PACKAGE --source SOURCE"), "{stderr}");
+            assert!(!stderr.contains('`'), "{stderr}");
+            assert!(!stderr.chars().any(|c| c.is_control() && c != '\n'), "{stderr:?}");
+        }
+    }
+}
+#[test]
 fn remap_preview_online_is_refused_with_offline_required() {
     let user = UserScratch::new();
     let home = tempfile::tempdir().unwrap();
