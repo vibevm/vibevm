@@ -557,10 +557,10 @@ fn test_proxy_reports_every_step_and_separates_proxy_from_target_problems() {
     assert_eq!(code(&ok), 0, "{err}");
     for needle in [
         "config",
-        "mode explicit (default)",
+        "mode explicit · default",
         "no_proxy",
         "CONNECT",
-        "TLS",
+        "tls",
         "redirect",
         "proxy test passed",
     ] {
@@ -586,7 +586,7 @@ fn test_proxy_reports_every_step_and_separates_proxy_from_target_problems() {
     let untrusted = w.dl(&["--test-proxy", &rogue.url(FIXTURE_HOST, "a.txt")]);
     let err = stderr(&untrusted);
     assert_eq!(code(&untrusted), 22, "{err}");
-    assert!(err.contains("TLS trust"), "{err}");
+    assert!(err.contains("tls trust"), "{err}");
     // The JSON form carries the same rows.
     let json = w.dl(&["--json", "--test-proxy", &auth_url(&w)]);
     let report: serde_json::Value = serde_json::from_slice(&json.stdout).unwrap();

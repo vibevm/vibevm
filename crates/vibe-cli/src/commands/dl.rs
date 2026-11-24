@@ -30,6 +30,8 @@ use vibe_net::probe::{FailureClass, ProbeOptions};
 use crate::cli::DlArgs;
 use crate::output::Context;
 
+mod error;
+pub use error::DlError;
 mod render;
 mod report;
 mod test_proxy;
@@ -42,79 +44,6 @@ const TIMEOUT: Duration = Duration::from_secs(600);
 /// The fix of a `vibe dl` that has nowhere to put the body: the two
 /// commands that do (`refusal_of` draws each on its own line).
 const SHOW_OR_DEST_FIX: &str = "`vibe dl <url> <dest>`, or `vibe dl <url> --show`";
-
-/// A classified `vibe dl` failure: a stable code first (the refusal's
-/// headline code), what was observed, and the fix. Never a credential.
-///
-/// ```text
-/// dl_proxy_auth: the proxy answered `HTTP/1.1 407 …` (violates spec://…#dl; fix: …)
-/// ```
-#[derive(Debug, thiserror::Error)]
-#[error("{code}: {detail} (violates spec://org.vibevm.core/vibevm/common/PROP-068#dl; fix: {fix})")]
-pub struct DlError {
-    pub code: &'static str,
-    pub exit: u8,
-    pub detail: String,
-    pub fix: String,
-}
-
-/// A nested error's message without its `(violates …; fix: …)` tail —
-/// what a refusal shows as the cause.
-fn first_sentence(message: &str) -> String {
-    match message.find(" (violates ") {
-        Some(at) => message[..at].to_owned(),
-        None => message.to_owned(),
-    }
-}
-
-/// The `fix:` a nested error carries, when it carries one: a
-/// configuration error knows its own fix better than any failure class
-/// does.
-fn nested_fix(message: &str) -> String {
-    match message.find("fix: ") {
-        Some(at) => message[at + "fix: ".len()..]
-            .trim_end_matches(')')
-            .trim()
-            .to_owned(),
-        None => "check the configured certificate files".to_owned(),
-    }
-}
-
-impl DlError {
-    fn class(class: FailureClass, detail: impl Into<String>) -> Self {
-        let detail: String = detail.into();
-        // A nested error's own `(violates …; fix: …)` tail is replaced by
-        // this class's fix, so the refusal names one fix.
-        let detail = match detail.find(" (violates ") {
-            Some(at) => detail[..at].to_owned(),
-            None => detail,
-        };
-        Self {
-            code: class.code(),
-            exit: class.exit_code(),
-            detail,
-            fix: class.fix().to_owned(),
-        }
-    }
-
-    fn local(code: &'static str, exit: u8, detail: impl Into<String>, fix: &str) -> Self {
-        Self {
-            code,
-            exit,
-            detail: detail.into(),
-            fix: fix.to_owned(),
-        }
-    }
-
-    fn usage(detail: impl Into<String>, fix: &str) -> Self {
-        Self::local("dl_usage", 2, detail, fix)
-    }
-
-    /// The process exit status of this failure.
-    pub fn exit_code(&self) -> u8 {
-        self.exit
-    }
-}
 
 /// `vibe dl`.
 #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-068#dl")]
@@ -182,13 +111,7 @@ pub fn run(ctx: &Context, args: DlArgs, offline: bool, verbose: bool) -> Result<
     // before a connection is made, so the fix names the key and the file
     // rather than the server's clock (PROP-068 `#proxy-trust`).
     if let Err(error) = session.trust() {
-        return Err(DlError::local(
-            "dl_usage",
-            2,
-            first_sentence(&error.to_string()),
-            &nested_fix(&error.to_string()),
-        )
-        .into());
+        return Err(error::trust_refusal(&error).into());
     }
     let started = Instant::now();
     let probe = vibe_net::probe::probe(&session, &url, &ProbeOptions::default(), &admit);
