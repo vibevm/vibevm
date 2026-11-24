@@ -3,6 +3,7 @@ use crate::{
     cli::{KitArgs, KitCommand},
     output,
 };
+use crate::output::language::{Block, Glyph, Role, hint, paint, warning};
 use anyhow::{Result, anyhow, ensure};
 use serde::Deserialize;
 use specmark::spec;
@@ -48,9 +49,22 @@ pub fn run(ctx: &output::Context, args: KitArgs) -> Result<()> {
         KitCommand::Build { file, out } => build::run(ctx, &file, &out)?,
         KitCommand::Init { file } => {
             let (project, name) = recipe_scope(&file)?;
-            project.publish_new_in(&project.root_dir()?, &name, TEMPLATE.as_bytes())
+            let path = project.root_path().join(&name);
+            #[cfg(not(windows))]
+            let quoted = crate::shell_syntax::posix_quote(&path.to_string_lossy());
+            #[cfg(windows)]
+            let quoted = crate::shell_syntax::powershell_quote(&path.to_string_lossy());
+            let template = TEMPLATE.replace("--file vibe-kit.toml", &format!("--file {quoted}"));
+            project.publish_new_in(&project.root_dir()?, &name, template.as_bytes())
                 .map_err(|_| anyhow!("kit recipe not created: existing entry or protected publication failure; inspect destination before retry"))?;
-            ctx.summary("Created commented kit recipe; demonstration paths and hashes are not verified inputs.");
+            answer(
+                ctx,
+                &format!("created kit recipe {}", path.display()),
+                &[
+                    hint("demonstration paths and placeholder hashes; edit them, then:"),
+                    paint(Role::Accent, &format!("vibe kit validate --file {quoted}")),
+                ],
+            );
         }
         KitCommand::Validate {
             file,
@@ -68,8 +82,10 @@ pub fn run(ctx: &output::Context, args: KitArgs) -> Result<()> {
             })?;
             recipe.validate_shape()?;
             if structure_only {
-                ctx.summary(
-                    "Kit recipe structure valid; input availability and readiness NOT checked.",
+                answer(
+                    ctx,
+                    "kit recipe structure is valid",
+                    &[warning("inputs not checked")],
                 );
             } else {
                 for (label, input) in [
@@ -91,11 +107,33 @@ pub fn run(ctx: &output::Context, args: KitArgs) -> Result<()> {
                     .map_err(|_| anyhow!("kit site profile must be UTF-8"))?;
                 vibe_core::site_profile::SiteProfile::parse(text, "kit site profile")
                     .map_err(|_| anyhow!("invalid kit site profile; contents omitted"))?;
-                ctx.summary("Kit recipe and local input hashes/profile valid; no kit built or installed, bundle compatibility not yet qualified.");
+                answer(
+                    ctx,
+                    "kit recipe and its inputs are valid",
+                    &[
+                        hint("bundle, installer and site profile match their sha256; the site profile parses"),
+                        warning("bundle compatibility is not checked; nothing was built or installed"),
+                    ],
+                );
             }
         }
     }
     Ok(())
+}
+
+/// A finished kit answer: the headline, then its body at column 2;
+/// quiet keeps the headline alone.
+fn answer(ctx: &output::Context, headline: &str, body: &[String]) {
+    if ctx.is_quiet() {
+        ctx.summary(headline);
+        return;
+    }
+    let mut text = Block::new(Glyph::Done, headline).render();
+    for line in body {
+        text.push_str("\n  ");
+        text.push_str(line);
+    }
+    ctx.block(&text);
 }
 
 impl Recipe {

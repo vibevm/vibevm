@@ -303,6 +303,87 @@ fn kit_init_and_validate_explicit_local_recipe() {
     assert!(!root.join("vibe.lock").exists());
 }
 
+#[test]
+fn kit_init_names_the_recipe_and_the_validate_command() {
+    let temp = tempfile::tempdir().unwrap();
+    let user = UserScratch::new();
+    let root = temp.path();
+    let out = command(&user, root, &["kit", "init", "--file", "my kit.toml"]);
+    let stdout = String::from_utf8_lossy(&out.stdout).into_owned();
+    good(out);
+    let recipe = fs::canonicalize(root).unwrap().join("my kit.toml");
+    let quoted = format!("'{}'", recipe.display());
+    assert_eq!(
+        stdout,
+        format!(
+            "✓ created kit recipe {}\n  demonstration paths and placeholder hashes; edit them, then:\n  vibe kit validate --file {quoted}\n",
+            recipe.display()
+        )
+    );
+    let text = fs::read_to_string(&recipe).unwrap();
+    assert!(
+        text.contains(&format!(
+            "# Check syntax only: vibe kit validate --file {quoted} --structure-only\n# Check actual inputs: vibe kit validate --file {quoted}\n"
+        )),
+        "{text}"
+    );
+    assert!(!text.contains("--file vibe-kit.toml"), "{text}");
+    let validate = ["kit", "validate", "--file", "my kit.toml", "--structure-only"];
+    let out = command(&user, root, &validate);
+    assert_eq!(
+        String::from_utf8_lossy(&out.stdout),
+        "✓ kit recipe structure is valid\n  ! inputs not checked\n"
+    );
+    good(out);
+    let out = command(
+        &user,
+        root,
+        &["--quiet", "kit", "validate", "--file", "my kit.toml", "--structure-only"],
+    );
+    assert_eq!(String::from_utf8_lossy(&out.stdout), "kit recipe structure is valid\n");
+    good(out);
+
+    let out = command(&user, root, &["--quiet", "kit", "init", "--file", "it's kit.toml"]);
+    let quiet_recipe = fs::canonicalize(root).unwrap().join("it's kit.toml");
+    assert_eq!(
+        String::from_utf8_lossy(&out.stdout),
+        format!("created kit recipe {}\n", quiet_recipe.display())
+    );
+    good(out);
+    #[cfg(not(windows))]
+    let escaped = format!("'{}'", quiet_recipe.display().to_string().replace('\'', "'\"'\"'"));
+    #[cfg(windows)]
+    let escaped = format!("'{}'", quiet_recipe.display().to_string().replace('\'', "''"));
+    let text = fs::read_to_string(&quiet_recipe).unwrap();
+    assert!(text.contains(&format!("--file {escaped} --structure-only")), "{text}");
+    assert!(text.contains(&format!("--file {escaped}\n")), "{text}");
+
+    let inputs = [
+        ("bundle", b"synthetic bundle".as_slice()),
+        ("installer", b"synthetic installer".as_slice()),
+        ("profile.toml", b"schema = 1\nname = 'synthetic'\n".as_slice()),
+    ];
+    for (name, bytes) in inputs {
+        fs::write(root.join(name), bytes).unwrap();
+    }
+    fs::write(
+        &recipe,
+        format!(
+            "schema_version=1\n[kit]\nname='synthetic'\ntarget='x86_64-unknown-linux-gnu'\nversion='1.0.12'\n[bundle]\npath='bundle'\nsha256='{}'\n[installer]\npath='installer'\nsha256='{}'\n[site_profile]\npath='profile.toml'\nsha256='{}'\n",
+            digest(inputs[0].1), digest(inputs[1].1), digest(inputs[2].1)
+        ),
+    ).unwrap();
+    let out = command(&user, root, &["kit", "validate", "--file", "my kit.toml"]);
+    assert_eq!(
+        String::from_utf8_lossy(&out.stdout),
+        "✓ kit recipe and its inputs are valid\n  bundle, installer and site profile match their sha256; the site profile parses\n  ! bundle compatibility is not checked; nothing was built or installed\n"
+    );
+    good(out);
+    let out = command(&user, root, &["--quiet", "kit", "validate", "--file", "my kit.toml"]);
+    assert_eq!(String::from_utf8_lossy(&out.stdout), "kit recipe and its inputs are valid\n");
+    good(out);
+}
+
 #[cfg(unix)]
 #[test]
 fn kit_init_and_validate_refuse_symlink_entries() {
