@@ -17,7 +17,7 @@ use vibe_wire::generated::application_report::{
 };
 
 use crate::output;
-use crate::output::language::{Role, paint};
+use crate::output::language::{Cell, List, Role, Row, paint, rule};
 
 /// A library sentence as human output: identifiers lose their backticks,
 /// which belong to the JSON and the logs (PROP-067 `#inline`).
@@ -204,16 +204,21 @@ pub(crate) fn render_outdated(ctx: &output::Context, report: &ApplicationOutdate
     if ctx.is_json() {
         return ctx.emit_json(report);
     }
+    println!("{}", outdated_text(report));
+    Ok(())
+}
+
+fn outdated_text(report: &ApplicationOutdated) -> String {
     let outdated = report
         .installations
         .iter()
         .filter(|row| row.status == Status::Outdated)
         .count();
-    println!(
-        "{outdated} of {} installed application(s) outdated",
-        report.installations.len()
+    let heading = rule(
+        "outdated",
+        Some(&format!("{outdated} of {}", report.installations.len())),
     );
-    for row in &report.installations {
+    let rows = report.installations.iter().map(|row| {
         let status = match row.status {
             Status::Current => "current",
             Status::Outdated => "outdated",
@@ -221,19 +226,90 @@ pub(crate) fn render_outdated(ctx: &output::Context, report: &ApplicationOutdate
             Status::Unknown => "unknown",
         };
         let latest = row.latest.as_deref().unwrap_or("?");
-        let hidden = if row.hidden { " [hidden]" } else { "" };
-        match &row.reason {
-            Some(reason) => println!(
-                "  {}: {} → {latest} ({status}: {reason}){hidden}",
-                row.key, row.installed
-            ),
-            None => println!(
-                "  {}: {} → {latest} ({status}){hidden}",
-                row.key, row.installed
-            ),
+        let mut cells = vec![
+            Cell::new(&row.key, Role::Accent),
+            Cell::text(format!("{} → {latest}", row.installed)),
+            Cell::text(format!("[{status}]")),
+        ];
+        if row.hidden {
+            cells.push(Cell::new("[hidden]", Role::Dim));
         }
+        let mut rendered = Row::new(cells);
+        if let Some(reason) = &row.reason {
+            rendered = rendered.child(prose(reason));
+        }
+        rendered
+    });
+    format!("{heading}\n{}", List::new(rows.collect()).render())
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn outdated_rows_show_state() {
+        let report: ApplicationOutdated = serde_json::from_value(serde_json::json!({
+            "protocol": "vibe-app-outdated/1",
+            "installations": [
+                {
+                    "key": "org.example/node",
+                    "slot": "node",
+                    "package": {
+                        "group": "org.example",
+                        "name": "node",
+                        "version": "22.23.4"
+                    },
+                    "held": false,
+                    "installed": "22.23.4",
+                    "latest": "24.22.2",
+                    "status": "outdated",
+                    "hidden": false,
+                    "reason": null
+                },
+                {
+                    "key": "org.example/held",
+                    "slot": "held",
+                    "package": {
+                        "group": "org.example",
+                        "name": "held",
+                        "version": "1.0.0"
+                    },
+                    "held": true,
+                    "installed": "1.0.0",
+                    "latest": null,
+                    "status": "held",
+                    "hidden": true,
+                    "reason": "held by user"
+                }
+            ]
+        }))
+        .expect("synthetic outdated report");
+        let rendered = outdated_text(&report);
+        let text = console::strip_ansi_codes(&rendered);
+        let mut lines = text.lines();
+        let heading = lines.next().expect("outdated rule");
+        assert!(heading.contains("outdated"), "{text}");
+        assert!(heading.ends_with("1 of 2"), "{text}");
+        assert!(heading.starts_with("── ") || heading.starts_with("-- "));
+        let outdated = lines.next().expect("outdated row");
+        assert!(outdated.contains("org.example/node"), "{text}");
+        assert!(outdated.contains("22.23.4 → 24.22.2"), "{text}");
+        assert!(outdated.contains("[outdated]"), "{text}");
+        assert!(!outdated.contains("[hidden]"), "{text}");
+        let held = lines.next().expect("held row");
+        assert!(held.contains("org.example/held"), "{text}");
+        assert!(held.contains("1.0.0 → ?"), "{text}");
+        assert!(held.contains("[held]"), "{text}");
+        assert!(held.contains("[hidden]"), "{text}");
+        let reason = lines.next().expect("reason child");
+        assert!(reason.contains("held by user"), "{text}");
+        assert!(reason.contains('└') || reason.contains('\\'), "{text}");
+        assert_eq!(text.matches("[outdated]").count(), 1);
+        assert_eq!(text.matches("[held]").count(), 1);
+        assert_eq!(text.matches("[hidden]").count(), 1);
+        assert!(lines.next().is_none(), "unexpected action trailer: {text}");
     }
-    Ok(())
 }
 
 /// One recommendation as the report carries it (`PROP-077#APP-RECOMMENDS`).
