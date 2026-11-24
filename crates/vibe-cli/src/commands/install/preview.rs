@@ -1,6 +1,7 @@
 //! No-publication projection of the same source-selected install metadata phase.
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-073#OPERATION-EFFECTS");
 
+use super::report::plan;
 use crate::{cli::InstallArgs, output};
 use anyhow::{Context as _, Result};
 use specmark::spec;
@@ -69,7 +70,7 @@ fn run_with_selected(
     // report a successful preview while its owned temporary state remains.
     let scratch_path = scratch.path().to_path_buf();
     let cleanup = scratch.close();
-    let report = match (result, cleanup) {
+    let (report, contributions) = match (result, cleanup) {
         (Ok(report), Ok(())) => report,
         (Err(error), Ok(())) => return Err(error),
         (Ok(_), Err(error)) => {
@@ -90,17 +91,32 @@ fn run_with_selected(
     if ctx.is_json() {
         return ctx.emit_json(&report);
     }
-    ctx.heading(&format!(
-        "Preview: {} selected packages",
-        report.packages.len()
+    let rows: Vec<plan::PlanRow> = report
+        .packages
+        .iter()
+        .map(|row| plan::PlanRow {
+            package: row.package.clone(),
+            version: row.version.clone(),
+            registry: row
+                .source_evidence
+                .as_ref()
+                .and_then(|source| source.registry.clone()),
+        })
+        .collect();
+    ctx.rule(&plan::plan_label(rows.len()));
+    ctx.block(&plan::preview_list(
+        &rows,
+        &contributions,
+        crate::output::language::viewport(),
     ));
-    for row in report.packages {
-        let registry = row
-            .source_evidence
-            .as_ref()
-            .and_then(|source| source.registry.as_deref())
-            .unwrap_or("unknown source");
-        ctx.step(&format!("{}@{} — {registry}", row.package, row.version));
+    if let Some(remaps) = &report.remaps
+        && !remaps.is_empty()
+    {
+        ctx.rule("remaps");
+        ctx.block(&plan::remap_list(
+            remaps,
+            crate::output::language::viewport(),
+        ));
     }
     Ok(())
 }
@@ -113,7 +129,7 @@ fn prepare(
     seed_default_registry: bool,
     scratch: &std::path::Path,
     routing: Option<super::SelectedRouting>,
-) -> Result<InstallPlan> {
+) -> Result<(InstallPlan, Vec<plan::ContributionRow>)> {
     ctx.progress().checkpoint()?;
     crate::commands::app::home::refuse_library(args.library.as_deref())?;
     let root = super::resolve_project_root(&args.path)?;
@@ -160,6 +176,7 @@ fn prepare(
         }
         Err(error) => return Err(error).context("observing preview lock"),
     };
+    let mut contributions = Vec::new();
     let packages = if vibe_install::preview_has_requirements(
         &workspace,
         &manifest,
@@ -242,6 +259,20 @@ fn prepare(
             &observer,
             &selected_roots,
         )?;
+        // Retain declarations beside the wire document before selected metadata
+        // is dropped. These are not eligibility decisions or an execution plan.
+        contributions = preview
+            .package_contributions()
+            .map(
+                |(group, name, version, id, handler, title)| plan::ContributionRow {
+                    package: format!("{group}/{name}"),
+                    version: version.to_string(),
+                    id: id.to_owned(),
+                    handler: handler.kind().to_owned(),
+                    title: title.map(str::to_owned),
+                },
+            )
+            .collect();
         preview
             .package_sources()
             .map(|(group, name, version, evidence)| PlanEntry {
@@ -273,13 +304,16 @@ fn prepare(
         )
     });
     ctx.progress().checkpoint()?;
-    Ok(super::report::hostings::with_hostings(InstallPlan {
-        command: "install:plan".into(),
-        packages,
-        preview_complete: Some(complete),
-        remaps: Some(remaps),
-        hostings: None,
-    }))
+    Ok((
+        super::report::hostings::with_hostings(InstallPlan {
+            command: "install:plan".into(),
+            packages,
+            preview_complete: Some(complete),
+            remaps: Some(remaps),
+            hostings: None,
+        }),
+        contributions,
+    ))
 }
 
 /// An unavailable settings home means there is no old store to read, not a

@@ -10,7 +10,6 @@ use vibe_wire::generated::install_report::{
 };
 
 use crate::output;
-use crate::output::language::{Cell, List, Role, Row};
 
 use super::WorldCallbackSummary;
 
@@ -39,7 +38,6 @@ impl LifecycleHookView<'_> {
     implements = "spec://org.vibevm.core/vibevm/common/PROP-073#SOURCE-EVIDENCE-PROJECT-EVENTS"
 )]
 pub(super) fn present_resolution(ctx: &output::Context, planned: &vibe_install::PlannedInstall) {
-    let resolution = &planned.resolution;
     if ctx.is_json() {
         use vibe_wire::generated::install::e2::plan::{InstallPlan, PlanEntry};
         let packages = planned
@@ -67,21 +65,16 @@ pub(super) fn present_resolution(ctx: &output::Context, planned: &vibe_install::
     if ctx.is_quiet() {
         return;
     }
-    ctx.rule(&format!(
-        "materialising {} package{} into vibedeps/",
-        resolution.len(),
-        if resolution.len() == 1 { "" } else { "s" },
-    ));
-    let rows = resolution
-        .iter()
-        .map(|d| {
-            Row::new(vec![Cell::new(
-                format!("{}/{}@{}", d.group, d.name, d.version),
-                Role::Accent,
-            )])
+    let rows: Vec<plan::PlanRow> = planned
+        .package_sources()
+        .map(|(group, name, version, evidence)| plan::PlanRow {
+            package: format!("{group}/{name}"),
+            version: version.to_string(),
+            registry: evidence.registry.clone(),
         })
         .collect();
-    ctx.block(&List::new(rows).render());
+    ctx.rule(&plan::plan_label(rows.len()));
+    ctx.block(&plan::plan_list(&rows, crate::output::language::viewport()));
 }
 
 pub(super) fn handoff_member(delegation: &vibe_lifecycle::Delegation) -> InstallDelegation {
@@ -294,5 +287,6 @@ pub(crate) fn phase_rows(
 mod tests;
 
 mod candidates;
+pub(crate) mod plan;
 pub(crate) use candidates::candidate_rows;
 pub(crate) mod hostings;
