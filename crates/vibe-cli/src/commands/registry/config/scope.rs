@@ -18,8 +18,7 @@ pub(super) fn parse_scope(raw: Option<&str>) -> Result<Option<RegistryScope>> {
     };
     match RegistryScope::parse(raw) {
         Some(RegistryScope::Site) => bail!(
-            "--scope site is not editable here: the site profile is applied as a whole by \
-             `vibe self apply <file>` (spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#registry-layers)"
+            "scope_read_only: the site layer is not editable here (violates spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#registry-layers; fix: `vibe self apply <file>`): the site profile is applied as a whole"
         ),
         Some(scope) => Ok(Some(scope)),
         None => bail!("unknown --scope `{raw}` — must be `project`, `local` or `user`"),
