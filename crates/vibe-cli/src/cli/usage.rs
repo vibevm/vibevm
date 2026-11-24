@@ -19,7 +19,15 @@ pub(crate) fn usage_refusal(rendered: &str, args: &[OsString]) -> Refusal {
     }
     // Only repair the two known rejected shapes. Suggestions are text, never run.
     for words in args.windows(3) {
-        let operand = words[2].to_string_lossy();
+        let Some(operand) = words[2].to_str() else { continue };
+        // A bare suggestion operand must be one literal shell word on its own.
+        // Anything requiring quoting retains clap's generic --help fallback.
+        if operand.is_empty() || operand.starts_with('-')
+            || !operand.bytes().all(|byte| byte.is_ascii_alphanumeric()
+                || matches!(byte, b'/' | b'.' | b'_' | b'-'))
+        {
+            continue;
+        }
         let (command, headline, fix) = if words[0] == "kit"
             && words[1] == "init"
             && !operand.starts_with('-')
