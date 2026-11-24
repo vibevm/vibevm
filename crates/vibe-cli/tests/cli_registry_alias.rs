@@ -61,6 +61,7 @@ impl Site {
             .current_dir(self.root.path())
             .args(args)
             .env("HOME", self.path("home"))
+            .env("USERPROFILE", self.path("home"))
             .env("VIBE_SETTINGS", self.path("settings"))
             .env("VIBE_REGISTRY_CACHE", self.path("cache"))
             .env("VIBE_NO_DEFAULT_REGISTRY", "1")
@@ -462,7 +463,7 @@ fn list_prints_the_table() {
     let listed = site.alias(&["list"]);
     ok(&listed, "vibe registry alias corp list");
     assert!(
-        stdout(&listed).contains("qwen -> org.vibevm.qwen/qwen-code"),
+        stdout(&listed).contains("  qwen  →  org.vibevm.qwen/qwen-code"),
         "{}",
         stdout(&listed)
     );
@@ -539,61 +540,5 @@ fn two_registries_agreeing_on_one_spelling_are_one_candidate() {
     );
 }
 
-/// The project install path obeys the same law: `vibe install <bare>`
-/// resolves an issued spelling and refuses a package's own name, with
-/// the qualified name offered to copy.
-#[test]
-#[specmark::spec(
-    verifies = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#short-name"
-)]
-fn the_project_install_path_resolves_only_issued_names() {
-    let site = Site::new();
-    fs::create_dir_all(site.path("proj")).unwrap();
-    fs::write(
-        site.path("proj/vibe.toml"),
-        "[package]\nname = \"consumer\"\ngroup = \"com.example\"\n\
-         kind = \"flow\"\nversion = \"0.1.0\"\n",
-    )
-    .unwrap();
-    let install = |spelling: &str| {
-        site.vibe(&[
-            "install",
-            "--path",
-            site.path("proj").to_str().unwrap(),
-            "--plan-only",
-            spelling,
-        ])
-    };
-
-    // The package's own name is not a short name.
-    let refused = install("qwen-code");
-    assert!(
-        !refused.status.success(),
-        "a package name resolves nothing: {}",
-        stdout(&refused)
-    );
-    let said = format!("{}{}", stdout(&refused), stderr(&refused));
-    assert!(
-        said.contains("not issued by any consulted registry"),
-        "{said}"
-    );
-    assert!(
-        said.contains("org.vibevm.qwen/qwen-code"),
-        "the refusal hands over the qualified name: {said}"
-    );
-
-    // Issued, and the bare spelling now resolves through it. The
-    // install itself may still fail further down (an application
-    // package is not a project requirement), so this asserts on the
-    // provenance line rather than on the exit code.
-    ok(
-        &site.alias(&["add", "qc", "org.vibevm.qwen/qwen-code"]),
-        "alias add",
-    );
-    let attempted = install("qc");
-    let said = format!("{}{}", stdout(&attempted), stderr(&attempted));
-    assert!(
-        said.contains("qc → org.vibevm.qwen/qwen-code (alias in registry corp)"),
-        "the install boundary must resolve the issued spelling: {said}"
-    );
-}
+#[path = "cli_registry_alias/f24a.rs"]
+mod f24a;
