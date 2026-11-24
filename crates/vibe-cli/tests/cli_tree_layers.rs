@@ -130,7 +130,7 @@ fn layered_tree_reports_disabled_and_missing_layers_without_changing_project_pro
 #[test]
 fn layers_plain_has_rule_sections_and_one_legend() {
     let user = UserScratch::new();
-    let scratch = tempfile::tempdir_in("/home/olegchir/.claude2/jobs/10bde8f1/tmp").unwrap();
+    let scratch = tempfile::tempdir().unwrap();
     let home = scratch.path().join("home");
     let project = scratch.path().join("project");
     fs::create_dir_all(&home).unwrap();
