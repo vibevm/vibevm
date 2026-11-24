@@ -8,9 +8,7 @@ use vibe_install::InstallSource;
 #[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-073#LOCKED-SOURCE-LAW")]
 pub(crate) fn run(ctx: &output::Context, args: RemapBindSourceArgs, offline: bool) -> Result<()> {
     if offline {
-        bail!(
-            "bind-source requires selected-endpoint verification; --offline cache reuse cannot prove a new source binding"
-        );
+        bail!("{}", online_refusal(&args.package, &args.source));
     }
     let selected = args
         .path
@@ -24,7 +22,13 @@ pub(crate) fn run(ctx: &output::Context, args: RemapBindSourceArgs, offline: boo
         .remaps
         .iter()
         .position(|row| row.package == args.package)
-        .ok_or_else(|| anyhow::anyhow!("`{}` is not a held project remap", args.package))?;
+        .ok_or_else(|| {
+            anyhow::anyhow!(
+                "remap_not_held: {} is not a held project remap (violates \
+                 spec://org.vibevm.core/vibevm/common/PROP-073#LOCKED-SOURCE-LAW; fix: `vibe remap list`)",
+                args.package
+            )
+        })?;
     let source: LockedRemapSource = toml::from_str(
         &std::fs::read_to_string(&args.source).context("reading explicit source binding")?,
     )
@@ -85,10 +89,44 @@ pub(crate) fn run(ctx: &output::Context, args: RemapBindSourceArgs, offline: boo
             "package":args.package, "binding":"newly_verified", "changed":changed}),
         );
     }
-    ctx.summary(if changed {
-        "verified source binding recorded; remap was not adopted or activated"
+    let lock = workspace
+        .root
+        .join(vibe_core::manifest::Lockfile::FILENAME)
+        .display()
+        .to_string();
+    let outcome = if changed {
+        "recorded, not adopted or activated"
     } else {
-        "verified source binding unchanged"
-    });
+        "unchanged"
+    };
+    ctx.trailer_at(
+        &format!("verified source binding for {} {outcome}", args.package),
+        &lock,
+    );
     Ok(())
+}
+
+/// Keep both retry arguments literal without controls or embedded fix delimiters.
+fn online_refusal(package: &str, source: &std::path::Path) -> String {
+    let source = source.to_string_lossy();
+    let unsafe_text = |text: &str| text.chars().any(|c| c.is_control() || c == '`');
+    let command = if unsafe_text(package) || unsafe_text(&source) {
+        "vibe remap bind-source PACKAGE --source SOURCE".to_owned()
+    } else {
+        let token = |text: &str| {
+            if !text.is_empty()
+                && text.bytes().all(|b| b.is_ascii_alphanumeric() || b"_-./:".contains(&b))
+            {
+                text.to_owned()
+            } else {
+                format!("'{}'", text.replace('\'', "'\\''"))
+            }
+        };
+        format!("vibe remap bind-source {} --source {}", token(package), token(&source))
+    };
+    format!(
+        "online_required: remap bind-source verifies the source at its endpoint, and --offline \
+         forbids that (violates spec://org.vibevm.core/vibevm/common/PROP-073#LOCKED-SOURCE-LAW; \
+         fix: `{command}`)"
+    )
 }
