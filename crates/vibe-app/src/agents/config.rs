@@ -17,7 +17,9 @@ use vibe_wire::generated::agent_presets as presets_wire;
 
 use crate::settings::{SettingsRoot, write_atomic};
 
-use super::error::{CLAUDE_PRESET_HINT, QWEN_PRESET_HINT};
+use super::error::{
+    CLAUDE_PRESET_HINT, CONFIG_LOAD, CONFIG_SERIALIZE, CONFIG_WRITE, QWEN_PRESET_HINT,
+};
 use super::presets::{PLACEHOLDERS, preset, presets};
 use super::{AgentError, ExternalAgent, ResolvedAgent, io};
 
@@ -149,6 +151,33 @@ pub struct LauncherDefinition {
     pub harness_version: Option<String>,
 }
 
+/// Keep TOML's location and message, never its source-line rendering.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-064#agent-definition")]
+fn parse_reason(input: &str, error: &toml::de::Error) -> String {
+    let message = error.message().lines().next().unwrap_or("invalid TOML");
+    let Some(start) = error.span().map(|span| span.start) else {
+        return message.to_owned();
+    };
+    let before = &input[..start];
+    let line = before.bytes().filter(|byte| *byte == b'\n').count() + 1;
+    let line_start = before.rfind('\n').map_or(0, |index| index + 1);
+    let column = input[line_start..start].chars().count() + 1;
+    let source_line = input[line_start..].lines().next().unwrap_or_default();
+    let scalar_command = source_line.split_once('=').is_some_and(|(key, value)| {
+        key.trim() == "command"
+            && (value.trim_start().starts_with('"') || value.trim_start().starts_with('\''))
+    });
+    let reason = if scalar_command
+        && message.starts_with("invalid type: string")
+        && message.ends_with("expected a sequence")
+    {
+        "command must be a list of strings, not a string"
+    } else {
+        message
+    };
+    format!("line {line}, column {column}: {reason}")
+}
+
 impl AgentsConfig {
     /// Read `<settings>/agents.toml`; a missing file is an empty registry.
     #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-064#agent-definition")]
@@ -163,7 +192,7 @@ impl AgentsConfig {
         };
         toml::from_str(&text).map_err(|error| AgentError::Config {
             path: path.display().to_string(),
-            reason: error.to_string(),
+            reason: format!("{CONFIG_LOAD}{}", parse_reason(&text, &error)),
         })
     }
 
@@ -173,11 +202,16 @@ impl AgentsConfig {
         let path = settings.agents_path();
         let text = toml::to_string(self).map_err(|error| AgentError::Config {
             path: path.display().to_string(),
-            reason: error.to_string(),
+            reason: format!("{CONFIG_SERIALIZE}{error}"),
         })?;
         write_atomic(&path, text.as_bytes()).map_err(|error| AgentError::Config {
             path: path.display().to_string(),
-            reason: error.to_string(),
+            reason: format!(
+                "{CONFIG_WRITE}{}",
+                std::error::Error::source(&error)
+                    .map(|source| source.to_string())
+                    .unwrap_or_else(|| error.to_string())
+            ),
         })
     }
 
@@ -426,6 +460,8 @@ pub fn preset_table() -> presets_wire::AgentPresets {
     }
 }
 
+#[cfg(test)]
+mod parse_tests;
 #[cfg(test)]
 mod refusal_tests;
 
