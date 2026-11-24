@@ -27,7 +27,7 @@ specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#r
 
 use std::path::{Path, PathBuf};
 
-use anyhow::{Context, Result, anyhow, bail};
+use anyhow::{Context, Result, bail};
 use vibe_core::manifest::{Manifest, RegistrySection};
 use vibe_publish::git_publish::redact_credentials;
 use vibe_publish::layout_publish::{
@@ -38,6 +38,7 @@ use vibe_wire::generated::registry_mirror_report::RegistryMirrorReport;
 use crate::cli::RegistryMirrorArgs;
 use crate::output;
 
+mod admission;
 mod aliases;
 mod config;
 mod git_source;
@@ -74,21 +75,7 @@ pub(super) fn run_mirror(
         Manifest::default()
     };
     let effective = super::effective_registries(&project_root, &manifest)?;
-    let source_reg = effective
-        .registries
-        .iter()
-        .find(|r| r.name == args.source)
-        .cloned()
-        .ok_or_else(|| {
-            anyhow!(
-                "no `[[registry]]` named `{}` in `vibe.toml`, `.vibe/registry.local.toml` or \
-                 `~/.vibe/registry.toml`; configured: {} \
-                 (violates spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#registry-mirror; \
-                 fix: name a configured registry, or add one with `vibe registry add`)",
-                args.source,
-                names(&effective.registries)
-            )
-        })?;
+    let source_reg = admission::resolve(&args.source, &effective.registries, &manifest)?;
     let target = resolve_target(&args, &effective.registries)?;
 
     let operation = vibe_package_source::source_operation(
@@ -509,17 +496,6 @@ fn refuse_templates_without_a_tree(
          fix: mirror the template out of a layout registry, or drop the `[[template]]` row(s) \
          and copy the package with `[select]`)"
     )
-}
-
-fn names(registries: &[RegistrySection]) -> String {
-    if registries.is_empty() {
-        return "(none)".to_string();
-    }
-    registries
-        .iter()
-        .map(|r| r.name.as_str())
-        .collect::<Vec<_>>()
-        .join(", ")
 }
 
 fn commit_message(source: &RegistrySection, items: &[PublishItem]) -> String {
