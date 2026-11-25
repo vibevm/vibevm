@@ -17,6 +17,7 @@ mod meta;
 mod page;
 mod roles;
 mod rule;
+#[cfg(test)]
 mod table;
 mod width;
 
@@ -33,7 +34,6 @@ pub(crate) use meta::{Meta, bytes, elapsed, join_meta, short_path};
 pub(crate) use page::{Kind, Stream, before, mark, same_destination, set_one_screen};
 pub(crate) use roles::{Role, colour_on, paint, style};
 pub(crate) use rule::{rule, rule_at};
-pub(crate) use table::Table;
 pub(crate) use width::{cut, rule_width, viewport, wrap};
 
 /// What the composition root decided about this invocation's terminal,

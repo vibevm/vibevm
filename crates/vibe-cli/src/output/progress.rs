@@ -554,5 +554,5 @@ fn alias_decision_prints_once_outside_panel() {
 mod tests;
 
 #[cfg(test)]
-#[path = "progress/tests_collapse.rs"]
+#[path = "progress/tests/collapse.rs"]
 mod tests_collapse;
