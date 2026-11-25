@@ -164,7 +164,7 @@ pub struct AutomaticBasis {
 #[specmark::spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-069#EVALUATION")]
 pub enum PackageConfigurationError {
     #[error(
-        "package `{package}` configuration is not supported by this operation: {reason} (spec://org.vibevm.core/vibevm/common/PROP-069#EFFECT-CONSUMERS; fix: use an operation supporting the named configuration input/effect)"
+        "configuration_unsupported: configuration of package {package} is not supported by this operation (violates spec://org.vibevm.core/vibevm/common/PROP-069#EFFECT-CONSUMERS; fix: use an operation that supports this configuration input): {reason}"
     )]
     Unsupported { package: String, reason: String },
     #[error(
@@ -392,3 +392,7 @@ impl Scope<'_> {
         }
     }
 }
+
+#[cfg(test)]
+#[path = "package/display_tests.rs"]
+mod display_tests;

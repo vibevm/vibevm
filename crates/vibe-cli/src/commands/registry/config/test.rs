@@ -5,11 +5,16 @@ specmark::scope!("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#registry");
 
 use anyhow::{Context, Result, bail};
 use serde::Serialize;
-use vibe_core::manifest::Manifest;
+use std::path::PathBuf;
+use vibe_core::manifest::{Manifest, RegistryType};
 
 use crate::cli::RegistryTestArgs;
 use crate::commands::registry::resolve_project_root;
 use crate::output;
+use crate::output::language::{rule_width, viewport};
+
+#[path = "test/view.rs"]
+mod view;
 
 #[derive(Debug, Serialize)]
 struct TestReport {
@@ -35,6 +40,7 @@ struct TestReportRegistry {
     ///   env-var resolved empty.
     /// - `protocol-error` — the configured registry could not be
     ///   initialised as a resolver.
+    /// - `missing` — a file transport's registry root does not exist.
     /// - `unknown` — any other shape; details in `note`.
     status: &'static str,
     /// Human-readable elaboration when `status` alone isn't
@@ -128,6 +134,41 @@ pub(in crate::commands::registry) fn run_test(
                 .map(vibe_core::manifest::AuthKind::as_str)
                 .unwrap_or("transport-default"),
         };
+        let kind = reg.checked_type();
+        let absent = missing_root(&row_url);
+        if let (Ok(RegistryType::Localdir), Some(path)) = (&kind, &absent) {
+            probe.fail("registry root is missing");
+            rows.push(TestReportRegistry {
+                name: reg.name.clone(),
+                url: row_url,
+                auth: row_auth_label,
+                status: "missing",
+                note: Some(format!("registry root {} does not exist", path.display())),
+            });
+            probes.set_progress(
+                (index + 1) as u64,
+                Some(registries.len() as u64),
+                "registries",
+            );
+            continue;
+        }
+        if matches!(kind, Ok(RegistryType::Git | RegistryType::Monorepo)) && absent.is_some() {
+            let (status, note) = probe_missing_git_root(&row_url);
+            probe.fail(format!("registry probe returned {status}"));
+            rows.push(TestReportRegistry {
+                name: reg.name.clone(),
+                url: row_url,
+                auth: row_auth_label,
+                status,
+                note: Some(note),
+            });
+            probes.set_progress(
+                (index + 1) as u64,
+                Some(registries.len() as u64),
+                "registries",
+            );
+            continue;
+        }
         let single = std::slice::from_ref(reg);
         // No freshness window: a probe reports the registry as it is now,
         // so a monorepo's clone is fetched, not read as a previous run left it.
@@ -238,45 +279,82 @@ pub(in crate::commands::registry) fn run_test(
     } else {
         probes.fail("one or more registry probes failed");
     }
+    let total = rows.len();
+    let failed = rows.iter().filter(|row| row.status != "reachable").count();
     if ctx.is_json() {
         ctx.emit_json(&TestReport {
             ok,
             command: "registry:test",
             registries: rows,
         })?;
-        return Ok(());
+    } else if ctx.is_quiet() {
+        ctx.summary(&view::reachable_line(&rows));
+    } else {
+        ctx.block(&view::render(&rows, viewport(), rule_width()));
     }
-
-    // Text output: aligned table.
-    let name_w = rows.iter().map(|r| r.name.len()).max().unwrap_or(0);
-    let url_w = rows.iter().map(|r| r.url.len()).max().unwrap_or(0);
-    let status_w = rows.iter().map(|r| r.status.len()).max().unwrap_or(0);
-    if !ctx.is_quiet() {
-        ctx.heading("Registry test");
-        for r in &rows {
-            let note = r
-                .note
-                .as_deref()
-                .map(|n| format!(" — {n}"))
-                .unwrap_or_default();
-            println!(
-                "  {:<name_w$}  {:<url_w$}  → {:<status_w$}  (auth={}){note}",
-                r.name,
-                r.url,
-                r.status,
-                r.auth,
-                name_w = name_w,
-                url_w = url_w,
-                status_w = status_w,
-            );
-        }
+    if !ok {
+        let noun = if failed == 1 { "registry" } else { "registries" };
+        bail!(
+            "registry_test_failed: {failed} of {total} {noun} did not answer the probe (violates spec://org.vibevm.core/vibevm/VIBEVM-SPEC#registry; fix: `vibe registry list`)"
+        );
     }
-    let n_reachable = rows.iter().filter(|r| r.status == "reachable").count();
-    ctx.summary(&format!(
-        "vibe registry test: {n_reachable}/{} reachable",
-        rows.len()
-    ));
     Ok(())
+}
+
+/// Only unescaped absolute local file URLs, never authorities or credentials.
+fn missing_root(url: &str) -> Option<PathBuf> {
+    let local = url.strip_prefix("file://")?;
+    if !local.starts_with('/')
+        || local.starts_with("//")
+        || local.chars().any(|c| c.is_control() || "%?#\\".contains(c))
+    {
+        return None;
+    }
+    let path = PathBuf::from(local);
+    (path.is_absolute() && matches!(path.try_exists(), Ok(false))).then_some(path)
+}
+
+/// The caller has checked both the backend type and the absent local URL.
+fn probe_missing_git_root(url: &str) -> (&'static str, String) {
+    use std::process::{Command, Stdio};
+
+    let mut command = Command::new("git");
+    command
+        .args(["ls-remote", "--", url])
+        .stdin(Stdio::null())
+        .env("GIT_TERMINAL_PROMPT", "0")
+        .env("GCM_INTERACTIVE", "Never")
+        // No user URL rewrites, helpers or non-file transport can participate.
+        .env("GIT_CONFIG_NOSYSTEM", "1")
+        .env(
+            "GIT_CONFIG_GLOBAL",
+            if cfg!(windows) { "NUL" } else { "/dev/null" },
+        )
+        .env("GIT_CONFIG_COUNT", "0")
+        .env("GIT_ALLOW_PROTOCOL", "file")
+        .env_remove("GIT_CONFIG")
+        .env_remove("GIT_CONFIG_PARAMETERS")
+        .env_remove("GIT_DIR")
+        .env_remove("GIT_WORK_TREE");
+    #[cfg(windows)]
+    {
+        use std::os::windows::process::CommandExt;
+        command.creation_flags(0x08000000); // CREATE_NO_WINDOW
+    }
+    match command.output() {
+        Ok(output) if !output.status.success() => match output.status.code() {
+            Some(code) => ("unreachable", format!("git ls-remote exit {code}")),
+            None => ("unknown", "git ls-remote ended without a numeric exit".into()),
+        },
+        Ok(_) => (
+            "unknown",
+            "git ls-remote unexpectedly reached the absent root".into(),
+        ),
+        Err(error) if error.kind() == std::io::ErrorKind::NotFound => {
+            ("unknown", "`git` is not on PATH".into())
+        }
+        Err(_) => ("unknown", "git ls-remote could not be started".into()),
+    }
 }
 
 /// `index: current|stale (<why>)|absent` for a `monorepo` / `localdir`
@@ -307,6 +385,21 @@ fn layout_index_note(
 #[cfg(test)]
 mod tests {
     use super::{PROBE_PKGREF, report_ok, require_configured};
+
+    #[test]
+    fn a_file_url_whose_directory_is_gone_is_missing() {
+        let root = tempfile::tempdir().expect("temporary registry parent");
+        let child = root.path().join("absent");
+        assert_eq!(
+            super::missing_root(&format!("file://{}", child.display())),
+            Some(child)
+        );
+        assert_eq!(
+            super::missing_root(&format!("file://{}", root.path().display())),
+            None
+        );
+        assert_eq!(super::missing_root("https://github.com/x"), None);
+    }
 
     #[test]
     fn probe_coordinate_is_fully_qualified_and_impossible() {

@@ -9,6 +9,7 @@ use vibe_core::manifest::{NamingConvention, RegistrySection, RegistryType};
 
 use crate::cli::RegistryAddArgs;
 use crate::output;
+use crate::output::language::{Block, Glyph, LabelValue, Line, Meta};
 
 use super::scope::{ScopeFile, parse_scope, parse_type};
 use super::{
@@ -37,10 +38,16 @@ pub(in crate::commands::registry) fn run_add(
 
     // Validation: name must not collide with an existing registry.
     if file.registries().iter().any(|r| r.name == args.name) {
+        let flag = match file.scope() {
+            RegistryScope::Local => " --scope local",
+            RegistryScope::User => " --scope user",
+            _ => "",
+        };
         bail!(
-            "a `[[registry]]` named `{}` already exists in `{}`. Pick a different name or remove the existing entry first.",
+            "registry_exists: a registry named {} already exists in the {} layer (violates spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#registry-layers; fix: `vibe registry remove registry {}{flag}`)",
             args.name,
-            file.path().display()
+            file.scope().as_str(),
+            args.name
         );
     }
     if args.name.trim().is_empty() {
@@ -156,29 +163,37 @@ pub(in crate::commands::registry) fn run_add(
         return Ok(());
     }
 
-    let position_text = if position_label == "primary" {
-        " as primary"
-    } else {
-        ""
-    };
-    let adapter_text = adapter
-        .as_deref()
-        .map(|a| format!(" (publish: {a})"))
-        .unwrap_or_else(|| " (publish: unsupported)".to_string());
-    ctx.step(&format!(
-        "Added `[[registry]]` `{}` (type {kind}, scope {}){} → {}{}",
-        new.name,
-        file.scope().as_str(),
-        position_text,
-        new.url,
-        adapter_text
-    ));
-    ctx.summary(&format!(
-        "\nvibe registry add: `{}` registered in `{}` ({} total registr{}).",
-        new.name,
-        file.path().display(),
-        total,
-        if total == 1 { "y" } else { "ies" },
-    ));
+    if ctx.is_quiet() {
+        ctx.summary(&format!(
+            "\nvibe registry add: `{}` registered in `{}` ({} total registr{}).",
+            new.name,
+            file.path().display(),
+            total,
+            if total == 1 { "y" } else { "ies" },
+        ));
+        return Ok(());
+    }
+
+    let mut meta = vec![Meta::note(kind.to_string()), Meta::note(file.scope().as_str())];
+    if position_label == "primary" {
+        meta.push(Meta::note("primary"));
+    }
+    meta.push(Meta::note(match adapter {
+        Some(adapter) => format!("publish {adapter}"),
+        None => "publish unsupported".to_string(),
+    }));
+    ctx.block(
+        &Block::new(Glyph::Done, format!("added registry {}", new.name))
+            .with_meta(meta)
+            .with_body(vec![Line::Label(
+                "url".into(),
+                vec![LabelValue::Text(new.url)],
+            )])
+            .render(),
+    );
+    ctx.trailer_at(
+        &format!("registered {}", new.name),
+        &file.path().display().to_string(),
+    );
     Ok(())
 }

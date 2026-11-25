@@ -63,7 +63,7 @@ pub(crate) enum VvmError {
     MissingWhich { component: String, path: String },
 
     #[error(
-        "cannot resolve the exact source tree for this execution \
+        "source_tree_unresolved: cannot resolve the exact source tree for this execution \
          (violates spec://org.vibevm.core/vibevm/common/PROP-019#provenance; \
           fix: run from a source checkout or reinstall the binary bundle with its source archive)"
     )]
@@ -120,4 +120,25 @@ pub(crate) enum VvmError {
           fix: reinstall that version; use `--force` to retain the damaged #N for inspection)"
     )]
     CorruptInstance { selector: String },
+}
+
+#[cfg(test)]
+mod tests {
+    use super::VvmError;
+
+    #[test]
+    fn source_tree_unresolved_keeps_fix_and_see() {
+        let error = anyhow::Error::new(VvmError::NoSource);
+        let rendered = crate::output::refusal_of(&error)
+            .block()
+            .render_at(200);
+        assert_eq!(
+            rendered,
+            concat!(
+                "✗ source_tree_unresolved  cannot resolve the exact source tree for this execution\n",
+                "  fix   run from a source checkout or reinstall the binary bundle with its source archive\n",
+                "  see   spec://org.vibevm.core/vibevm/common/PROP-019#provenance"
+            )
+        );
+    }
 }

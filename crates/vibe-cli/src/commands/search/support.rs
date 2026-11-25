@@ -5,6 +5,7 @@ use super::*;
 pub(super) fn make_hit_row(hit: &SearchHit, registry: &str) -> HitRow {
     HitRow {
         kind: hit.kind.to_string(),
+        group: hit.group.clone(),
         name: hit.name.clone(),
         latest_stable: hit.latest_stable.as_ref().map(|v| v.to_string()),
         score: hit.score,
@@ -22,6 +23,7 @@ pub(super) fn make_hit_row(hit: &SearchHit, registry: &str) -> HitRow {
 pub(super) fn make_full_scan_hit_row(hit: &FullScanHit, registry: &str) -> HitRow {
     HitRow {
         kind: hit.kind.to_string(),
+        group: None,
         name: hit.name.clone(),
         // Full-scan reads HEAD, not the latest tag — so what we
         // report is the manifest's declared version. Operators see
@@ -154,4 +156,40 @@ pub(super) fn load_project_manifest(root: &Path) -> Result<Manifest> {
         return Ok(Manifest::default());
     }
     Ok(Manifest::read(&path)?)
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn grouped_hit_survives_mapping() {
+        let hit = SearchHit {
+            kind: PackageKind::Flow,
+            group: Some("org.vibevm".into()),
+            name: "wal".into(),
+            latest_stable: Some("0.1.0".parse().unwrap()),
+            score: 3,
+            matched_tokens: vec!["wal".into()],
+            description: Some("Write-ahead log".into()),
+        };
+        let row = make_hit_row(&hit, "corp");
+        assert_eq!(row.group.as_deref(), Some("org.vibevm"));
+        let serialized = serde_json::to_value(&row).unwrap();
+        assert!(serialized.get("group").is_none(), "{serialized}");
+        assert_eq!(
+            serialized,
+            serde_json::json!({
+                "kind": "flow",
+                "name": "wal",
+                "latest_stable": "0.1.0",
+                "score": 3,
+                "matched_tokens": ["wal"],
+                "description": "Write-ahead log",
+                "short_names": [],
+                "registry": "corp",
+                "source": "index"
+            })
+        );
+    }
 }

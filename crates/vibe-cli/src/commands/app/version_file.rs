@@ -86,11 +86,12 @@ pub(super) fn install_spelling(
 ) -> String {
     match decide_from_version_file(settings, spelling) {
         Some(decided) => {
-            ctx.diagnostic(&format!(
-                "`{}` asks for `{}`, so `{}` is what this install resolves",
-                decided.path.display(),
+            ctx.decision(&format!(
+                "  {} asks for {} · {} · {}",
+                decided.path.file_name().unwrap_or_default().to_string_lossy(),
                 decided.authored,
-                decided.spelling
+                decided.spelling,
+                output::language::short_path(&decided.path.display().to_string())
             ));
             decided.spelling
         }

@@ -41,6 +41,12 @@ impl Context {
         self.file_row(Glyph::Skipped, Role::Dim, "kept", path, Some(reason));
     }
 
+    /// A file the command wrote over, and why: a regenerated artifact.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-067#list")]
+    pub fn updated(&self, path: &str, reason: &str) {
+        self.file_row(Glyph::Done, Role::Ok, "updated", path, Some(reason));
+    }
+
     /// A file the command removed.
     #[allow(dead_code)] // used by uninstall
     pub fn removed(&self, path: &str) {
@@ -230,6 +236,11 @@ impl Context {
         self.write_trailer(Stream::Out, self.trailer_text_at(true, what, Some(record)));
     }
 
+    /// The run verdict with its retained result written last and in full.
+    pub(crate) fn trailer_verdict_at(&self, ok: bool, what: &str, record: &str) {
+        self.write_trailer(Stream::Out, self.trailer_text_at(ok, what, Some(record)));
+    }
+
     fn write_trailer(&self, stream: Stream, text: String) {
         if self.suppress_output || self.is_json() {
             return;
@@ -296,10 +307,16 @@ pub(crate) fn cancelled_line() -> String {
 /// `fix`, and whatever the chain adds after the tail as `why`.
 #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-067#refusal")]
 pub(crate) fn refusal_of(err: &anyhow::Error) -> Refusal {
-    parse_refusal(
+    let mut refusal = parse_refusal(
         &format!("{err:#}"),
         structured::app_error(err).map(|error| error.code().to_owned()),
-    )
+    );
+    if refusal.code.as_deref() == Some("px_no_proxy") {
+        refusal
+            .fix
+            .push("vibe tool px exec --allow-direct -- true".to_owned());
+    }
+    refusal
 }
 
 /// Read the nested text shapes of a refusal without manufacturing an error.

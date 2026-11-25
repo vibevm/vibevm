@@ -182,6 +182,60 @@ fn vibe(world: &World) -> assert_cmd::Command {
     command
 }
 
+/// A direct route refuses with one code and two independently actionable fixes.
+#[test]
+fn px_exec_no_proxy_has_code_and_fix() {
+    let user = UserScratch::new();
+    let dir = tempfile::tempdir().unwrap();
+    let config = user.settings.join("config.toml");
+    std::fs::write(&config, "[proxy]\nmode = 'none'\n").unwrap();
+    let w = World {
+        bin: tools(dir.path()),
+        log: dir.path().join("px.log"),
+        port: 0,
+        user,
+        dir,
+    };
+    script(&w.bin, "true", "exit 0");
+    let output = vibe(&w)
+        .env("USERPROFILE", w.dir.path())
+        .env("VIBE_SETTINGS", &w.user.settings)
+        .env("NO_COLOR", "1")
+        .args(["--plain", "tool", "px", "exec", "--", "true"])
+        .output()
+        .unwrap();
+    let stderr = String::from_utf8_lossy(&output.stderr);
+    assert!(!output.status.success(), "{stderr}");
+    assert!(output.stdout.is_empty(), "stdout belongs to the child");
+    assert_eq!(stderr.matches("px_no_proxy").count(), 1, "{stderr}");
+    assert!(stderr.contains("[proxy] configures no proxy"), "{stderr}");
+    assert!(stderr.contains(&config.display().to_string()), "{stderr}");
+    assert!(
+        stderr.contains("set [proxy] mode = \"px\" with pac or upstream"),
+        "{stderr}"
+    );
+    let command = "vibe tool px exec --allow-direct -- true";
+    assert_eq!(stderr.matches(command).count(), 1, "{stderr}");
+    assert_eq!(
+        stderr.lines().filter(|line| line.trim() == command).count(),
+        1,
+        "{stderr}"
+    );
+    assert_eq!(
+        stderr
+            .lines()
+            .filter(|line| line.trim_start().starts_with("fix   "))
+            .count(),
+        1,
+        "{stderr}"
+    );
+    assert!(
+        stderr.contains("see   spec://org.vibevm.core/vibevm/common/PROP-068#proxy-tool"),
+        "{stderr}"
+    );
+    assert!(!stderr.contains('`'), "{stderr}");
+}
+
 /// The whole point: one px for the invocation, the child sees its address
 /// in every spelling, reaches a server through it, and px is gone after.
 #[test]

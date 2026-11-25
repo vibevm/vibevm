@@ -10,6 +10,7 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-059#launcher-catalog
 use std::ffi::OsString;
 use std::fs;
 use std::path::{Path, PathBuf};
+use std::time::Instant;
 
 use anyhow::{Result, bail};
 use vibe_app::{Index, LauncherChange, PinTarget, StartRequest, Storage};
@@ -19,6 +20,7 @@ use super::home::AppHome;
 use super::launch::choose_launcher;
 use crate::cli::{CollectionCommand, PinArg};
 use crate::output;
+use crate::output::language::{Cell, List, Meta, Row, rule, trailer};
 
 /// `vibe app launchers --revision`: the counter alone, so a client polls one
 /// number instead of refetching the catalog.
@@ -39,9 +41,26 @@ pub(super) fn collection(
 ) -> Result<()> {
     let settings = app_home.settings();
     let layer = match command {
-        CollectionCommand::List => vibe_app::collections(settings)?,
+        CollectionCommand::List => {
+            return render_list(ctx, &vibe_app::collections(settings)?);
+        }
         CollectionCommand::Create { name, icon } => {
-            vibe_app::app_collection_create(settings, &name, resolved(icon.as_deref()).as_deref())?
+            let started = Instant::now();
+            let layer =
+                vibe_app::app_collection_create(settings, &name, resolved(icon.as_deref()).as_deref())?;
+            if ctx.is_json() {
+                return ctx.emit_json(&layer);
+            }
+            ctx.summary(&trailer(
+                true,
+                &format!("created collection {name}"),
+                vec![
+                    Meta::note(format!("revision {}", layer.revision)),
+                    Meta::Time(started.elapsed()),
+                ],
+                None,
+            ));
+            return Ok(());
         }
         CollectionCommand::Rename { old, new } => {
             vibe_app::app_collection_rename(settings, &old, &new)?
@@ -192,6 +211,44 @@ pub(super) fn start_launcher_id(
     }
 }
 
+/// Listing is a section of measured rows, not the result of an edit.
+fn render_list(ctx: &output::Context, layer: &ApplicationCollections) -> Result<()> {
+    if ctx.is_json() || ctx.is_quiet() {
+        return render(ctx, layer);
+    }
+    println!(
+        "{}",
+        rule("collections", Some(&format!("revision {}", layer.revision)))
+    );
+    let rows = layer
+        .collections
+        .iter()
+        .map(|collection| {
+            let mut meta = Vec::new();
+            if collection.seeded {
+                meta.push(Meta::State("seeded".into()));
+            }
+            if let Some(icon) = &collection.icon {
+                meta.push(Meta::note(format!("icon {icon}")));
+            }
+            let mut row = Row::new(vec![Cell::text(&collection.name)]).meta(meta);
+            for key in &collection.launchers {
+                row = row.child(key);
+            }
+            for key in &collection.removed {
+                row = row.child(format!("{key} [removed]"));
+            }
+            row
+        })
+        .collect();
+    let list = List::new(rows).render();
+    if !list.is_empty() {
+        println!("{list}");
+    }
+    render_arrangement(layer);
+    Ok(())
+}
+
 /// The user layer as a terminal shows it: every collection with its keys in
 /// order, both pinned lists and every override.
 fn render(ctx: &output::Context, layer: &ApplicationCollections) -> Result<()> {
@@ -220,6 +277,11 @@ fn render(ctx: &output::Context, layer: &ApplicationCollections) -> Result<()> {
             println!("    {key} [removed]");
         }
     }
+    render_arrangement(layer);
+    Ok(())
+}
+
+fn render_arrangement(layer: &ApplicationCollections) {
     for (name, list) in [
         ("taskbar", &layer.pins.taskbar),
         ("favorites", &layer.pins.favorites),
@@ -234,5 +296,4 @@ fn render(ctx: &output::Context, layer: &ApplicationCollections) -> Result<()> {
         let icon = row.icon.as_deref().unwrap_or("-");
         println!("override {}{hidden}: name {name}, icon {icon}", row.key);
     }
-    Ok(())
 }

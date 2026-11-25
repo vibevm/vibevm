@@ -46,15 +46,19 @@ fn run_remove_registry(ctx: &output::Context, args: RegistryRemoveRegistryArgs) 
     if !file.registries().iter().any(|r| r.name == args.name) {
         let known: Vec<&str> = file.registries().iter().map(|r| r.name.as_str()).collect();
         let known_text = if known.is_empty() {
-            "(none configured)".to_string()
+            "none".to_string()
         } else {
             known.join(", ")
         };
+        let flag = match file.scope() {
+            RegistryScope::Local => " --scope local",
+            RegistryScope::User => " --scope user",
+            _ => "",
+        };
         bail!(
-            "no `[[registry]]` named `{}` in `{}`. Known: {}.",
+            "registry_not_found: no registry named {} in the {} layer (violates spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#registry-layers; fix: `vibe registry list{flag}`): known: {known_text}",
             args.name,
-            manifest_path.display(),
-            known_text
+            file.scope().as_str()
         );
     }
 
@@ -94,16 +98,18 @@ fn run_remove_registry(ctx: &output::Context, args: RegistryRemoveRegistryArgs) 
         return Ok(());
     }
 
-    ctx.step(&format!(
-        "Removed `[[registry]]` `{}` from `{}`",
-        args.name,
-        manifest_path.display()
-    ));
-    ctx.summary(&format!(
-        "\nvibe registry remove: {} registr{} remain.",
-        remaining,
-        if remaining == 1 { "y" } else { "ies" }
-    ));
+    if ctx.is_quiet() {
+        ctx.summary(&format!(
+            "\nvibe registry remove: {} registr{} remain.",
+            remaining,
+            if remaining == 1 { "y" } else { "ies" }
+        ));
+    } else {
+        ctx.trailer_at(
+            &format!("removed registry {}", args.name),
+            &manifest_path.display().to_string(),
+        );
+    }
     Ok(())
 }
 
@@ -151,14 +157,17 @@ fn run_remove_mirror(ctx: &output::Context, args: RegistryRemoveMirrorArgs) -> R
         return Ok(());
     }
 
-    ctx.step(&format!(
-        "Removed `[[mirror]]` of=`{}` url=`{}`",
-        args.of, args.url
-    ));
-    ctx.summary(&format!(
-        "\nvibe registry remove: {} mirror{} remain.",
-        file.mirrors().len(),
-        if file.mirrors().len() == 1 { "" } else { "s" }
-    ));
+    if ctx.is_quiet() {
+        ctx.summary(&format!(
+            "\nvibe registry remove: {} mirror{} remain.",
+            file.mirrors().len(),
+            if file.mirrors().len() == 1 { "" } else { "s" }
+        ));
+    } else {
+        ctx.trailer_at(
+            &format!("removed mirror {} of {}", args.url, args.of),
+            &manifest_path.display().to_string(),
+        );
+    }
     Ok(())
 }

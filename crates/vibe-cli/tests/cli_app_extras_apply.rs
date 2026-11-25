@@ -14,11 +14,13 @@
 #![cfg(all(test, target_os = "linux"))]
 
 mod common;
+#[path = "common/extras_trailer.rs"]
+mod extras_trailer;
 
 use std::fs;
 use std::path::{Path, PathBuf};
 
-use common::app_registry::{AppRegistry, json, ok};
+use common::app_registry::{AppRegistry, failed, json, ok};
 use serde_json::Value;
 
 /// The package body: a payload and one public command, so the adapter's
@@ -90,7 +92,6 @@ fn runtime(r: &AppRegistry, version: &str) -> PathBuf {
     );
     root
 }
-
 fn verb_script(root: &Path, name: &str, body: &str) {
     let dir = root.join("eco");
     fs::create_dir_all(&dir).unwrap();
@@ -105,16 +106,40 @@ fn verb_script(root: &Path, name: &str, body: &str) {
 fn config(r: &AppRegistry, body: &str) {
     fs::write(r.settings().join("config.toml"), body).unwrap();
 }
-
 fn config_text(r: &AppRegistry) -> String {
     fs::read_to_string(r.settings().join("config.toml")).unwrap_or_default()
+}
+
+/// Every fixture child, including setup, has an explicit temporary home.
+fn isolated_vibe(r: &AppRegistry, args: &[&str]) -> std::process::Output {
+    r.user
+        .vibe()
+        .current_dir(r.root.path())
+        .env("HOME", r.home())
+        .env("USERPROFILE", r.home())
+        .env("VIBE_SETTINGS", r.settings())
+        .env_remove("VIBE_AGENT_COMMAND")
+        .env_remove("VIBE_AGENT_ARGS")
+        .env_remove("VIBE_INVOKED_BY")
+        .env_remove("VIBE_APP_USE")
+        .args(args)
+        .output()
+        .unwrap()
+}
+fn app(r: &AppRegistry, verb: &[&str], package: &str, extra: &[&str]) -> std::process::Output {
+    let registry = r.registry();
+    let mut args = verb.to_vec();
+    args.extend_from_slice(&[package, "--registry", registry.to_str().unwrap()]);
+    args.extend_from_slice(extra);
+    isolated_vibe(r, &args)
 }
 
 /// `vibe install -g org.example/runtime@<version>` with `extra` flags.
 fn install(r: &AppRegistry, version: &str, extra: &[&str]) -> std::process::Output {
     let mut args = vec!["--offline", "--unattended"];
     args.extend_from_slice(extra);
-    r.app(
+    app(
+        r,
         &["install", "-g"],
         &format!("org.example/runtime@{version}"),
         &args,
@@ -127,7 +152,7 @@ fn extras(r: &AppRegistry, verb: &str, args: &[&str]) -> std::process::Output {
     let mut argv = vec!["app", "extras", verb, "runtime"];
     argv.extend_from_slice(args);
     argv.extend_from_slice(&["--registry", registry.to_str().unwrap(), "--offline"]);
-    r.vibe(&argv)
+    isolated_vibe(r, &argv)
 }
 
 /// What the `install` verb was handed, across every run, as
@@ -142,7 +167,6 @@ fn applied(r: &AppRegistry) -> Vec<String> {
         })
         .collect()
 }
-
 fn ecosystem_of<'a>(document: &'a Value, id: &str) -> &'a Value {
     document["ecosystems"]
         .as_array()
@@ -296,7 +320,14 @@ fn a_failing_apply_never_touches_the_runtime_and_names_its_retry() {
         "the exact retry command is named: {shown}"
     );
     // The runtime is installed and is still the slot's default.
-    assert_eq!(r.listed("org.example/runtime@1.0.0")["default"], true);
+    let listed = json(&isolated_vibe(&r, &["app", "list", "-g", "--json"]));
+    let runtime = listed["installations"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .find(|row| row["key"] == "org.example/runtime@1.0.0")
+        .expect("the installed runtime is listed");
+    assert_eq!(runtime["default"], true);
     // And the record says what was not carried, so a later `describe`
     // still does.
     let record = &retained(&r, "org.example/runtime@1.0.0")["extras"][0];
@@ -317,7 +348,19 @@ fn a_failing_apply_never_touches_the_runtime_and_names_its_retry() {
         document["adapters"][0]["retry"],
         "vibe app extras apply runtime --ecosystem npm"
     );
-    assert!(Path::new(document["work"].as_str().unwrap()).exists());
+    let work = Path::new(document["work"].as_str().unwrap());
+    assert!(work.exists());
+    let before = r.index();
+    extras_trailer::assert_failed_trailer(&r, work.parent().unwrap());
+    let after = r.index();
+    assert_eq!(before["slots"], after["slots"], "slot defaults unchanged");
+    let key = "org.example/runtime@1.0.0";
+    let mut prior = before["installations"][key].clone();
+    let mut current = after["installations"][key].clone();
+    prior.as_object_mut().expect("installed record").remove("extras");
+    current.as_object_mut().expect("installed record").remove("extras");
+    assert_eq!(prior, current, "runtime installation unchanged");
+    assert!(applied(&r).is_empty(), "failed adapter never ran the runtime");
 }
 
 /// `vibe app extras add|drop|import` edit the user's own file and install
@@ -422,7 +465,8 @@ fn a_stale_settings_line_is_reported_and_describe_answers_off_the_record() {
     }
 
     // `describe` carries what the record holds, having run nothing.
-    let described = json(&r.app(
+    let described = json(&app(
+        &r,
         &["app", "describe"],
         "org.example/runtime@1.0.0",
         &["--json", "--offline"],
@@ -460,7 +504,8 @@ fn a_home_with_no_slot_table_is_unchanged_and_a_package_with_no_adapter_is_silen
     r.package("plain", "1.0.0", "plain", option_body());
     let root = r.registry().join("org.example/plain/v1.0.0");
     r.script(&root, "plainrt", "plain-1.0.0");
-    let output = r.app(
+    let output = app(
+        &r,
         &["install", "-g"],
         "org.example/plain@1.0.0",
         &["--offline", "--unattended"],
@@ -481,5 +526,69 @@ fn a_home_with_no_slot_table_is_unchanged_and_a_package_with_no_adapter_is_silen
         r.index()["installations"]["org.example/plain@1.0.0"]["extras"].is_null(),
         "{:#}",
         r.index()
+    );
+}
+
+/// The hint precedes the final trailer, which names the actual change and file.
+#[test]
+#[specmark::spec(verifies = "spec://org.vibevm.core/vibevm/common/PROP-075#SLOT-EXTRAS")]
+fn extras_edit_ends_with_a_trailer() {
+    let r = AppRegistry::new();
+    runtime(&r, "1.0.0");
+    ok(&install(&r, "1.0.0", &["--json"]));
+
+    let shown = ok(&extras(&r, "add", &["pnpm@9"]));
+    assert!(
+        shown.contains(
+            "  the version you have now is unchanged; to put the list into it\n  vibe app extras apply runtime\n"
+        ),
+        "{shown}"
+    );
+    let last = shown.lines().last().unwrap();
+    assert!(
+        last.starts_with("✻ added 1 item to runtime's npm list · 1 in all · "),
+        "{shown}"
+    );
+    assert!(
+        last.ends_with(r.settings().join("config.toml").to_str().unwrap()),
+        "{shown}"
+    );
+
+    let shown = ok(&extras(&r, "drop", &["corepack"]));
+    assert!(
+        shown.lines().last().unwrap().starts_with(
+            "✻ declined 1 recommendation of runtime's npm list · 1 declined in all · "
+        ),
+        "{shown}"
+    );
+    assert!(!shown.contains("the version you have now"), "{shown}");
+
+    let file = r.home().join("default-packages");
+    fs::write(&file, "pnpm@9\ntypescript\n@scope/pkg@^1.2\n").unwrap();
+    let shown = ok(&extras(&r, "import", &[file.to_str().unwrap()]));
+    assert!(
+        shown.lines().last().unwrap().starts_with(
+            "✻ imported 2 items into runtime's npm list · 3 in all · "
+        ),
+        "{shown}"
+    );
+}
+
+/// Ecosystem inference without an installed provider names the explicit flag remedy.
+#[test]
+#[specmark::spec(verifies = "spec://org.vibevm.core/vibevm/common/PROP-075#SLOT-EXTRAS")]
+fn extras_edit_of_an_uninstalled_slot_refuses() {
+    let r = AppRegistry::new();
+    runtime(&r, "1.0.0");
+    let refused = failed(&extras(&r, "add", &["lodash"]));
+    assert!(
+        refused.contains(concat!(
+            "✗ unknown_slot  slot runtime has no installed provider, so its ecosystems cannot be read\n",
+            "  why   the ecosystem is read off the installed version when --ecosystem is not given\n",
+            "  fix   vibe app extras add runtime --ecosystem <ecosystem> <item>\n",
+            "        vibe app list\n",
+            "  see   spec://org.vibevm.core/vibevm/common/PROP-059#alternatives"
+        )),
+        "{refused}"
     );
 }

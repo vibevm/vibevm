@@ -296,18 +296,18 @@ impl Cli {
             .try_get_matches_from(&args)
             .ok()
             .is_some_and(|matches| matches.subcommand_name() == Some("secrets"));
-        let matches = Self::command().try_get_matches_from(args).unwrap_or_else(|error| {
+        let matches = Self::command().try_get_matches_from(args.clone()).unwrap_or_else(|error| {
             if protected && !matches!(error.kind(), clap::error::ErrorKind::DisplayHelp | clap::error::ErrorKind::DisplayVersion) {
                 eprintln!("invalid secrets invocation; use `vibe secrets --help` (values must not be arguments)");
                 std::process::exit(2);
             }
-            error.exit()
+            usage::exit(error, &args)
         });
         let explicit_path = matches.subcommand().is_some_and(|(_, sub)| {
             sub.try_contains_id("path").unwrap_or(false)
                 && sub.value_source("path") == Some(clap::parser::ValueSource::CommandLine)
         });
-        let mut cli = Self::from_arg_matches(&matches).unwrap_or_else(|error| error.exit());
+        let mut cli = Self::from_arg_matches(&matches).unwrap_or_else(|error| usage::exit(error, &args));
         if let Command::Install(args) = &mut cli.command {
             args.explicit_path = explicit_path;
             args.stop_requested = cli.stop_file.is_some();
@@ -326,6 +326,7 @@ pub enum ProgressFormat {
 }
 
 mod command;
+mod usage;
 pub use command::Command;
 
 /// `vibe bin` subcommands (PROP-025 §4).

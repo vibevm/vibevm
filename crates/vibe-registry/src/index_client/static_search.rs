@@ -93,6 +93,7 @@ pub(crate) fn search_entries(
     .filter_map(|hit| {
         Some(SearchHit {
             kind: PackageKind::from_str(hit.kind.as_str()).ok()?,
+            group: Some(hit.group.to_string()),
             name: hit.name,
             latest_stable: hit.latest_stable,
             score: u32::try_from(hit.score).unwrap_or(u32::MAX),

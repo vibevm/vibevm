@@ -13,10 +13,12 @@ use vibe_core::user_config::UserConfig;
 
 use crate::cli::ShowConfigArgs;
 use crate::output;
+use crate::output::language::{rule_width, viewport};
 
 use super::resolve_project_root;
 
 mod layers;
+mod view;
 use layers::{ConfigSiteProfileSummary, DeclarationLayers, provenance_of};
 
 // ===================== show config =====================
@@ -314,186 +316,39 @@ pub(super) fn run_config(ctx: &output::Context, args: ShowConfigArgs) -> Result<
                       to pass this flag automatically.",
     };
 
+    let payload = ConfigReport {
+        ok: true,
+        command: "show:config",
+        project: project_root.display().to_string(),
+        project_name: project.name.clone(),
+        project_version: project.version.clone(),
+        registries,
+        mirrors,
+        overrides,
+        env,
+        user_config: user_config_summary,
+        site_profile,
+        versions,
+        invoked_by_resolution: invoked_by_block,
+    };
     if ctx.is_json() {
-        let payload = ConfigReport {
-            ok: true,
-            command: "show:config",
-            project: project_root.display().to_string(),
-            project_name: project.name.clone(),
-            project_version: project.version.clone(),
-            registries,
-            mirrors,
-            overrides,
-            env,
-            user_config: user_config_summary,
-            site_profile,
-            versions,
-            invoked_by_resolution: invoked_by_block,
-        };
         ctx.emit_json(&payload)?;
         return Ok(());
     }
     if ctx.is_quiet() {
         ctx.summary(&format!(
             "vibe show config: {} registries, {} mirror{}, {} override{}, {} env entries",
-            registries.len(),
-            mirrors.len(),
-            if mirrors.len() == 1 { "" } else { "s" },
-            overrides.len(),
-            if overrides.len() == 1 { "" } else { "s" },
-            env.len(),
+            payload.registries.len(),
+            payload.mirrors.len(),
+            if payload.mirrors.len() == 1 { "" } else { "s" },
+            payload.overrides.len(),
+            if payload.overrides.len() == 1 { "" } else { "s" },
+            payload.env.len(),
         ));
         return Ok(());
     }
 
-    println!(
-        "Project: {} {} ({})",
-        project.name,
-        project.version,
-        project_root.display()
-    );
-    println!();
-    println!("Registries ({}; primary first):", registries.len());
-    if registries.is_empty() {
-        println!("  (none configured)");
-    } else {
-        for (i, r) in registries.iter().enumerate() {
-            let primary = if i == 0 { " (primary)" } else { "" };
-            println!(
-                "  {}. {}{}\n     url:    {}\n     ref:    {}\n     naming: {}\n     source: {}",
-                i + 1,
-                r.name,
-                primary,
-                r.url,
-                r.refname,
-                r.naming,
-                r.provenance
-            );
-        }
-    }
-    println!();
-    println!("Mirrors ({}):", mirrors.len());
-    if mirrors.is_empty() {
-        println!("  (none configured)");
-    } else {
-        for m in &mirrors {
-            println!(
-                "  - of=`{}` priority={} url={} (source: {})",
-                m.of, m.priority, m.url, m.provenance
-            );
-        }
-    }
-    println!();
-    println!("Overrides ({}):", overrides.len());
-    if overrides.is_empty() {
-        println!("  (none configured)");
-    } else {
-        for o in &overrides {
-            let ref_part = o
-                .refname
-                .as_deref()
-                .map(|r| format!("@{r}"))
-                .unwrap_or_default();
-            let reason_part = o
-                .reason
-                .as_deref()
-                .map(|r| format!(" — {r}"))
-                .unwrap_or_default();
-            println!(
-                "  - {} → {}{}{} (source: {})",
-                o.pkgref, o.source_url, ref_part, reason_part, o.provenance
-            );
-        }
-    }
-    println!();
-    match &user_config_summary {
-        ConfigUserConfigSummary {
-            path: Some(p),
-            loaded: true,
-            ..
-        } => {
-            println!("User config: {p}  (loaded)");
-        }
-        ConfigUserConfigSummary {
-            path: Some(p),
-            loaded: false,
-            error: Some(err),
-        } => {
-            println!("User config: {p}  (parse error — {err})");
-        }
-        ConfigUserConfigSummary {
-            path: Some(p),
-            loaded: false,
-            error: None,
-        } => {
-            println!("User config: {p}  (not present)");
-        }
-        ConfigUserConfigSummary { path: None, .. } => {
-            println!(
-                "User config: (no path resolved — set HOME / VIBE_SETTINGS / VIBEVM_USER_CONFIG)"
-            );
-        }
-    }
-    match &site_profile {
-        ConfigSiteProfileSummary {
-            path: Some(p),
-            loaded: true,
-            name,
-            ..
-        } => println!(
-            "Site profile: {p}  (applied{})",
-            name.as_deref()
-                .map(|name| format!(": {name}"))
-                .unwrap_or_default()
-        ),
-        ConfigSiteProfileSummary {
-            path: Some(p),
-            error: Some(err),
-            ..
-        } => println!("Site profile: {p}  (unreadable — {err})"),
-        ConfigSiteProfileSummary { path: Some(p), .. } => {
-            println!("Site profile: {p}  (none applied)")
-        }
-        ConfigSiteProfileSummary { path: None, .. } => {
-            println!("Site profile: (no settings directory resolved)")
-        }
-    }
-    println!(
-        "Version selection: `[versions] select = \"{}\"`  [source: {}]",
-        versions.select, versions.provenance
-    );
-    println!();
-    println!("Environment:");
-    for e in &env {
-        let value_part = match (&e.value, e.provenance) {
-            (Some(v), "redacted") => v.clone(),
-            (Some(v), _) => format!("`{v}`"),
-            (None, _) => "(unset; using built-in default)".to_string(),
-        };
-        println!(
-            "  {}  [source: {}]\n    {}\n    {}",
-            e.name, e.provenance, e.description, value_part
-        );
-    }
-
-    println!();
-    println!("Invoked-by:");
-    let invoked_value_text = match &invoked_by_block.value {
-        Some(v) => format!("`{v}`"),
-        None => "(unset; envelopes carry no `invoked_by` field)".to_string(),
-    };
-    println!(
-        "  [source: {}]\n  {}\n  {}",
-        invoked_by_block.provenance, invoked_by_block.description, invoked_value_text
-    );
-
-    ctx.summary(&format!(
-        "\nvibe show config: {} registries, {} mirrors, {} overrides, {} env entries",
-        registries.len(),
-        mirrors.len(),
-        overrides.len(),
-        env.len()
-    ));
+    ctx.block(&view::render(&payload, viewport(), rule_width()));
     Ok(())
 }
 

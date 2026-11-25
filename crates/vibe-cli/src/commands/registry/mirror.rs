@@ -27,7 +27,7 @@ specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#r
 
 use std::path::{Path, PathBuf};
 
-use anyhow::{Context, Result, anyhow, bail};
+use anyhow::{Context, Result, bail};
 use vibe_core::manifest::{Manifest, RegistrySection};
 use vibe_publish::git_publish::redact_credentials;
 use vibe_publish::layout_publish::{
@@ -38,6 +38,7 @@ use vibe_wire::generated::registry_mirror_report::RegistryMirrorReport;
 use crate::cli::RegistryMirrorArgs;
 use crate::output;
 
+mod admission;
 mod aliases;
 mod config;
 mod git_source;
@@ -74,21 +75,7 @@ pub(super) fn run_mirror(
         Manifest::default()
     };
     let effective = super::effective_registries(&project_root, &manifest)?;
-    let source_reg = effective
-        .registries
-        .iter()
-        .find(|r| r.name == args.source)
-        .cloned()
-        .ok_or_else(|| {
-            anyhow!(
-                "no `[[registry]]` named `{}` in `vibe.toml`, `.vibe/registry.local.toml` or \
-                 `~/.vibe/registry.toml`; configured: {} \
-                 (violates spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#registry-mirror; \
-                 fix: name a configured registry, or add one with `vibe registry add`)",
-                args.source,
-                names(&effective.registries)
-            )
-        })?;
+    let source_reg = admission::resolve(&args.source, &effective.registries, &manifest)?;
     let target = resolve_target(&args, &effective.registries)?;
 
     let operation = vibe_package_source::source_operation(
@@ -97,13 +84,7 @@ pub(super) fn run_mirror(
         &project_root,
         vibe_package_source::deferred_user_registry(crate::output::seeds_default_registry()),
     )?;
-    ctx.heading(&format!(
-        "Mirroring registry `{}` ({}) → {}{}",
-        source_reg.name,
-        redact_credentials(&source_reg.url),
-        target.shown,
-        if args.dry_run { " [dry-run]" } else { "" }
-    ));
+    render::heading(ctx, &source_reg.name, &target, args.dry_run);
 
     let progress = ctx.progress();
     // The target is read first because it is what carries the selection a
@@ -134,8 +115,20 @@ pub(super) fn run_mirror(
         payloads: args.prune_payloads,
         yes: args.yes,
     };
-    prune::check(pruning, &selection, args.config.as_deref())?;
-    announce(ctx, &selection);
+    let retry = prune::view::Retry {
+        source: &args.source,
+        into: &args.into,
+        config: args.config.as_deref(),
+        branch: args.branch.as_deref(),
+        name: args.name.as_deref(),
+        payloads: args.prune_payloads,
+        update_snapshots: args.update_snapshots,
+        keep_history: args.keep_history,
+        offline: root_offline,
+        path: &args.path,
+    };
+    prune::check_retry(pruning, &selection, &retry)?;
+    announce(ctx, &selection, args.config.as_deref());
 
     let reader = SourceReader::open(
         &source_reg,
@@ -219,9 +212,7 @@ pub(super) fn run_mirror(
     // mirror report is a wire schema of its own, and these three counts
     // do not earn a format change of their own yet (B-293).
     for (alias, target) in &alias_merge.dropped {
-        ctx.diagnostic(&format!(
-            "the alias `{alias}` was not carried — this mirror does not hold `{target}`"
-        ));
+        ctx.diagnostic(&aliases::drop_warning(alias, target, &target_index, &planned));
     }
     for (alias, held, offered) in &alias_merge.conflicts {
         ctx.diagnostic(&format!(
@@ -324,7 +315,7 @@ pub(super) fn run_mirror(
         removed: args.prune.then_some(0),
     };
     if alarms > 0 {
-        render(ctx, &report)?;
+        render(ctx, &report, &target, snapshot_count)?;
         bail!(
             "vibe registry mirror: {alarms} version(s) of `{}` differ from the copy in the target \
              in a way that may not happen (a frozen version changed, or the bytes disagree with \
@@ -339,7 +330,7 @@ pub(super) fn run_mirror(
     // Never silent, and never without a word: the plan is printed before
     // anything is removed, and an unattended run without `--yes` is
     // refused rather than left to copy against a plan it did not answer.
-    let removing = prune::answer(ctx, &pruned, pruning, args.dry_run)?;
+    let removing = prune::answer(ctx, &pruned, pruning, args.dry_run, &retry)?;
 
     if let Some(plan) = selection.payloads() {
         payloads::weigh(&projection, plan)?;
@@ -360,7 +351,7 @@ pub(super) fn run_mirror(
         report.index_refreshed = recorded > 0
             || snapshot_count > 0
             || target_state != vibe_core::layout_registry::IndexState::Current;
-        return render(ctx, &report);
+        return render(ctx, &report, &target, snapshot_count);
     }
     // Payloads are projected before the batch: a target must not come to
     // advertise a version whose bytes a closed network cannot get, and the
@@ -415,7 +406,7 @@ pub(super) fn run_mirror(
         }
     }
     if unavailable > 0 {
-        render(ctx, &report)?;
+        render(ctx, &report, &target, snapshot_count)?;
         bail!(
             "vibe registry mirror: the source `{}` could not serve {unavailable} version(s); \
              everything else was copied \
@@ -425,7 +416,7 @@ pub(super) fn run_mirror(
             source_reg.name
         );
     }
-    render(ctx, &report)
+    render(ctx, &report, &target, snapshot_count)
 }
 
 /// Whether a carried fact is news to the target (the batch applies the
@@ -453,10 +444,17 @@ fn fact_is_new(fact: &vibe_index::journal::Event, target: &vibe_index::index::In
 /// `--config` cannot tell from the version rows alone whether the file was
 /// read, and one who ran bare cannot tell that the target's recorded
 /// selection is what narrowed the run.
-fn announce(ctx: &output::Context, selection: &Selection) {
+fn announce(ctx: &output::Context, selection: &Selection, config: Option<&Path>) {
     match selection.origin() {
         selection::Origin::Flags => {}
-        selection::Origin::Config => ctx.step("Selecting from `--config`"),
+        selection::Origin::Config => {
+            if let Some(config) = config {
+                ctx.step(&format!(
+                    "selection from {}",
+                    redact_credentials(&config.display().to_string())
+                ));
+            }
+        }
         selection::Origin::Recorded => {
             ctx.step(
                 "Selecting as the target's mirror record says, adding only what newly matches",
@@ -515,17 +513,6 @@ fn refuse_templates_without_a_tree(
          fix: mirror the template out of a layout registry, or drop the `[[template]]` row(s) \
          and copy the package with `[select]`)"
     )
-}
-
-fn names(registries: &[RegistrySection]) -> String {
-    if registries.is_empty() {
-        return "(none)".to_string();
-    }
-    registries
-        .iter()
-        .map(|r| r.name.as_str())
-        .collect::<Vec<_>>()
-        .join(", ")
 }
 
 fn commit_message(source: &RegistrySection, items: &[PublishItem]) -> String {
