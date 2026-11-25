@@ -61,7 +61,7 @@ ignore-concept-warnings = ["WAL"]
 [[command]]
 id = "vibevm-doc"
 description = "Incrementally build and serve the complete VibeVM site"
-handler = { kind = "script", base = "vibevm/vibepacks/org.vibevm.doc/web/v1.0.12/tooling/site-build/serve" }
+handler = { kind = "script", base = "vibevm/vibepacks/org.vibevm.doc/web/v1.0.13/tooling/site-build/serve" }
 
 # The repository owns the domain and every package whose documentation it
 # publishes, so its ordinary build lifecycle owns their composition too. This
@@ -70,7 +70,7 @@ handler = { kind = "script", base = "vibevm/vibepacks/org.vibevm.doc/web/v1.0.12
 [[extension]]
 id = "build-documentation-site"
 point = "phase:build"
-handler = { kind = "script", base = "vibevm/vibepacks/org.vibevm.doc/web/v1.0.12/tooling/site-build/build" }
+handler = { kind = "script", base = "vibevm/vibepacks/org.vibevm.doc/web/v1.0.13/tooling/site-build/build" }
 inputs = [
   "vibe.toml",
   "VIBEVM-SPEC.md",
@@ -78,14 +78,14 @@ inputs = [
   "vibevm/vibepacks/**/vibe.toml",
   "vibevm/vibepacks/**/README.md",
   "vibevm/vibepacks/**/vibevm/vibespecs/**",
-  "vibevm/vibepacks/org.vibevm.doc/web/v1.0.12/package.json",
-  "vibevm/vibepacks/org.vibevm.doc/web/v1.0.12/pnpm-lock.yaml",
-  "vibevm/vibepacks/org.vibevm.doc/web/v1.0.12/pnpm-workspace.yaml",
-  "vibevm/vibepacks/org.vibevm.doc/web/v1.0.12/design/**",
-  "vibevm/vibepacks/org.vibevm.doc/web/v1.0.12/site/package.json",
-  "vibevm/vibepacks/org.vibevm.doc/web/v1.0.12/site/adapters/**",
-  "vibevm/vibepacks/org.vibevm.doc/web/v1.0.12/site/src/**",
-  "vibevm/vibepacks/org.vibevm.doc/web/v1.0.12/site/vite.config.ts",
-  "vibevm/vibepacks/org.vibevm.doc/web/v1.0.12/tools/**",
-  "vibevm/vibepacks/org.vibevm.doc/web/v1.0.12/tooling/site-build/**",
+  "vibevm/vibepacks/org.vibevm.doc/web/v1.0.13/package.json",
+  "vibevm/vibepacks/org.vibevm.doc/web/v1.0.13/pnpm-lock.yaml",
+  "vibevm/vibepacks/org.vibevm.doc/web/v1.0.13/pnpm-workspace.yaml",
+  "vibevm/vibepacks/org.vibevm.doc/web/v1.0.13/design/**",
+  "vibevm/vibepacks/org.vibevm.doc/web/v1.0.13/site/package.json",
+  "vibevm/vibepacks/org.vibevm.doc/web/v1.0.13/site/adapters/**",
+  "vibevm/vibepacks/org.vibevm.doc/web/v1.0.13/site/src/**",
+  "vibevm/vibepacks/org.vibevm.doc/web/v1.0.13/site/vite.config.ts",
+  "vibevm/vibepacks/org.vibevm.doc/web/v1.0.13/tools/**",
+  "vibevm/vibepacks/org.vibevm.doc/web/v1.0.13/tooling/site-build/**",
 ]
