@@ -59,12 +59,12 @@ fn listing() -> AgentList {
 /// `vibe agent list` of the fixture at 80 columns, exactly.
 const GOLDEN_80: &str = "\
 ── launchers ───────────────────────────────────────────────────────────────────
-  claude    claude    claude    [built-in]
-  codex     codex     codex     [built-in]
-  opencode  opencode  opencode  [built-in]
-  qwen      qwen      qwen      [built-in]
-  hermes    hermes    hermes    [built-in]
-  pi        pi        pi        [built-in]
+  claude    claude    claude    preset claude-code  [built-in]
+  codex     codex     codex     preset codex  [built-in]
+  opencode  opencode  opencode  preset opencode  [built-in]
+  qwen      qwen      qwen      preset qwen-code  [built-in]
+  hermes    hermes    hermes    preset hermes  [built-in]
+  pi        pi        pi        preset pi  [built-in]
   cc2       claude    cc2       config /u/.claude2  [/u/.vibe/agents.toml]
   starts a launcher with this project's boot lane
   vibe agent <name>
@@ -176,7 +176,11 @@ fn at_forty_columns_a_launchers_metadata_moves_to_its_own_line() {
         "{out}"
     );
     assert_eq!(lines[1], "  claude    claude    claude", "{out}");
-    assert_eq!(lines[2], format!("{}[built-in]", " ".repeat(22)), "{out}");
+    assert_eq!(
+        lines[2],
+        format!("{}preset claude-cod…", " ".repeat(22)),
+        "{out}"
+    );
     // The fix wraps under its own text rather than running past the edge.
     assert!(
         out.contains("  └ fix  give the definition a command\n         and both"),

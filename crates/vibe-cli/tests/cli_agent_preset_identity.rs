@@ -80,6 +80,34 @@ fn named<'a>(document: &'a Value, table: &str, name: &str) -> &'a Value {
 #[test]
 fn canonical_preset_name_roundtrips() {
     let fixture = Fixture::new();
+    // Discover the accepted preset from the clean human launcher listing,
+    // before any definition exists to supply a coincidental preset annotation.
+    let clean = fixture.text(&["agent", "list"]);
+    let launcher_row = clean
+        .lines()
+        .take_while(|line| !line.contains("agent definitions"))
+        .find(|line| {
+            line.split_whitespace().next() == Some("claude") && line.contains("[built-in]")
+        })
+        .expect("the clean built-in claude launcher row advertises its preset");
+    let canonical = launcher_row
+        .split_once("preset ")
+        .and_then(|(_, metadata)| metadata.split_whitespace().next())
+        .expect("the built-in launcher identifies an accepted preset");
+    assert_eq!(canonical, "claude-code");
+    let discovered = fixture.json(&[
+        "agent",
+        "add",
+        "discovered",
+        "--preset",
+        canonical,
+        "--json",
+    ]);
+    let discovered = named(&discovered, "agents", "discovered");
+    assert_eq!(discovered["preset"], canonical);
+    assert_eq!(discovered["command"], "claude");
+    assert!(discovered["problem"].is_null());
+
     let presets = fixture.json(&["agent", "presets", "--json"]);
     assert_eq!(presets["protocol"], "vibe-agent-presets/1");
     let claude = named(&presets, "presets", "claude-code");
