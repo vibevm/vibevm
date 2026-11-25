@@ -439,8 +439,28 @@ pub(super) fn px_beside_with(
     dir: &Path,
     progress: &Progress,
 ) -> Result<companions::PxOutcome> {
+    px_beside_rows(store, pin, dir, progress, false)
+}
+
+/// Compact terminal vocabulary at the site import boundary only.
+#[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-067#collapse")]
+pub(in crate::commands::vvm) fn px_beside_for_site(
+    store: &crate::commands::vvm::store::VersionStore,
+    dir: &Path,
+    progress: &Progress,
+) -> Result<companions::PxOutcome> {
+    px_beside_rows(store, vibe_net::px_store::PxPin::embedded(), dir, progress, true)
+}
+
+fn px_beside_rows(
+    store: &crate::commands::vvm::store::VersionStore,
+    pin: &vibe_net::px_store::PxPin,
+    dir: &Path,
+    progress: &Progress,
+    site_rows: bool,
+) -> Result<companions::PxOutcome> {
     use companions::PxOutcome;
-    let task = progress.task("Installing px");
+    let task = progress.task(if site_rows { "px" } else { "Installing px" });
     let outcome = companions::install_beside(store, pin, dir);
     match &outcome {
         Ok(PxOutcome::AlreadyInstalled(program)) => {
@@ -449,6 +469,9 @@ pub(super) fn px_beside_with(
         Ok(PxOutcome::Installed { program, from }) => {
             task.detail(format!("`{}` from `{from}`", program.display()));
             task.finish();
+        }
+        Ok(PxOutcome::Unavailable { asset, .. }) if site_rows => {
+            task.skip(format!("no {asset} beside the binary"));
         }
         Ok(PxOutcome::Unavailable { asset, .. }) => task.skip(format!(
             "no `{asset}` beside the binary; `[proxy] mode = \"px\"` uses `px_path` or px on PATH"

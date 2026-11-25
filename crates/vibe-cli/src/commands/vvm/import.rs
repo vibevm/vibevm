@@ -60,11 +60,32 @@ pub(crate) fn perform_import(
     store: &VersionStore,
     req: &ImportRequest<'_>,
 ) -> Result<ImportOutcome> {
+    perform_import_with_rows(ctx, store, req, false)
+}
+
+/// Site apply's live terminal boundary; standalone import retains its vocabulary.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-067#collapse")]
+pub(crate) fn perform_site_import(
+    ctx: &output::Context,
+    store: &VersionStore,
+    req: &ImportRequest<'_>,
+) -> Result<ImportOutcome> {
+    perform_import_with_rows(ctx, store, req, true)
+}
+
+fn perform_import_with_rows(
+    ctx: &output::Context,
+    store: &VersionStore,
+    req: &ImportRequest<'_>,
+    site_rows: bool,
+) -> Result<ImportOutcome> {
     let progress = ctx.progress();
+    let label = |normal, site| if site_rows { site } else { normal };
     if let Some(dir) = unpacked_release_dir(req.executable) {
         return import_unpacked_release(ctx, store, req, &dir, &progress);
     }
-    let observed = observed_stage(&progress, "Verifying local import payload", |task| {
+    let verify_label = label("Verifying local import payload", "verify  local import payload");
+    let observed = observed_stage(&progress, verify_label, |task| {
         task.detail(format!("payload: {}", req.executable.display()));
         let tag = parse_tag(req.tag)?;
         ensure_payload_file(req.executable)?;
@@ -109,7 +130,13 @@ pub(crate) fn perform_import(
             reused,
         })
     })?;
-    px_beside(req.executable, store, &progress)?;
+    if site_rows {
+        if let Some(dir) = req.executable.parent() {
+            bundle::px_lane::px_beside_for_site(store, dir, &progress)?;
+        }
+    } else {
+        px_beside(req.executable, store, &progress)?;
+    }
     let ObservedPayload {
         id,
         dist,
@@ -125,15 +152,17 @@ pub(crate) fn perform_import(
 
     if let Some(record) = reused {
         let instance_dir = store.instance_dir(&id, record.instance);
-        let copying = progress.task("Copying import payload");
+        let copying = progress.task(label("Copying import payload", "copy  import payload"));
         copying.detail(format!("reusing {}", record.selector()));
         copying.skip("matching verified payload already installed");
-        let recording = progress.task("Recording imported instance");
+        let recording = progress.task(label("Recording imported instance", "record  imported instance"));
         recording.skip("inventory unchanged");
-        ctx.summary(&format!(
-            "{} payload already imported — reused",
-            record.selector()
-        ));
+        if !site_rows {
+            ctx.summary(&format!(
+                "{} payload already imported — reused",
+                record.selector()
+            ));
+        }
         return Ok(ImportOutcome {
             record,
             home: instance_dir,
@@ -141,7 +170,8 @@ pub(crate) fn perform_import(
         });
     }
 
-    let instance = observed_stage(&progress, "Copying import payload", |task| {
+    let copy_label = label("Copying import payload", "copy  import payload");
+    let instance = observed_stage(&progress, copy_label, |task| {
         task.detail(format!("destination version: {id}"));
         let instance = store.alloc_instance()?;
         let previous = existing.last().and_then(|record| {
@@ -169,15 +199,22 @@ pub(crate) fn perform_import(
         payload_sha256: Some(digest),
         distribution_manifest_sha256: None,
     };
-    observed_stage(&progress, "Recording imported instance", |task| {
+    let record_label = if site_rows {
+        format!("record  imported instance {}", record.selector())
+    } else {
+        "Recording imported instance".to_owned()
+    };
+    observed_stage(&progress, &record_label, |task| {
         task.detail(format!("selector: {}", record.selector()));
         store.record_install(record.clone())?;
         Ok(())
     })?;
 
     let instance_dir = store.instance_dir(&id, instance);
-    ctx.created(&instance_dir.display().to_string());
-    ctx.summary(&format!("imported {id}#{instance}"));
+    if !site_rows {
+        ctx.created(&instance_dir.display().to_string());
+        ctx.summary(&format!("imported {id}#{instance}"));
+    }
     Ok(ImportOutcome {
         record,
         home: instance_dir,

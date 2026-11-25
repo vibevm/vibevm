@@ -146,7 +146,32 @@ pub(in crate::commands::vvm) fn run_apply_cmd(
         dry_run,
         &mut report.next_steps,
     )?;
-    report::emit(&report, ctx)
+    if !dry_run && super::steps::live_rows(ctx) {
+        let files = Files::resolve()?;
+        let profile = ctx.progress().task(format!(
+            "profile  {} written to {}",
+            prepared.profile.name.as_deref().unwrap_or("site profile"),
+            output::language::short_path(&files.profile.display().to_string()),
+        ));
+        profile.finish();
+        for warning in &report.warnings {
+            ctx.diagnostic(warning);
+        }
+        if let Some(path) = &report.path {
+            for hint in [&path.activation_hint, &path.fix_hint].into_iter().flatten() {
+                ctx.step(hint);
+            }
+        }
+        for next in &report.next_steps {
+            ctx.step(next);
+        }
+        if let Some(what) = super::report_text::trailer_what(&report) {
+            ctx.trailer_at(&what, &files.receipt.display().to_string());
+        }
+        Ok(())
+    } else {
+        report::emit(&report, ctx)
+    }
 }
 
 /// Read and fully validate a profile from a path, a `file://` URL or an
