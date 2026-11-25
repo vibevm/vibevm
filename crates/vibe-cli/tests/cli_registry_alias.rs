@@ -558,3 +558,5 @@ fn two_registries_agreeing_on_one_spelling_are_one_candidate() {
 
 #[path = "cli_registry_alias/f24a.rs"]
 mod f24a;
+#[path = "cli_registry_alias/f24b.rs"]
+mod f24b;

@@ -47,6 +47,7 @@ use super::layout_root;
 use crate::cli::{RegistryAliasAction, RegistryAliasArgs};
 use crate::output;
 
+mod refusals;
 mod view;
 
 #[derive(Debug, Serialize)]
@@ -87,21 +88,13 @@ pub(super) fn run_alias(
         .find(|r| r.name == args.registry)
         .cloned()
     else {
-        bail!(
-            "no `[[registry]]` named `{}` is configured — `vibe registry list` shows the ones \
-             that are",
-            args.registry
-        );
+        return Err(refusals::missing(&args.registry));
     };
     if !layout_root::is_layout(&section) {
-        bail!(
-            "registry `{}` is a `{}` registry — an alias table lives in a directory-layout \
-             registry's own `{INDEX_DIR}/{ALIAS_TABLE_FILE}`, so only `monorepo` and `localdir` \
-             registries carry one. A per-package git or org registry keeps its index in a \
-             separate checkout; edit that one with `vibe-index alias`.",
-            section.name,
+        return Err(refusals::unsupported(
+            &section.name,
             section.checked_type()?.as_str(),
-        );
+        ));
     }
     let operation = vibe_package_source::source_operation(
         &vibe_package_source::PackageSourceOptions::default(),
@@ -109,7 +102,7 @@ pub(super) fn run_alias(
         &project_root,
         vibe_package_source::deferred_user_registry(crate::output::seeds_default_registry()),
     )?;
-    let opened = layout_root::open(
+    let opened = layout_root::open_alias(
         &section,
         &effective.mirrors,
         &operation,
@@ -130,12 +123,7 @@ pub(super) fn run_alias(
         }
         RegistryAliasAction::Remove { alias } => {
             if table.remove(&alias).is_none() {
-                bail!(
-                    "registry `{}` issues no short name `{alias}` — `vibe registry alias {} list` \
-                     shows the ones it does",
-                    section.name,
-                    section.name,
-                );
+                return Err(refusals::not_issued(&section.name, &alias));
             }
             ("remove", Some(alias), None)
         }
@@ -164,13 +152,12 @@ pub(super) fn run_alias(
                     );
                 }
                 if !replace {
-                    bail!(
-                        "`{alias}` already means {} in registry `{}` — one spelling has one \
-                         meaning, so re-pointing it is a deliberate act: pass `--replace` to \
-                         change it, or pick another spelling",
-                        aliases::spell(held),
-                        section.name,
-                    );
+                    return Err(refusals::exists(
+                        &section.name,
+                        &alias,
+                        &aliases::spell(held),
+                        &spelled,
+                    ));
                 }
             }
             table.insert(alias.clone(), target);
@@ -240,11 +227,7 @@ pub(crate) fn refuse_faults(
     if faults.is_empty() {
         return Ok(());
     }
-    let lines: Vec<String> = faults.iter().map(ToString::to_string).collect();
-    bail!(
-        "the alias table of registry `{registry}` would not stand:\n  {}",
-        lines.join("\n  "),
-    )
+    Err(refusals::faults(registry, &faults, table))
 }
 
 fn layout_target(section: &RegistrySection) -> Result<LayoutTarget> {
