@@ -472,8 +472,12 @@ fn apply_metadata_checked<S: InstallSource + ?Sized>(
     );
     apply_task.finish();
 
-    for warning in &outcome.integrity_warnings {
-        tracing::warn!(target: "vibe_install::apply", "{warning}");
+    for _ in &outcome.integrity_warnings {
+        static NEXT: std::sync::atomic::AtomicU64 = std::sync::atomic::AtomicU64::new(1);
+        let occurrence = NEXT.fetch_add(1, std::sync::atomic::Ordering::Relaxed);
+        tracing::warn!(target: "vibe_install::apply",
+            diagnostic_code = "install_integrity", occurrence,
+            "a dependency slot failed integrity verification and was re-materialised");
     }
 
     let record_task = progress.task("Recording installation state");

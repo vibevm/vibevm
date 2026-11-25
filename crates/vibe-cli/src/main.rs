@@ -91,19 +91,11 @@ fn run() -> ExitCode {
     // VVM: derive the running version from the binary's own path, and warn
     // when the inherited $VIBEVM_HOME is stale (PROP-019 §2.5).
     let self_loc = commands::vvm::derive_self(std::env::current_exe().ok().as_deref());
-    if let Some(loc) = &self_loc
-        && let Some(env_home) = read_env_opt(commands::vvm::VIBEVM_HOME_ENV)
-        && !commands::vvm::same_location(&env_home, &loc.home)
-    {
-        eprintln!(
-            "{}",
-            output::language::warning(&format!(
-                "$VIBEVM_HOME is stale (env={env_home}); the running version is {} \
-                 — open a new shell or run eval \"$(vibe self env)\"",
-                loc.home.display()
-            ))
-        );
-    }
+    let stale_home = self_loc.as_ref().and_then(|loc| {
+        read_env_opt(commands::vvm::VIBEVM_HOME_ENV)
+            .filter(|home| !commands::vvm::same_location(home, &loc.home))
+            .map(|home| composition::startup_notes::stale_home_text(&home, &loc.home))
+    });
 
     let progress_interactive = std::io::stderr().is_terminal() && terminal_vocabulary && !cli.plain;
     output::configure_language(
@@ -139,13 +131,19 @@ fn run() -> ExitCode {
             read_env_opt("VIBE_PROGRESS_FORMAT").as_deref(),
         ),
     );
+    if let Some(text) = stale_home {
+        composition::startup_notes::warn_with_command(&ctx, &text, "eval \"$(vibe self env)\"");
+    }
     let preview_only = composition::project_preview(&cli.command);
     let ctx = composition::transfers::attach_for_command(ctx, &transfer_config, &cli.command);
+    let mut config_notice =
+        composition::startup_notes::PendingConfig::new(&ctx, composition::config_problem());
+    let _diagnostic_drain = composition::startup_notes::DrainOnDrop(&ctx);
     let (ctx, cancellation, mut stop_input) =
         match composition::cancellation::for_command(&ctx, &cli.command, cli.stop_file.clone()) {
             Ok(value) => value,
             Err(error) => {
-                ctx.error_with_suffix(&error, None);
+                config_notice.error(&error);
                 return ExitCode::FAILURE;
             }
         };
@@ -171,7 +169,7 @@ fn run() -> ExitCode {
             offline: cli.offline,
         },
     ) {
-        ctx.error_with_suffix(&error, None);
+        config_notice.error(&error);
         return as_exit_code(&error);
     }
 
@@ -463,6 +461,10 @@ fn run() -> ExitCode {
     stop_input.settle(&ctx, &cancellation);
     composition::network::finish(&ctx, network, result.is_err());
     command_activity.complete(result.is_ok());
+    if config_notice.fatal(&result) {
+        return as_exit_code(result.as_ref().err().expect("fatal configuration error"));
+    }
+    drop(config_notice);
     composition::finish(&ctx, &cancellation, result, preview_only)
 }
 

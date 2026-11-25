@@ -372,6 +372,7 @@ fn execute_owned(
             .iter()
             .map(|r| resolver.qualify(r, &lockfile_snapshot))
             .collect::<Result<_>>()?;
+        observer.roots_qualified();
 
         // The PREPARED planner, over the two values this command already owns.
         // The compatibility wrapper would re-read the selected `vibe.toml` — the

@@ -110,8 +110,11 @@ fn register_px_store() {
 /// End the operation's network: px is killed and reaped now, and a px that
 /// could not serve a failed operation is named once with its cause.
 pub(crate) fn finish(ctx: &crate::output::Context, network: vibe_net::NetworkGuard, failed: bool) {
+    let diagnostics = super::startup_notes::diagnostics();
     if failed && let Some(failure) = network.session().px_failure() {
-        ctx.diagnostic(&format!("vibe-managed px: {failure}"));
+        let occurrence = std::sync::Arc::as_ptr(network.session()) as usize as u64;
+        diagnostics.px_failure(occurrence, &failure);
     }
     drop(network);
+    diagnostics.drain(ctx);
 }

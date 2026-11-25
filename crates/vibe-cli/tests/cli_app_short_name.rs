@@ -479,3 +479,83 @@ fn versions_keeps_its_own_refusal_for_a_word_no_registry_carries() {
         stderr(&unissued)
     );
 }
+
+/// Decisions precede even the first parent frame, without a second lookup.
+#[test]
+#[specmark::spec(verifies = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#short-name")]
+fn alias_decision_prints_once_outside_panel() {
+    let site = Site::new();
+    let fixture = site.path("decision-reg/org.vibevm.node/node/v1.0.0");
+    fs::create_dir_all(&fixture).unwrap();
+    fs::write(fixture.join("vibe.toml"), "[package]\nname='node'\ngroup='org.vibevm.node'\nkind='tool'\nversion='1.0.0'\n").unwrap();
+    fs::create_dir_all(site.path("decision-reg/_index")).unwrap();
+    fs::write(site.path("decision-reg/_index/aliases.toml"), "schema=1\n[aliases]\nnode='org.vibevm.node/node'\n").unwrap();
+    fs::write(site.path("settings/registry.toml"), format!("[[registry]]\nname='corp'\ntype='localdir'\nurl='file://{}'\n[source_policy]\nexclude_hosting=['github','gitverse']\n", site.path("decision-reg").display())).unwrap();
+    let script = r#"
+import errno, fcntl, json, os, pathlib, pty, re, select, signal, struct, subprocess, sys, termios, time
+binary, root = sys.argv[1], pathlib.Path(sys.argv[2])
+env = {'PATH': os.environ['PATH'], 'HOME':str(root/'home'), 'USERPROFILE':str(root/'home'),
+ 'VIBE_SETTINGS':str(root/'settings'), 'VIBE_REGISTRY_CACHE':str(root/'cache'),
+ 'VIBE_NO_DEFAULT_REGISTRY':'1', 'TERM':'xterm-256color', 'NO_COLOR':'1',
+ 'GIT_CONFIG_NOSYSTEM':'1', 'GIT_CONFIG_GLOBAL':str(root/'empty')}
+def project(name):
+ p=root/name
+ r=subprocess.run([binary,'init','--path',str(p),'--group','org.test','--name',name,'--kind','flow'],env=env,capture_output=True,timeout=30)
+ assert r.returncode==0, 'synthetic init failed'
+ return p
+needle='  node → org.vibevm.node/node · alias in registry corp'
+plain=subprocess.run([binary,'install','node','--assume-yes'],cwd=project('separate'),env=env,capture_output=True,timeout=60)
+assert plain.returncode==0, 'separate-stream install failed'
+assert needle not in plain.stdout.decode(), 'decision on stdout'
+assert plain.stderr.decode().splitlines().count(needle)==1, 'decision not exactly once on stderr'
+qualified=subprocess.run([binary,'install','org.vibevm.node/node','--assume-yes'],cwd=project('qualified'),env=env,capture_output=True,timeout=60)
+assert qualified.returncode==0 and '→' not in qualified.stderr.decode(), 'qualified control failed'
+p=project('attended'); master,slave=pty.openpty()
+fcntl.ioctl(slave,termios.TIOCSWINSZ,struct.pack('HHHH',40,100,0,0))
+pid=os.fork()
+if pid==0:
+ os.close(master);os.setsid();fcntl.ioctl(slave,termios.TIOCSCTTY,0)
+ for fd in (0,1,2): os.dup2(slave,fd)
+ if slave>2:os.close(slave)
+ os.chdir(p);os.execve(binary,[binary,'install','node','--assume-yes'],env)
+os.close(slave);raw=bytearray();deadline=time.monotonic()+60
+while True:
+ remaining=deadline-time.monotonic()
+ if remaining<=0:
+  os.killpg(pid,signal.SIGKILL);raise AssertionError('PTY timeout')
+ ready,_,_=select.select([master],[],[],remaining)
+ if not ready:continue
+ try:block=os.read(master,65536)
+ except OSError as e:
+  if e.errno==errno.EIO:break
+  raise
+ if not block:break
+ raw.extend(block)
+os.close(master);_,status=os.waitpid(pid,0)
+assert os.waitstatus_to_exitcode(status)==0, 'PTY install failed'
+(root/'decision.raw').write_bytes(raw)
+text=raw.decode(); first=text.find('Installing packages'); decision=text.find(needle)
+assert first>=0 and decision>=0 and text.count(needle)==1, 'missing frame or duplicate decision'
+assert text[decision+len(needle):].startswith(('\n','\r\n')), 'decision not separate line'
+assert decision+len(needle)<first, 'decision came after first parent frame'
+visible=re.sub(r'\x1b\[[0-?]*[ -/]*[@-~]', '', text)
+assert re.search(r'[⠋⠙⠹⠸⠼⠴⠦⠧⠇⠏●] └ Resolving dependencies',visible), 'no explicitly active child frame'
+print(json.dumps({'decision_count':1,'before_first_parent':True,'active_child':True,'exit':0}))
+"#;
+    let output = Command::new("python3").args(["-I", "-c", script, env!("CARGO_BIN_EXE_vibe")])
+        .arg(site.root.path()).output().unwrap();
+    assert!(output.status.success(), "decision ordering fixture failed: {}", String::from_utf8_lossy(&output.stderr));
+    let report: serde_json::Value = serde_json::from_slice(&output.stdout).unwrap();
+    assert_eq!(report["decision_count"], 1);
+    assert_eq!(report["before_first_parent"], true);
+    // The global route consumes its already-selected candidate; it must not
+    // qualify the original bare request a second time.
+    let app = manifest("org.vibevm.node", "node")
+        .replace("/opt/node", site.path("synthetic-app").to_str().unwrap())
+        .replacen("\ninstall = \"true\"\n", "\ninstall = 'mkdir -p \"$VIBE_APP_ROOT\"'\n", 1);
+    fs::write(fixture.join("vibe.toml"), app).unwrap();
+    let global = site.vibe(&["install", "-g", "node", "--assume-yes"]);
+    assert!(global.status.success(), "selected global install failed");
+    assert_eq!(stderr(&global).matches("node → org.vibevm.node/node").count(), 1);
+    assert!(!String::from_utf8_lossy(&global.stdout).contains("node →"));
+}

@@ -83,6 +83,10 @@ impl<'a> CliInstallObserver<'a> {
 }
 
 impl InstallObserver for CliInstallObserver<'_> {
+    fn roots_qualified(&self) {
+        self.ctx.release_input_progress();
+    }
+
     fn stream_mode(&self) -> StreamMode {
         if self.ctx.is_json() {
             StreamMode::Capture
