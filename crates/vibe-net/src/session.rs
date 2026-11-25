@@ -222,7 +222,9 @@ impl NetworkSession {
             let pid = process.id();
             match process.kill_and_reap() {
                 Ok(()) => tracing::info!(pid, "stopped vibe-managed px"),
-                Err(error) => tracing::warn!(pid, "could not stop the vibe-managed px: {error}"),
+                Err(_) => tracing::warn!(target: "vibe_net::cleanup",
+                    diagnostic_code = "network_cleanup", occurrence = u64::from(pid),
+                    "vibe-managed px could not be reaped"),
             }
         }
         self.scratch

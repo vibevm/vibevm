@@ -107,6 +107,23 @@ pub enum PxError {
     SystemProxy(#[from] SystemProxyError),
 }
 
+impl PxError {
+    /// A bounded diagnostic cause, never the process log, path or reason.
+    pub(crate) fn diagnostic_cause(&self) -> &'static str {
+        match self {
+            Self::NotInstalled { .. } => "not_installed",
+            Self::Spawn { .. } => "spawn",
+            Self::Exited { .. } => "exited",
+            Self::NotReady { .. } => "not_ready",
+            Self::PortBusy { .. } => "port_busy",
+            Self::Port { .. } => "port",
+            Self::Cancelled => "cancelled",
+            Self::Closed => "closed",
+            Self::SystemProxy(_) => "system_proxy",
+        }
+    }
+}
+
 /// Where vibe looks for a px it carries: `tools/px/` beside the running
 /// executable and beside its parent directory (a `bin/` layout).
 #[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-068#proxy-px")]
@@ -432,8 +449,10 @@ impl PxProcess {
 
 impl Drop for PxProcess {
     fn drop(&mut self) {
-        if let Err(error) = self.kill_and_reap() {
-            tracing::warn!("could not stop the vibe-managed px: {error}");
+        if self.kill_and_reap().is_err() {
+            tracing::warn!(target: "vibe_net::cleanup",
+                diagnostic_code = "network_cleanup", occurrence = u64::from(self.id()),
+                "vibe-managed px could not be reaped");
         }
     }
 }

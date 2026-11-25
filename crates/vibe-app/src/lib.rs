@@ -163,7 +163,7 @@ pub use resolve::{
     DirectoryRoots, ResolvedPackage, directory_roots_from_global_with_operation, from_global,
     from_global_with_operation, from_local_registry, from_manifest, global_resolver,
     local_registry_carries, qualified_ref, template_from_global_with_operation,
-    versions_from_global_with_operation,
+    versions_from_global_with_operation, versions_from_global_with_presence_with_operation,
 };
 pub use select::{
     Choice, Chooser, InstallChoice, detected_arch, detected_platform, options_listing,
@@ -193,8 +193,8 @@ pub use versionfile::{
     write as write_version_file,
 };
 pub use versions::{
-    DEFAULT_LIMIT as VERSIONS_DEFAULT_LIMIT, Domain, DomainVersion, Domains, Origin, TemplateFacts,
-    VERSIONS_PROTOCOL, VersionsRequest, versions_listing,
+    DEFAULT_LIMIT as VERSIONS_DEFAULT_LIMIT, Domain, DomainObservation, DomainVersion, Domains,
+    Origin, PackagePresence, TemplateFacts, VERSIONS_PROTOCOL, VersionsRequest, versions_listing,
 };
 
 pub use operations::import_full;

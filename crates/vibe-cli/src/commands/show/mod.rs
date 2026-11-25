@@ -23,6 +23,7 @@ specmark::scope!("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#command-summary");
 
 mod config;
 mod configuration_data;
+mod configuration_view;
 pub(crate) mod configuration_preview;
 mod effective;
 mod features;

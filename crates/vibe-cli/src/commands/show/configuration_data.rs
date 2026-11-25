@@ -52,8 +52,35 @@ pub(super) fn run(ctx: &output::Context, args: ShowFeaturesArgs) -> Result<()> {
     };
     if ctx.is_json() {
         ctx.emit_json(&report)?;
+    } else if ctx.is_quiet() {
+        let n = report.packages.len();
+        ctx.summary(&format!(
+            "{} {} with retained configuration data",
+            n,
+            if n == 1 { "package" } else { "packages" },
+        ));
     } else {
-        println!("{}", serde_json::to_string_pretty(&report)?);
+        use super::configuration_view::{DataRow, data_view};
+        use crate::output::language::{rule_width, viewport};
+        let rows = report
+            .packages
+            .iter()
+            .map(|row| DataRow {
+                package: row.package.clone(),
+                version: row.version.clone(),
+                values: row
+                    .values
+                    .iter()
+                    .map(|(key, value)| (key.clone(), value.to_string()))
+                    .collect(),
+                parameters: row
+                    .parameters
+                    .iter()
+                    .map(|(key, value)| (key.clone(), value.to_string()))
+                    .collect(),
+            })
+            .collect::<Vec<_>>();
+        ctx.block(&data_view(&rows, viewport(), rule_width()));
     }
     Ok(())
 }
