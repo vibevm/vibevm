@@ -181,8 +181,8 @@ impl ShellGitFactory for Factory {
                 // PROP-068 `#proxy`: a configured `[proxy]` route is the
                 // qualified one — the admitted child is handed it and
                 // nothing else — so its promoted variables are not refused.
-                if !(vibe_core::net::route().is_proxied() && name.ends_with("_PROXY"))
-                    && !(vibe_core::net::route().is_proxied() && name.ends_with("_proxy"))
+                if !(vibe_core::net::route().is_proxied() && name.ends_with("_PROXY")
+                    || vibe_core::net::route().is_proxied() && name.ends_with("_proxy"))
                     && self
                         .operation
                         .transport
@@ -216,8 +216,8 @@ impl ShellGitFactory for Factory {
                 // PROP-068 `#proxy`: a configured `[proxy]` route is the
                 // qualified one — the admitted child is handed it and
                 // nothing else — so its promoted variables are not refused.
-                if !(vibe_core::net::route().is_proxied() && name.ends_with("_PROXY"))
-                    && !(vibe_core::net::route().is_proxied() && name.ends_with("_proxy"))
+                if !(vibe_core::net::route().is_proxied() && name.ends_with("_PROXY")
+                    || vibe_core::net::route().is_proxied() && name.ends_with("_proxy"))
                     && self
                         .operation
                         .transport
