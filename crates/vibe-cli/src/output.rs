@@ -418,6 +418,11 @@ impl Context {
         scoped
     }
 
+    /// The invocation's verbose flag, independent of progress animation.
+    pub(crate) fn verbose_requested(&self) -> bool {
+        self.verbose
+    }
+
     /// Whether detailed human progress is active for this context.
     pub fn is_verbose(&self) -> bool {
         self.verbose && self.progress_renderer.is_some()

@@ -14,6 +14,19 @@ pub(super) fn render(
     effective: &[Row],
     verbose: bool,
 ) -> String {
+    render_with_provenance(report, width, rule, effective, verbose, |origin| {
+        super::layer_view::provenance(report, origin)
+    })
+}
+
+fn render_with_provenance(
+    report: &ConfigReport,
+    width: usize,
+    rule: usize,
+    effective: &[Row],
+    verbose: bool,
+    provenance: impl Fn(&str) -> String,
+) -> String {
     let mut sections = Vec::new();
     let mut section = |label: &str, list: List| {
         if !list.rows.is_empty() {
@@ -31,7 +44,7 @@ pub(super) fn render(
         let mut meta = vec![
             Meta::note(format!("ref {}", registry.refname)),
             Meta::note(format!("naming {}", registry.naming)),
-            Meta::State(super::layer_view::provenance(report, registry.provenance)),
+            Meta::State(provenance(registry.provenance)),
         ];
         if index == 0 {
             meta.push(Meta::State("primary".into()));
@@ -49,7 +62,7 @@ pub(super) fn render(
     section("mirrors", List::new(report.mirrors.iter().map(|mirror| {
         Row::new(vec![Cell::text(&mirror.of), Cell::text(&mirror.url)]).meta(vec![
             Meta::note(format!("priority {}", mirror.priority)),
-            Meta::State(super::layer_view::provenance(report, mirror.provenance)),
+            Meta::State(provenance(mirror.provenance)),
         ])
     }).collect()).meta_column());
     section("overrides", List::new(report.overrides.iter().map(|entry| {
@@ -61,7 +74,7 @@ pub(super) fn render(
         if let Some(reason) = &entry.reason {
             meta.push(Meta::note(reason));
         }
-        meta.push(Meta::State(super::layer_view::provenance(report, entry.provenance)));
+        meta.push(Meta::State(provenance(entry.provenance)));
         Row::new(vec![Cell::text(&entry.pkgref), Cell::text("→"), Cell::text(source)]).meta(meta)
     }).collect()).meta_column());
 
@@ -189,15 +202,11 @@ mod tests {
 
 ── invoked by ──────────────────────────────────────────────────────────────────────────────────────
   unset  [none]";
-        let rendered = render(&report, usize::MAX, 100, &[], false);
-        // Source paths now name the files consulted rather than historical
-        // shorthand. Column gaps depend on those actual path lengths.
-        let compact = |text: &str| text.split_whitespace().collect::<Vec<_>>().join(" ");
-        let expected = expected
-            .replace("[vibe.toml]", "[/srv/app/vibe.toml]")
-            .replace("[~/.vibe/registry.toml]", &format!("[{}]", super::super::layer_view::provenance(&report, "~/.vibe/registry.toml")))
-            .replace("[site-profile.toml]", &format!("[{}]", super::super::layer_view::provenance(&report, "site-profile.toml")));
-        assert_eq!(compact(&rendered), compact(&expected));
+        // Keep the original exact 100-column layout contract isolated from
+        // machine-local settings paths. Production supplies the path adapter;
+        // this fixture supplies deterministic declaration labels.
+        let rendered = render_with_provenance(&report, 100, 100, &[], false, str::to_owned);
+        assert_eq!(rendered, expected);
         assert!(!rendered.contains("Publish token."));
     }
 }

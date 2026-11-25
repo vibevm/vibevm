@@ -225,6 +225,8 @@ fn show_config_reports_effective_layer_paths() {
     };
     let plain = run(&["--plain"]);
     let verbose = run(&["--plain", "--verbose"]);
+    let verbose_no_progress = run(&["--plain", "--verbose", "--no-progress"]);
+    assert_eq!(verbose, verbose_no_progress, "report verbosity is independent of progress");
     let words = |text: &str| text.split_whitespace().collect::<Vec<_>>().join(" ");
     let shown = |path: &std::path::Path| path.display().to_string().replace('\\', "/");
     let compact = words(&plain);
@@ -250,12 +252,17 @@ fn show_config_reports_effective_layer_paths() {
     let machine: Value = serde_json::from_str(&run(&["--json"])).unwrap();
     let verbose_machine: Value = serde_json::from_str(&run(&["--json", "--verbose"])).unwrap();
     assert_eq!(machine, verbose_machine, "verbose must not change JSON");
+    let no_progress_machine: Value = serde_json::from_str(
+        &run(&["--json", "--verbose", "--no-progress"])
+    ).unwrap();
+    assert_eq!(machine, no_progress_machine, "progress must not change JSON");
     assert_eq!(machine["registries"][1]["provenance"], "~/.vibe/registry.toml");
     assert_eq!(machine["mirrors"][0]["provenance"], "site-profile.toml");
     assert!(machine.get("tls").is_none());
     assert!(machine.get("proxy").is_none());
     assert!(machine.get("effective").is_none());
     let quiet = run(&["--quiet"]);
+    assert_eq!(quiet, run(&["--quiet", "--verbose", "--no-progress"]));
     assert_eq!(quiet.lines().count(), 1);
     assert!(quiet.contains("3 registries, 1 mirror, 0 overrides, 5 env entries"));
 

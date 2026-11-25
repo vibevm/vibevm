@@ -354,7 +354,7 @@ pub(super) fn run_config(ctx: &output::Context, args: ShowConfigArgs) -> Result<
         viewport(),
         rule_width(),
         &layer_view::effective(&user_config),
-        ctx.is_verbose(),
+        ctx.verbose_requested(),
     ));
     Ok(())
 }
