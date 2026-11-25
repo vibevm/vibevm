@@ -30,53 +30,94 @@ fn render_with_provenance(
     let mut sections = Vec::new();
     let mut section = |label: &str, list: List| {
         if !list.rows.is_empty() {
-            sections.push(format!("{}\n{}", rule_at(label, None, rule), list.render_at(width)));
+            sections.push(format!(
+                "{}\n{}",
+                rule_at(label, None, rule),
+                list.render_at(width)
+            ));
         }
     };
     section(
         "project",
-        List::new(vec![Row::new(vec![
-            Cell::text(&report.project_name),
-            Cell::text(&report.project_version),
-        ]).meta(vec![Meta::note(&report.project)])]),
+        List::new(vec![
+            Row::new(vec![
+                Cell::text(&report.project_name),
+                Cell::text(&report.project_version),
+            ])
+            .meta(vec![Meta::note(&report.project)]),
+        ]),
     );
-    let mut registries: Vec<_> = report.registries.iter().enumerate().map(|(index, registry)| {
-        let mut meta = vec![
-            Meta::note(format!("ref {}", registry.refname)),
-            Meta::note(format!("naming {}", registry.naming)),
-            Meta::State(provenance(registry.provenance)),
-        ];
-        if index == 0 {
-            meta.push(Meta::State("primary".into()));
-        }
-        Row::new(vec![
-            Cell::text((index + 1).to_string()),
-            Cell::text(&registry.name),
-            Cell::text(&registry.url),
-        ]).meta(meta)
-    }).collect();
+    let mut registries: Vec<_> = report
+        .registries
+        .iter()
+        .enumerate()
+        .map(|(index, registry)| {
+            let mut meta = vec![
+                Meta::note(format!("ref {}", registry.refname)),
+                Meta::note(format!("naming {}", registry.naming)),
+                Meta::State(provenance(registry.provenance)),
+            ];
+            if index == 0 {
+                meta.push(Meta::State("primary".into()));
+            }
+            Row::new(vec![
+                Cell::text((index + 1).to_string()),
+                Cell::text(&registry.name),
+                Cell::text(&registry.url),
+            ])
+            .meta(meta)
+        })
+        .collect();
     if registries.is_empty() {
         registries.push(Row::new(vec![Cell::text("none")]).dim(true));
     }
-    section("registries · primary first", List::new(registries).meta_column());
-    section("mirrors", List::new(report.mirrors.iter().map(|mirror| {
-        Row::new(vec![Cell::text(&mirror.of), Cell::text(&mirror.url)]).meta(vec![
-            Meta::note(format!("priority {}", mirror.priority)),
-            Meta::State(provenance(mirror.provenance)),
-        ])
-    }).collect()).meta_column());
-    section("overrides", List::new(report.overrides.iter().map(|entry| {
-        let source = match &entry.refname {
-            Some(reference) => format!("{}@{reference}", entry.source_url),
-            None => entry.source_url.clone(),
-        };
-        let mut meta = Vec::new();
-        if let Some(reason) = &entry.reason {
-            meta.push(Meta::note(reason));
-        }
-        meta.push(Meta::State(provenance(entry.provenance)));
-        Row::new(vec![Cell::text(&entry.pkgref), Cell::text("→"), Cell::text(source)]).meta(meta)
-    }).collect()).meta_column());
+    section(
+        "registries · primary first",
+        List::new(registries).meta_column(),
+    );
+    section(
+        "mirrors",
+        List::new(
+            report
+                .mirrors
+                .iter()
+                .map(|mirror| {
+                    Row::new(vec![Cell::text(&mirror.of), Cell::text(&mirror.url)]).meta(vec![
+                        Meta::note(format!("priority {}", mirror.priority)),
+                        Meta::State(provenance(mirror.provenance)),
+                    ])
+                })
+                .collect(),
+        )
+        .meta_column(),
+    );
+    section(
+        "overrides",
+        List::new(
+            report
+                .overrides
+                .iter()
+                .map(|entry| {
+                    let source = match &entry.refname {
+                        Some(reference) => format!("{}@{reference}", entry.source_url),
+                        None => entry.source_url.clone(),
+                    };
+                    let mut meta = Vec::new();
+                    if let Some(reason) = &entry.reason {
+                        meta.push(Meta::note(reason));
+                    }
+                    meta.push(Meta::State(provenance(entry.provenance)));
+                    Row::new(vec![
+                        Cell::text(&entry.pkgref),
+                        Cell::text("→"),
+                        Cell::text(source),
+                    ])
+                    .meta(meta)
+                })
+                .collect(),
+        )
+        .meta_column(),
+    );
 
     let user = &report.user_config;
     let user_row = match &user.path {
@@ -93,8 +134,13 @@ fn render_with_provenance(
             meta.push(Meta::State(state.into()));
             Row::new(vec![Cell::text("user config"), Cell::text(path)]).meta(meta)
         }
-        None => Row::new(vec![Cell::text("user config"), Cell::text("no path resolved")])
-            .meta(vec![Meta::note("set HOME, VIBE_SETTINGS or VIBEVM_USER_CONFIG")]),
+        None => Row::new(vec![
+            Cell::text("user config"),
+            Cell::text("no path resolved"),
+        ])
+        .meta(vec![Meta::note(
+            "set HOME, VIBE_SETTINGS or VIBEVM_USER_CONFIG",
+        )]),
     };
     let site = &report.site_profile;
     let site_row = match &site.path {
@@ -114,37 +160,81 @@ fn render_with_provenance(
             meta.push(Meta::State(state.into()));
             Row::new(vec![Cell::text("site profile"), Cell::text(path)]).meta(meta)
         }
-        None => Row::new(vec![Cell::text("site profile"), Cell::text("no settings directory resolved")]),
+        None => Row::new(vec![
+            Cell::text("site profile"),
+            Cell::text("no settings directory resolved"),
+        ]),
     };
-    section("layers", List::new(vec![
-        user_row,
-        site_row,
-        Row::new(vec![Cell::text("version selection"), Cell::text(report.versions.select)])
+    section(
+        "layers",
+        List::new(vec![
+            user_row,
+            site_row,
+            Row::new(vec![
+                Cell::text("version selection"),
+                Cell::text(report.versions.select),
+            ])
             .meta(vec![Meta::State(report.versions.provenance.into())]),
-    ]).meta_column());
-    section("effective choices", List::new(effective.to_vec()).meta_column());
-    section("environment", List::new(report.env.iter().map(|entry| {
-        let mut row = Row::new(vec![Cell::text(entry.name), Cell::text(entry.value.as_deref().unwrap_or("unset"))])
-            .meta(vec![Meta::State(entry.provenance.into())]);
-        if verbose {
-            for line in crate::output::language::wrap(entry.description, width.saturating_sub(4)) {
-                row = row.child(line);
-            }
-        }
-        row
-    }).collect()).meta_column().children_under(0));
-    section("invoked by", List::new(vec![
-        Row::new(vec![Cell::text(report.invoked_by_resolution.value.as_deref().unwrap_or("unset"))])
-            .meta(vec![Meta::State(report.invoked_by_resolution.provenance.into())]),
-    ]).meta_column());
+        ])
+        .meta_column(),
+    );
+    section(
+        "effective choices",
+        List::new(effective.to_vec()).meta_column(),
+    );
+    section(
+        "environment",
+        List::new(
+            report
+                .env
+                .iter()
+                .map(|entry| {
+                    let mut row = Row::new(vec![
+                        Cell::text(entry.name),
+                        Cell::text(entry.value.as_deref().unwrap_or("unset")),
+                    ])
+                    .meta(vec![Meta::State(entry.provenance.into())]);
+                    if verbose {
+                        for line in crate::output::language::wrap(
+                            entry.description,
+                            width.saturating_sub(4),
+                        ) {
+                            row = row.child(line);
+                        }
+                    }
+                    row
+                })
+                .collect(),
+        )
+        .meta_column()
+        .children_under(0),
+    );
+    section(
+        "invoked by",
+        List::new(vec![
+            Row::new(vec![Cell::text(
+                report
+                    .invoked_by_resolution
+                    .value
+                    .as_deref()
+                    .unwrap_or("unset"),
+            )])
+            .meta(vec![Meta::State(
+                report.invoked_by_resolution.provenance.into(),
+            )]),
+        ])
+        .meta_column(),
+    );
     sections.join("\n\n")
 }
 
 #[cfg(test)]
 mod tests {
+    use super::super::{
+        ConfigEnvEntry, ConfigInvokedBy, ConfigMirror, ConfigRegistry, ConfigSiteProfileSummary,
+        ConfigUserConfigSummary, ConfigVersions,
+    };
     use super::*;
-    use super::super::{ConfigEnvEntry, ConfigInvokedBy, ConfigMirror, ConfigRegistry,
-        ConfigSiteProfileSummary, ConfigUserConfigSummary, ConfigVersions};
 
     #[test]
     fn show_config_renders_sections_as_lists() {
@@ -158,28 +248,50 @@ mod tests {
                 ("team", "file:///team/registry", "vibe.toml"),
                 ("mine", "file:///home/me/registry", "~/.vibe/registry.toml"),
                 ("corp", "file:///site/corp", "site-profile.toml"),
-            ].into_iter().map(|(name, url, provenance)| ConfigRegistry {
-                name: name.into(), url: url.into(), refname: "main".into(),
-                naming: "fqdn".into(), provenance,
-            }).collect(),
+            ]
+            .into_iter()
+            .map(|(name, url, provenance)| ConfigRegistry {
+                name: name.into(),
+                url: url.into(),
+                refname: "main".into(),
+                naming: "fqdn".into(),
+                provenance,
+            })
+            .collect(),
             mirrors: vec![ConfigMirror {
-                of: "corp".into(), url: "file:///site/corp-mirror".into(),
-                priority: 5, provenance: "site-profile.toml",
+                of: "corp".into(),
+                url: "file:///site/corp-mirror".into(),
+                priority: 5,
+                provenance: "site-profile.toml",
             }],
             overrides: vec![],
             env: vec![ConfigEnvEntry {
-                name: "VIBEVM_PUBLISH_TOKEN_GITVERSE", value: None,
-                provenance: "default", description: "Publish token.",
+                name: "VIBEVM_PUBLISH_TOKEN_GITVERSE",
+                value: None,
+                provenance: "default",
+                description: "Publish token.",
             }],
             user_config: ConfigUserConfigSummary {
-                path: Some("/u/.vibe/config.toml".into()), loaded: true, error: None,
+                path: Some("/u/.vibe/config.toml".into()),
+                loaded: true,
+                error: None,
             },
             site_profile: ConfigSiteProfileSummary {
-                path: Some("/u/.vibe/site-profile.toml".into()), loaded: true,
-                name: Some("corp-site".into()), error: None,
+                path: Some("/u/.vibe/site-profile.toml".into()),
+                loaded: true,
+                name: Some("corp-site".into()),
+                error: None,
             },
-            versions: ConfigVersions { select: "newest", provenance: "default", description: "…" },
-            invoked_by_resolution: ConfigInvokedBy { value: None, provenance: "none", description: "…" },
+            versions: ConfigVersions {
+                select: "newest",
+                provenance: "default",
+                description: "…",
+            },
+            invoked_by_resolution: ConfigInvokedBy {
+                value: None,
+                provenance: "none",
+                description: "…",
+            },
         };
         let expected = "── project ─────────────────────────────────────────────────────────────────────────────────────────
   app  0.1.0 · /srv/app

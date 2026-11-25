@@ -26,7 +26,12 @@ pub fn versions_from_global_with_presence_with_operation(
     offline: bool,
     operation: &SourceOperation,
 ) -> Result<Option<Vec<semver::Version>>, ResolveError> {
-    let resolver = global_resolver(settings_root, &format!("{group}/{name}"), offline, operation)?;
+    let resolver = global_resolver(
+        settings_root,
+        &format!("{group}/{name}"),
+        offline,
+        operation,
+    )?;
     from_resolver(&resolver, group, name)
 }
 
@@ -36,13 +41,12 @@ fn from_resolver(
     name: &str,
 ) -> Result<Option<Vec<semver::Version>>, ResolveError> {
     let mut found = None;
-    let local_versions = |local: &vibe_registry::LocalRegistry| {
-        match local.list_versions(group, name) {
+    let local_versions =
+        |local: &vibe_registry::LocalRegistry| match local.list_versions(group, name) {
             Ok(versions) => Ok(Some(versions)),
             Err(RegistryError::UnknownPackage { .. }) => Ok(None),
             Err(error) => Err(error),
-        }
-    };
+        };
     let mut merge = |contribution| merge_presence(&mut found, contribution, group, name);
     match resolver {
         InstallResolver::Local(local, _) => merge(local_versions(local))?,
@@ -170,7 +174,10 @@ mod tests {
             out.contains("1 passed; 0 failed"),
             "no matched child test: {out}"
         );
-        assert!(out.contains(RECEIPT), "missing API assertion receipt: {out}");
+        assert!(
+            out.contains(RECEIPT),
+            "missing API assertion receipt: {out}"
+        );
         assert!(fs::metadata(root.join("stdout")).unwrap().len() <= 65_536);
         assert!(fs::metadata(root.join("stderr")).unwrap().len() <= 65_536);
     }
@@ -253,10 +260,7 @@ mod tests {
                     held: multi,
                     solver: None,
                 };
-                assert_eq!(
-                    query(&held, "tool"),
-                    expected(&["1.0.0", "2.0.0", "3.0.0"])
-                );
+                assert_eq!(query(&held, "tool"), expected(&["1.0.0", "2.0.0", "3.0.0"]));
                 assert_eq!(query(&held, "missing"), None);
                 let options = PackageSourceOptions {
                     no_prefer_local: true,
@@ -355,8 +359,10 @@ mod tests {
             )
         )));
         assert_eq!(
-            versions_from_global_with_presence_with_operation(root, group, "tool", false, operation)
-                .unwrap(),
+            versions_from_global_with_presence_with_operation(
+                root, group, "tool", false, operation
+            )
+            .unwrap(),
             expected(&["2.1.0"])
         );
         // A concrete template domain returns from the existing registry walk;

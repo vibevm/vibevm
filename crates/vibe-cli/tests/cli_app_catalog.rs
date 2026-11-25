@@ -94,7 +94,11 @@ fn collection_create_ends_with_revision() {
     let revision = before["revision"].as_u64().unwrap();
     assert!(revision > 0, "{before}");
     let lines: Vec<_> = created.lines().collect();
-    assert_eq!(lines.len(), 1, "creation must not list the layer: {created}");
+    assert_eq!(
+        lines.len(),
+        1,
+        "creation must not list the layer: {created}"
+    );
     let last = lines.last().unwrap();
     assert!(last.contains("created collection tools"), "{created}");
     assert!(last.contains(&format!("revision {revision}")), "{created}");
@@ -112,7 +116,10 @@ fn collection_create_ends_with_revision() {
     let listed = ok(&run(&["app", "collection", "-g", "list"]));
     let lines: Vec<_> = listed.lines().collect();
     assert!(lines[0].contains("collections"), "{listed}");
-    assert!(lines[0].contains(&format!("revision {revision}")), "{listed}");
+    assert!(
+        lines[0].contains(&format!("revision {revision}")),
+        "{listed}"
+    );
     assert!(lines[0].starts_with("── "), "{listed}");
     assert_eq!(lines[1], "  tools", "{listed}");
     assert_eq!(lines.len(), 2, "{listed}");
@@ -121,7 +128,10 @@ fn collection_create_ends_with_revision() {
     assert_eq!(quiet.lines().count(), 1, "{quiet}");
     assert!(quiet.contains(&format!("revision {revision}")), "{quiet}");
     let after = json(&run(&["app", "collection", "-g", "list", "--json"]));
-    assert_eq!(before, after, "a human listing must not change the user layer");
+    assert_eq!(
+        before, after,
+        "a human listing must not change the user layer"
+    );
 }
 
 #[test]

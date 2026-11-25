@@ -155,7 +155,10 @@ pub(super) fn emit(report: &SelfApplyReport, ctx: &output::Context) -> anyhow::R
         let receipt = if report.action == ApplyAction::Apply {
             vibe_core::settings::site_receipt_path().map(|path| path.display().to_string())
         } else {
-            report.profile.as_ref().map(|profile| profile.stored.clone())
+            report
+                .profile
+                .as_ref()
+                .map(|profile| profile.stored.clone())
         };
         if let Some(receipt) = receipt {
             ctx.trailer_at(&what, &receipt);

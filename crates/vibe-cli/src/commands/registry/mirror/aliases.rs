@@ -47,9 +47,8 @@ pub(super) fn alias_merge(
         .as_ref()
         .map(record::MirrorRecord::carried_aliases)
         .unwrap_or_default();
-    let holds = |target: &vibe_index::types::AliasTarget| {
-        holds_target(target_index, planned, target)
-    };
+    let holds =
+        |target: &vibe_index::types::AliasTarget| holds_target(target_index, planned, target);
     let mut merge = crate::commands::registry::alias::mirrored(
         &listing.aliases,
         &target_table,
@@ -60,9 +59,11 @@ pub(super) fn alias_merge(
         // This gate sees the pre-copy index. Only an absent target that
         // this plan actually supplies may pass; all other faults still drop.
         if let vibe_index::aliases::AliasFault::TargetAbsent { alias, target } = &fault {
-            if merge.table.get(alias).is_some_and(|row| {
-                vibe_index::aliases::spell(row) == *target && holds(row)
-            }) {
+            if merge
+                .table
+                .get(alias)
+                .is_some_and(|row| vibe_index::aliases::spell(row) == *target && holds(row))
+            {
                 continue;
             }
         }
@@ -93,10 +94,14 @@ pub(super) fn drop_warning(
 ) -> String {
     let held = target.split_once('/').is_some_and(|(group, name)| {
         group.parse().is_ok_and(|group| {
-            holds_target(index, planned, &vibe_index::types::AliasTarget {
-                group,
-                name: name.into(),
-            })
+            holds_target(
+                index,
+                planned,
+                &vibe_index::types::AliasTarget {
+                    group,
+                    name: name.into(),
+                },
+            )
         })
     });
     if held {

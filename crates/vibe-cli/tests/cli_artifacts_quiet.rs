@@ -28,7 +28,11 @@ fn quiet_artifacts_where_retains_source() {
         .env("NO_COLOR", "1")
         .output()
         .unwrap();
-    assert!(result.status.success(), "{}", String::from_utf8_lossy(&result.stderr));
+    assert!(
+        result.status.success(),
+        "{}",
+        String::from_utf8_lossy(&result.stderr)
+    );
     let stdout = String::from_utf8(result.stdout).unwrap();
     assert_eq!(stdout.matches("vibe releases").count(), 1);
     assert!(stdout.contains("localdir"));

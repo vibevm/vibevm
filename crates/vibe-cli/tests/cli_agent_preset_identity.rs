@@ -40,8 +40,14 @@ impl Fixture {
             .env("HOME", &self.home)
             .env("USERPROFILE", &self.home)
             .env("VIBE_SETTINGS", &self.settings)
-            .env("VIBE_REGISTRY_CACHE", self.root.path().join("registry-cache"))
-            .env("VIBEVM_SEARCH_CACHE_DIR", self.root.path().join("search-cache"))
+            .env(
+                "VIBE_REGISTRY_CACHE",
+                self.root.path().join("registry-cache"),
+            )
+            .env(
+                "VIBEVM_SEARCH_CACHE_DIR",
+                self.root.path().join("search-cache"),
+            )
             .env("VIBEVM_INSTALL_ROOT", self.root.path().join("applications"))
             .env("VIBE_NO_DEFAULT_REGISTRY", "1")
             .env("NO_COLOR", "1")

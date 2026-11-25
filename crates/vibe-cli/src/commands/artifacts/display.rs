@@ -17,7 +17,11 @@ pub(super) fn render(ctx: &output::Context, report: &ArtifactsWhereReport, packa
     }
 }
 
-fn report_text(report: &ArtifactsWhereReport, package: Option<&str>, width: Option<usize>) -> String {
+fn report_text(
+    report: &ArtifactsWhereReport,
+    package: Option<&str>,
+    width: Option<usize>,
+) -> String {
     let release = &report.release;
     let separator = language::heading_separator();
     let label = format!(
@@ -25,10 +29,18 @@ fn report_text(report: &ArtifactsWhereReport, package: Option<&str>, width: Opti
         release_source::kind_label(release.source.clone()),
         release.location
     );
-    let mut sections = vec![language::rule_at(&label, Some(&release.from), width.unwrap_or(80))];
+    let mut sections = vec![language::rule_at(
+        &label,
+        Some(&release.from),
+        width.unwrap_or(80),
+    )];
     let mut files = Vec::new();
     if let Some(dir) = &release.example_dir {
-        let version = dir.trim_end_matches(['/', '\\']).rsplit(['/', '\\']).next().unwrap_or(dir);
+        let version = dir
+            .trim_end_matches(['/', '\\'])
+            .rsplit(['/', '\\'])
+            .next()
+            .unwrap_or(dir);
         for file in &release.files {
             files.extend(body_lines(&format!("{version}/{file}"), width));
         }
@@ -57,14 +69,32 @@ fn report_text(report: &ArtifactsWhereReport, package: Option<&str>, width: Opti
         ),
     });
     if let Some(package) = package {
-        sections.push(language::rule_at(&format!("inputs of {package}"), None, width.unwrap_or(80)));
-        let option_width = report.inputs.iter().map(|i| cells(&i.option)).max().unwrap_or(0);
-        let file_width = report.inputs.iter().map(|i| cells(i.file.as_deref().unwrap_or("<unnamed>"))).max().unwrap_or(0);
+        sections.push(language::rule_at(
+            &format!("inputs of {package}"),
+            None,
+            width.unwrap_or(80),
+        ));
+        let option_width = report
+            .inputs
+            .iter()
+            .map(|i| cells(&i.option))
+            .max()
+            .unwrap_or(0);
+        let file_width = report
+            .inputs
+            .iter()
+            .map(|i| cells(i.file.as_deref().unwrap_or("<unnamed>")))
+            .max()
+            .unwrap_or(0);
         let mut rows = Vec::new();
         for input in &report.inputs {
             let file = input.file.as_deref().unwrap_or("<unnamed>");
             let digest: String = input.sha256.chars().take(8).collect();
-            let end = if language::rule_glyph().to_string() == "-" { "..." } else { "…" };
+            let end = if language::rule_glyph().to_string() == "-" {
+                "..."
+            } else {
+                "…"
+            };
             let status = match input.status {
                 DropStatus::Present => "present",
                 DropStatus::Missing => "missing",
@@ -143,7 +173,9 @@ fn indented_lines(text: &str, width: Option<usize>, indent: usize) -> Vec<String
 #[cfg(test)]
 mod tests {
     use super::*;
-    use vibe_wire::generated::artifacts_where_report::{InputWhere, ReleaseSourceKind, ReleaseWhere};
+    use vibe_wire::generated::artifacts_where_report::{
+        InputWhere, ReleaseSourceKind, ReleaseWhere,
+    };
 
     #[test]
     fn artifacts_where_sections_and_input_rows() {
@@ -155,7 +187,10 @@ mod tests {
                 location: "/drop".into(),
                 from: "[self] in /settings/config.toml".into(),
                 example_dir: Some("/drop/v1.0.12".into()),
-                files: vec!["DISTRIBUTIONS.json".into(), "vibevm-1.0.12-x86_64-unknown-linux-gnu.zip".into()],
+                files: vec![
+                    "DISTRIBUTIONS.json".into(),
+                    "vibevm-1.0.12-x86_64-unknown-linux-gnu.zip".into(),
+                ],
             },
             packages: None,
             inputs: vec![InputWhere {
@@ -175,10 +210,18 @@ mod tests {
         second.searched = vec!["/packages/node.tar.gz".into()];
         report.inputs.push(second);
         let text = report_text(&report, Some("org.vibevm.node/node"), Some(100));
-        assert_eq!(text.lines().next().unwrap(), "── vibe releases · localdir /drop ────────────────────────────────── [self] in /settings/config.toml");
-        assert!(text.contains(&format!("\n\n{}\n\n", language::rule_at("inputs of org.vibevm.node/node", None, 100))));
+        assert_eq!(
+            text.lines().next().unwrap(),
+            "── vibe releases · localdir /drop ────────────────────────────────── [self] in /settings/config.toml"
+        );
+        assert!(text.contains(&format!(
+            "\n\n{}\n\n",
+            language::rule_at("inputs of org.vibevm.node/node", None, 100)
+        )));
         assert_eq!(text.matches("inputs of org.vibevm.node/node").count(), 1);
-        assert!(text.contains("\n\n  v1.0.12/DISTRIBUTIONS.json\n  v1.0.12/vibevm-1.0.12-x86_64-unknown-linux-gnu.zip"));
+        assert!(text.contains(
+            "\n\n  v1.0.12/DISTRIBUTIONS.json\n  v1.0.12/vibevm-1.0.12-x86_64-unknown-linux-gnu.zip"
+        ));
         assert!(text.contains("sha256 518674de…  [no drop]"));
         assert!(text.contains("[missing]\n    put it at /packages/node.tar.gz"));
         assert!(!text.contains(&sha));
@@ -202,7 +245,10 @@ mod tests {
         for status in [DropStatus::Present, DropStatus::Mismatch] {
             report.inputs[0].status = status.clone();
             let text = report_text(&report, Some("node"), None);
-            assert!(text.contains(match status { DropStatus::Present => "[present]", _ => "[mismatch]" }));
+            assert!(text.contains(match status {
+                DropStatus::Present => "[present]",
+                _ => "[mismatch]",
+            }));
         }
         report.inputs.clear();
         report.release.example_dir = None;

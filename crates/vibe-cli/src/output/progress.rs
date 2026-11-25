@@ -217,7 +217,9 @@ impl ProgressRenderer {
     pub(super) fn release_input(&self) {
         if self.deferred.swap(false, Ordering::SeqCst) {
             if let Renderer::Interactive(renderer) = &self.renderer {
-                renderer.multi.set_draw_target(ProgressDrawTarget::stderr_with_hz(12));
+                renderer
+                    .multi
+                    .set_draw_target(ProgressDrawTarget::stderr_with_hz(12));
             }
         }
     }
@@ -271,7 +273,11 @@ impl ProgressObserver for ProgressRenderer {
     fn observe(&self, event: ProgressEvent) {
         match &self.renderer {
             Renderer::Interactive(renderer) => renderer.observe(
-                event, self.verbose, &self.logs, self.deferred.load(Ordering::SeqCst)),
+                event,
+                self.verbose,
+                &self.logs,
+                self.deferred.load(Ordering::SeqCst),
+            ),
             Renderer::Plain(renderer) => renderer.observe(event, self.verbose, &self.logs),
         }
     }
@@ -297,7 +303,14 @@ impl InteractiveRenderer {
             return;
         };
         if let Some(end) = ending(&event.kind) {
-            self.terminal_row(&mut tasks, event.task_id, &end, event.elapsed, logs, deferred);
+            self.terminal_row(
+                &mut tasks,
+                event.task_id,
+                &end,
+                event.elapsed,
+                logs,
+                deferred,
+            );
             return;
         }
         match event.kind {
@@ -315,7 +328,8 @@ impl InteractiveRenderer {
                 // `#trailer`). A plain stream still says so while it waits.
                 // The first block of the list stands one blank line off the
                 // block before it; its row will then join it with none.
-                if !deferred && !headline.command
+                if !deferred
+                    && !headline.command
                     && headline.depth == 0
                     && language::before(Stream::Err, STEPS) == "\n"
                 {
@@ -395,7 +409,10 @@ impl InteractiveRenderer {
                     } else if let Some(task) = tasks.get_mut(&event.task_id) {
                         push_tail(&self.multi, task, &line, &panel);
                     }
-                } else if !deferred && verbose && let Some(task) = tasks.get(&event.task_id) {
+                } else if !deferred
+                    && verbose
+                    && let Some(task) = tasks.get(&event.task_id)
+                {
                     let _ = self.multi.println(format!(
                         "{}{}",
                         task.headline.under(),

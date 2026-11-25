@@ -116,7 +116,10 @@ pub(super) fn report(
         .iter()
         .filter(|o| o.action == Action::Created)
         .count();
-    let kept = outcomes.iter().filter(|o| o.action != Action::Created).count();
+    let kept = outcomes
+        .iter()
+        .filter(|o| o.action != Action::Created)
+        .count();
 
     if ctx.is_json() {
         use vibe_wire::generated::init_report::{
@@ -181,18 +184,24 @@ fn human_counts(outcomes: &[Outcome]) -> (usize, usize, usize) {
             *action = outcome.action;
         }
     }
-    paths.values().fold((0, 0, 0), |(c, r, k), action| match action {
-        Action::Created => (c + 1, r, k),
-        Action::Regenerated => (c, r + 1, k),
-        Action::Kept => (c, r, k + 1),
-    })
+    paths
+        .values()
+        .fold((0, 0, 0), |(c, r, k), action| match action {
+            Action::Created => (c + 1, r, k),
+            Action::Regenerated => (c, r + 1, k),
+            Action::Kept => (c, r, k + 1),
+        })
 }
 
 fn next_steps(role: &str, outcomes: &[Outcome]) -> String {
     if role == "package"
         && let Some(manifest) = outcomes.iter().find(|o| o.reason == "package manifest")
     {
-        return format!("  {}\n  {}", hint("edit the package manifest next"), manifest.path);
+        return format!(
+            "  {}\n  {}",
+            hint("edit the package manifest next"),
+            manifest.path
+        );
     }
     format!(
         "  {}\n  {}\n  {}\n  {}\n  {}",
@@ -208,7 +217,9 @@ fn next_steps(role: &str, outcomes: &[Outcome]) -> String {
 #[test]
 fn human_counts_created_then_regenerated() {
     let outcomes = [Action::Created, Action::Regenerated].map(|action| Outcome {
-        path: "CLAUDE.md".into(), action, reason: "boot artifact",
+        path: "CLAUDE.md".into(),
+        action,
+        reason: "boot artifact",
     });
     assert_eq!(human_counts(&outcomes), (0, 1, 0));
 }

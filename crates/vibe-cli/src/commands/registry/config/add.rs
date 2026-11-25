@@ -174,7 +174,10 @@ pub(in crate::commands::registry) fn run_add(
         return Ok(());
     }
 
-    let mut meta = vec![Meta::note(kind.to_string()), Meta::note(file.scope().as_str())];
+    let mut meta = vec![
+        Meta::note(kind.to_string()),
+        Meta::note(file.scope().as_str()),
+    ];
     if position_label == "primary" {
         meta.push(Meta::note("primary"));
     }

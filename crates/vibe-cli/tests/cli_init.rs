@@ -446,21 +446,55 @@ fn init_package_counts_regenerated_files() {
     fs::create_dir_all(&home).unwrap();
     fs::create_dir_all(&settings).unwrap();
     let dir = tempfile::tempdir().unwrap();
-    let out = user.vibe()
-        .env("HOME", &home).env("USERPROFILE", &home).env("VIBE_SETTINGS", &settings)
+    let out = user
+        .vibe()
+        .env("HOME", &home)
+        .env("USERPROFILE", &home)
+        .env("VIBE_SETTINGS", &settings)
         .current_dir(dir.path())
-        .args(["init", "package", "org.demo/app1", "--kind", "app", "--unattended", "--no-registry"])
-        .output().unwrap();
-    assert!(out.status.success(), "{}", String::from_utf8_lossy(&out.stderr));
+        .args([
+            "init",
+            "package",
+            "org.demo/app1",
+            "--kind",
+            "app",
+            "--unattended",
+            "--no-registry",
+        ])
+        .output()
+        .unwrap();
+    assert!(
+        out.status.success(),
+        "{}",
+        String::from_utf8_lossy(&out.stderr)
+    );
     let stdout = String::from_utf8_lossy(&out.stdout);
-    assert!(stdout.contains("── creating package org.demo/app1 (app, recipe) in "), "{stdout}");
-    assert!(stdout.contains("\n✓ updated  CLAUDE.md · regenerated\n"), "{stdout}");
-    assert!(stdout.contains("\n○ kept     vibevm/vibespecs/boot/.vibe-boot-artifacts.lock · retained\n"), "{stdout}");
+    assert!(
+        stdout.contains("── creating package org.demo/app1 (app, recipe) in "),
+        "{stdout}"
+    );
+    assert!(
+        stdout.contains("\n✓ updated  CLAUDE.md · regenerated\n"),
+        "{stdout}"
+    );
+    assert!(
+        stdout
+            .contains("\n○ kept     vibevm/vibespecs/boot/.vibe-boot-artifacts.lock · retained\n"),
+        "{stdout}"
+    );
     assert!(stdout.contains("\n  edit the package manifest next\n  vibevm/vibepacks/org.demo/app1/v0.1.0/vibe.toml\n"), "{stdout}");
     let trailer = stdout.lines().last().unwrap();
-    assert!(trailer.starts_with("✻ initialized package org.demo/app1 · 12 files created · 4 regenerated · "), "{stdout}");
+    assert!(
+        trailer.starts_with(
+            "✻ initialized package org.demo/app1 · 12 files created · 4 regenerated · "
+        ),
+        "{stdout}"
+    );
     let root = dir.path().canonicalize().unwrap();
-    assert!(trailer.ends_with(&format!(" · {}", root.display())), "{stdout}");
+    assert!(
+        trailer.ends_with(&format!(" · {}", root.display())),
+        "{stdout}"
+    );
 }
 
 fn append_manifest_extension(path: &std::path::Path, declaration: &str) {

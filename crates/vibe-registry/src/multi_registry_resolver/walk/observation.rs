@@ -46,9 +46,9 @@ impl VersionPresence {
             Err(RegistryError::UnknownPackage { .. }) if !self.indeterminate => Ok(None),
             Err(RegistryError::PackageNotFoundEverywhere { attempts, .. })
                 if !self.indeterminate
-                    && attempts.iter().all(|attempt| {
-                        matches!(attempt.status, WalkAttemptStatus::NotFound)
-                    }) =>
+                    && attempts
+                        .iter()
+                        .all(|attempt| matches!(attempt.status, WalkAttemptStatus::NotFound)) =>
             {
                 Ok(self.present.then(Vec::new))
             }
@@ -159,9 +159,7 @@ impl MultiRegistryResolver {
     ///     Ok(())
     /// }
     /// ```
-    #[specmark::spec(
-        implements = "spec://org.vibevm.core/vibevm/common/PROP-075#VERSIONS-LIST"
-    )]
+    #[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-075#VERSIONS-LIST")]
     pub fn list_versions_with_presence(
         &self,
         group: &Group,

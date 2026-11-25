@@ -86,7 +86,11 @@ fn registry_test_separates_missing_git_and_localdir() {
     let diagnostic = format!("git ls-remote exit {exit}");
     let mut registries = String::new();
     for (name, kind, url) in [
-        ("local", "localdir", format!("file://{}", reachable.display())),
+        (
+            "local",
+            "localdir",
+            format!("file://{}", reachable.display()),
+        ),
         ("brokendir", "localdir", missing_dir),
         ("brokengit", "git", missing_git.clone()),
         ("brokenmono", "monorepo", missing_git),
@@ -130,7 +134,9 @@ fn registry_test_separates_missing_git_and_localdir() {
                 ("brokenmono", "unreachable"),
             ] {
                 assert!(
-                    stdout.lines().any(|line| line.contains(name) && line.contains(status)),
+                    stdout
+                        .lines()
+                        .any(|line| line.contains(name) && line.contains(status)),
                     "{stdout}"
                 );
             }

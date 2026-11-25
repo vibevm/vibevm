@@ -56,7 +56,11 @@ pub(super) fn render(
                     "mirror {} · priority {}{}",
                     mirror.url,
                     mirror.priority,
-                    if mirror.of == "*" { " · any registry" } else { "" },
+                    if mirror.of == "*" {
+                        " · any registry"
+                    } else {
+                        ""
+                    },
                 ));
             }
             row
@@ -65,7 +69,10 @@ pub(super) fn render(
     let mut rendered = format!(
         "{}\n{}",
         rule_at("registries · declared order", None, rule),
-        List::new(rows).meta_column().children_under(1).render_at(width),
+        List::new(rows)
+            .meta_column()
+            .children_under(1)
+            .render_at(width),
     );
     if registries.iter().any(|row| row.disabled_by_source_policy) {
         rendered.push_str(&hint_line(
@@ -85,7 +92,11 @@ pub(super) fn render(
                 let source = format!(
                     "{}{}",
                     entry.source_url,
-                    entry.refname.as_deref().map(|r| format!("@{r}")).unwrap_or_default(),
+                    entry
+                        .refname
+                        .as_deref()
+                        .map(|r| format!("@{r}"))
+                        .unwrap_or_default(),
                 );
                 let mut row = Row::new(vec![
                     Cell::text(&entry.pkgref),
@@ -123,9 +134,15 @@ pub(super) fn counts(
     overrides: &[ListReportOverride],
 ) -> String {
     let n = registries.len();
-    let m = registries.iter().map(|row| row.mirrors.len()).sum::<usize>();
+    let m = registries
+        .iter()
+        .map(|row| row.mirrors.len())
+        .sum::<usize>();
     let k = overrides.len();
-    let d = registries.iter().filter(|row| row.disabled_by_source_policy).count();
+    let d = registries
+        .iter()
+        .filter(|row| row.disabled_by_source_policy)
+        .count();
     let mut counts = format!(
         "{n} {} · {m} {} · {k} {}",
         if n == 1 { "registry" } else { "registries" },

@@ -171,7 +171,10 @@ sys.stdout.buffer.write(captured)
         .arg(if both_terminals { "both" } else { "stdout" })
         .current_dir(private.path())
         .env_clear()
-        .env("PATH", std::env::var_os("PATH").unwrap_or_else(|| "/usr/bin:/bin".into()))
+        .env(
+            "PATH",
+            std::env::var_os("PATH").unwrap_or_else(|| "/usr/bin:/bin".into()),
+        )
         .env("HOME", &home)
         .env("XDG_CONFIG_HOME", &home)
         .env("VIBE_SETTINGS", &settings)
@@ -204,15 +207,21 @@ fn check_terminal_width_and_warn_colour() {
         vibe_core::layout::SYSTEM_META_JSON,
         vibe_core::layout::AGENT_LANE_MD,
     ] {
-        assert!(!boot.join(artifact).exists(), "fixture must lack {artifact}");
+        assert!(
+            !boot.join(artifact).exists(),
+            "fixture must lack {artifact}"
+        );
     }
 
     // stderr is a file: stdout alone must supply the rule's 100 columns.
     let stdout_only = check_pty(project.path(), false);
     let plain = console::strip_ansi_codes(&stdout_only);
-    assert!(plain.lines().any(|line| {
-        line.starts_with("! system_prompt  ") && line.contains("missing")
-    }), "the opted-in fixture must produce a warning: {plain}");
+    assert!(
+        plain
+            .lines()
+            .any(|line| { line.starts_with("! system_prompt  ") && line.contains("missing") }),
+        "the opted-in fixture must produce a warning: {plain}"
+    );
     let rule = plain
         .lines()
         .find(|line| line.starts_with("── ") && line.contains(" findings in "))
@@ -255,7 +264,10 @@ fn the_unattended_init_reads_as_its_golden() {
         .unwrap();
     assert!(initialised.status.success(), "{}", screen(&initialised));
     let canonical = root.path().canonicalize().unwrap();
-    golden("init-wizard", &normalise(&screen(&initialised), &[(canonical.as_path(), "<root>")]));
+    golden(
+        "init-wizard",
+        &normalise(&screen(&initialised), &[(canonical.as_path(), "<root>")]),
+    );
 }
 
 #[test]

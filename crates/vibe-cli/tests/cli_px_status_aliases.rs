@@ -27,7 +27,11 @@ fn no_completion(output: &Output) {
     let err = String::from_utf8_lossy(&output.stderr);
     assert!(err.trim().is_empty(), "unexpected progress: {err}");
     assert!(!out.contains('✻') && !out.contains("[done]"), "{out}");
-    assert_eq!(out.lines().filter(|line| !line.starts_with(' ')).count(), 1, "{out}");
+    assert_eq!(
+        out.lines().filter(|line| !line.starts_with(' ')).count(),
+        1,
+        "{out}"
+    );
 }
 
 #[test]
@@ -72,8 +76,14 @@ fn px_status_aliases_render_one_block() {
         no_completion(&output);
         assert!(text.starts_with(&expected), "{text}");
         assert!(text.contains(&format!("  asset  {asset_name}")), "{text}");
-        assert!(text.lines().any(|line| line == "  vibe self px install"), "{text}");
-        assert!(text.contains("  vibe self px install --from <archive|directory|executable>"), "{text}");
+        assert!(
+            text.lines().any(|line| line == "  vibe self px install"),
+            "{text}"
+        );
+        assert!(
+            text.contains("  vibe self px install --from <archive|directory|executable>"),
+            "{text}"
+        );
         assert!(!text.contains('`') && !text.contains('\x1b'), "{text}");
         missing.push(text);
     }
@@ -100,16 +110,23 @@ fn px_status_aliases_render_one_block() {
         let output = cmd().args(alias).output().unwrap();
         let text = stdout(&output);
         no_completion(&output);
-        assert!(text.starts_with(&format!("✓ px  installed · {program}")), "{text}");
+        assert!(
+            text.starts_with(&format!("✓ px  installed · {program}")),
+            "{text}"
+        );
         for (label, value) in [
             ("reports", "px fixture 9.9.9"),
             ("read from", own.to_str().unwrap()),
             ("sha256", digest.as_str()),
         ] {
-            assert!(text.lines().any(|line| {
-                line.trim_start().strip_prefix(label)
-                    .is_some_and(|tail| tail.starts_with("   ") && tail.trim() == value)
-            }), "missing {label} {value}: {text}");
+            assert!(
+                text.lines().any(|line| {
+                    line.trim_start()
+                        .strip_prefix(label)
+                        .is_some_and(|tail| tail.starts_with("   ") && tail.trim() == value)
+                }),
+                "missing {label} {value}: {text}"
+            );
         }
         assert!(!text.to_lowercase().contains("verif"), "{text}");
         assert!(!text.contains("vibe self px install"), "{text}");

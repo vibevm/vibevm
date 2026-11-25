@@ -52,7 +52,11 @@ fn planned(decision: Decision) -> plan::Planned {
 fn assert_dropped(merge: &crate::commands::registry::alias::MirrorMerge, alias: &str) {
     assert_eq!(merge.table.get(alias), None);
     assert!(!merge.recorded().iter().any(|(held, _)| held == alias));
-    assert!(merge.dropped.contains(&(alias.into(), "org.x/node-runtime".into())));
+    assert!(
+        merge
+            .dropped
+            .contains(&(alias.into(), "org.x/node-runtime".into()))
+    );
 }
 
 #[test]
@@ -64,10 +68,13 @@ fn mirror_alias_uses_projected_target() {
     let index = index();
     let listing = listing();
     for decision in [Decision::Copy, Decision::Update] {
-        let merge = alias_merge(&listing, &[planned(decision)], &index, root.path(), &None)
-            .unwrap();
+        let merge =
+            alias_merge(&listing, &[planned(decision)], &index, root.path(), &None).unwrap();
         assert_eq!(merge.table.get("node"), Some(&target()));
-        assert_eq!(merge.recorded(), vec![("node".into(), "org.x/node-runtime".into())]);
+        assert_eq!(
+            merge.recorded(),
+            vec![("node".into(), "org.x/node-runtime".into())]
+        );
         assert!(!merge.dropped.iter().any(|(alias, _)| alias == "node"));
     }
 }
@@ -98,9 +105,12 @@ fn mirror_alias_uses_projected_target_matches_exact_qualified_target() {
 fn mirror_alias_uses_projected_target_rejects_unavailable_and_alarm() {
     let root = tempfile::tempdir().unwrap();
     let index = index();
-    for decision in [Decision::Unavailable("missing".into()), Decision::Alarm("hash".into())] {
-        let merge = alias_merge(&listing(), &[planned(decision)], &index, root.path(), &None)
-            .unwrap();
+    for decision in [
+        Decision::Unavailable("missing".into()),
+        Decision::Alarm("hash".into()),
+    ] {
+        let merge =
+            alias_merge(&listing(), &[planned(decision)], &index, root.path(), &None).unwrap();
         assert_dropped(&merge, "node");
     }
 }
@@ -109,18 +119,32 @@ fn mirror_alias_uses_projected_target_rejects_unavailable_and_alarm() {
 fn mirror_alias_uses_projected_target_preserves_buried_and_grammar_checks() {
     let root = tempfile::tempdir().unwrap();
     let mut index = index();
-    index.tombstones.insert("node".into(), Tombstone {
-        reason: "retired".into(),
-        superseded_by: None,
-    });
+    index.tombstones.insert(
+        "node".into(),
+        Tombstone {
+            reason: "retired".into(),
+            superseded_by: None,
+        },
+    );
     let mut listing = listing();
     listing.aliases.insert("bad/name", target());
-    let merge = alias_merge(&listing, &[planned(Decision::Copy)], &index, root.path(), &None)
-        .unwrap();
+    let merge = alias_merge(
+        &listing,
+        &[planned(Decision::Copy)],
+        &index,
+        root.path(),
+        &None,
+    )
+    .unwrap();
     assert_dropped(&merge, "node");
     assert_dropped(&merge, "bad/name");
     assert_eq!(
-        drop_warning("node", "org.x/node-runtime", &index, &[planned(Decision::Copy)]),
+        drop_warning(
+            "node",
+            "org.x/node-runtime",
+            &index,
+            &[planned(Decision::Copy)]
+        ),
         "alias node not carried · row does not stand in the target registry"
     );
 }
@@ -129,10 +153,13 @@ fn mirror_alias_uses_projected_target_preserves_buried_and_grammar_checks() {
 fn mirror_alias_uses_projected_target_preserves_alias_of_alias_check() {
     let root = tempfile::tempdir().unwrap();
     let mut listing = listing();
-    listing.aliases.insert("node-runtime", AliasTarget {
-        group: "org.other".parse().unwrap(),
-        name: "other-runtime".into(),
-    });
+    listing.aliases.insert(
+        "node-runtime",
+        AliasTarget {
+            group: "org.other".parse().unwrap(),
+            name: "other-runtime".into(),
+        },
+    );
     let mut other = planned(Decision::Copy);
     other.version.group = "org.other".parse().unwrap();
     other.version.name = "other-runtime".into();
@@ -142,6 +169,7 @@ fn mirror_alias_uses_projected_target_preserves_alias_of_alias_check() {
         &index(),
         root.path(),
         &None,
-    ).unwrap();
+    )
+    .unwrap();
     assert_dropped(&merge, "node");
 }

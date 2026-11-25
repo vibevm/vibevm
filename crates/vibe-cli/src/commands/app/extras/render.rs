@@ -39,7 +39,10 @@ fn listing_section(
     rule: usize,
 ) -> String {
     let heading = rule_at(
-        &format!("extras of {} {} · {}", document.slot, document.version, row.id),
+        &format!(
+            "extras of {} {} · {}",
+            document.slot, document.version, row.id
+        ),
         None,
         rule,
     );
@@ -64,11 +67,17 @@ fn listing_section(
         );
     }
     for item in &row.add {
-        items.push(Row::new(vec![Cell::new("yours", Role::Dim), Cell::text(item)]));
+        items.push(Row::new(vec![
+            Cell::new("yours", Role::Dim),
+            Cell::text(item),
+        ]));
     }
     let mut summary = vec![summary_row("final list", item_cell(&row.items))];
     if !row.applied.is_empty() {
-        summary.push(summary_row("last applied", Cell::text(row.applied.join(" "))));
+        summary.push(summary_row(
+            "last applied",
+            Cell::text(row.applied.join(" ")),
+        ));
     }
     summary.push(match &row.observed_failed {
         Some(reason) => summary_row("not observed", Cell::new(prose(reason), Role::Warn)),
@@ -134,7 +143,10 @@ pub(super) fn run_text(document: &wire::ApplicationEcosystem, width: usize) -> S
         .map(|notice| prose(notice))
         .collect::<Vec<_>>();
     if !document.work.is_empty() {
-        hints.push(format!("work directory kept {}", short_path(&document.work)));
+        hints.push(format!(
+            "work directory kept {}",
+            short_path(&document.work)
+        ));
     }
     let hints = hints
         .iter()
@@ -157,7 +169,10 @@ fn run_block(row: &wire::Adapter, headline: &str) -> Block {
         wire::Outcome::Failed => {
             meta.push(Meta::Alert("failed".into()));
             if let Some(reason) = &row.reason {
-                body.push(Line::Label("why".into(), vec![LabelValue::Text(prose(reason))]));
+                body.push(Line::Label(
+                    "why".into(),
+                    vec![LabelValue::Text(prose(reason))],
+                ));
             }
             if let Some(retry) = &row.retry {
                 body.push(Line::Label(
@@ -213,7 +228,10 @@ pub(super) fn run_trailer(document: &wire::ApplicationEcosystem) -> (bool, Strin
     let text = if document.ok {
         format!("extras of {} {word}", document.slot)
     } else if done > 0 {
-        format!("extras of {} partly {word} · {failed} failed", document.slot)
+        format!(
+            "extras of {} partly {word} · {failed} failed",
+            document.slot
+        )
     } else {
         format!("extras of {} not {word} · {failed} failed", document.slot)
     };

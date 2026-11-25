@@ -190,14 +190,22 @@ fn show_config_lists_every_layer_and_the_site_profile() {
         .output()
         .unwrap();
     let text = String::from_utf8_lossy(&text.stdout);
-    assert!(text.contains(&format!(
-        "[{}]",
-        user.settings.join("site-profile.toml").display().to_string().replace('\\', "/")
-    )), "{text}");
     assert!(
-        text.lines().any(|line| line.trim_start().starts_with("site profile")
-            && line.contains("corp-site")
-            && line.trim_end().ends_with("[applied]")),
+        text.contains(&format!(
+            "[{}]",
+            user.settings
+                .join("site-profile.toml")
+                .display()
+                .to_string()
+                .replace('\\', "/")
+        )),
+        "{text}"
+    );
+    assert!(
+        text.lines()
+            .any(|line| line.trim_start().starts_with("site profile")
+                && line.contains("corp-site")
+                && line.trim_end().ends_with("[applied]")),
         "{text}"
     );
 }
@@ -209,16 +217,25 @@ fn show_config_reports_effective_layer_paths() {
     let ca = user.home.path().join("ca.pem");
     let second = user.home.path().join("second-ca.pem");
     // Synthetic declarations only: no certificate or network probe.
-    let literal = |path: &std::path::Path| {
-        serde_json::to_string(&path.display().to_string()).unwrap()
-    };
-    fs::write(user.settings.join("config.toml"), format!(
-        "[tls]\nextra_ca = [{}, {}]\n[self]\nsource = 'github'\n",
-        literal(&ca), literal(&second)
-    )).unwrap();
+    let literal =
+        |path: &std::path::Path| serde_json::to_string(&path.display().to_string()).unwrap();
+    fs::write(
+        user.settings.join("config.toml"),
+        format!(
+            "[tls]\nextra_ca = [{}, {}]\n[self]\nsource = 'github'\n",
+            literal(&ca),
+            literal(&second)
+        ),
+    )
+    .unwrap();
     let run = |flags: &[&str]| {
-        let output = user.vibe().args(flags)
-            .args(["show", "config", "--path"]).arg(project.path()).output().unwrap();
+        let output = user
+            .vibe()
+            .args(flags)
+            .args(["show", "config", "--path"])
+            .arg(project.path())
+            .output()
+            .unwrap();
         assert!(output.status.success(), "show config must succeed");
         assert!(output.stderr.is_empty(), "stderr must stay empty");
         String::from_utf8(output.stdout).unwrap()
@@ -226,7 +243,10 @@ fn show_config_reports_effective_layer_paths() {
     let plain = run(&["--plain"]);
     let verbose = run(&["--plain", "--verbose"]);
     let verbose_no_progress = run(&["--plain", "--verbose", "--no-progress"]);
-    assert_eq!(verbose, verbose_no_progress, "report verbosity is independent of progress");
+    assert_eq!(
+        verbose, verbose_no_progress,
+        "report verbosity is independent of progress"
+    );
     let words = |text: &str| text.split_whitespace().collect::<Vec<_>>().join(" ");
     let shown = |path: &std::path::Path| path.display().to_string().replace('\\', "/");
     let compact = words(&plain);
@@ -240,9 +260,15 @@ fn show_config_reports_effective_layer_paths() {
     assert!(compact.find(&ca_row) < compact.find(&second_row));
     assert!(compact.find(&second_row) < compact.find(proxy_row));
     assert!(compact.find(proxy_row) < compact.find(release_row));
-    assert!(plain.contains(&format!("[{}]", shown(&user.settings.join("registry.toml")))));
+    assert!(plain.contains(&format!(
+        "[{}]",
+        shown(&user.settings.join("registry.toml"))
+    )));
     assert!(plain.contains(&format!("[{}]", shown(&project.path().join("vibe.toml")))));
-    assert!(plain.contains(&format!("[{}]", shown(&user.settings.join("site-profile.toml")))));
+    assert!(plain.contains(&format!(
+        "[{}]",
+        shown(&user.settings.join("site-profile.toml"))
+    )));
     assert!(!plain.contains("~/.vibe/registry.toml"));
     let description = "Tracing filter (reads `tracing-subscriber::EnvFilter`).";
     assert!(!plain.contains(description));
@@ -252,11 +278,16 @@ fn show_config_reports_effective_layer_paths() {
     let machine: Value = serde_json::from_str(&run(&["--json"])).unwrap();
     let verbose_machine: Value = serde_json::from_str(&run(&["--json", "--verbose"])).unwrap();
     assert_eq!(machine, verbose_machine, "verbose must not change JSON");
-    let no_progress_machine: Value = serde_json::from_str(
-        &run(&["--json", "--verbose", "--no-progress"])
-    ).unwrap();
-    assert_eq!(machine, no_progress_machine, "progress must not change JSON");
-    assert_eq!(machine["registries"][1]["provenance"], "~/.vibe/registry.toml");
+    let no_progress_machine: Value =
+        serde_json::from_str(&run(&["--json", "--verbose", "--no-progress"])).unwrap();
+    assert_eq!(
+        machine, no_progress_machine,
+        "progress must not change JSON"
+    );
+    assert_eq!(
+        machine["registries"][1]["provenance"],
+        "~/.vibe/registry.toml"
+    );
     assert_eq!(machine["mirrors"][0]["provenance"], "site-profile.toml");
     assert!(machine.get("tls").is_none());
     assert!(machine.get("proxy").is_none());
@@ -267,10 +298,14 @@ fn show_config_reports_effective_layer_paths() {
     assert!(quiet.contains("3 registries, 1 mirror, 0 overrides, 5 env entries"));
 
     let site_ca = user.home.path().join("site-ca.pem");
-    fs::write(user.settings.join("site-profile.toml"), format!(
-        "{PROFILE}\n[tls]\nextra_ca = {}\n[proxy]\nmode = 'none'\n[self]\nsource = 'github'\n",
-        literal(&site_ca)
-    )).unwrap();
+    fs::write(
+        user.settings.join("site-profile.toml"),
+        format!(
+            "{PROFILE}\n[tls]\nextra_ca = {}\n[proxy]\nmode = 'none'\n[self]\nsource = 'github'\n",
+            literal(&site_ca)
+        ),
+    )
+    .unwrap();
     fs::write(user.settings.join("config.toml"), "").unwrap();
     let inherited = words(&run(&["--plain"]));
     assert!(inherited.contains(&format!("tls extra_ca {} [site]", shown(&site_ca))));

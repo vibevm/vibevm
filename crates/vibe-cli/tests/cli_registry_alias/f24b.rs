@@ -13,8 +13,15 @@ fn alias_refusals_name_the_failed_operation() {
         let said = stderr(&output);
         let lines: Vec<_> = said.lines().collect();
         let first = format!("✗ {headline}");
-        assert!(lines.first().copied() == Some(first.as_str()), "refusal headline mismatch");
-        assert_eq!(said.matches("✗ ").count(), 1, "refusal display contract mismatch");
+        assert!(
+            lines.first().copied() == Some(first.as_str()),
+            "refusal headline mismatch"
+        );
+        assert_eq!(
+            said.matches("✗ ").count(),
+            1,
+            "refusal display contract mismatch"
+        );
         assert!(!said.contains('`'), "refusal display contract mismatch");
         let mut previous = 0;
         for (i, fix) in fixes.iter().enumerate() {
@@ -23,13 +30,17 @@ fn alias_refusals_name_the_failed_operation() {
             } else {
                 format!("        {fix}")
             };
-            let position = lines.iter().position(|value| *value == line).unwrap_or_else(|| {
-                panic!("required fix line missing")
-            });
+            let position = lines
+                .iter()
+                .position(|value| *value == line)
+                .unwrap_or_else(|| panic!("required fix line missing"));
             assert!(position > previous, "refusal display contract mismatch");
             previous = position;
         }
-        assert!(lines.last().copied() == Some(format!("  see   {see}").as_str()), "refusal reference mismatch");
+        assert!(
+            lines.last().copied() == Some(format!("  see   {see}").as_str()),
+            "refusal reference mismatch"
+        );
         said
     };
     let short = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#short-name";
@@ -45,7 +56,12 @@ fn alias_refusals_name_the_failed_operation() {
         &["vibe registry alias corp list"],
         short,
     );
-    assert!(site.alias(&["add", "qwen", "org.vibevm.qwen/qwen-code"]).status.success(), "seed alias failed");
+    assert!(
+        site.alias(&["add", "qwen", "org.vibevm.qwen/qwen-code"])
+            .status
+            .success(),
+        "seed alias failed"
+    );
     check(
         site.alias(&["add", "qwen", "org.vibevm.qwen/other"]),
         "alias_exists  qwen already means org.vibevm.qwen/qwen-code in registry corp",
@@ -58,7 +74,10 @@ fn alias_refusals_name_the_failed_operation() {
         &["vibe registry alias corp add bad-name org.vibevm.qwen/qwen-code"],
         "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#pkgref",
     );
-    assert!(grammar.contains("lowercase letters, digits and inner single hyphens"), "grammar explanation missing");
+    assert!(
+        grammar.contains("lowercase letters, digits and inner single hyphens"),
+        "grammar explanation missing"
+    );
     let before = fs::read(site.path("reg/_index/aliases.toml")).unwrap();
     assert!(!String::from_utf8_lossy(&before).contains("Bad_Name"));
     fs::write(
@@ -68,41 +87,72 @@ fn alias_refusals_name_the_failed_operation() {
     let faults = site.alias(&["add", "valid", "org.vibevm.qwen/qwen-code"]);
     assert!(!faults.status.success());
     let said = stderr(&faults);
-    assert!(said.contains("Bad_Name is not a legal package name"), "refusal display contract mismatch");
-    assert!(said.contains("points INTO the registry"), "refusal display contract mismatch");
-    assert!(said.contains("org.vibevm.qwen/absent"), "refusal display contract mismatch");
+    assert!(
+        said.contains("Bad_Name is not a legal package name"),
+        "refusal display contract mismatch"
+    );
+    assert!(
+        said.contains("points INTO the registry"),
+        "refusal display contract mismatch"
+    );
+    assert!(
+        said.contains("org.vibevm.qwen/absent"),
+        "refusal display contract mismatch"
+    );
     fs::write(site.path("reg/_index/aliases.toml"), before).unwrap();
     fs::write(
         site.path("settings/registry.toml"),
         "[[registry]]\nname = 'gh'\ntype = 'github'\nurl = 'https://github.com/example'\n\
          [source_policy]\nexclude_hosting = ['github', 'gitverse']\n",
-    ).unwrap();
+    )
+    .unwrap();
     let unsupported = check(
         site.alias_in("gh", &["list"]),
         "alias_table_unsupported  registry gh is a github registry and carries no alias table",
         &["vibe-index alias"],
         short,
     );
-    assert!(unsupported.contains("only localdir and monorepo"), "unsupported-layout explanation missing");
+    assert!(
+        unsupported.contains("only localdir and monorepo"),
+        "unsupported-layout explanation missing"
+    );
     // A local, non-repository tree forces a clone failure without contacting a service.
     fs::create_dir_all(site.path("not-a-repository")).unwrap();
     fs::write(
         site.path("settings/registry.toml"),
-        format!("[[registry]]\nname = 'corp4'\ntype = 'monorepo'\nurl = 'file://{}'\n\
+        format!(
+            "[[registry]]\nname = 'corp4'\ntype = 'monorepo'\nurl = 'file://{}'\n\
                  [source_policy]\nexclude_hosting = ['github', 'gitverse']\n",
-                site.path("not-a-repository").display()),
-    ).unwrap();
+            site.path("not-a-repository").display()
+        ),
+    )
+    .unwrap();
     let unreachable = check(
         site.alias_in("corp4", &["list"]),
         "registry_unreachable  could not open registry corp4 to read its alias table",
         &["vibe registry test", "vibe dl --test-proxy"],
         "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#failure-discriminator",
     );
-    assert!(unreachable.contains("  why   git "), "registry-open diagnostic contract mismatch");
-    assert!(!unreachable.contains("fatal:"), "registry-open diagnostic contract mismatch");
-    assert!(!unreachable.contains("file://"), "registry-open diagnostic contract mismatch");
-    assert!(!unreachable.contains("mirror"), "registry-open diagnostic contract mismatch");
-    assert!(!unreachable.contains("registry snapshot candidate failed"), "default fallback warning leaked");
+    assert!(
+        unreachable.contains("  why   git "),
+        "registry-open diagnostic contract mismatch"
+    );
+    assert!(
+        !unreachable.contains("fatal:"),
+        "registry-open diagnostic contract mismatch"
+    );
+    assert!(
+        !unreachable.contains("file://"),
+        "registry-open diagnostic contract mismatch"
+    );
+    assert!(
+        !unreachable.contains("mirror"),
+        "registry-open diagnostic contract mismatch"
+    );
+    assert!(
+        !unreachable.contains("registry snapshot candidate failed"),
+        "default fallback warning leaked"
+    );
     // Repeat the identical alias operation and local directory with explicit
     // warning logging: F19 owns visibility, not the alias refusal adapter.
     let diagnostic = Command::new(env!("CARGO_BIN_EXE_vibe"))
@@ -122,9 +172,21 @@ fn alias_refusals_name_the_failed_operation() {
         .env("VIBE_LOG", "warn")
         .output()
         .expect("explicit diagnostic alias child failed to start");
-    assert!(!diagnostic.status.success(), "explicit diagnostic operation must refuse");
-    assert!(diagnostic.stdout.is_empty(), "explicit diagnostic refusal wrote stdout");
+    assert!(
+        !diagnostic.status.success(),
+        "explicit diagnostic operation must refuse"
+    );
+    assert!(
+        diagnostic.stdout.is_empty(),
+        "explicit diagnostic refusal wrote stdout"
+    );
     let diagnostic = stderr(&diagnostic);
-    assert!(diagnostic.contains("registry snapshot candidate failed"), "explicit warning diagnostic was suppressed");
-    assert!(diagnostic.contains("registry_unreachable"), "explicit diagnostic lost alias refusal");
+    assert!(
+        diagnostic.contains("registry snapshot candidate failed"),
+        "explicit warning diagnostic was suppressed"
+    );
+    assert!(
+        diagnostic.contains("registry_unreachable"),
+        "explicit diagnostic lost alias refusal"
+    );
 }

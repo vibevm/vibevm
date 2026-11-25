@@ -447,8 +447,11 @@ fn install_of_a_new_version_offers_and_does_not_migrate() {
     // It offered and nothing else: no migration ran.
     assert!(!r.home().join("imported").exists());
     assert!(
-        crate::common::app_registry::ok(&migrate_trailer::vibe(&r, &["app", "work", "-g", "--json"]))
-            .contains("\"entries\": []")
+        crate::common::app_registry::ok(&migrate_trailer::vibe(
+            &r,
+            &["app", "work", "-g", "--json"]
+        ))
+        .contains("\"entries\": []")
             || !r.index().to_string().contains("\"migrated\"")
     );
 }
@@ -520,7 +523,15 @@ fn an_unknown_slot_and_an_uninstalled_version_refuse_before_any_effect() {
     pair(&r, EXPORT, IMPORT);
     let unknown = failed(&migrate_trailer::vibe(
         &r,
-        &["app", "migrate", "absent", "1.0.0", "2.0.0", "--all", "--offline"],
+        &[
+            "app",
+            "migrate",
+            "absent",
+            "1.0.0",
+            "2.0.0",
+            "--all",
+            "--offline",
+        ],
     ));
     assert!(unknown.contains("absent"), "{unknown}");
     let missing = failed(&migrate(&r, "1.0.0", "9.9.9", &["--all"]));

@@ -115,14 +115,20 @@ fn online_refusal(package: &str, source: &std::path::Path) -> String {
     } else {
         let token = |text: &str| {
             if !text.is_empty()
-                && text.bytes().all(|b| b.is_ascii_alphanumeric() || b"_-./:".contains(&b))
+                && text
+                    .bytes()
+                    .all(|b| b.is_ascii_alphanumeric() || b"_-./:".contains(&b))
             {
                 text.to_owned()
             } else {
                 format!("'{}'", text.replace('\'', "'\\''"))
             }
         };
-        format!("vibe remap bind-source {} --source {}", token(package), token(&source))
+        format!(
+            "vibe remap bind-source {} --source {}",
+            token(package),
+            token(&source)
+        )
     };
     format!(
         "online_required: remap bind-source verifies the source at its endpoint, and --offline \

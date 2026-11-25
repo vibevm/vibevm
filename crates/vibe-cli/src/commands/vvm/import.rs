@@ -84,7 +84,10 @@ fn perform_import_with_rows(
     if let Some(dir) = unpacked_release_dir(req.executable) {
         return import_unpacked_release(ctx, store, req, &dir, &progress);
     }
-    let verify_label = label("Verifying local import payload", "verify  local import payload");
+    let verify_label = label(
+        "Verifying local import payload",
+        "verify  local import payload",
+    );
     let observed = observed_stage(&progress, verify_label, |task| {
         task.detail(format!("payload: {}", req.executable.display()));
         let tag = parse_tag(req.tag)?;
@@ -155,7 +158,10 @@ fn perform_import_with_rows(
         let copying = progress.task(label("Copying import payload", "copy  import payload"));
         copying.detail(format!("reusing {}", record.selector()));
         copying.skip("matching verified payload already installed");
-        let recording = progress.task(label("Recording imported instance", "record  imported instance"));
+        let recording = progress.task(label(
+            "Recording imported instance",
+            "record  imported instance",
+        ));
         recording.skip("inventory unchanged");
         if !site_rows {
             ctx.summary(&format!(

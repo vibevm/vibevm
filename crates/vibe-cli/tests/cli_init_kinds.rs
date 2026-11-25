@@ -246,17 +246,52 @@ fn init_refusals_lead_with_their_codes() {
     fs::create_dir(&home).unwrap();
     fs::create_dir(&settings).unwrap();
     for (args, name, expected) in [
-        (vec!["init", "package", "org.demo/app4", "--kind", "app", "--app-install-way", "prebuilt", "--app-source-url", "https://example.invalid/app.tgz", "--path"], "app4",
-         "✗ app_source_digest_required  a source or prebuilt installer needs the input's SHA-256\n  fix   supply --app-source-sha256 <64-hex> for the declared source URL\n  see   spec://org.vibevm.core/vibevm/common/PROP-059#declaration"),
-        (vec!["init", "--link", "static", "--path"], "root",
-         "✗ link_on_root  --link sets the boot snippet of a nested package, and a root declaration writes none\n  fix   vibe init package <group>/<name> --link static|dynamic\n  see   spec://org.vibevm.core/vibevm/common/PROP-024#INIT-ROOT-ROLE"),
-        (vec!["init", "package", "org.demo/r1", "--kind", "remap", "--link", "static", "--path"], "r1",
-         "✗ link_without_boot_snippet  --link sets a boot snippet, and a remap package carries none\n  fix   drop --link, or pick a kind with a boot lane such as --kind tool\n  see   spec://org.vibevm.core/vibevm/common/PROP-024#INIT-ROOT-ROLE"),
+        (
+            vec![
+                "init",
+                "package",
+                "org.demo/app4",
+                "--kind",
+                "app",
+                "--app-install-way",
+                "prebuilt",
+                "--app-source-url",
+                "https://example.invalid/app.tgz",
+                "--path",
+            ],
+            "app4",
+            "✗ app_source_digest_required  a source or prebuilt installer needs the input's SHA-256\n  fix   supply --app-source-sha256 <64-hex> for the declared source URL\n  see   spec://org.vibevm.core/vibevm/common/PROP-059#declaration",
+        ),
+        (
+            vec!["init", "--link", "static", "--path"],
+            "root",
+            "✗ link_on_root  --link sets the boot snippet of a nested package, and a root declaration writes none\n  fix   vibe init package <group>/<name> --link static|dynamic\n  see   spec://org.vibevm.core/vibevm/common/PROP-024#INIT-ROOT-ROLE",
+        ),
+        (
+            vec![
+                "init",
+                "package",
+                "org.demo/r1",
+                "--kind",
+                "remap",
+                "--link",
+                "static",
+                "--path",
+            ],
+            "r1",
+            "✗ link_without_boot_snippet  --link sets a boot snippet, and a remap package carries none\n  fix   drop --link, or pick a kind with a boot lane such as --kind tool\n  see   spec://org.vibevm.core/vibevm/common/PROP-024#INIT-ROOT-ROLE",
+        ),
     ] {
         let path = dir.path().join(name);
-        user.vibe().env("HOME", &home).env("USERPROFILE", &home)
-            .env("VIBE_SETTINGS", &settings).args(args).arg(&path)
-            .assert().failure().stderr(predicate::str::contains(expected));
+        user.vibe()
+            .env("HOME", &home)
+            .env("USERPROFILE", &home)
+            .env("VIBE_SETTINGS", &settings)
+            .args(args)
+            .arg(&path)
+            .assert()
+            .failure()
+            .stderr(predicate::str::contains(expected));
         assert!(!path.exists(), "refusal left {path:?}");
     }
 }
@@ -267,7 +302,10 @@ fn init_refusals_lead_with_their_codes() {
 fn init_identity_hint_is_plain_english() {
     let dir = tempfile::tempdir().unwrap();
     let output = std::process::Command::new("python3")
-        .args(["-I", "-c", r#"
+        .args([
+            "-I",
+            "-c",
+            r#"
 import errno, os, pathlib, pty, re, select, subprocess, sys, time
 root = pathlib.Path(sys.argv[2])
 home, settings = root / 'home', root / 'settings'
@@ -311,8 +349,12 @@ text = re.sub(r'\x1b\[[0-?]*[ -/]*[@-~]', '', capture.decode('utf-8', 'replace')
 print(text)
 assert 'cancelled' in text, text
 assert not (root / 'project').exists()
-"#])
-        .arg(env!("CARGO_BIN_EXE_vibe")).arg(dir.path()).output().unwrap();
+"#,
+        ])
+        .arg(env!("CARGO_BIN_EXE_vibe"))
+        .arg(dir.path())
+        .output()
+        .unwrap();
     assert!(output.status.success(), "{}", screen(&output));
     let text = String::from_utf8(output.stdout).unwrap();
     let normalized = text.split_whitespace().collect::<Vec<_>>().join(" ");

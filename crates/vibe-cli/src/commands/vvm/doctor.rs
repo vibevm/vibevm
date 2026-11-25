@@ -325,7 +325,11 @@ pub(super) fn run_doctor_cmd(
             record.version_id().to_string(),
             vec!["its binary is gone".into()],
         ),
-        None => (Mark::Note, "none".into(), vec!["vibe self use <selector>".into()]),
+        None => (
+            Mark::Note,
+            "none".into(),
+            vec!["vibe self use <selector>".into()],
+        ),
     };
     rows.push(DoctorRow {
         mark,
@@ -348,7 +352,11 @@ pub(super) fn run_doctor_cmd(
             name: "running".into(),
             value: record.selector().to_string(),
             notes: Vec::new(),
-            states: if ok { Vec::new() } else { vec!["binary missing".into()] },
+            states: if ok {
+                Vec::new()
+            } else {
+                vec!["binary missing".into()]
+            },
             children: Vec::new(),
         });
     }
@@ -378,7 +386,10 @@ pub(super) fn run_doctor_cmd(
                 ],
             )
         } else {
-            ("legacy single-binary import", vec![("full integrity", layout.integrity)])
+            (
+                "legacy single-binary import",
+                vec![("full integrity", layout.integrity)],
+            )
         };
         let missing = flags
             .iter()
@@ -403,7 +414,14 @@ pub(super) fn run_doctor_cmd(
             name: format!("{role} instance"),
             value: record.selector().to_string(),
             notes: vec![kind.into()],
-            states: vec![if missing.is_empty() { "complete" } else { "incomplete" }.into()],
+            states: vec![
+                if missing.is_empty() {
+                    "complete"
+                } else {
+                    "incomplete"
+                }
+                .into(),
+            ],
             children,
         });
     }
@@ -415,7 +433,11 @@ pub(super) fn run_doctor_cmd(
             root.display().to_string(),
             vec!["source install".into(), "embedded first".into()],
         ),
-        None => (Mark::Note, "none".into(), vec!["not a source install".into()]),
+        None => (
+            Mark::Note,
+            "none".into(),
+            vec!["not a source install".into()],
+        ),
     };
     rows.push(DoctorRow {
         mark,

@@ -195,7 +195,10 @@ mod tests {
 
         assert_eq!(ensure_block(ENV_BLOCK, &path, "first body"), Ok(true));
         let inserted = fs::read_to_string(&path).unwrap();
-        assert_eq!(inserted, format!("{prefix}{}", block(ENV_BLOCK, "first body")));
+        assert_eq!(
+            inserted,
+            format!("{prefix}{}", block(ENV_BLOCK, "first body"))
+        );
         fs::write(&path, format!("{inserted}{suffix}")).unwrap();
         let before = fs::read(&path).unwrap();
         assert_eq!(ensure_block(ENV_BLOCK, &path, "first body"), Ok(false));
