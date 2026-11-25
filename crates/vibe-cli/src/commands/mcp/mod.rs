@@ -136,12 +136,22 @@ pub(crate) fn register_project_packages(
     let mut selected = Vec::new();
     let mut destinations = std::collections::BTreeSet::new();
     for package in packages {
-        if selected.contains(package) { continue; }
+        if selected.contains(package) {
+            continue;
+        }
         let reference = vibe_core::PackageRef::parse(package)?;
-        let group = reference.group.as_ref().ok_or_else(|| anyhow::anyhow!("MCP selector requires GROUP/NAME"))?;
-        let matches: Vec<_> = lock.packages.iter().filter(|row| {
-            row.group.to_string() == group.to_string() && row.name.to_string() == reference.name.to_string()
-        }).collect();
+        let group = reference
+            .group
+            .as_ref()
+            .ok_or_else(|| anyhow::anyhow!("MCP selector requires GROUP/NAME"))?;
+        let matches: Vec<_> = lock
+            .packages
+            .iter()
+            .filter(|row| {
+                row.group.to_string() == group.to_string()
+                    && row.name.to_string() == reference.name.to_string()
+            })
+            .collect();
         if matches.len() != 1 || matches[0].kind.to_string() != "mcp" {
             bail!("requested project MCP package is absent, ambiguous, or not MCP: `{package}`");
         }
@@ -151,7 +161,10 @@ pub(crate) fn register_project_packages(
             if let Some(config) = agent.config_path_with_dirs(Scope::Project, Some(root), &dirs)? {
                 for server in &servers {
                     if !destinations.insert((config.clone(), server.decl.name.clone())) {
-                        bail!("requested MCP packages collide at project server `{}`", server.decl.name);
+                        bail!(
+                            "requested MCP packages collide at project server `{}`",
+                            server.decl.name
+                        );
                     }
                 }
             }
@@ -163,7 +176,9 @@ pub(crate) fn register_project_packages(
     for package in selected {
         package_registration::register(root, &package, None, &agents, Scope::Project, true, false)?;
         if !ctx.is_json() {
-            ctx.summary(&format!("registered MCP package {package} in project scope"));
+            ctx.summary(&format!(
+                "registered MCP package {package} in project scope"
+            ));
         }
     }
     Ok(())
