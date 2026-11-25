@@ -48,6 +48,17 @@ impl MultiRegistryResolver {
         task: &vibe_core::progress::ProgressTask,
         registry_filter: Option<&str>,
     ) -> Result<Vec<semver::Version>, RegistryError> {
+        self.list_versions_observed(group, name, task, registry_filter, &mut Default::default())
+    }
+
+    fn list_versions_observed(
+        &self,
+        group: &Group,
+        name: &str,
+        task: &vibe_core::progress::ProgressTask,
+        registry_filter: Option<&str>,
+        presence: &mut observation::VersionPresence,
+    ) -> Result<Vec<semver::Version>, RegistryError> {
         let qualified = format!("{group}/{name}");
         if let Some(locked) = self.locked.get(&qualified) {
             return self.locked_versions(locked);
@@ -81,7 +92,10 @@ impl MultiRegistryResolver {
                             .ask_remote(reg, group, name, task, || reg.list_versions(group, name))
                         {
                             Ok(versions) if !versions.is_empty() => return Ok(versions),
-                            Ok(_) => continue,
+                            Ok(_) => {
+                                presence.present = true;
+                                continue;
+                            }
                             Err(RegistryError::UnknownPackage { .. }) => continue,
                             Err(RegistryError::Git(crate::git_backend::GitError::AuthFailed {
                                 ..
@@ -90,6 +104,7 @@ impl MultiRegistryResolver {
                                 vibe_core::manifest::AuthKind::None
                             ) && !self.strict_auth =>
                             {
+                                presence.indeterminate = true;
                                 continue;
                             }
                             Err(other) => return Err(other),
@@ -99,7 +114,10 @@ impl MultiRegistryResolver {
                         task.detail(format!("checking local registry {} ({})", ls.name, ls.url));
                         match ls.registry.list_versions(group, name) {
                             Ok(versions) if !versions.is_empty() => return Ok(versions),
-                            Ok(_) => continue,
+                            Ok(_) => {
+                                presence.present = true;
+                                continue;
+                            }
                             Err(RegistryError::UnknownPackage { .. }) => continue,
                             Err(other) => return Err(other),
                         }
@@ -114,13 +132,17 @@ impl MultiRegistryResolver {
                             .and_then(|local| local.list_versions(group, name))
                         {
                             Ok(versions) if !versions.is_empty() => return Ok(versions),
-                            Ok(_) => continue,
+                            Ok(_) => {
+                                presence.present = true;
+                                continue;
+                            }
                             Err(RegistryError::UnknownPackage { .. }) => continue,
                             Err(RegistryError::Git(crate::git_backend::GitError::AuthFailed {
                                 ..
                             })) if mono.auth == vibe_core::manifest::AuthKind::None
                                 && !self.strict_auth =>
                             {
+                                presence.indeterminate = true;
                                 continue;
                             }
                             Err(other) => return Err(other),
