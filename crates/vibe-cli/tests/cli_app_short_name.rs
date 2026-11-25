@@ -217,11 +217,11 @@ fn one_candidate_resolves_and_the_provenance_line_says_which() {
     ok(&listed, "vibe app installers widget");
     let said = stderr(&listed);
     assert!(
-        said.contains("widget → org.vibevm.node/widget (alias in registry corp)"),
+        said.contains("widget → org.vibevm.node/widget · alias in registry corp"),
         "the provenance line is missing: {said}"
     );
     assert_eq!(
-        said.matches("widget → org.vibevm.node/widget (alias in registry corp)")
+        said.matches("widget → org.vibevm.node/widget · alias in registry corp")
             .count(),
         1,
         "the provenance line is printed once: {said}"
@@ -242,7 +242,7 @@ fn the_provenance_line_survives_quiet_and_json() {
         let listed = site.vibe(&args);
         ok(&listed, "vibe app installers widget");
         assert!(
-            stderr(&listed).contains("widget → org.vibevm.node/widget (alias in registry corp)"),
+            stderr(&listed).contains("widget → org.vibevm.node/widget · alias in registry corp"),
             "{extra:?} dropped the provenance line: {}",
             stderr(&listed)
         );
@@ -294,7 +294,7 @@ fn two_groups_under_one_name_are_a_hint_and_not_a_collision() {
     );
     let said = stderr(&refused);
     assert!(
-        said.contains("the short name `node` is not issued by any consulted registry"),
+        said.contains("no consulted registry issues the short name node"),
         "{said}"
     );
     assert!(!said.contains("is ambiguous"), "{said}");
@@ -332,7 +332,7 @@ fn an_untrusted_group_is_listed_and_never_picked() {
     let listed = site.vibe(&["app", "installers", "gadget"]);
     ok(&listed, "vibe app installers gadget, com.acme trusted");
     assert!(
-        stderr(&listed).contains("gadget → com.acme/gadget (alias in registry corp)"),
+        stderr(&listed).contains("gadget → com.acme/gadget · alias in registry corp"),
         "{}",
         stderr(&listed)
     );
@@ -377,7 +377,7 @@ fn offline_resolves_from_the_cached_index() {
     let listed = site.vibe(&["app", "installers", "widget", "--offline"]);
     ok(&listed, "vibe app installers widget --offline");
     assert!(
-        stderr(&listed).contains("widget → org.vibevm.node/widget (alias in registry corp)"),
+        stderr(&listed).contains("widget → org.vibevm.node/widget · alias in registry corp"),
         "{}",
         stderr(&listed)
     );
@@ -409,18 +409,33 @@ fn offline_without_a_cached_candidate_asks_for_the_qualified_form() {
 #[specmark::spec(
     verifies = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#INSTALLED-STATE-RESOLVES-LOCALLY"
 )]
-fn an_installed_state_verb_refuses_locally() {
+fn short_name_refusals_keep_local_and_registry_fixes_distinct() {
     let site = Site::new();
     let refused = site.vibe(&["app", "hold", "widget"]);
     assert!(!refused.status.success(), "{}", stderr(&refused));
     let said = stderr(&refused);
-    assert!(said.contains("`widget` is not installed"), "{said}");
+    assert!(
+        said.contains("widget is not installed in this home"),
+        "{said}"
+    );
     assert!(said.contains("application index"), "{said}");
     assert!(said.contains("vibe app hold <group>/widget"), "{said}");
     assert!(
         !said.contains("consulted"),
         "installed state consults no registry: {said}"
     );
+    assert!(said.contains("not_installed"), "{said}");
+    assert!(said.contains("vibe install -g <group>/widget"), "{said}");
+    let missing = site.vibe(&["app", "installers", "absent"]);
+    let registry = stderr(&missing);
+    assert!(!missing.status.success());
+    assert!(registry.contains("short_name_not_issued"), "{registry}");
+    assert!(registry.contains("consulted: corp"), "{registry}");
+    assert!(
+        registry.contains("vibe app installers <group>/absent"),
+        "{registry}"
+    );
+    assert!(refused.stdout.is_empty() && missing.stdout.is_empty());
 }
 
 /// `vibe app versions` keeps its first two tiers inside the library — a
@@ -434,7 +449,7 @@ fn versions_reaches_the_index_only_for_a_word_that_is_neither() {
     let listed = site.vibe(&["app", "versions", "widget", "--json"]);
     ok(&listed, "vibe app versions widget --json");
     assert!(
-        stderr(&listed).contains("widget → org.vibevm.node/widget (alias in registry corp)"),
+        stderr(&listed).contains("widget → org.vibevm.node/widget · alias in registry corp"),
         "{}",
         stderr(&listed)
     );

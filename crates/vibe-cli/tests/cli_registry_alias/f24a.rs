@@ -132,7 +132,7 @@ fn the_project_install_path_resolves_only_issued_names() {
     );
     let said = format!("{}{}", stdout(&refused), stderr(&refused));
     assert!(
-        said.contains("not issued by any consulted registry"),
+        said.contains("no consulted registry issues the short name qwen-code"),
         "{said}"
     );
     assert!(
@@ -151,7 +151,7 @@ fn the_project_install_path_resolves_only_issued_names() {
     let attempted = install("qc");
     let said = format!("{}{}", stdout(&attempted), stderr(&attempted));
     assert!(
-        said.contains("qc → org.vibevm.qwen/qwen-code (alias in registry corp)"),
+        said.contains("qc → org.vibevm.qwen/qwen-code · alias in registry corp"),
         "the install boundary must resolve the issued spelling: {said}"
     );
 }
