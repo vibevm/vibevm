@@ -26,6 +26,10 @@ use crate::error_versions::VersionsError;
 use crate::index::{Index, Installation};
 use crate::versionfile::VersionRequest;
 
+#[path = "versions/presence.rs"]
+mod presence;
+pub use presence::{DomainObservation, PackagePresence};
+
 /// The protocol tag of the `--json` answer (`AV-FMT-014`).
 pub const VERSIONS_PROTOCOL: &str = "vibe-app-versions/1";
 
@@ -120,6 +124,17 @@ pub trait Domains {
     /// Every version of `<group>/<name>`, with each version's origin and
     /// the channel table the package's rules produced.
     fn domain(&self, group: &str, name: &str) -> Result<Domain, String>;
+
+    /// Observe a domain and explicit presence in one call (PROP-075
+    /// `#VERSIONS-LIST-OUTPUT`). Override when the source can confirm absence;
+    /// legacy sources call `domain` exactly once and remain indeterminate.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-075#VERSIONS-LIST-OUTPUT")]
+    fn observe_domain(&self, group: &str, name: &str) -> Result<DomainObservation, String> {
+        self.domain(group, name).map(|domain| DomainObservation {
+            domain,
+            presence: PackagePresence::Indeterminate,
+        })
+    }
 
     /// Where an `[artifacts] packages` drop already holds **every** input
     /// the installer option this platform would select for one version
@@ -369,13 +384,11 @@ fn one_package(
     domains: &dyn Domains,
 ) -> Result<wire::Package, VersionsError> {
     let coordinate = heading.coordinate();
-    let domain = domains
-        .domain(&heading.group, &heading.name)
-        .map_err(|reason| VersionsError::Domain {
-            package: coordinate.clone(),
-            reason,
-        })?;
     let installed = installed_of(index, heading);
+    let has_installations = index.installations.values().any(|record| {
+        record.package.group == heading.group && record.package.name == heading.name
+    });
+    let domain = presence::observed_domain(heading, request, has_installations, domains)?;
 
     // The union: every version the domain carries plus every version this
     // home installed, because an installation whose registry row is gone

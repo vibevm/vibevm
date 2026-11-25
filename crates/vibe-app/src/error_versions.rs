@@ -35,6 +35,12 @@ pub enum VersionsError {
     )]
     UnknownTarget { target: String, slots: String },
     #[error(
+        "{package} is in no registry this run reads \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-075#VERSIONS-LIST-OUTPUT; \
+         fix: vibe search {name})"
+    )]
+    UnknownPackage { package: String, name: String },
+    #[error(
         "`{target}` names several installed packages: {spellings} \
          (violates spec://org.vibevm.core/vibevm/common/PROP-075#VERSIONS-LIST-OUTPUT; \
          fix: name one exactly as <group>/<name>)"

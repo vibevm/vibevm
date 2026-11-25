@@ -193,8 +193,8 @@ pub use versionfile::{
     write as write_version_file,
 };
 pub use versions::{
-    DEFAULT_LIMIT as VERSIONS_DEFAULT_LIMIT, Domain, DomainVersion, Domains, Origin, TemplateFacts,
-    VERSIONS_PROTOCOL, VersionsRequest, versions_listing,
+    DEFAULT_LIMIT as VERSIONS_DEFAULT_LIMIT, Domain, DomainObservation, DomainVersion, Domains,
+    Origin, PackagePresence, TemplateFacts, VERSIONS_PROTOCOL, VersionsRequest, versions_listing,
 };
 
 pub use operations::import_full;
