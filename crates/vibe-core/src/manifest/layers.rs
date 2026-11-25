@@ -127,9 +127,9 @@ impl LayersSection {
             .chain(self.relations.iter().map(|r| &r.source))
         {
             if !source.starts_with("spec://")
-                || !source
+                || source
                     .split_once('#')
-                    .is_some_and(|(_, anchor)| !anchor.is_empty())
+                    .is_none_or(|(_, anchor)| anchor.is_empty())
             {
                 return Err(format!(
                     "[layers] source `{source}` requires an explicit spec:// document and anchor"
