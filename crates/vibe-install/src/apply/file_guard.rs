@@ -213,8 +213,12 @@ impl FileGuard {
 
 impl Drop for FileGuard {
     fn drop(&mut self) {
-        if let Err(error) = self.undo() {
-            tracing::warn!(target: "vibe_install::apply", "checked metadata undo failed: {error}");
+        if self.undo().is_err() {
+            static NEXT: std::sync::atomic::AtomicU64 = std::sync::atomic::AtomicU64::new(1);
+            let occurrence = NEXT.fetch_add(1, std::sync::atomic::Ordering::Relaxed);
+            tracing::warn!(target: "vibe_install::apply",
+                diagnostic_code = "install_rollback", occurrence,
+                "checked metadata restoration failed; inspect installation metadata");
         }
     }
 }

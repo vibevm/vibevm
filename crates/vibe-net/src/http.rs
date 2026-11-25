@@ -106,7 +106,9 @@ pub fn route_in<B: RouteBuilder>(
         match session.proxy_for(url) {
             Ok(choice) => choice.map(String::from),
             Err(error) => {
-                tracing::warn!("{error}");
+                let occurrence = Arc::as_ptr(&session) as usize as u64;
+                tracing::warn!(target: "vibe_net::route", diagnostic_code = "network_route",
+                    occurrence, cause = error.diagnostic_cause(), "configured route unavailable");
                 Some(UNROUTABLE.to_owned())
             }
         }
