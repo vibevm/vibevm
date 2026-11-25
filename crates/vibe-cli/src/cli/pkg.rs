@@ -85,6 +85,9 @@ impl InstallArgs {
 
 #[derive(Debug, Clone, clap::Args)]
 pub struct InstallArgs {
+    /// Explicitly consent to registering this resolved MCP package in this project.
+    #[arg(long = "register-mcp", value_name = "GROUP/NAME", conflicts_with_all = ["global", "user_project", "plan_only"])]
+    pub register_mcp: Vec<String>,
     /// Source-bound ordinary root answer document, not app configuration input.
     #[arg(long, conflicts_with_all = ["ordinary_interactive", "global", "plan_only"])]
     pub ordinary_answers: Option<PathBuf>,

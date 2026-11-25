@@ -7,4 +7,4 @@
 # own agent configuration: an unmet need or a failure is recorded and the
 # installation carries on (PROP-065 `#ordinary-consumer`, `#steps`).
 set -euo pipefail
-exec "${VIBE_EXECUTABLE:-vibe}" mcp install
+exec "${VIBE_EXECUTABLE:-vibe}" mcp install --auto --path "$VIBE_PROJECT_ROOT"

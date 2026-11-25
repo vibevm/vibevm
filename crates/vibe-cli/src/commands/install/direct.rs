@@ -268,6 +268,7 @@ fn run_with_scope_selected(
     scope: ConfirmationScope<'_>,
     completion: Completion,
 ) -> Result<()> {
+    super::project_mcp::validate_syntax(&args.register_mcp)?;
     let overall = ctx.progress().task("Installing packages");
     let scoped = ctx.with_progress_scope(overall.progress());
     let display = crate::commands::app::display::StepDisplay::open(&scoped, &args.steps);
@@ -431,8 +432,11 @@ fn execute_after_open(
     // The post-durability stage, NAMED: it holds the observation policy and the
     // backend, and nothing else. The closure it replaced captured this
     // command's whole rendering context.
-    let mut world_stage =
+    let ordinary_world =
         crate::commands::lifecycle::DirectInstallWorld::new(&run_observer, &agent);
+    let mut world_stage = super::project_mcp::ProjectMcpWorld::new(
+        ordinary_world, ctx, &args.register_mcp,
+    );
     let (selected_source, selected_roots) = match selected {
         Some(selected) => (
             Some(SelectedSource {

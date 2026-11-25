@@ -79,6 +79,7 @@ pub(crate) fn local_resolver(dir: &Path) -> Result<InstallResolver> {
 /// anything into a manifest here.
 fn inert_args() -> InstallArgs {
     InstallArgs {
+        register_mcp: Vec::new(),
         ordinary_answers: None,
         ordinary_interactive: false,
         parsed_ordinary_submission: None,

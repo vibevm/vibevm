@@ -20,6 +20,7 @@ use crate::cli::{InstallArgs, UpdateArgs};
 /// `--registry` / `--git` / feature flags, so those default off.
 pub(super) fn install_args_from(args: &UpdateArgs) -> InstallArgs {
     InstallArgs {
+        register_mcp: Vec::new(),
         ordinary_answers: None,
         ordinary_interactive: false,
         parsed_ordinary_submission: None,

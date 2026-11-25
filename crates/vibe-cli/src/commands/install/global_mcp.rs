@@ -103,6 +103,7 @@ pub(crate) fn update(
     let project_root = existing_user_project_root()?;
     ensure_locked(&project_root, &package)?;
     let install_args = InstallArgs {
+        register_mcp: Vec::new(),
         ordinary_answers: None,
         ordinary_interactive: false,
         parsed_ordinary_submission: None,
