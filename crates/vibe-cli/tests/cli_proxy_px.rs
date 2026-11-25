@@ -19,6 +19,14 @@ use std::time::{Duration, Instant};
 use common::UserScratch;
 use support::{FIXTURE_HOST, https_server, test_ca};
 
+/// Whether a line begins with these words, however its columns are padded.
+fn row_starts(text: &str, words: &[&str]) -> bool {
+    text.lines().any(|line| {
+        let mut found = line.split_whitespace();
+        words.iter().all(|word| found.next() == Some(*word))
+    })
+}
+
 fn fake_px() -> PathBuf {
     support::support_dir().join("fake_px.py")
 }
@@ -222,14 +230,14 @@ fn mode_none_from_the_environment_turns_a_configured_px_off() {
         .unwrap();
     let text = String::from_utf8_lossy(&show.stdout);
     assert!(
-        text.contains("proxy mode: none (from VIBEVM_PROXY_MODE)"),
+        row_starts(&text, &["proxy", "mode", "none", "·", "VIBEVM_PROXY_MODE"]),
         "{text}"
     );
     let show = vibe(&w).args(["self", "apply", "--show"]).output().unwrap();
     let text = String::from_utf8_lossy(&show.stdout);
-    assert!(text.contains("proxy mode: px (from user config)"), "{text}");
+    assert!(row_starts(&text, &["proxy", "mode", "px", "·", "user", "config"]), "{text}");
     assert!(
-        text.contains("proxy upstream: proxy.example.corp:8080"),
+        row_starts(&text, &["proxy", "upstream", "proxy.example.corp:8080"]),
         "{text}"
     );
 }
@@ -255,7 +263,7 @@ fn the_user_turns_a_site_profiles_px_off() {
     let show = vibe(&w).args(["self", "apply", "--show"]).output().unwrap();
     let text = String::from_utf8_lossy(&show.stdout);
     assert!(
-        text.contains("proxy mode: px (from site profile)"),
+        row_starts(&text, &["proxy", "mode", "px", "·", "site", "profile"]),
         "{text}"
     );
     std::fs::write(
@@ -266,7 +274,7 @@ fn the_user_turns_a_site_profiles_px_off() {
     let show = vibe(&w).args(["self", "apply", "--show"]).output().unwrap();
     let text = String::from_utf8_lossy(&show.stdout);
     assert!(
-        text.contains("proxy mode: none (from user config)"),
+        row_starts(&text, &["proxy", "mode", "none", "·", "user", "config"]),
         "{text}"
     );
     let target = format!("https://{FIXTURE_HOST}:{}/", w.server.port);
