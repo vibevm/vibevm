@@ -1,5 +1,7 @@
 //! Thin ordinary-preview adapter; the shared operation owns source/evaluation.
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-069#SURFACE-PARITY");
+use super::configuration_view::{integer_view, preview_view};
+use crate::output::language::{rule_width, viewport};
 use crate::{cli::ShowConfigurationPreviewArgs, output};
 use anyhow::{Result, anyhow, bail};
 use specmark::spec;
@@ -23,7 +25,7 @@ pub(super) fn run(ctx: &output::Context, args: ShowConfigurationPreviewArgs) -> 
     let root = std::path::absolute(&args.path)?;
     let isolated = output::default_registry_isolated();
     if args.interactive {
-        return interactive(&root, args.package, isolated);
+        return interactive(ctx, &root, args.package, isolated);
     }
     let input = args
         .input
@@ -54,12 +56,17 @@ pub(super) fn run(ctx: &output::Context, args: ShowConfigurationPreviewArgs) -> 
     if ctx.is_json() {
         ctx.emit_json(&result)?;
     } else {
-        println!("{}", serde_json::to_string_pretty(&result)?);
+        ctx.block(&preview_view(&result, viewport(), rule_width()));
     }
     Ok(())
 }
 
-fn interactive(root: &std::path::Path, package: String, isolated: bool) -> Result<()> {
+fn interactive(
+    ctx: &output::Context,
+    root: &std::path::Path,
+    package: String,
+    isolated: bool,
+) -> Result<()> {
     let description = configuration_preview(
         root,
         &OrdinaryConfigurationPreviewRequest {
@@ -85,7 +92,7 @@ fn interactive(root: &std::path::Path, package: String, isolated: bool) -> Resul
             "configuration preview source changed after questions were shown; no answers applied"
         );
     }
-    println!("{}", serde_json::to_string_pretty(&result)?);
+    ctx.block(&preview_view(&result, viewport(), rule_width()));
     Ok(())
 }
 
@@ -189,7 +196,7 @@ pub(super) fn run_integer(ctx: &output::Context, args: ShowConfigurationPreviewA
     if ctx.is_json() {
         ctx.emit_json(&result)?;
     } else {
-        println!("{}", serde_json::to_string_pretty(&result)?);
+        ctx.block(&integer_view(&result, viewport(), rule_width()));
     }
     Ok(())
 }

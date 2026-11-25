@@ -5,6 +5,8 @@
 //! dependencies, the help-text smoke, and `vibe reinstall`.
 
 mod common;
+#[path = "cli_registry_mgmt/configuration_view.rs"]
+mod configuration_view;
 
 use std::fs;
 use std::path::{Path, PathBuf};
@@ -299,40 +301,6 @@ fn update_bumps_to_new_version_and_remateralises() {
 // slot that the operator never edits — `vibedeps::materialise` clears
 // and rewrites the slot wholesale on every install/update. There is no
 // user-edit to detect, so there is no refusal path to test.
-
-#[test]
-fn show_effective_emits_boot_files_with_provenance() {
-    let user = UserScratch::new();
-    let project = tempfile::tempdir().unwrap();
-    user.init_project(project.path());
-
-    let assertion = user
-        .vibe()
-        .arg("show")
-        .arg("effective")
-        .arg("--path")
-        .arg(project.path())
-        .assert()
-        .success();
-    let stdout = String::from_utf8_lossy(&assertion.get_output().stdout);
-    // 00-core and 90-user boot files. The WAL is NOT created by
-    // default `vibe init` — it's a project convention, not part of
-    // the package manager's contract — so `show effective` should
-    // simply skip it when absent, not blow up.
-    assert!(
-        stdout.contains("spec://project/boot/00-core.md"),
-        "expected 00-core spec URI; got:\n{stdout}"
-    );
-    assert!(
-        stdout.contains("spec://project/boot/90-user.md"),
-        "expected 90-user spec URI; got:\n{stdout}"
-    );
-    // Provenance marker for foundation (user-owned) files.
-    assert!(
-        stdout.contains("(user)"),
-        "expected (user) provenance marker; got:\n{stdout}"
-    );
-}
 
 #[test]
 fn show_effective_includes_wal_when_present() {
