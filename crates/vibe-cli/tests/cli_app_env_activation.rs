@@ -406,7 +406,8 @@ fn env_missing_notice_is_eval_clean() {
     runtime(&r, "1.0.0", "one");
     let dir = project(&r, "missing");
     let run = |args: &[&str]| {
-        r.user.vibe()
+        r.user
+            .vibe()
             .current_dir(&dir)
             .env("HOME", r.home())
             .env("USERPROFILE", r.home())
@@ -422,8 +423,14 @@ fn env_missing_notice_is_eval_clean() {
     };
     let registry = r.registry();
     ok(&run(&[
-        "install", "-g", "org.example/runtime@1.0.0", "--registry",
-        registry.to_str().unwrap(), "--offline", "--unattended", "--json",
+        "install",
+        "-g",
+        "org.example/runtime@1.0.0",
+        "--registry",
+        registry.to_str().unwrap(),
+        "--offline",
+        "--unattended",
+        "--json",
     ]));
     for (slot, install) in [
         ("runtime", "vibe install -g org.example/runtime@9.9.9"),
@@ -437,16 +444,20 @@ fn env_missing_notice_is_eval_clean() {
         assert!(stdout.lines().next().unwrap().starts_with("export PATH='"));
         assert_eq!(stdout.lines().nth(1), Some("unset VIBE_APP_USE;"));
         let stderr = String::from_utf8_lossy(&out.stderr);
-        assert_eq!(stderr.trim(), format!(
-            "! {slot} wants 9.9.9, which is not installed\n  {install}"
-        ));
+        assert_eq!(
+            stderr.trim(),
+            format!("! {slot} wants 9.9.9, which is not installed\n  {install}")
+        );
         let mut write = args.to_vec();
         write.push("--write-version-file");
         let out = run(&write);
         let stderr = failed(&out);
         assert!(out.stdout.is_empty(), "{out:?}");
         assert_eq!(stderr.matches("not_installed").count(), 1, "{stderr}");
-        assert!(stderr.contains("--write-version-file has no version to write"), "{stderr}");
+        assert!(
+            stderr.contains("--write-version-file has no version to write"),
+            "{stderr}"
+        );
         assert!(stderr.contains(&format!("fix   {install}")), "{stderr}");
         assert!(stderr.contains("PROP-075#VERSION-FILE-WRITE"), "{stderr}");
         assert!(!dir.join(".runtime-version").exists());

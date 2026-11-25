@@ -220,7 +220,11 @@ fn human_row(outcome: &SnapshotOutcome, projection: Option<&RowProjection>) -> R
         payloads.push_str(&format!(
             " · lower bound · {} {} without a size",
             facts.unknown,
-            if facts.unknown == 1 { "input" } else { "inputs" }
+            if facts.unknown == 1 {
+                "input"
+            } else {
+                "inputs"
+            }
         ));
     }
     row.child(payloads)

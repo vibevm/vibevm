@@ -97,5 +97,8 @@ fn self_apply_dry_run_renders_sections() {
          ✗ px      not installed\n\
          ○ PATH    left as it is · /srv/iroot/opt/bin not on it"
     );
-    assert_eq!(trailer_what(&applied), Some("applied site profile corp".into()));
+    assert_eq!(
+        trailer_what(&applied),
+        Some("applied site profile corp".into())
+    );
 }

@@ -224,22 +224,30 @@ pub fn qualify(
     lockfile: &Lockfile,
 ) -> Result<PackageRef> {
     let (qualified, decision) = qualify_for_route(resolver, pkgref, lockfile)?;
-    if let Some(decision) = decision { decision.publish(); }
+    if let Some(decision) = decision {
+        decision.publish();
+    }
     Ok(qualified)
 }
 
 /// A speculative remap route publishes its decision only if it owns the request.
 pub(super) struct RouteAliasDecision(String);
 impl RouteAliasDecision {
-    pub(super) fn publish(self) { eprintln!("{}", self.0); }
+    pub(super) fn publish(self) {
+        eprintln!("{}", self.0);
+    }
 }
 
 /// Compute the existing qualification without announcing a rejected route.
 #[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#short-name")]
 pub(super) fn qualify_for_route(
-    resolver: &InstallResolver, pkgref: &PackageRef, lockfile: &Lockfile,
+    resolver: &InstallResolver,
+    pkgref: &PackageRef,
+    lockfile: &Lockfile,
 ) -> Result<(PackageRef, Option<RouteAliasDecision>)> {
-    if pkgref.is_qualified() { return Ok((pkgref.clone(), None)); }
+    if pkgref.is_qualified() {
+        return Ok((pkgref.clone(), None));
+    }
     let mut decision = None;
     let qualified = match resolve(resolver, &pkgref.name, lockfile)? {
         ShortNameOutcome::Resolved(group) => Ok::<PackageRef, anyhow::Error>(PackageRef {

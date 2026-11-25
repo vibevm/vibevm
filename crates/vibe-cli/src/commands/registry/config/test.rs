@@ -293,7 +293,11 @@ pub(in crate::commands::registry) fn run_test(
         ctx.block(&view::render(&rows, viewport(), rule_width()));
     }
     if !ok {
-        let noun = if failed == 1 { "registry" } else { "registries" };
+        let noun = if failed == 1 {
+            "registry"
+        } else {
+            "registries"
+        };
         bail!(
             "registry_test_failed: {failed} of {total} {noun} did not answer the probe (violates spec://org.vibevm.core/vibevm/VIBEVM-SPEC#registry; fix: `vibe registry list`)"
         );
@@ -344,7 +348,10 @@ fn probe_missing_git_root(url: &str) -> (&'static str, String) {
     match command.output() {
         Ok(output) if !output.status.success() => match output.status.code() {
             Some(code) => ("unreachable", format!("git ls-remote exit {code}")),
-            None => ("unknown", "git ls-remote ended without a numeric exit".into()),
+            None => (
+                "unknown",
+                "git ls-remote ended without a numeric exit".into(),
+            ),
         },
         Ok(_) => (
             "unknown",

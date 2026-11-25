@@ -74,27 +74,41 @@ print(json.dumps([child.wait(), *(streams[m].decode() for m, _ in pairs)]))
 fn clap_usage_error_uses_refusal_shape() {
     let user = UserScratch::new();
     let cases: &[(&[&str], &str, &str)] = &[
-        (&["kit", "init", "/tmp/x/kit.toml"],
-         "✗ usage  unexpected argument /tmp/x/kit.toml\n  fix   vibe kit init --file /tmp/x/kit.toml\n  see   vibe kit init --help\n",
-         "vibe kit init --file /tmp/x/kit.toml"),
-        (&["kit", "init", "/tmp/x space/kit.toml"],
-         "✗ usage  unexpected argument '/tmp/x space/kit.toml' found\n  fix   vibe kit init --help\n",
-         "vibe kit init --help"),
-        (&["kit", "init", "/tmp/x;echo/kit.toml"],
-         "✗ usage  unexpected argument '/tmp/x;echo/kit.toml' found\n  fix   vibe kit init --help\n",
-         "vibe kit init --help"),
-        (&["registry", "remove", "corp4;echo"],
-         "✗ usage  unrecognized subcommand 'corp4;echo'\n  fix   vibe registry remove --help\n",
-         "vibe registry remove --help"),
-        (&["registry", "remove", "corp4"],
-         "✗ usage  unrecognized subcommand corp4\n  fix   vibe registry remove registry corp4\n  see   vibe registry remove --help\n",
-         "vibe registry remove registry corp4"),
-        (&["kit", "init", "--fil", "x"],
-         "✗ usage  unexpected argument '--fil' found\n  why   a similar argument exists: '--file'\n  fix   vibe kit init --help\n",
-         "vibe kit init --help"),
-        (&["app", "extras", "add"],
-         "✗ usage  the following required arguments were not provided: <SLOT> <ITEM>...\n  fix   vibe app extras add --help\n",
-         "vibe app extras add --help"),
+        (
+            &["kit", "init", "/tmp/x/kit.toml"],
+            "✗ usage  unexpected argument /tmp/x/kit.toml\n  fix   vibe kit init --file /tmp/x/kit.toml\n  see   vibe kit init --help\n",
+            "vibe kit init --file /tmp/x/kit.toml",
+        ),
+        (
+            &["kit", "init", "/tmp/x space/kit.toml"],
+            "✗ usage  unexpected argument '/tmp/x space/kit.toml' found\n  fix   vibe kit init --help\n",
+            "vibe kit init --help",
+        ),
+        (
+            &["kit", "init", "/tmp/x;echo/kit.toml"],
+            "✗ usage  unexpected argument '/tmp/x;echo/kit.toml' found\n  fix   vibe kit init --help\n",
+            "vibe kit init --help",
+        ),
+        (
+            &["registry", "remove", "corp4;echo"],
+            "✗ usage  unrecognized subcommand 'corp4;echo'\n  fix   vibe registry remove --help\n",
+            "vibe registry remove --help",
+        ),
+        (
+            &["registry", "remove", "corp4"],
+            "✗ usage  unrecognized subcommand corp4\n  fix   vibe registry remove registry corp4\n  see   vibe registry remove --help\n",
+            "vibe registry remove registry corp4",
+        ),
+        (
+            &["kit", "init", "--fil", "x"],
+            "✗ usage  unexpected argument '--fil' found\n  why   a similar argument exists: '--file'\n  fix   vibe kit init --help\n",
+            "vibe kit init --help",
+        ),
+        (
+            &["app", "extras", "add"],
+            "✗ usage  the following required arguments were not provided: <SLOT> <ITEM>...\n  fix   vibe app extras add --help\n",
+            "vibe app extras add --help",
+        ),
     ];
     // Match the active roles.rs palette: alert red, labels dim, commands blue.
     let alert = console::Style::new().red().force_styling(true);
@@ -109,13 +123,25 @@ fn clap_usage_error_uses_refusal_shape() {
         assert_eq!(status, 2);
         assert!(stdout.is_empty(), "{stdout:?}");
         assert_eq!(console::strip_ansi_codes(&stderr), expected);
-        assert!(stderr.contains(&alert.apply_to("✗").to_string()), "{stderr:?}");
+        assert!(
+            stderr.contains(&alert.apply_to("✗").to_string()),
+            "{stderr:?}"
+        );
         let headline = expected.lines().next().unwrap().strip_prefix("✗ ").unwrap();
-        assert!(stderr.contains(&alert.apply_to(headline).to_string()), "{stderr:?}");
-        assert!(stderr.contains(&accent.apply_to(fix).to_string()), "{stderr:?}");
+        assert!(
+            stderr.contains(&alert.apply_to(headline).to_string()),
+            "{stderr:?}"
+        );
+        assert!(
+            stderr.contains(&accent.apply_to(fix).to_string()),
+            "{stderr:?}"
+        );
         for label in ["why", "fix", "see"] {
             if expected.contains(&format!("  {label}   ")) {
-                assert!(stderr.contains(&dim.apply_to(label).to_string()), "{stderr:?}");
+                assert!(
+                    stderr.contains(&dim.apply_to(label).to_string()),
+                    "{stderr:?}"
+                );
             }
         }
     }

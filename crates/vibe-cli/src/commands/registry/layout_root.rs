@@ -112,7 +112,9 @@ pub(crate) fn open(
 
 /// Open an alias table's registry, naming the errand only for git failures.
 /// Policy and cancellation retain their original typed error identities.
-#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#failure-discriminator")]
+#[spec(
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#failure-discriminator"
+)]
 pub(crate) fn open_alias(
     reg: &RegistrySection,
     mirrors: &[MirrorSection],

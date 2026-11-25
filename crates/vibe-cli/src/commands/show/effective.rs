@@ -265,7 +265,11 @@ pub(super) fn run_effective(ctx: &output::Context, args: ShowEffectiveArgs) -> R
     let count = format!(
         "{} {}",
         sections.len(),
-        if sections.len() == 1 { "section" } else { "sections" },
+        if sections.len() == 1 {
+            "section"
+        } else {
+            "sections"
+        },
     );
     ctx.block_err(&format!(
         "  {}",

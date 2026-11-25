@@ -546,7 +546,11 @@ fn recommendation_credit_matches_selected_version() {
             "vibe.toml",
         ));
         assert!(slot.is_file(), "the selected companion is materialised");
-        assert!(fs::read_to_string(slot).unwrap().contains("version = \"1.0.0\""));
+        assert!(
+            fs::read_to_string(slot)
+                .unwrap()
+                .contains("version = \"1.0.0\"")
+        );
 
         assert_eq!(incompatible["outcome"], "skipped", "{document}");
         assert_eq!(

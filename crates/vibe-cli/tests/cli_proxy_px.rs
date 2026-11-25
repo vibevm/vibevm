@@ -235,7 +235,10 @@ fn mode_none_from_the_environment_turns_a_configured_px_off() {
     );
     let show = vibe(&w).args(["self", "apply", "--show"]).output().unwrap();
     let text = String::from_utf8_lossy(&show.stdout);
-    assert!(row_starts(&text, &["proxy", "mode", "px", "·", "user", "config"]), "{text}");
+    assert!(
+        row_starts(&text, &["proxy", "mode", "px", "·", "user", "config"]),
+        "{text}"
+    );
     assert!(
         row_starts(&text, &["proxy", "upstream", "proxy.example.corp:8080"]),
         "{text}"

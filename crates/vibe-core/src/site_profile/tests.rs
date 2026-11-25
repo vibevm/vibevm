@@ -136,7 +136,9 @@ fn parse_error_carries_its_code_and_leaves_the_diagnostic_to_its_source() {
     .expect_err("an unknown proxy mode is refused");
     let message = error.to_string();
     assert!(
-        message.starts_with("site_profile_invalid: /srv/bad-site.toml is not a valid site profile (violates "),
+        message.starts_with(
+            "site_profile_invalid: /srv/bad-site.toml is not a valid site profile (violates "
+        ),
         "{message}"
     );
     assert!(

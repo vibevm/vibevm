@@ -237,9 +237,9 @@ mod tests {
         let rendered = render_outline(&document, 160);
         let plain = console::strip_ansi_codes(&rendered);
         assert!(plain.contains("org.vibevm.node/node@26.13.0 · slot node · 1 installer option"));
-        assert!(plain.contains(
-            "  linux-x64  Node.js 26.13.0  linux/x86_64  · result owned · portable"
-        ));
+        assert!(
+            plain.contains("  linux-x64  Node.js 26.13.0  linux/x86_64  · result owned · portable")
+        );
         let children = [
             "feature docs: Documentation [default]",
             "1. node  (archive)  Download Node.js",
@@ -283,7 +283,10 @@ mod tests {
         assert!(plain.contains("(archive, finish, optional)"));
         assert!(plain.contains("launcher node (command, menu, default) → bin/node"));
         assert!(plain.contains("launcher node (override, menu, default) → bin/other-node"));
-        let parents: Vec<_> = plain.lines().filter(|line| line.starts_with("  ")).collect();
+        let parents: Vec<_> = plain
+            .lines()
+            .filter(|line| line.starts_with("  "))
+            .collect();
         assert_eq!(parents.len(), 14);
         let first = parents
             .iter()
@@ -321,7 +324,9 @@ mod tests {
             let tokens: Vec<_> = text.split_whitespace().collect();
             tokens.windows(2).any(|pair| pair == ["not", "portable"])
         };
-        assert!(!has_not_portable("result external `/opt/node` · notportable"));
+        assert!(!has_not_portable(
+            "result external `/opt/node` · notportable"
+        ));
         for (index, start) in starts.iter().copied().enumerate() {
             let end = starts.get(index + 1).copied().unwrap_or(lines.len());
             let block = &lines[start..end];

@@ -212,7 +212,12 @@ pub(super) fn run_mirror(
     // mirror report is a wire schema of its own, and these three counts
     // do not earn a format change of their own yet (B-293).
     for (alias, target) in &alias_merge.dropped {
-        ctx.diagnostic(&aliases::drop_warning(alias, target, &target_index, &planned));
+        ctx.diagnostic(&aliases::drop_warning(
+            alias,
+            target,
+            &target_index,
+            &planned,
+        ));
     }
     for (alias, held, offered) in &alias_merge.conflicts {
         ctx.diagnostic(&format!(

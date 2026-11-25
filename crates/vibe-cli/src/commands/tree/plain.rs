@@ -210,7 +210,8 @@ pub fn legend(tree: &PackageTree) -> String {
 #[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-036#OUT-PLAIN")]
 pub fn layer_summary(tree: &PackageTree) -> String {
     let lane_name = tree.boot.static_lane_name.as_str();
-    let plural = |n: usize, one: &str, many: &str| format!("{n} {}", if n == 1 { one } else { many });
+    let plural =
+        |n: usize, one: &str, many: &str| format!("{n} {}", if n == 1 { one } else { many });
     let lane = match &tree.boot.static_md {
         Some(lane) => format!(
             "{lane_name} {} · {} · {}",

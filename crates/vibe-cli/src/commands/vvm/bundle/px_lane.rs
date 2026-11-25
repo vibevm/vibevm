@@ -449,7 +449,13 @@ pub(in crate::commands::vvm) fn px_beside_for_site(
     dir: &Path,
     progress: &Progress,
 ) -> Result<companions::PxOutcome> {
-    px_beside_rows(store, vibe_net::px_store::PxPin::embedded(), dir, progress, true)
+    px_beside_rows(
+        store,
+        vibe_net::px_store::PxPin::embedded(),
+        dir,
+        progress,
+        true,
+    )
 }
 
 fn px_beside_rows(

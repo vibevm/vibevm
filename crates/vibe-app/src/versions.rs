@@ -385,9 +385,10 @@ fn one_package(
 ) -> Result<wire::Package, VersionsError> {
     let coordinate = heading.coordinate();
     let installed = installed_of(index, heading);
-    let has_installations = index.installations.values().any(|record| {
-        record.package.group == heading.group && record.package.name == heading.name
-    });
+    let has_installations = index
+        .installations
+        .values()
+        .any(|record| record.package.group == heading.group && record.package.name == heading.name);
     let domain = presence::observed_domain(heading, request, has_installations, domains)?;
 
     // The union: every version the domain carries plus every version this

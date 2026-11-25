@@ -148,7 +148,11 @@ fn hop_rows_with_origin(
         rows.push(tls_row);
     }
     if let Some(status) = &hop.status_line {
-        let mut response = row("response", status.clone(), vec![took(hop.timings.request_ms)]);
+        let mut response = row(
+            "response",
+            status.clone(),
+            vec![took(hop.timings.request_ms)],
+        );
         if verbose && index + 1 < probe.hops.len() {
             response.children = hop
                 .headers
@@ -187,7 +191,11 @@ pub(super) fn probe_rows(probe: &Probe, verbose: bool) -> Vec<PhaseRow> {
 }
 
 pub(super) fn print_rows(ctx: &Context, rows: &[PhaseRow]) {
-    let width = rows.iter().map(|row| shown(row.phase).len()).max().unwrap_or(0);
+    let width = rows
+        .iter()
+        .map(|row| shown(row.phase).len())
+        .max()
+        .unwrap_or(0);
     for row in rows {
         let glyph = if row.ok { Glyph::Done } else { Glyph::Failed };
         let mut block = Block::new(glyph, format!("{:<width$}  {}", shown(row.phase), row.text))
@@ -417,7 +425,10 @@ mod tests {
         };
         assert_eq!(
             done_text(&download, Duration::ZERO, false),
-            format!("✻ downloaded /o/f.txt · 6 B · 0s\n  sha256 {}", "ab".repeat(32))
+            format!(
+                "✻ downloaded /o/f.txt · 6 B · 0s\n  sha256 {}",
+                "ab".repeat(32)
+            )
         );
     }
 

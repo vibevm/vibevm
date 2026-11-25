@@ -54,12 +54,15 @@ fn view(report: &SearchReport, width: usize, rule: usize) -> String {
     if report.hits.is_empty() {
         if !report.registries_searched.is_empty() {
             parts.push(
-                Block::new(Glyph::Skipped, format!("no package matches {}", report.query))
-                    .with_meta(vec![Meta::note(format!(
-                        "searched {}",
-                        report.registries_searched.join(" · ")
-                    ))])
-                    .render_at(width),
+                Block::new(
+                    Glyph::Skipped,
+                    format!("no package matches {}", report.query),
+                )
+                .with_meta(vec![Meta::note(format!(
+                    "searched {}",
+                    report.registries_searched.join(" · ")
+                ))])
+                .render_at(width),
             );
         }
     } else {
@@ -89,32 +92,54 @@ fn view(report: &SearchReport, width: usize, rule: usize) -> String {
         );
         let mut hits = format!(
             "{}\n{}\n{}",
-            heading(&format!("search {}", report.query), Some(&right), width, rule),
-            List::new(rows.collect()).meta_column().children_under(1).render_at(width),
-            hint_line(&format!("searched {}", report.registries_searched.join(" · ")), width)
+            heading(
+                &format!("search {}", report.query),
+                Some(&right),
+                width,
+                rule
+            ),
+            List::new(rows.collect())
+                .meta_column()
+                .children_under(1)
+                .render_at(width),
+            hint_line(
+                &format!("searched {}", report.registries_searched.join(" · ")),
+                width
+            )
         );
         if !report.registries_full_scanned.is_empty() {
             hits.push('\n');
             hits.push_str(&hint_line(
-                &format!("full-scanned {}", report.registries_full_scanned.join(" · ")),
+                &format!(
+                    "full-scanned {}",
+                    report.registries_full_scanned.join(" · ")
+                ),
                 width,
             ));
         }
         parts.push(hits);
     }
-    let rows: Vec<_> = report.hits.iter().filter(|hit| !hit.short_names.is_empty()).map(|hit| {
-        Row::new(vec![
-            Cell::new(hit.short_names.join(", "), Role::Accent),
-            Cell::text(qualified(hit)),
-        ])
-        .meta(vec![Meta::note(&hit.registry)])
-    }).collect();
+    let rows: Vec<_> = report
+        .hits
+        .iter()
+        .filter(|hit| !hit.short_names.is_empty())
+        .map(|hit| {
+            Row::new(vec![
+                Cell::new(hit.short_names.join(", "), Role::Accent),
+                Cell::text(qualified(hit)),
+            ])
+            .meta(vec![Meta::note(&hit.registry)])
+        })
+        .collect();
     if !rows.is_empty() {
         parts.push(format!(
             "{}\n{}\n{}",
             heading("short names", None, width, rule),
             List::new(rows).render_at(width),
-            hint_line("type these bare; every other hit needs its group/name", width)
+            hint_line(
+                "type these bare; every other hit needs its group/name",
+                width
+            )
         ));
     }
     let registries = registries(report, width, rule);
@@ -127,29 +152,53 @@ fn view(report: &SearchReport, width: usize, rule: usize) -> String {
 fn registries(report: &SearchReport, width: usize, rule: usize) -> String {
     let mut rows = Vec::new();
     for registry in &report.registries_unreachable {
-        rows.push(Row::new(vec![Cell::text(&registry.name), Cell::text("unreachable")])
-            .glyph(Glyph::Failed, Role::Alert)
-            .child(cut(&registry.reason, width.saturating_sub(6))));
+        rows.push(
+            Row::new(vec![Cell::text(&registry.name), Cell::text("unreachable")])
+                .glyph(Glyph::Failed, Role::Alert)
+                .child(cut(&registry.reason, width.saturating_sub(6))),
+        );
     }
     for registry in &report.registries_policy_skipped {
-        rows.push(Row::new(vec![Cell::text(&registry.name), Cell::text("skipped by source policy")])
+        rows.push(
+            Row::new(vec![
+                Cell::text(&registry.name),
+                Cell::text("skipped by source policy"),
+            ])
             .glyph(Glyph::Skipped, Role::Dim)
-            .child(cut(&registry.reason, width.saturating_sub(6))));
+            .child(cut(&registry.reason, width.saturating_sub(6))),
+        );
     }
     for registry in &report.registries_full_scan_unsupported {
-        rows.push(Row::new(vec![Cell::text(&registry.name), Cell::text("full scan unsupported")])
+        rows.push(
+            Row::new(vec![
+                Cell::text(&registry.name),
+                Cell::text("full scan unsupported"),
+            ])
             .glyph(Glyph::Skipped, Role::Dim)
-            .child(cut(&registry.reason, width.saturating_sub(6))));
+            .child(cut(&registry.reason, width.saturating_sub(6))),
+        );
     }
     for name in &report.registries_unconfigured {
-        rows.push(Row::new(vec![Cell::text(name), Cell::text("no index URL")])
-            .glyph(Glyph::Skipped, Role::Dim)
-            .child(cut("set VIBEVM_INDEX_URL_<R> to search it", width.saturating_sub(6))));
+        rows.push(
+            Row::new(vec![Cell::text(name), Cell::text("no index URL")])
+                .glyph(Glyph::Skipped, Role::Dim)
+                .child(cut(
+                    "set VIBEVM_INDEX_URL_<R> to search it",
+                    width.saturating_sub(6),
+                )),
+        );
     }
     if rows.is_empty() {
         return String::new();
     }
-    bounded(&format!("{}\n{}", heading("registries", None, width, rule), List::new(rows).render_at(width)), width)
+    bounded(
+        &format!(
+            "{}\n{}",
+            heading("registries", None, width, rule),
+            List::new(rows).render_at(width)
+        ),
+        width,
+    )
 }
 
 // The shared rule reserves at least four fill cells. Budget labels before
@@ -170,7 +219,10 @@ fn bounded(text: &str, width: usize) -> String {
     if width == 0 {
         return String::new();
     }
-    text.lines().map(|line| cut(line, width)).collect::<Vec<_>>().join("\n")
+    text.lines()
+        .map(|line| cut(line, width))
+        .collect::<Vec<_>>()
+        .join("\n")
 }
 
 fn hint_line(text: &str, width: usize) -> String {

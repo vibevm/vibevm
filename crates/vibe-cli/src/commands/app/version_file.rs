@@ -88,7 +88,11 @@ pub(super) fn install_spelling(
         Some(decided) => {
             ctx.decision(&format!(
                 "  {} asks for {} · {} · {}",
-                decided.path.file_name().unwrap_or_default().to_string_lossy(),
+                decided
+                    .path
+                    .file_name()
+                    .unwrap_or_default()
+                    .to_string_lossy(),
                 decided.authored,
                 decided.spelling,
                 output::language::short_path(&decided.path.display().to_string())

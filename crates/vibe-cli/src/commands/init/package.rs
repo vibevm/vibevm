@@ -152,10 +152,20 @@ pub(super) fn create_package_in_project(
     if let Some(app) = &app {
         let tables: toml::Value = toml::from_str(&app.manifest_tail()?)?;
         let steps = tables["installer_options"][0]["steps"].as_array();
-        let has = |kind: &str| steps.is_some_and(|steps| {
-            steps.iter().any(|step| step.get("kind").and_then(toml::Value::as_str) == Some(kind))
-        });
-        let way = if has("archive") { "prebuilt" } else if has("sources") { "source" } else { "recipe" };
+        let has = |kind: &str| {
+            steps.is_some_and(|steps| {
+                steps
+                    .iter()
+                    .any(|step| step.get("kind").and_then(toml::Value::as_str) == Some(kind))
+            })
+        };
+        let way = if has("archive") {
+            "prebuilt"
+        } else if has("sources") {
+            "source"
+        } else {
+            "recipe"
+        };
         descriptor.push_str(&format!(", {way}"));
     }
     ctx.rule(&format!(

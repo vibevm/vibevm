@@ -161,7 +161,9 @@ fn applications_follow_the_install_root_and_earlier_ones_keep_working() {
             &[
                 "applications",
                 store.join("apps").display().to_string().as_str(),
-                "·", "commands", "in",
+                "·",
+                "commands",
+                "in",
                 bin.display().to_string().as_str(),
             ],
         ),

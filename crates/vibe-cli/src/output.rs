@@ -419,7 +419,9 @@ impl Context {
     }
     /// Defer interactive input display; control and accounting remain live.
     pub(crate) fn defer_input_progress(&self) -> Option<impl Drop> {
-        self.progress_renderer.as_ref().filter(|renderer| renderer.is_interactive())
+        self.progress_renderer
+            .as_ref()
+            .filter(|renderer| renderer.is_interactive())
             .map(|renderer| renderer.defer_input())
     }
     /// Release input display after the single qualification pass.

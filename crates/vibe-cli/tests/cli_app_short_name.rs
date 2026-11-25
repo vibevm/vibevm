@@ -482,14 +482,24 @@ fn versions_keeps_its_own_refusal_for_a_word_no_registry_carries() {
 
 /// Decisions precede even the first parent frame, without a second lookup.
 #[test]
-#[specmark::spec(verifies = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#short-name")]
+#[specmark::spec(
+    verifies = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#short-name"
+)]
 fn alias_decision_prints_once_outside_panel() {
     let site = Site::new();
     let fixture = site.path("decision-reg/org.vibevm.node/node/v1.0.0");
     fs::create_dir_all(&fixture).unwrap();
-    fs::write(fixture.join("vibe.toml"), "[package]\nname='node'\ngroup='org.vibevm.node'\nkind='tool'\nversion='1.0.0'\n").unwrap();
+    fs::write(
+        fixture.join("vibe.toml"),
+        "[package]\nname='node'\ngroup='org.vibevm.node'\nkind='tool'\nversion='1.0.0'\n",
+    )
+    .unwrap();
     fs::create_dir_all(site.path("decision-reg/_index")).unwrap();
-    fs::write(site.path("decision-reg/_index/aliases.toml"), "schema=1\n[aliases]\nnode='org.vibevm.node/node'\n").unwrap();
+    fs::write(
+        site.path("decision-reg/_index/aliases.toml"),
+        "schema=1\n[aliases]\nnode='org.vibevm.node/node'\n",
+    )
+    .unwrap();
     fs::write(site.path("settings/registry.toml"), format!("[[registry]]\nname='corp'\ntype='localdir'\nurl='file://{}'\n[source_policy]\nexclude_hosting=['github','gitverse']\n", site.path("decision-reg").display())).unwrap();
     let script = r#"
 import errno, fcntl, json, os, pathlib, pty, re, select, signal, struct, subprocess, sys, termios, time
@@ -542,9 +552,16 @@ visible=re.sub(r'\x1b\[[0-?]*[ -/]*[@-~]', '', text)
 assert re.search(r'[⠋⠙⠹⠸⠼⠴⠦⠧⠇⠏●] └ Resolving dependencies',visible), 'no explicitly active child frame'
 print(json.dumps({'decision_count':1,'before_first_parent':True,'active_child':True,'exit':0}))
 "#;
-    let output = Command::new("python3").args(["-I", "-c", script, env!("CARGO_BIN_EXE_vibe")])
-        .arg(site.root.path()).output().unwrap();
-    assert!(output.status.success(), "decision ordering fixture failed: {}", String::from_utf8_lossy(&output.stderr));
+    let output = Command::new("python3")
+        .args(["-I", "-c", script, env!("CARGO_BIN_EXE_vibe")])
+        .arg(site.root.path())
+        .output()
+        .unwrap();
+    assert!(
+        output.status.success(),
+        "decision ordering fixture failed: {}",
+        String::from_utf8_lossy(&output.stderr)
+    );
     let report: serde_json::Value = serde_json::from_slice(&output.stdout).unwrap();
     assert_eq!(report["decision_count"], 1);
     assert_eq!(report["before_first_parent"], true);
@@ -552,10 +569,19 @@ print(json.dumps({'decision_count':1,'before_first_parent':True,'active_child':T
     // qualify the original bare request a second time.
     let app = manifest("org.vibevm.node", "node")
         .replace("/opt/node", site.path("synthetic-app").to_str().unwrap())
-        .replacen("\ninstall = \"true\"\n", "\ninstall = 'mkdir -p \"$VIBE_APP_ROOT\"'\n", 1);
+        .replacen(
+            "\ninstall = \"true\"\n",
+            "\ninstall = 'mkdir -p \"$VIBE_APP_ROOT\"'\n",
+            1,
+        );
     fs::write(fixture.join("vibe.toml"), app).unwrap();
     let global = site.vibe(&["install", "-g", "node", "--assume-yes"]);
     assert!(global.status.success(), "selected global install failed");
-    assert_eq!(stderr(&global).matches("node → org.vibevm.node/node").count(), 1);
+    assert_eq!(
+        stderr(&global)
+            .matches("node → org.vibevm.node/node")
+            .count(),
+        1
+    );
     assert!(!String::from_utf8_lossy(&global.stdout).contains("node →"));
 }

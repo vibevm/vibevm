@@ -357,10 +357,19 @@ fn a_failing_apply_never_touches_the_runtime_and_names_its_retry() {
     let key = "org.example/runtime@1.0.0";
     let mut prior = before["installations"][key].clone();
     let mut current = after["installations"][key].clone();
-    prior.as_object_mut().expect("installed record").remove("extras");
-    current.as_object_mut().expect("installed record").remove("extras");
+    prior
+        .as_object_mut()
+        .expect("installed record")
+        .remove("extras");
+    current
+        .as_object_mut()
+        .expect("installed record")
+        .remove("extras");
     assert_eq!(prior, current, "runtime installation unchanged");
-    assert!(applied(&r).is_empty(), "failed adapter never ran the runtime");
+    assert!(
+        applied(&r).is_empty(),
+        "failed adapter never ran the runtime"
+    );
 }
 
 /// `vibe app extras add|drop|import` edit the user's own file and install
@@ -567,9 +576,11 @@ fn extras_edit_ends_with_a_trailer() {
     fs::write(&file, "pnpm@9\ntypescript\n@scope/pkg@^1.2\n").unwrap();
     let shown = ok(&extras(&r, "import", &[file.to_str().unwrap()]));
     assert!(
-        shown.lines().last().unwrap().starts_with(
-            "✻ imported 2 items into runtime's npm list · 3 in all · "
-        ),
+        shown
+            .lines()
+            .last()
+            .unwrap()
+            .starts_with("✻ imported 2 items into runtime's npm list · 3 in all · "),
         "{shown}"
     );
 }

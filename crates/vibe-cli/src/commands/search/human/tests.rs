@@ -1,7 +1,7 @@
 //! The human answer of vibe search at a fixed width. Glyphs asserted here: └ ✗ ○.
 
-use super::*;
 use super::super::report::{HitRow, UnreachableRegistry};
+use super::*;
 
 fn report() -> SearchReport {
     SearchReport {
@@ -53,8 +53,12 @@ fn search_view_rows_fit_viewport() {
     let expected = format!(
         "{}\n  {:<4}  {:<28}  {:<5}  corp · score 1\n        └ A test application package for node-runtime\n  {:<4}  {:<28}  {:<5}  mirror · score 1  [full-scan]\n  searched corp · mirror\n\n{}\n  node  org.vibevm.node/node-runtime · corp\n  type these bare; every other hit needs its group/name\n\n{}\n✗ broken  unreachable\n  └ probe of http://x/repomd.json failed\n○ quiet   no index URL\n  └ set VIBEVM_INDEX_URL_<R> to search it",
         rule_at("search node", Some("2 hits · 2 registries searched"), 80),
-        "app", "org.vibevm.node/node-runtime", "1.0.0",
-        "flow", "wal", "-",
+        "app",
+        "org.vibevm.node/node-runtime",
+        "1.0.0",
+        "flow",
+        "wal",
+        "-",
         rule_at("short names", None, 80),
         rule_at("registries", None, 80),
     );
@@ -63,7 +67,10 @@ fn search_view_rows_fit_viewport() {
     long.query = "界".repeat(80);
     for width in [0, 1, 7, 8, 9, 20, 40] {
         for line in view(&long, width, width).lines() {
-            assert!(console::measure_text_width(line) <= width, "width {width}: {line:?}");
+            assert!(
+                console::measure_text_width(line) <= width,
+                "width {width}: {line:?}"
+            );
         }
     }
 }
@@ -76,7 +83,10 @@ fn search_view_no_match_is_one_line() {
     report.registries_unconfigured.clear();
     report.registries_unreachable.clear();
     report.query = "zzzz".into();
-    assert_eq!(view(&report, 80, 80), "○ no package matches zzzz · searched corp · mirror");
+    assert_eq!(
+        view(&report, 80, 80),
+        "○ no package matches zzzz · searched corp · mirror"
+    );
 }
 
 #[test]
@@ -85,7 +95,10 @@ fn search_view_short_names_sit_under_a_rule() {
     let mut lines = view.lines();
     let rule = rule_at("short names", None, 80);
     assert!(lines.any(|line| line == rule));
-    assert_eq!(lines.next(), Some("  node  org.vibevm.node/node-runtime · corp"));
+    assert_eq!(
+        lines.next(),
+        Some("  node  org.vibevm.node/node-runtime · corp")
+    );
 }
 
 #[test]
@@ -96,12 +109,19 @@ fn search_view_qualified_names_and_registry_order() {
     report.hits[1].group = Some(String::new());
     assert_eq!(qualified(&report.hits[1]), "/wal");
     report.registries_full_scanned.push("mirror".into());
-    report.registries_policy_skipped.push(super::super::report::PolicySkippedRegistry {
-        name: "policy".into(), observation: "unknown", reason: "contact refused".into(),
-    });
-    report.registries_full_scan_unsupported.push(UnreachableRegistry {
-        name: "unsupported".into(), reason: "unsupported host".into(),
-    });
+    report
+        .registries_policy_skipped
+        .push(super::super::report::PolicySkippedRegistry {
+            name: "policy".into(),
+            observation: "unknown",
+            reason: "contact refused".into(),
+        });
+    report
+        .registries_full_scan_unsupported
+        .push(UnreachableRegistry {
+            name: "unsupported".into(),
+            reason: "unsupported host".into(),
+        });
     let text = view(&report, 80, 80);
     assert!(text.contains("  full-scanned mirror"));
     assert!(text.find("✗ broken").unwrap() < text.find("○ policy").unwrap());

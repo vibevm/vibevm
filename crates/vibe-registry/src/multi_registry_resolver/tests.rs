@@ -31,13 +31,34 @@ fn fix13_registry_presence_absent_empty_and_versions_are_distinct() {
         Arc::new(FakeBackend::default()),
         cache.path().into(),
     );
-    assert_eq!(resolver.list_versions_with_presence(&org(), "missing").unwrap(), None);
-    assert_eq!(resolver.list_versions_with_presence(&org(), "empty").unwrap(), Some(vec![]));
+    assert_eq!(
+        resolver
+            .list_versions_with_presence(&org(), "missing")
+            .unwrap(),
+        None
+    );
+    assert_eq!(
+        resolver
+            .list_versions_with_presence(&org(), "empty")
+            .unwrap(),
+        Some(vec![])
+    );
     let expected = vec![semver::Version::new(1, 2, 3)];
-    assert_eq!(resolver.list_versions_with_presence(&org(), "full").unwrap(), Some(expected.clone()));
+    assert_eq!(
+        resolver
+            .list_versions_with_presence(&org(), "full")
+            .unwrap(),
+        Some(expected.clone())
+    );
     assert_eq!(resolver.list_versions(&org(), "full").unwrap(), expected);
-    assert!(matches!(resolver.list_versions(&org(), "empty"), Err(RegistryError::NoMatchingVersion { .. })));
-    assert!(matches!(resolver.list_versions(&org(), "missing"), Err(RegistryError::PackageNotFoundEverywhere { .. })));
+    assert!(matches!(
+        resolver.list_versions(&org(), "empty"),
+        Err(RegistryError::NoMatchingVersion { .. })
+    ));
+    assert!(matches!(
+        resolver.list_versions(&org(), "missing"),
+        Err(RegistryError::PackageNotFoundEverywhere { .. })
+    ));
 }
 
 #[test]
@@ -49,11 +70,23 @@ fn fix13_registry_presence_keeps_priority_after_empty_and_propagates_malformed()
     std::fs::create_dir_all(second.path().join("org.vibevm/wal/v2.0.0")).unwrap();
     std::fs::create_dir_all(second.path().join("org.vibevm/bad/vinvalid")).unwrap();
     let resolver = MultiRegistryResolver::new(
-        vec![presence_local(first.path(), "first"), presence_local(second.path(), "second")],
-        vec![], vec![], Arc::new(FakeBackend::default()), cache.path().into(),
+        vec![
+            presence_local(first.path(), "first"),
+            presence_local(second.path(), "second"),
+        ],
+        vec![],
+        vec![],
+        Arc::new(FakeBackend::default()),
+        cache.path().into(),
     );
-    assert_eq!(resolver.list_versions_with_presence(&org(), "wal").unwrap(), Some(vec![semver::Version::new(2, 0, 0)]));
-    assert!(matches!(resolver.list_versions_with_presence(&org(), "bad"), Err(RegistryError::BadVersionDir { .. })));
+    assert_eq!(
+        resolver.list_versions_with_presence(&org(), "wal").unwrap(),
+        Some(vec![semver::Version::new(2, 0, 0)])
+    );
+    assert!(matches!(
+        resolver.list_versions_with_presence(&org(), "bad"),
+        Err(RegistryError::BadVersionDir { .. })
+    ));
 }
 
 #[derive(Default)]
@@ -73,7 +106,12 @@ impl GitBackend for PresenceBackend {
         self.calls.fetch_add(1, std::sync::atomic::Ordering::SeqCst);
         self.fake.list_tags(url)
     }
-    fn fetch_file_at_ref(&self, url: &str, reference: &str, path: &str) -> Result<Vec<u8>, GitError> {
+    fn fetch_file_at_ref(
+        &self,
+        url: &str,
+        reference: &str,
+        path: &str,
+    ) -> Result<Vec<u8>, GitError> {
         self.fake.fetch_file_at_ref(url, reference, path)
     }
 }
@@ -83,16 +121,37 @@ fn fix13_registry_presence_does_not_add_a_remote_probe_or_confirm_auth_absence()
     let cache = tempdir().unwrap();
     let backend = Arc::new(PresenceBackend::default());
     let resolver = MultiRegistryResolver::from_manifest(
-        &[registry_section("synthetic", "git+file:///synthetic-registry")],
-        &[], &[], cache.path().into(), backend.clone(), DEFAULT_FRESHNESS_SECS,
-    ).unwrap();
-    let url = resolver.registries().unwrap()[0].package_repo_url(&org(), "wal").unwrap();
-    backend.fake.seed_tags(strip_git_plus_prefix(&url), vec!["v1.0.0".into()]);
-    assert_eq!(resolver.list_versions_with_presence(&org(), "wal").unwrap(), Some(vec![semver::Version::new(1, 0, 0)]));
+        &[registry_section(
+            "synthetic",
+            "git+file:///synthetic-registry",
+        )],
+        &[],
+        &[],
+        cache.path().into(),
+        backend.clone(),
+        DEFAULT_FRESHNESS_SECS,
+    )
+    .unwrap();
+    let url = resolver.registries().unwrap()[0]
+        .package_repo_url(&org(), "wal")
+        .unwrap();
+    backend
+        .fake
+        .seed_tags(strip_git_plus_prefix(&url), vec!["v1.0.0".into()]);
+    assert_eq!(
+        resolver.list_versions_with_presence(&org(), "wal").unwrap(),
+        Some(vec![semver::Version::new(1, 0, 0)])
+    );
     assert_eq!(backend.calls.load(std::sync::atomic::Ordering::SeqCst), 1);
-    let url = resolver.registries().unwrap()[0].package_repo_url(&org(), "denied").unwrap();
+    let url = resolver.registries().unwrap()[0]
+        .package_repo_url(&org(), "denied")
+        .unwrap();
     backend.fake.seed_auth_failure(strip_git_plus_prefix(&url));
-    assert!(resolver.list_versions_with_presence(&org(), "denied").is_err());
+    assert!(
+        resolver
+            .list_versions_with_presence(&org(), "denied")
+            .is_err()
+    );
 }
 
 #[test]

@@ -72,7 +72,14 @@ pub(super) fn rows(rows: &[LinkDir]) -> Vec<super::view::DoctorRow> {
                 Some(target) => format!("→ {}", target.display()),
                 None => "no link · the slot is off or its payload directory is absent".into(),
             }],
-            states: vec![if row.on_path { "on PATH" } else { "not on PATH" }.into()],
+            states: vec![
+                if row.on_path {
+                    "on PATH"
+                } else {
+                    "not on PATH"
+                }
+                .into(),
+            ],
             children: Vec::new(),
         })
         .collect()

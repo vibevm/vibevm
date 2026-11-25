@@ -104,9 +104,18 @@ fn summary_error(rows: &[CheckRow]) -> Option<DlError> {
     let first = *hard.first()?;
     let proxy = hard.iter().any(|row| row.proxy_side);
     Some(DlError {
-        code: if proxy { "dl_proxy_problem" } else { "dl_target_problem" },
+        code: if proxy {
+            "dl_proxy_problem"
+        } else {
+            "dl_target_problem"
+        },
         exit: if proxy { PROXY_PROBLEM } else { TARGET_PROBLEM },
-        detail: format!("{} of {} checks failed: {}", hard.len(), rows.len(), first.check),
+        detail: format!(
+            "{} of {} checks failed: {}",
+            hard.len(),
+            rows.len(),
+            first.check
+        ),
         fix: first.fix.clone().unwrap_or_default(),
         why: Some(first.detail.clone()),
     })
@@ -184,10 +193,7 @@ pub(super) fn run(ctx: &Context, args: &DlArgs, offline: bool) -> Result<()> {
             "test a host outside no_proxy",
         ));
     } else {
-        rows.push(CheckRow::ok(
-            "no_proxy",
-            format!("{host} is not bypassed"),
-        ));
+        rows.push(CheckRow::ok("no_proxy", format!("{host} is not bypassed")));
     }
     if let Some(px) = session.route().px() {
         let source = match &px.pac {
@@ -356,7 +362,9 @@ fn rows_as_phases(rows: &[CheckRow]) -> Vec<PhaseRow> {
             text: if row.result == "warn" {
                 format!("{} (warning)", row.detail)
             } else {
-                row.summary.map(str::to_owned).unwrap_or_else(|| row.detail.clone())
+                row.summary
+                    .map(str::to_owned)
+                    .unwrap_or_else(|| row.detail.clone())
             },
             meta: Vec::new(),
             children: Vec::new(),

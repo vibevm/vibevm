@@ -344,7 +344,8 @@ fn env_write_receipt_stays_on_stderr() {
     runtime(&r, "alpha", "alpha", "1.0.0");
     let dir = project(&r, "receipt");
     let run = |args: &[&str]| {
-        r.user.vibe()
+        r.user
+            .vibe()
             .current_dir(&dir)
             .env("HOME", r.home())
             .env("USERPROFILE", r.home())
@@ -360,23 +361,48 @@ fn env_write_receipt_stays_on_stderr() {
     };
     let registry = r.registry();
     ok(&run(&[
-        "install", "-g", "org.example/alpha@1.0.0", "--registry",
-        registry.to_str().unwrap(), "--offline", "--unattended", "--json",
+        "install",
+        "-g",
+        "org.example/alpha@1.0.0",
+        "--registry",
+        registry.to_str().unwrap(),
+        "--offline",
+        "--unattended",
+        "--json",
     ]));
     let out = run(&[
-        "app", "env", "--shell", "bash", "--use", "alpha==1.0.0",
+        "app",
+        "env",
+        "--shell",
+        "bash",
+        "--use",
+        "alpha==1.0.0",
         "--write-version-file",
     ]);
     let stdout = ok(&out);
     assert_eq!(stdout.lines().count(), 2, "{stdout}");
     assert!(stdout.lines().next().unwrap().starts_with("export PATH='"));
-    assert!(stdout.lines().nth(1).unwrap().starts_with("export VIBE_APP_USE='"));
+    assert!(
+        stdout
+            .lines()
+            .nth(1)
+            .unwrap()
+            .starts_with("export VIBE_APP_USE='")
+    );
     let path = dir.join(".alpharc");
     assert_eq!(fs::read(&path).unwrap(), b"1.0.0\n");
     let stderr = String::from_utf8_lossy(&out.stderr);
-    assert_eq!(stderr.trim(), format!("✓ wrote 1.0.0 to .alpharc · {}", path.display()));
+    assert_eq!(
+        stderr.trim(),
+        format!("✓ wrote 1.0.0 to .alpharc · {}", path.display())
+    );
     let out = run(&[
-        "app", "env", "--json", "--use", "alpha==1.0.0", "--write-version-file",
+        "app",
+        "env",
+        "--json",
+        "--use",
+        "alpha==1.0.0",
+        "--write-version-file",
     ]);
     let document = json(&out);
     assert_eq!(document["versionFile"]["version"], "1.0.0");
@@ -474,10 +500,15 @@ fn version_file_choice_is_a_decision() {
     runtime(&r, "alpha", "alpha", "1.1.0");
     let dir = r.home().join("pin");
     fs::create_dir_all(&dir).unwrap();
-    fs::write(dir.join("vibe.toml"), "[project]\nname='pin'\nversion='1.0.0'\n").unwrap();
+    fs::write(
+        dir.join("vibe.toml"),
+        "[project]\nname='pin'\nversion='1.0.0'\n",
+    )
+    .unwrap();
     let registry = r.registry();
     let run = |spelling: &str| {
-        r.user.vibe()
+        r.user
+            .vibe()
             .current_dir(&dir)
             .env("HOME", r.home())
             .env("USERPROFILE", r.home())
@@ -488,8 +519,13 @@ fn version_file_choice_is_a_decision() {
             .env_remove("VIBE_AGENT_COMMAND")
             .env_remove("VIBE_AGENT_ARGS")
             .args([
-                "install", "-g", spelling, "--registry", registry.to_str().unwrap(),
-                "--offline", "--unattended",
+                "install",
+                "-g",
+                spelling,
+                "--registry",
+                registry.to_str().unwrap(),
+                "--offline",
+                "--unattended",
             ])
             .output()
             .unwrap()
@@ -501,11 +537,13 @@ fn version_file_choice_is_a_decision() {
     let output = run("org.example/alpha");
     ok(&output);
     let stderr = String::from_utf8_lossy(&output.stderr);
-    let decisions: Vec<_> = stderr.lines().filter(|line| line.contains("asks for")).collect();
+    let decisions: Vec<_> = stderr
+        .lines()
+        .filter(|line| line.contains("asks for"))
+        .collect();
     assert_eq!(decisions.len(), 1, "{stderr}");
     assert_eq!(
-        decisions[0],
-        "  .alpharc asks for 1.0 · org.example/alpha@~1.0 · ~/pin/.alpharc",
+        decisions[0], "  .alpharc asks for 1.0 · org.example/alpha@~1.0 · ~/pin/.alpharc",
         "{stderr}"
     );
     assert!(!decisions[0].contains(['!', '`']), "{stderr}");

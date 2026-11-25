@@ -431,8 +431,7 @@ pub(crate) fn init_tracing() {
     // Keep unrelated payloads and explicit debug output unchanged. Only
     // classified events use the bridge; registry fallback chatter and trial
     // certificate verification are excluded from ordinary logging by default.
-    let filter = explicit
-        .unwrap_or_else(|| EnvFilter::new("warn,rustls_platform_verifier=off"));
+    let filter = explicit.unwrap_or_else(|| EnvFilter::new("warn,rustls_platform_verifier=off"));
     let ordinary = fmt::layer()
         .with_target(false)
         .with_writer(std::io::stderr)

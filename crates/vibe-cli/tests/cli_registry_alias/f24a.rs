@@ -38,7 +38,10 @@ fn alias_writes_and_lists_use_display_language() {
         !format!("{}{}", stdout(&unchanged), stderr(&unchanged))
             .contains("Writing the alias table")
     );
-    assert_eq!(fs::read(site.path("reg/_index/aliases.toml")).unwrap(), table);
+    assert_eq!(
+        fs::read(site.path("reg/_index/aliases.toml")).unwrap(),
+        table
+    );
 
     let listed = site.alias(&["list"]);
     ok(&listed, "list");
@@ -63,8 +66,11 @@ fn alias_writes_and_lists_use_display_language() {
     ok(&preview, "preview remove");
     trailer(&preview, "would withdraw qwen");
     assert!(!stdout(&preview).contains("withdrew"));
-    assert!(fs::read_to_string(site.path("reg/_index/aliases.toml"))
-        .unwrap().contains("qwen = "));
+    assert!(
+        fs::read_to_string(site.path("reg/_index/aliases.toml"))
+            .unwrap()
+            .contains("qwen = ")
+    );
     let removed = site.alias(&["remove", "qwen"]);
     ok(&removed, "remove");
     trailer(&removed, "withdrew qwen");
@@ -77,9 +83,16 @@ fn alias_writes_and_lists_use_display_language() {
 fn trailer(output: &Output, what: &str) {
     let said = stdout(output);
     let lines: Vec<_> = said.lines().collect();
-    assert_eq!(lines.iter().filter(|line| line.starts_with("✻ ")).count(), 1, "{said}");
+    assert_eq!(
+        lines.iter().filter(|line| line.starts_with("✻ ")).count(),
+        1,
+        "{said}"
+    );
     let last = lines.last().unwrap();
-    assert!(last.starts_with(&format!("✻ {what} · registry corp · ")), "{said}");
+    assert!(
+        last.starts_with(&format!("✻ {what} · registry corp · ")),
+        "{said}"
+    );
     assert!(!last.contains('`'), "{said}");
     assert!(!stderr(output).contains("✻ "), "{}", stderr(output));
 }

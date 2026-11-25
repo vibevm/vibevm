@@ -78,8 +78,15 @@ finally:
     let output = command(r, "/usr/bin/python3")
         .args(["-I", "-c", script, env!("CARGO_BIN_EXE_vibe")])
         .args([
-            "app", "extras", "apply", "runtime", "--ecosystem", "npm",
-            "--offline", "--registry", registry.to_str().unwrap(),
+            "app",
+            "extras",
+            "apply",
+            "runtime",
+            "--ecosystem",
+            "npm",
+            "--offline",
+            "--registry",
+            registry.to_str().unwrap(),
         ])
         .output()
         .expect("extras PTY runner");
@@ -92,10 +99,9 @@ finally:
         .map(|entry| entry.unwrap().path())
         .find(|path| !before.contains(path) && path.join("ecosystem.json").is_file())
         .expect("the actual apply retained its ecosystem record");
-    let record: serde_json::Value = serde_json::from_slice(
-        &std::fs::read(work.join("ecosystem.json")).unwrap(),
-    )
-    .expect("retained ecosystem document");
+    let record: serde_json::Value =
+        serde_json::from_slice(&std::fs::read(work.join("ecosystem.json")).unwrap())
+            .expect("retained ecosystem document");
     assert_eq!(record["work"].as_str(), work.to_str());
     assert_eq!(record["key"], "org.example/runtime@1.0.0");
     assert_eq!(record["ok"], false);
@@ -107,20 +113,37 @@ finally:
     // The active roles.rs palette is alert red and ok green.
     let alert = console::Style::new().red().force_styling(true);
     let ok = console::Style::new().green().force_styling(true);
-    assert!(last.contains(&alert.apply_to("✻").to_string()), "last trailer is not alert {excerpt:?}");
-    assert!(last.contains(&alert.apply_to(what).to_string()), "last trailer lacks failed verdict {excerpt:?}");
-    assert!(!last.contains(&ok.apply_to("✻").to_string()), "last trailer is ok {excerpt:?}");
-    assert!(!last.contains(&ok.apply_to(what).to_string()), "last verdict is ok {excerpt:?}");
+    assert!(
+        last.contains(&alert.apply_to("✻").to_string()),
+        "last trailer is not alert {excerpt:?}"
+    );
+    assert!(
+        last.contains(&alert.apply_to(what).to_string()),
+        "last trailer lacks failed verdict {excerpt:?}"
+    );
+    assert!(
+        !last.contains(&ok.apply_to("✻").to_string()),
+        "last trailer is ok {excerpt:?}"
+    );
+    assert!(
+        !last.contains(&ok.apply_to(what).to_string()),
+        "last verdict is ok {excerpt:?}"
+    );
     let plain = console::strip_ansi_codes(last);
     let trailers = console::strip_ansi_codes(&stdout)
         .lines()
         .chain(steps.lines())
         .filter(|line| line.starts_with("✻ "))
         .count();
-    assert_eq!(trailers, 1, "expected exactly one final trailer {excerpt:?}");
-    assert!(console::strip_ansi_codes(&stdout).contains(
-        "vibe app extras apply runtime --ecosystem npm"
-    ), "missing exact retry command");
+    assert_eq!(
+        trailers, 1,
+        "expected exactly one final trailer {excerpt:?}"
+    );
+    assert!(
+        console::strip_ansi_codes(&stdout)
+            .contains("vibe app extras apply runtime --ecosystem npm"),
+        "missing exact retry command"
+    );
     let prefix = format!("✻ {what} · ");
     let suffix = format!(" · {}", work.display());
     let metadata = plain
@@ -131,9 +154,11 @@ finally:
     let elapsed = match fields.as_slice() {
         [elapsed] => *elapsed,
         [steps, elapsed] => {
-            let (count, unit) = steps.split_once(' ')
+            let (count, unit) = steps
+                .split_once(' ')
                 .unwrap_or_else(|| panic!("invalid step metadata {excerpt:?}"));
-            let count = count.parse::<usize>()
+            let count = count
+                .parse::<usize>()
                 .unwrap_or_else(|_| panic!("invalid step count {excerpt:?}"));
             assert!(
                 count > 0 && unit == if count == 1 { "step" } else { "steps" },
@@ -143,7 +168,10 @@ finally:
         }
         _ => panic!("invalid trailer metadata order {excerpt:?}"),
     };
-    assert!(valid_elapsed(elapsed), "invalid elapsed immediately before work {excerpt:?}");
+    assert!(
+        valid_elapsed(elapsed),
+        "invalid elapsed immediately before work {excerpt:?}"
+    );
     assert!(work.is_dir(), "retained work directory missing");
 }
 

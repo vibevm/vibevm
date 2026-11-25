@@ -64,11 +64,14 @@ impl DlError {
             None => detail,
         };
         // `connecting to <target>: <cause>` reads as a headline and its cause.
-        let split = matches!(class, FailureClass::ConnectFailed | FailureClass::ConnectTimeout)
-            .then(|| detail.strip_prefix("connecting to "))
-            .flatten()
-            .and_then(|rest| rest.split_once(": "))
-            .map(|(target, cause)| (format!("could not connect to {target}"), cause.to_owned()));
+        let split = matches!(
+            class,
+            FailureClass::ConnectFailed | FailureClass::ConnectTimeout
+        )
+        .then(|| detail.strip_prefix("connecting to "))
+        .flatten()
+        .and_then(|rest| rest.split_once(": "))
+        .map(|(target, cause)| (format!("could not connect to {target}"), cause.to_owned()));
         let (detail, why) = match split {
             Some((headline, cause)) => (headline, Some(cause)),
             None => (detail, None),
@@ -82,7 +85,12 @@ impl DlError {
         }
     }
 
-    pub(super) fn local(code: &'static str, exit: u8, detail: impl Into<String>, fix: &str) -> Self {
+    pub(super) fn local(
+        code: &'static str,
+        exit: u8,
+        detail: impl Into<String>,
+        fix: &str,
+    ) -> Self {
         Self {
             code,
             exit,
@@ -119,7 +127,10 @@ pub(super) fn trust_refusal(error: &vibe_net::NetError) -> DlError {
             DlError::local(
                 "tls_extra_ca_invalid",
                 2,
-                format!("extra certificate {} holds no usable certificate", path.display()),
+                format!(
+                    "extra certificate {} holds no usable certificate",
+                    path.display()
+                ),
                 invalid_fix,
             )
         }
@@ -128,7 +139,10 @@ pub(super) fn trust_refusal(error: &vibe_net::NetError) -> DlError {
             ..DlError::local(
                 "tls_extra_ca_invalid",
                 2,
-                format!("extra certificate {} holds no usable certificate", path.display()),
+                format!(
+                    "extra certificate {} holds no usable certificate",
+                    path.display()
+                ),
                 invalid_fix,
             )
         },
@@ -151,7 +165,10 @@ mod tests {
         )));
         assert_eq!(refusal.code.as_deref(), Some("dl_connect_failed"));
         assert_eq!(refusal.headline, "could not connect to 127.0.0.1:1");
-        assert_eq!(refusal.why.as_deref(), Some("Connection refused (os error 111)"));
+        assert_eq!(
+            refusal.why.as_deref(),
+            Some("Connection refused (os error 111)")
+        );
     }
 
     #[test]
@@ -161,7 +178,10 @@ mod tests {
             source: std::io::Error::from(std::io::ErrorKind::NotFound),
         }));
         assert_eq!(error.code, "tls_extra_ca_unreadable");
-        assert_eq!(error.detail, "extra certificate /x/missing.pem cannot be read");
+        assert_eq!(
+            error.detail,
+            "extra certificate /x/missing.pem cannot be read"
+        );
         assert!(error.why.is_some());
         assert_eq!(error.exit_code(), 2);
     }

@@ -307,7 +307,8 @@ impl Cli {
             sub.try_contains_id("path").unwrap_or(false)
                 && sub.value_source("path") == Some(clap::parser::ValueSource::CommandLine)
         });
-        let mut cli = Self::from_arg_matches(&matches).unwrap_or_else(|error| usage::exit(error, &args));
+        let mut cli =
+            Self::from_arg_matches(&matches).unwrap_or_else(|error| usage::exit(error, &args));
         if let Command::Install(args) = &mut cli.command {
             args.explicit_path = explicit_path;
             args.stop_requested = cli.stop_file.is_some();

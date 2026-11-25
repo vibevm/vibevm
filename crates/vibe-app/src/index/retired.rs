@@ -127,11 +127,16 @@ pub(super) fn validate(bytes: &[u8], home: Option<&Path>) -> Result<(), String> 
         let expected = home.map(|home| home.join(&suffix));
         if !record.host_root.is_absolute()
             || !record.host_root.ends_with(&suffix)
-            || expected.as_ref().is_some_and(|expected| *expected != record.host_root)
+            || expected
+                .as_ref()
+                .is_some_and(|expected| *expected != record.host_root)
             || !record.management.entry.is_absolute()
             || !record.management.entry.starts_with(&record.host_root)
             || record.management.entry == record.host_root
-            || record.host_root.components().chain(record.management.entry.components())
+            || record
+                .host_root
+                .components()
+                .chain(record.management.entry.components())
                 .any(|part| matches!(part, Component::ParentDir | Component::CurDir))
         {
             return Err("retired index carries a path outside its owned application host".into());
@@ -165,8 +170,8 @@ pub(super) fn before_replacement(settings: &SettingsRoot) -> Result<(), StateErr
     if protocol != 1 {
         return Ok(());
     }
-    let home = fs::canonicalize(settings.path())
-        .map_err(|e| io("resolving", settings.path(), e))?;
+    let home =
+        fs::canonicalize(settings.path()).map_err(|e| io("resolving", settings.path(), e))?;
     validate(&bytes, Some(&home)).map_err(invalid)?;
     let directory = settings.applications_dir();
     // Refuse links/special entries in the two source components rather than
@@ -177,30 +182,40 @@ pub(super) fn before_replacement(settings: &SettingsRoot) -> Result<(), StateErr
             || (source == &directory && !metadata.is_dir())
             || (source == &path && !metadata.is_file())
         {
-            return Err(invalid("retired index source is not an ordinary file in its home".into()));
+            return Err(invalid(
+                "retired index source is not an ordinary file in its home".into(),
+            ));
         }
     }
     let backup = directory.join(BACKUP);
     match fs::symlink_metadata(&backup) {
-        Ok(_) => return Err(invalid(format!(
-            "retired index backup `{}` already exists; refusing to replace either file",
-            backup.display()
-        ))),
+        Ok(_) => {
+            return Err(invalid(format!(
+                "retired index backup `{}` already exists; refusing to replace either file",
+                backup.display()
+            )));
+        }
         Err(e) if e.kind() == std::io::ErrorKind::NotFound => {}
         Err(e) => return Err(io("inspecting retired index backup", &backup, e)),
     }
     let mut staged = tempfile::NamedTempFile::new_in(&directory)
         .map_err(|e| io("staging retired index backup", &backup, e))?;
-    staged.write_all(&bytes).and_then(|()| staged.as_file().sync_all())
+    staged
+        .write_all(&bytes)
+        .and_then(|()| staged.as_file().sync_all())
         .map_err(|e| io("preserving retired index", &backup, e))?;
-    let retained = staged.persist_noclobber(&backup)
+    let retained = staged
+        .persist_noclobber(&backup)
         .map_err(|e| io("publishing retired index backup", &backup, e.error))?;
-    retained.sync_all().map_err(|e| io("syncing retired index backup", &backup, e))?;
+    retained
+        .sync_all()
+        .map_err(|e| io("syncing retired index backup", &backup, e))?;
     // Make the backup directory entry durable BEFORE the modern index rename.
     // Windows persist_noclobber publishes the already-flushed file by move;
     // Unix additionally needs the containing directory flushed.
     #[cfg(unix)]
-    fs::File::open(&directory).and_then(|file| file.sync_all())
+    fs::File::open(&directory)
+        .and_then(|file| file.sync_all())
         .map_err(|e| io("syncing retired index directory", &directory, e))?;
     Ok(())
 }

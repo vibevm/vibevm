@@ -72,7 +72,10 @@ fn version_rows(report: &RegistryMirrorReport) -> List {
                     .unwrap_or_default();
                 Row::new(vec![
                     Cell::new(format!("{}@{}", row.package, row.version), Role::Accent),
-                    Cell::new(format!("{}{note}", action_word(&row.action, report.dry_run)), role),
+                    Cell::new(
+                        format!("{}{note}", action_word(&row.action, report.dry_run)),
+                        role,
+                    ),
                 ])
                 .glyph(glyph, role)
             })
@@ -82,11 +85,18 @@ fn version_rows(report: &RegistryMirrorReport) -> List {
 
 fn summary(report: &RegistryMirrorReport, target: &str, snapshots: usize) -> String {
     let count = |action: MirrorAction| {
-        report.versions.iter().filter(|row| row.action == action).count()
+        report
+            .versions
+            .iter()
+            .filter(|row| row.action == action)
+            .count()
     };
     let current = report.ok
         && !report.dry_run
-        && report.versions.iter().all(|row| row.action == MirrorAction::Unchanged)
+        && report
+            .versions
+            .iter()
+            .all(|row| row.action == MirrorAction::Unchanged)
         && report.facts_recorded == 0
         && !report.index_refreshed
         && report.commit.is_none()
@@ -115,21 +125,73 @@ fn summary(report: &RegistryMirrorReport, target: &str, snapshots: usize) -> Str
             parts.push(format!("{count} {label}"));
         }
     };
-    positive(count(MirrorAction::Copied), if report.dry_run { "would be copied" } else { "copied" });
-    positive(count(MirrorAction::Updated), if report.dry_run { "would be updated" } else { "updated" });
+    positive(
+        count(MirrorAction::Copied),
+        if report.dry_run {
+            "would be copied"
+        } else {
+            "copied"
+        },
+    );
+    positive(
+        count(MirrorAction::Updated),
+        if report.dry_run {
+            "would be updated"
+        } else {
+            "updated"
+        },
+    );
     positive(count(MirrorAction::Unchanged), "unchanged");
-    positive(count(MirrorAction::SnapshotDiffers), "snapshots left as they are");
+    positive(
+        count(MirrorAction::SnapshotDiffers),
+        "snapshots left as they are",
+    );
     positive(count(MirrorAction::Alarm), "alarms");
     positive(count(MirrorAction::Unavailable), "unavailable");
-    positive(report.facts_recorded as usize, if report.dry_run { "facts would be recorded" } else { "facts recorded" });
-    positive(report.bundles as usize, if report.dry_run { "bundles would be saved" } else { "bundles saved" });
-    positive(snapshots, if report.dry_run { "snapshots would be written" } else { "snapshots written" });
+    positive(
+        report.facts_recorded as usize,
+        if report.dry_run {
+            "facts would be recorded"
+        } else {
+            "facts recorded"
+        },
+    );
+    positive(
+        report.bundles as usize,
+        if report.dry_run {
+            "bundles would be saved"
+        } else {
+            "bundles saved"
+        },
+    );
+    positive(
+        snapshots,
+        if report.dry_run {
+            "snapshots would be written"
+        } else {
+            "snapshots written"
+        },
+    );
     positive(report.removed.unwrap_or(0) as usize, "removed");
     if !report.pruned.is_empty() && report.removed.unwrap_or(0) == 0 {
-        positive(report.pruned.len(), if report.dry_run { "would be removed" } else { "planned removals left in place" });
+        positive(
+            report.pruned.len(),
+            if report.dry_run {
+                "would be removed"
+            } else {
+                "planned removals left in place"
+            },
+        );
     }
     if report.index_refreshed {
-        parts.push(if report.dry_run { "index would be refreshed" } else { "index refreshed" }.into());
+        parts.push(
+            if report.dry_run {
+                "index would be refreshed"
+            } else {
+                "index refreshed"
+            }
+            .into(),
+        );
     }
     if let Some(commit) = &report.commit {
         parts.push(format!("commit {commit}"));

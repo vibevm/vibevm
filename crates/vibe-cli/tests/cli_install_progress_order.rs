@@ -175,11 +175,15 @@ fn plain_stream_matches_tty_block_order() {
     for (index, name) in ["one", "two"].iter().enumerate() {
         let live = tty["live"][index].as_str().unwrap();
         let lines: Vec<_> = live.lines().collect();
-        let parent = lines.iter().position(|line| line.contains("Installing packages"));
-        let child = lines.iter().position(|line| {
-            line.contains(&format!("order-{name}")) && !line.contains("DETAIL-")
-        });
-        let detail = lines.iter().position(|line| line.contains(&format!("DETAIL-{name}")));
+        let parent = lines
+            .iter()
+            .position(|line| line.contains("Installing packages"));
+        let child = lines
+            .iter()
+            .position(|line| line.contains(&format!("order-{name}")) && !line.contains("DETAIL-"));
+        let detail = lines
+            .iter()
+            .position(|line| line.contains(&format!("DETAIL-{name}")));
         assert!(
             matches!((parent, child, detail), (Some(p), Some(c), Some(d)) if p < c && c < d),
             "live parent must be above its active child, with detail underneath: {live}"
@@ -189,27 +193,53 @@ fn plain_stream_matches_tty_block_order() {
             "the child must actually be running: {live}"
         );
         if index == 1 {
-            assert!(!live.contains("DETAIL-one"), "finished detail must collapse: {live}");
+            assert!(
+                !live.contains("DETAIL-one"),
+                "finished detail must collapse: {live}"
+            );
         }
     }
     let final_screen = tty["final"].as_str().unwrap();
-    assert!(!final_screen.contains("DETAIL-"), "detail survived completion: {final_screen}");
-    assert!(final_screen.contains('✻'), "no successful trailer: {final_screen}");
+    assert!(
+        !final_screen.contains("DETAIL-"),
+        "detail survived completion: {final_screen}"
+    );
+    assert!(
+        final_screen.contains('✻'),
+        "no successful trailer: {final_screen}"
+    );
 
     let plain = &report["plain"];
     let during_second = plain["live"][1].as_str().unwrap();
-    let child = during_second.lines().find(|line| {
-        line.starts_with("✓ ") && line.contains("order-one")
-    }).unwrap_or_else(|| panic!("completed child was not flushed while parent ran: {during_second}"));
-    assert!(child.contains("└ "), "plain child lost its indentation: {child}");
+    let child = during_second
+        .lines()
+        .find(|line| line.starts_with("✓ ") && line.contains("order-one"))
+        .unwrap_or_else(|| {
+            panic!("completed child was not flushed while parent ran: {during_second}")
+        });
     assert!(
-        !during_second.lines().any(|line| line.starts_with("✓ Installing packages")),
+        child.contains("└ "),
+        "plain child lost its indentation: {child}"
+    );
+    assert!(
+        !during_second
+            .lines()
+            .any(|line| line.starts_with("✓ Installing packages")),
         "parent completed before the held second child: {during_second}"
     );
     let final_plain = plain["final"].as_str().unwrap();
     let first = final_plain.find(child).unwrap();
     let parent = final_plain.find("✓ Installing packages").unwrap();
-    assert!(first < parent, "plain output changed temporal completion order: {final_plain}");
-    assert!(final_plain.contains('✻'), "no successful plain trailer: {final_plain}");
-    assert!(!final_plain.contains('\u{1b}'), "plain stream used cursor control: {final_plain}");
+    assert!(
+        first < parent,
+        "plain output changed temporal completion order: {final_plain}"
+    );
+    assert!(
+        final_plain.contains('✻'),
+        "no successful plain trailer: {final_plain}"
+    );
+    assert!(
+        !final_plain.contains('\u{1b}'),
+        "plain stream used cursor control: {final_plain}"
+    );
 }

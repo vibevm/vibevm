@@ -126,7 +126,11 @@ pub(super) fn explain(document: &explanation::RemapExplanation, rule: usize) -> 
     let right = format!("{count} matching row{}", if count == 1 { "" } else { "s" });
     let mut out = format!(
         "{}\n",
-        rule_at(&format!("explain {} fetch", document.kind), Some(&right), rule)
+        rule_at(
+            &format!("explain {} fetch", document.kind),
+            Some(&right),
+            rule
+        )
     );
     out.push_str(&head(
         "origin",
@@ -201,7 +205,10 @@ pub(super) fn explain(document: &explanation::RemapExplanation, rule: usize) -> 
 
 /// An explanation header label at the same left edge as its chosen target.
 fn head(label: &str, value: &str) -> String {
-    format!("  {}  {value}\n", paint(Role::Dim, &format!("{label:<LABEL$}")))
+    format!(
+        "  {}  {value}\n",
+        paint(Role::Dim, &format!("{label:<LABEL$}"))
+    )
 }
 
 /// One indented `label   value` line under a row's key kind, the label

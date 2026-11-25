@@ -19,12 +19,16 @@ pub(crate) fn usage_refusal(rendered: &str, args: &[OsString]) -> Refusal {
     }
     // Only repair the two known rejected shapes. Suggestions are text, never run.
     for words in args.windows(3) {
-        let Some(operand) = words[2].to_str() else { continue };
+        let Some(operand) = words[2].to_str() else {
+            continue;
+        };
         // A bare suggestion operand must be one literal shell word on its own.
         // Anything requiring quoting retains clap's generic --help fallback.
-        if operand.is_empty() || operand.starts_with('-')
-            || !operand.bytes().all(|byte| byte.is_ascii_alphanumeric()
-                || matches!(byte, b'/' | b'.' | b'_' | b'-'))
+        if operand.is_empty()
+            || operand.starts_with('-')
+            || !operand.bytes().all(|byte| {
+                byte.is_ascii_alphanumeric() || matches!(byte, b'/' | b'.' | b'_' | b'-')
+            })
         {
             continue;
         }
@@ -33,14 +37,20 @@ pub(crate) fn usage_refusal(rendered: &str, args: &[OsString]) -> Refusal {
             && !operand.starts_with('-')
             && headline == format!("unexpected argument '{operand}' found")
         {
-            ("vibe kit init", format!("unexpected argument {operand}"),
-             format!("vibe kit init --file {operand}"))
+            (
+                "vibe kit init",
+                format!("unexpected argument {operand}"),
+                format!("vibe kit init --file {operand}"),
+            )
         } else if words[0] == "registry"
             && words[1] == "remove"
             && headline == format!("unrecognized subcommand '{operand}'")
         {
-            ("vibe registry remove", format!("unrecognized subcommand {operand}"),
-             format!("vibe registry remove registry {operand}"))
+            (
+                "vibe registry remove",
+                format!("unrecognized subcommand {operand}"),
+                format!("vibe registry remove registry {operand}"),
+            )
         } else {
             continue;
         };
@@ -52,14 +62,20 @@ pub(crate) fn usage_refusal(rendered: &str, args: &[OsString]) -> Refusal {
             see: Some(format!("{command} --help")),
         };
     }
-    let tips: Vec<_> = rendered.lines()
+    let tips: Vec<_> = rendered
+        .lines()
         .filter_map(|line| line.trim().strip_prefix("tip: "))
         .collect();
-    let command = rendered.lines()
+    let command = rendered
+        .lines()
         .find_map(|line| line.strip_prefix("Usage: "))
-        .map(|usage| usage.split_whitespace()
-            .take_while(|word| !word.starts_with(['-', '[', '<']))
-            .collect::<Vec<_>>().join(" "))
+        .map(|usage| {
+            usage
+                .split_whitespace()
+                .take_while(|word| !word.starts_with(['-', '[', '<']))
+                .collect::<Vec<_>>()
+                .join(" ")
+        })
         .unwrap_or_else(|| "vibe".to_owned());
     Refusal {
         code: Some("usage".to_owned()),
@@ -73,17 +89,27 @@ pub(crate) fn usage_refusal(rendered: &str, args: &[OsString]) -> Refusal {
 /// Preserve clap's help/version paths and exit status; render other errors once.
 pub(crate) fn exit(error: clap::Error, args: &[OsString]) -> ! {
     use clap::error::ErrorKind;
-    if matches!(error.kind(), ErrorKind::DisplayHelp | ErrorKind::DisplayVersion
-        | ErrorKind::DisplayHelpOnMissingArgumentOrSubcommand)
-    {
+    if matches!(
+        error.kind(),
+        ErrorKind::DisplayHelp
+            | ErrorKind::DisplayVersion
+            | ErrorKind::DisplayHelpOnMissingArgumentOrSubcommand
+    ) {
         error.exit();
     }
-    let plain = args.iter().any(|arg| arg == "--plain" || arg == "--json" || arg == "--quiet");
+    let plain = args
+        .iter()
+        .any(|arg| arg == "--plain" || arg == "--json" || arg == "--quiet");
     let vocabulary = std::env::var("TERM").map_or(true, |term| !term.eq_ignore_ascii_case("dumb"));
     crate::output::configure_language(
         std::io::stdout().is_terminal() && std::io::stderr().is_terminal(),
         vocabulary && !plain,
     );
-    eprintln!("{}", usage_refusal(&error.render().to_string(), args).block().render());
+    eprintln!(
+        "{}",
+        usage_refusal(&error.render().to_string(), args)
+            .block()
+            .render()
+    );
     std::process::exit(error.exit_code());
 }

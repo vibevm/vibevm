@@ -72,7 +72,10 @@ pub(super) fn render(report: &SelfApplyReport, width: usize, rule: usize) -> Str
         }
     }
     if let Some(path) = &report.path {
-        for text in [&path.activation_hint, &path.fix_hint].into_iter().flatten() {
+        for text in [&path.activation_hint, &path.fix_hint]
+            .into_iter()
+            .flatten()
+        {
             head.push(format!("  {}", hint(text)));
         }
     }
@@ -120,7 +123,9 @@ pub(super) fn trailer_what(report: &SelfApplyReport) -> Option<String> {
         .unwrap_or_default();
     match report.action {
         ApplyAction::Apply if report.changed => Some(format!("applied site profile{name}")),
-        ApplyAction::Apply => Some(format!("site profile{name} already applied · nothing changed")),
+        ApplyAction::Apply => Some(format!(
+            "site profile{name} already applied · nothing changed"
+        )),
         ApplyAction::Remove => Some(format!("removed site profile{name}")),
         _ => None,
     }
@@ -182,9 +187,7 @@ fn px_row(px: &PxStep) -> Option<Row> {
             false,
             px.program.as_ref().map(Meta::note).into_iter().collect(),
         ),
-        (PxOutcome::Installed, true) => {
-            ("would be installed", true, vec![Meta::note(&px.store)])
-        }
+        (PxOutcome::Installed, true) => ("would be installed", true, vec![Meta::note(&px.store)]),
         (PxOutcome::Missing | PxOutcome::NoTarget, planned) => {
             let meta = if planned {
                 vec![Meta::note("and would not be")]

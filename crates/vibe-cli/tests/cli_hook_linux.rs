@@ -8,10 +8,10 @@
 //! are installed and skipped, loudly, when they are not.
 #![cfg(all(test, target_os = "linux"))]
 mod common;
+use common::app_registry::{AppRegistry, failed, ok};
 use std::fs;
 use std::path::{Path, PathBuf};
 use std::process::Command;
-use common::app_registry::{AppRegistry, failed, ok};
 const BLOCK_BEGIN: &str = "# >>> vibe application versions (managed by vibe, do not edit) >>>";
 const BLOCK_END: &str = "# <<< vibe application versions <<<";
 fn runtime(r: &AppRegistry, version: &str, marker: &str) {
@@ -165,24 +165,66 @@ fn the_block_is_written_into_the_startup_file_and_nothing_outside_it_moves() {
 #[test]
 #[specmark::spec(verifies = "spec://org.vibevm.core/vibevm/common/PROP-075#ACTIVATION-HOOK")]
 fn hook_pipe_requires_consent() {
-    for args in [vec!["hook", "fish"], vec!["hook", "cmd", "--print"], vec!["hook", "fish", "--print"]] {
-        let home = tempfile::tempdir().unwrap(); let settings = tempfile::tempdir().unwrap();
+    for args in [
+        vec!["hook", "fish"],
+        vec!["hook", "cmd", "--print"],
+        vec!["hook", "fish", "--print"],
+    ] {
+        let home = tempfile::tempdir().unwrap();
+        let settings = tempfile::tempdir().unwrap();
         let rc = home.path().join(".config/fish/config.fish");
-        let out = Command::new(vibe_binary()).args(&args).current_dir(home.path()).env_clear()
-            .env("HOME", home.path()).env("USERPROFILE", home.path()).env("VIBE_SETTINGS", settings.path())
-            .env("NO_COLOR", "1").stdin(std::process::Stdio::null()).output().unwrap();
-        let err = String::from_utf8(out.stderr).unwrap(); let stdout = String::from_utf8(out.stdout).unwrap();
-        assert!(!rc.exists()); assert!(!err.starts_with('\n'), "{err}");
-        assert!(!err.contains("❯") && !err.contains("reading the hook consent answer"), "{err}");
+        let out = Command::new(vibe_binary())
+            .args(&args)
+            .current_dir(home.path())
+            .env_clear()
+            .env("HOME", home.path())
+            .env("USERPROFILE", home.path())
+            .env("VIBE_SETTINGS", settings.path())
+            .env("NO_COLOR", "1")
+            .stdin(std::process::Stdio::null())
+            .output()
+            .unwrap();
+        let err = String::from_utf8(out.stderr).unwrap();
+        let stdout = String::from_utf8(out.stdout).unwrap();
+        assert!(!rc.exists());
+        assert!(!err.starts_with('\n'), "{err}");
+        assert!(
+            !err.contains("❯") && !err.contains("reading the hook consent answer"),
+            "{err}"
+        );
         if args == ["hook", "fish", "--print"] {
-            assert!(out.status.success(), "{err}"); assert!(err.is_empty(), "{err}");
+            assert!(out.status.success(), "{err}");
+            assert!(err.is_empty(), "{err}");
             assert!(stdout.contains("function __vibe_versions"), "{stdout}");
         } else {
-            assert!(!out.status.success()); assert!(stdout.is_empty(), "{stdout}");
-            let code = if args[1] == "cmd" { "unsupported_shell" } else { "consent_required" };
+            assert!(!out.status.success());
+            assert!(stdout.is_empty(), "{stdout}");
+            let code = if args[1] == "cmd" {
+                "unsupported_shell"
+            } else {
+                "consent_required"
+            };
             assert!(err.starts_with(&format!("✗ {code}  ")), "{err}");
-            if args[1] == "cmd" { assert!(err.contains("cmd has no prompt hook"), "{err}"); assert_eq!(err.matches("vibe shell").count(), 1, "{err}"); }
-            else { for fix in ["vibe hook fish --yes", "vibe hook fish --print", "~/.config/fish/config.fish", "spec://org.vibevm.core/vibevm/common/PROP-075#ACTIVATION-HOOK"] { assert_eq!(err.matches(fix).count(), 1, "{err}"); } assert_eq!(err.lines().filter(|line| line.contains("--yes") || line.contains("--print")).count(), 2, "{err}"); }
+            if args[1] == "cmd" {
+                assert!(err.contains("cmd has no prompt hook"), "{err}");
+                assert_eq!(err.matches("vibe shell").count(), 1, "{err}");
+            } else {
+                for fix in [
+                    "vibe hook fish --yes",
+                    "vibe hook fish --print",
+                    "~/.config/fish/config.fish",
+                    "spec://org.vibevm.core/vibevm/common/PROP-075#ACTIVATION-HOOK",
+                ] {
+                    assert_eq!(err.matches(fix).count(), 1, "{err}");
+                }
+                assert_eq!(
+                    err.lines()
+                        .filter(|line| line.contains("--yes") || line.contains("--print"))
+                        .count(),
+                    2,
+                    "{err}"
+                );
+            }
         }
     }
 }
@@ -246,7 +288,10 @@ fn hook_rerun_reports_unchanged() {
     let quiet_written = run(&["hook", "bash", "--yes", "--quiet"]);
     trailer(&quiet_written, "written");
     assert_eq!(quiet_written.lines().count(), 1, "{quiet_written}");
-    assert!(!quiet_written.contains("open a new shell"), "{quiet_written}");
+    assert!(
+        !quiet_written.contains("open a new shell"),
+        "{quiet_written}"
+    );
     assert_eq!(fs::read(&rc).unwrap(), bytes);
     assert_eq!(run(&["hook", "bash", "--print", "--quiet"]), printed);
     assert_eq!(fs::read(&rc).unwrap(), bytes);
@@ -550,27 +595,62 @@ finally:
 "#;
     for answer in ["accept", "decline"] {
         let scratch = vibe_test_support::UserScratch::new();
-        let home = tempfile::tempdir().unwrap(); let rc = home.path().join(".bashrc");
+        let home = tempfile::tempdir().unwrap();
+        let rc = home.path().join(".bashrc");
         fs::write(&rc, b"# preserved startup\n").unwrap();
-        let out = Command::new("python3").args(["-I", "-c", DRIVER])
-            .arg(vibe_binary()).arg(answer).current_dir(home.path())
-            .env_clear().env("PATH", std::env::var_os("PATH").unwrap_or_default())
-            .env("HOME", home.path()).env("USERPROFILE", home.path())
-            .env("VIBE_SETTINGS", &scratch.settings).env("TERM", "xterm")
-            .env("LANG", "C.UTF-8").output().unwrap();
-        assert!(out.status.success(), "{}", String::from_utf8_lossy(&out.stderr));
+        let out = Command::new("python3")
+            .args(["-I", "-c", DRIVER])
+            .arg(vibe_binary())
+            .arg(answer)
+            .current_dir(home.path())
+            .env_clear()
+            .env("PATH", std::env::var_os("PATH").unwrap_or_default())
+            .env("HOME", home.path())
+            .env("USERPROFILE", home.path())
+            .env("VIBE_SETTINGS", &scratch.settings)
+            .env("TERM", "xterm")
+            .env("LANG", "C.UTF-8")
+            .output()
+            .unwrap();
+        assert!(
+            out.status.success(),
+            "{}",
+            String::from_utf8_lossy(&out.stderr)
+        );
         let report: serde_json::Value = serde_json::from_slice(&out.stdout).unwrap();
         assert_eq!(report["status"], 0, "{report}");
         assert_eq!(report["sent"], true, "{report}");
         assert_eq!(report["terminal_restored"], true, "{report}");
-        let screen = report["screen"].as_str().unwrap(); assert!(!screen.contains("❯"), "{screen}");
+        let screen = report["screen"].as_str().unwrap();
+        assert!(!screen.contains("❯"), "{screen}");
         if answer == "accept" {
-            assert!(screen.lines().any(|line| line.contains("✓ hook") && line.contains("write into ~/.bashrc")), "{screen}");
+            assert!(
+                screen
+                    .lines()
+                    .any(|line| line.contains("✓ hook") && line.contains("write into ~/.bashrc")),
+                "{screen}"
+            );
             assert!(fs::read_to_string(&rc).unwrap().contains(BLOCK_BEGIN));
-            assert_eq!(screen.matches("hook written for bash").count(), 1, "{screen}");
-            assert!(screen.lines().last().unwrap().ends_with(&rc.display().to_string()), "{screen}");
+            assert_eq!(
+                screen.matches("hook written for bash").count(),
+                1,
+                "{screen}"
+            );
+            assert!(
+                screen
+                    .lines()
+                    .last()
+                    .unwrap()
+                    .ends_with(&rc.display().to_string()),
+                "{screen}"
+            );
         } else {
-            assert!(screen.lines().any(|line| line.contains("✓ hook") && line.contains("nothing written")), "{screen}");
+            assert!(
+                screen
+                    .lines()
+                    .any(|line| line.contains("✓ hook") && line.contains("nothing written")),
+                "{screen}"
+            );
             assert_eq!(fs::read(&rc).unwrap(), b"# preserved startup\n");
             assert!(!screen.contains("hook written for"), "{screen}");
         }
