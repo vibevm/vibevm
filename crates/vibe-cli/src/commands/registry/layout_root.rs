@@ -110,6 +110,55 @@ pub(crate) fn open(
     }
 }
 
+/// Open an alias table's registry, naming the errand only for git failures.
+/// Policy and cancellation retain their original typed error identities.
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#failure-discriminator")]
+pub(crate) fn open_alias(
+    reg: &RegistrySection,
+    mirrors: &[MirrorSection],
+    operation: &vibe_package_source::SourceOperation,
+    offline: bool,
+    progress: &vibe_core::progress::Progress,
+) -> Result<LayoutRoot> {
+    open(reg, mirrors, operation, offline, progress).map_err(|error| {
+        let git = match error.downcast_ref::<RegistryError>() {
+            Some(RegistryError::Git(git)) => git,
+            Some(RegistryError::GitOperation { detail }) => &detail.source,
+            _ => return error,
+        };
+        use vibe_registry::git_backend::GitError;
+        // Do not render argv, endpoint strings or arbitrary stderr. Even a
+        // classified error may retain those fields for other consumers.
+        let cause = match git {
+            GitError::ContactRefused(_) => return error,
+            GitError::CommandFailed { status, .. } => format!("git exited with status {status}"),
+            GitError::NativeMetadata { status: Some(status), .. } => {
+                format!("git metadata read failed with exit {status}")
+            }
+            GitError::NativeMetadata { status: None, .. } => "git metadata read failed".into(),
+            GitError::RepoNotFound { .. } => "git repository not found or access not granted".into(),
+            GitError::AuthFailed { .. } => "git authentication rejected".into(),
+            GitError::SshHostKeyRejected => "git SSH host key rejected".into(),
+            GitError::SshAuthenticationRejected => "git SSH authentication rejected".into(),
+            GitError::HttpRedirected { status, .. } => format!("git received HTTP redirect {status}"),
+            GitError::TlsTrust { .. } => "git TLS trust check failed".into(),
+            GitError::NetworkUnreachable { .. } => "git network or DNS failure".into(),
+            GitError::RefNotFound { .. } => "git branch or ref not found".into(),
+            GitError::NotInstalled => "git executable is unavailable".into(),
+            GitError::Io { source, .. } => format!("git could not start ({:?})", source.kind()),
+            // Preparation, policy and other non-contact failures are not
+            // relabelled as an unreachable registry.
+            _ => return error,
+        };
+        anyhow::anyhow!(
+            "registry_unreachable: could not open registry {} to read its alias table \
+             (violates spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#failure-discriminator; \
+             fix: `vibe registry test`, `vibe dl --test-proxy`): {cause}",
+            reg.name,
+        )
+    })
+}
+
 /// A contact refusal travels as itself, so a caller can tell a policy
 /// skip from a broken registry.
 pub(crate) fn refusal_first(error: RegistryError) -> anyhow::Error {
