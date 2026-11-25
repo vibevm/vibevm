@@ -1,7 +1,7 @@
 [project]
 name = "vibevm"
 group = "org.vibevm.core"
-version = "1.0.12"
+version = "1.0.13"
 # PROP-045: материализация спек зависимостей — XML (слово владельца 2026-08-22,
 # догфуд сценария №0: исходники MD, слоты XML).
 spec_format = "xml"
@@ -38,7 +38,7 @@ exclude = [
 # `vibespecs` first and falls through to `vibespecs-gitverse`.
 #
 # Every vibevm-owned package follows the vibevm version from 1.0.12 on, so
-# the requirements above ask for at least 1.0.12.
+# the requirements above follow the current release line.
 [[registry]]
 name = "vibespecs"
 url = "https://github.com/vibespecs"
