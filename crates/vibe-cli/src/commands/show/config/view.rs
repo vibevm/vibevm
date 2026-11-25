@@ -7,7 +7,26 @@ use crate::output::language::{Cell, List, Meta, Row, rule_at};
 
 /// Draw the configuration report as lists under section rules.
 #[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-067#list")]
-pub(super) fn render(report: &ConfigReport, width: usize, rule: usize) -> String {
+pub(super) fn render(
+    report: &ConfigReport,
+    width: usize,
+    rule: usize,
+    effective: &[Row],
+    verbose: bool,
+) -> String {
+    render_with_provenance(report, width, rule, effective, verbose, |origin| {
+        super::layer_view::provenance(report, origin)
+    })
+}
+
+fn render_with_provenance(
+    report: &ConfigReport,
+    width: usize,
+    rule: usize,
+    effective: &[Row],
+    verbose: bool,
+    provenance: impl Fn(&str) -> String,
+) -> String {
     let mut sections = Vec::new();
     let mut section = |label: &str, list: List| {
         if !list.rows.is_empty() {
@@ -25,7 +44,7 @@ pub(super) fn render(report: &ConfigReport, width: usize, rule: usize) -> String
         let mut meta = vec![
             Meta::note(format!("ref {}", registry.refname)),
             Meta::note(format!("naming {}", registry.naming)),
-            Meta::State(registry.provenance.into()),
+            Meta::State(provenance(registry.provenance)),
         ];
         if index == 0 {
             meta.push(Meta::State("primary".into()));
@@ -43,7 +62,7 @@ pub(super) fn render(report: &ConfigReport, width: usize, rule: usize) -> String
     section("mirrors", List::new(report.mirrors.iter().map(|mirror| {
         Row::new(vec![Cell::text(&mirror.of), Cell::text(&mirror.url)]).meta(vec![
             Meta::note(format!("priority {}", mirror.priority)),
-            Meta::State(mirror.provenance.into()),
+            Meta::State(provenance(mirror.provenance)),
         ])
     }).collect()).meta_column());
     section("overrides", List::new(report.overrides.iter().map(|entry| {
@@ -55,7 +74,7 @@ pub(super) fn render(report: &ConfigReport, width: usize, rule: usize) -> String
         if let Some(reason) = &entry.reason {
             meta.push(Meta::note(reason));
         }
-        meta.push(Meta::State(entry.provenance.into()));
+        meta.push(Meta::State(provenance(entry.provenance)));
         Row::new(vec![Cell::text(&entry.pkgref), Cell::text("→"), Cell::text(source)]).meta(meta)
     }).collect()).meta_column());
 
@@ -103,10 +122,17 @@ pub(super) fn render(report: &ConfigReport, width: usize, rule: usize) -> String
         Row::new(vec![Cell::text("version selection"), Cell::text(report.versions.select)])
             .meta(vec![Meta::State(report.versions.provenance.into())]),
     ]).meta_column());
+    section("effective choices", List::new(effective.to_vec()).meta_column());
     section("environment", List::new(report.env.iter().map(|entry| {
-        Row::new(vec![Cell::text(entry.name), Cell::text(entry.value.as_deref().unwrap_or("unset"))])
-            .meta(vec![Meta::State(entry.provenance.into())])
-    }).collect()).meta_column());
+        let mut row = Row::new(vec![Cell::text(entry.name), Cell::text(entry.value.as_deref().unwrap_or("unset"))])
+            .meta(vec![Meta::State(entry.provenance.into())]);
+        if verbose {
+            for line in crate::output::language::wrap(entry.description, width.saturating_sub(4)) {
+                row = row.child(line);
+            }
+        }
+        row
+    }).collect()).meta_column().children_under(0));
     section("invoked by", List::new(vec![
         Row::new(vec![Cell::text(report.invoked_by_resolution.value.as_deref().unwrap_or("unset"))])
             .meta(vec![Meta::State(report.invoked_by_resolution.provenance.into())]),
@@ -176,7 +202,10 @@ mod tests {
 
 ── invoked by ──────────────────────────────────────────────────────────────────────────────────────
   unset  [none]";
-        let rendered = render(&report, 100, 100);
+        // Keep the original exact 100-column layout contract isolated from
+        // machine-local settings paths. Production supplies the path adapter;
+        // this fixture supplies deterministic declaration labels.
+        let rendered = render_with_provenance(&report, 100, 100, &[], false, str::to_owned);
         assert_eq!(rendered, expected);
         assert!(!rendered.contains("Publish token."));
     }

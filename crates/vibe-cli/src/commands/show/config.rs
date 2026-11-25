@@ -17,6 +17,7 @@ use crate::output::language::{rule_width, viewport};
 
 use super::resolve_project_root;
 
+mod layer_view;
 mod layers;
 mod view;
 use layers::{ConfigSiteProfileSummary, DeclarationLayers, provenance_of};
@@ -287,7 +288,7 @@ pub(super) fn run_config(ctx: &output::Context, args: ShowConfigArgs) -> Result<
     // process env. We still load it for the summary block so the
     // operator can see whether the file is loaded / where the
     // loader looked.
-    let _ = user_config;
+    // Retain the parsed user layer for the human-only effective choices.
 
     // The version-selection policy, with the layer that decided it. A
     // misspelled `VIBE_VERSIONS_SELECT` refuses here as it does on an
@@ -348,7 +349,13 @@ pub(super) fn run_config(ctx: &output::Context, args: ShowConfigArgs) -> Result<
         return Ok(());
     }
 
-    ctx.block(&view::render(&payload, viewport(), rule_width()));
+    ctx.block(&view::render(
+        &payload,
+        viewport(),
+        rule_width(),
+        &layer_view::effective(&user_config),
+        ctx.verbose_requested(),
+    ));
     Ok(())
 }
 
