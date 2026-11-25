@@ -1,0 +1,38 @@
+/* The mark that says what KIND of package a card names.
+   ---------------------------------------------------------------------
+   Everything the eight contours have in common is here rather than on
+   the elements: one weight, one cap, one join, one colour. Eight marks
+   that each carried their own would drift apart the first time one of
+   them was redrawn, and the set only works if it reads as one hand.
+
+   Two of them are named because a host has to be able to set them: the
+   size, because the same mark stands in a 48px tile on a shelf, in a
+   1.9rem one beside a title and in a 72px one at the head of a page; and
+   the stroke, because it is the one number that decides whether eight
+   pictures look like a family. Nothing else about the mark is a knob. */
+
+.kind-glyph {
+  /* The share of the tile the mark fills. `1em` is the safe default — it
+     needs no tile of a definite size to resolve against — and a host
+     that has one overrides it with a share of that tile instead. */
+  --kind-glyph-size: 1em;
+  /* In user units of the 24-grid above, so the weight holds at every
+     size the mark is drawn at rather than thinning as the tile grows. */
+  --kind-glyph-stroke: 1.75;
+
+  flex: none;
+  width: var(--kind-glyph-size);
+  height: var(--kind-glyph-size);
+  fill: none;
+  stroke: currentColor;
+  stroke-width: var(--kind-glyph-stroke);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* The one contour that is filled rather than stroked: the point a flow
+   starts from, which at this size is smaller than its own outline. */
+.kind-glyph__solid {
+  fill: currentColor;
+  stroke: none;
+}

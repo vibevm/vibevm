@@ -1,0 +1,18 @@
+# The package is published as source (PROP-024 §2.2): nothing a build
+# writes may enter it, and nothing here is a build input either.
+node_modules/
+dist/
+dist-*/
+server/
+server-*/
+tmp/
+.vite/
+*.tsbuildinfo
+# The structural gate writes its SARIF report here on every run.
+target/
+# What the end-to-end run leaves behind: traces, screenshots and the
+# HTML report. The browser itself lives in the user's own cache, never
+# in the tree.
+test-results/
+playwright-report/
+.playwright/

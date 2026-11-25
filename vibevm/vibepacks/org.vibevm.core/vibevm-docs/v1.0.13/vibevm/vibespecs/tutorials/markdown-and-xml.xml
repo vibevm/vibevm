@@ -1,0 +1,508 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">Advanced Markdown &amp; XML</title>
+  <status stage="doc" state="work" audience="user,author"/>
+  <p>This page takes a package you write in Markdown and shows you the XML your agent reads in its place. On the way you learn why VibeVM turns every text into XML, and why that costs an author nothing. You learn how to name a rule so that a machine can point at it. And you learn to split a long text into a short header and a long body, the way C and C++ programmers split a library. You build one small package by hand, watch it compile, and prove that the two forms are one. Plan for about half an hour, with no agent required.</p>
+  <what-you-need title="What you need">
+    <table>
+      <tr><td>What</td><td>Why</td><td>Where to get it</td></tr>
+      <tr><td>`vibe`</td><td>creates the project, converts the text and compiles it</td><td>[Install vibe](../start/install-vibe.xml)</td></tr>
+      <tr><td>a text editor</td><td>you write three short files by hand</td><td>any</td></tr>
+      <tr><td>about thirty minutes</td><td>the whole walk, with no agent in it</td><td></td></tr>
+    </table>
+  </what-you-need>
+  <why-xml title="Why everything becomes XML">
+    <p>In a project that asks for it, every text a package brings lands on disk as XML, whatever its author wrote it in. The texts are [specifications](../glossary/index.xml#specification), the rules a package states for the agents that work under it, and the reason for the conversion is the reader. A model that reads `&lt;TESTS-FIRST fact="true" status="spec/done"&gt;` knows where the rule starts, where it ends, what it is called and what state it is in, without guessing at layout. Prose asks the model to infer all four.</p>
+    <p>The measurement agrees with the instinct. In a benchmark study, Yuan Sui and colleagues gave GPT-3.5 and GPT-4 the same tables written six ways, from plain text with separators to CSV, JSON, XML, HTML and Markdown ([WSDM 2024](https://arxiv.org/abs/2305.13062)). Across seven kinds of question, markup that names its parts beat the same content in prose. HTML did best overall, by 6.76 percent in the paper's own figure. On one task, telling where a table's parts begin and end, XML scored 96.00 percent against 93.00 for plain text and 92.33 for Markdown. The study is about tables, and that is exactly as far as this page takes it.</p>
+    <p>Vendor advice says the same from the other side. Anthropic's prompting guide for Claude, guidance rather than research, tells you to wrap each kind of content in its own XML tag so that the model parses a long prompt without ambiguity ([the guide](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices)). Oleg Chirukhin, the author of VibeVM, found this in practice before any published work said it. The `xml` target is the form the projects of this manual use, and the one the specification names as the future primary form.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-045#TARGET-XML"/>
+    <p>The names matter as much as the brackets. A section becomes an element named after itself, `&lt;tests-first title="Tests before fixes"&gt;`. A rule becomes an element named after its id with one marker attribute, `fact="true"`, so that a reader who knows nothing of your vocabulary finds every rule by one test. The first reader of this dialect is an agent, and a tag that says what it holds needs no legend.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-045#NAMED-SECTION-ELEMENTS"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-045#NAMED-FACT-ELEMENTS"/>
+    <p>One caution for the readers who train models. The evidence above is about text a model reads. For text a model writes, it runs the other way: forcing an answer into JSON, XML or YAML can cost reasoning quality ([Tam and colleagues, EMNLP 2024](https://arxiv.org/abs/2408.02442)). VibeVM shapes what an agent reads and never what it answers, so that finding does not touch it.</p>
+  </why-xml>
+  <one-model title="Markdown and XML: one model underneath">
+    <p>Under the hood the two forms are one thing. Every document, Markdown or XML, is parsed into one tree: a title, a status, and sections nested by heading depth. Inside the sections sit paragraphs, lists, tables, fenced code and quotes, some carrying a [fact](../glossary/index.xml#fact), one named rule with a status. vibe never rewrites Markdown text into XML text. It parses into the tree and prints from it, in either direction.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-045#PIVOT-MODEL"/>
+    <p>Compiler writers call such a tree an *intermediate representation*, or IR: the one form that every front end parses into and every back end prints from. A compiler for three languages and four processors needs three front ends and four back ends, not twelve translators, and a rule stated once about the tree holds for every language. VibeVM has the same shape with two front ends and two back ends, Markdown and XML on each side.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#DOCUMENT-IR"/>
+    <p>It needs the tree for the same two reasons. Without it, each pair of forms would need its own converter, and converters drift. A survey of the code in 2026 found four readers of Markdown inside vibe, each accepting a slightly different dialect: the disease one shared tree is meant to cure. And every tool that reads a specification reads XML through the same tree: the checker of facts, the compiler that builds an agent's reading list, the router that resolves an address. So an XML document and its Markdown twin give every tool the same answer.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-045#PROJECTION-READ"/>
+    <p>The tree has a future beyond conversion. The compiler names its levels, from one document's text up to the whole reachable closure of a project, and a compiler plugin may read and rewrite them. A long-horizon agent could plan over that closure one day: not a wall of text but a graph of named units with addresses. That is a direction, not a feature you can run today. And VibeVM itself is not an agent. It never reads your rules to act on them; it prepares the text, the tree and the addresses for whichever agent you run.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-054#IR-LEVELS"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-054#PASS-TIER-LAW"/>
+    <p>The consequence for you is plain. Write the specifications of your own packages in Markdown, the form your editor and your reviewers already handle. Every property of the XML form arrives on its own: named elements, machine-checked facts, an address on every rule. The steps below do exactly that, and end by proving it.</p>
+  </one-model>
+  <create-project title="Step 1: a project that materialises into XML">
+    <p>1. Create a project in an empty folder, as on [Create your first project](../start/first-project.xml). The name becomes the folder:</p>
+    <example id="init" fixture="empty">
+      <run>vibe init review-lab</run>
+      <expect>Initializing project `review-lab` in `review-lab`
+  ✓ created  vibevm/vibespecs/boot/00-core.md
+  ✓ created  vibevm/vibespecs/boot/90-user.md
+  ✓ created  vibe.toml
+  ✓ created  vibe.lock
+  ✓ created  .vibe/.gitignore
+  ✓ created  .gitignore
+  ✓ created  vibevm/vibespecs/boot/INDEX.md
+  ✓ created  CLAUDE.md
+  ✓ created  AGENTS.md
+  ✓ created  GEMINI.md
+
+Done. Project `review-lab`: 10 files created, 0 kept.
+
+Next:
+  • edit vibevm/vibespecs/boot/00-core.md and vibevm/vibespecs/common as your project takes shape
+  • install packages with `vibe install &lt;kind&gt;:&lt;name&gt;` (e.g. flow:wal)</expect>
+    </example>
+    <p>2. Open `review-lab/vibe.toml`, the project's [manifest](../glossary/index.xml#manifest), and add one line under `[project]`:</p>
+    <fence lang="toml">[project]
+spec_format = "xml"
+name = "review-lab"</fence>
+    <p>3. Work inside the folder from here on: `cd review-lab`.</p>
+    <p>The line decides the form of every text a package brings in. With `xml`, vibe converts what an author wrote in Markdown as it copies the package in, and copies XML as it is. Your own files are never converted. Without the line, each file keeps its author's form.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-045#SETTING"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-045#TARGET-XML"/>
+  </create-project>
+  <scaffold title="Step 2: scaffold the package">
+    <p>1. Add a package to the project. It is a `flow`, a package of working rules for an agent, and it asks for the `normal` format, whose meaning step 4 explains:</p>
+    <example id="init-package" fixture="xml-lab">
+      <run>vibe init package org.acme/review --kind flow --format normal</run>
+      <expect>Creating package `org.acme/review` in `&lt;TMP&gt;/work/review-lab`
+  ✓ created  vibevm/vibepacks/org.acme/review/v0.1.0/vibe.toml
+  ✓ created  vibevm/vibepacks/org.acme/review/v0.1.0/vibevm/vibespecs/boot/10-flow-review.md
+  ✓ created  vibevm/vibepacks/org.acme/review/v0.1.0/README.md
+  • kept     vibevm/vibespecs/boot/INDEX.md (regenerated)
+  • kept     CLAUDE.md (regenerated)
+  • kept     AGENTS.md (regenerated)
+  • kept     GEMINI.md (regenerated)
+
+Done. Project `org.acme/review`: 3 files created, 4 kept.
+
+Next:
+  • edit vibevm/vibespecs/boot/00-core.md and vibevm/vibespecs/common as your project takes shape
+  • install packages with `vibe install &lt;kind&gt;:&lt;name&gt;` (e.g. flow:wal)</expect>
+    </example>
+    <p>2. Open the manifest the scaffold wrote:</p>
+    <example id="manifest" fixture="review-slot">
+      <run>cat vibevm/vibepacks/org.acme/review/v0.1.0/vibe.toml</run>
+      <expect>[package]
+group = "org.acme"
+name = "review"
+kind = "flow"
+version = "0.1.0"
+epoch = 1
+authors = ["vibevm docs fixtures"]
+license = "UPL-1.0"
+description = ""
+format = "normal"
+
+[boot_snippet]
+source = "vibevm/vibespecs/boot/10-flow-review.md"
+category = "flow"
+link = "dynamic"</expect>
+    </example>
+    <p>3. Change two lines: give the package a `description`, and set `link = "static"`. The end of the file then reads:</p>
+    <fence lang="toml">description = "The team's code review rules, as a contract with its reasons."
+format = "normal"
+
+[boot_snippet]
+source = "vibevm/vibespecs/boot/10-flow-review.md"
+category = "flow"
+link = "static"</fence>
+    <p>The [link type](../glossary/index.xml#link-type) says how the package's text reaches the agent. With `static`, vibe compiles the text into the one file an agent reads first, in full, at every session start. With `dynamic`, the scaffold's choice, it lists the file for the agent to open on its own. This page uses `static`, so that you can watch the compiler work.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#LINK-STATIC"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#LINK-DYNAMIC"/>
+  </scaffold>
+  <anchors-and-facts title="Step 3: anchors and facts, in Markdown">
+    <p>The package needs two documents. The first is the note an agent reads at session start, the package's [boot snippet](../glossary/index.xml#boot-snippet). The second is the contract: the rules themselves, each with an address.</p>
+    <p>1. Replace the scaffold's note, `vibevm/vibepacks/org.acme/review/v0.1.0/vibevm/vibespecs/boot/10-flow-review.md`, with this:</p>
+    <fence lang="markdown"># Review flow
+
+Before you open a change for review, hold it to the review rules. This
+note pulls the rules in; each rule is one fact with an address, and the
+reasons follow the rules. Cite a rule by its address, for example
+`spec://org.acme/review/contract/REVIEW#ONE-IDEA`.
+
+#use spec://org.acme/review/contract/REVIEW#root</fence>
+    <p>The line that starts with `#use` is a directive: an instruction to the compiler, not prose. It pulls the contract in ahead of the note, so that the agent meets the rules before the note referring to them.</p>
+    <p>2. Create `vibevm/vibespecs/contract/REVIEW.md` inside the same package:</p>
+    <fence lang="markdown"># Review rules {#root}
+
+&lt;status stage="spec" state="done"/&gt;
+
+The rules a reviewer holds every change to. Each rule is one anchored
+fact with a status.
+
+## One idea per change {#one-idea}
+
+@fact:ONE-IDEA A change under review carries one idea, named in its first line. @status:spec/done
+
+## Tests before fixes {#tests-first}
+
+@fact:TESTS-FIRST A change that alters behaviour carries a test that fails without it. @status:spec/done</fence>
+    <p>Read the file as a machine does. A heading carries an [anchor](../glossary/index.xml#anchor) in braces, `{#one-idea}`: the name a citation uses, the part after `#` in an address. A paragraph that opens with `@fact:ONE-IDEA` is a fact, one anchored rule with a status. The `@status:spec/done` at its end says that the rule is settled and not yet built. The `&lt;status&gt;` element under the title is the same marker for the whole document. Heading anchors and fact ids share one namespace, so no two may repeat in a document.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#FACT-ANCHOR-SYNTAX"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#ANCHORED-WHEN-MARKED"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#SHORTHAND-FORMS"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#FACT-ID-GRAMMAR"/>
+    <p>The case of an id is a signal. Upper-case ids mark rules with binding weight; lower-case ids mark headings, lead-ins and notes. The first rule's address is `spec://org.acme/review/contract/REVIEW#ONE-IDEA`. It joins the package's [coordinate](../glossary/index.xml#coordinate), the document's path under `vibevm/vibespecs/` without its extension, and the anchor. The address does not change when the file changes form.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#DECISION-TWO-REGISTERS"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-045#ADDRESSING-UNCHANGED"/>
+    <p>3. Check the markup of the package:</p>
+    <example id="facts-check" fixture="review-contract">
+      <run>vibe facts check --path vibevm/vibepacks/org.acme/review/v0.1.0</run>
+      <expect>progress check: clean (2 files, 0 warning(s))</expect>
+    </example>
+    <p>The check reads every document under the package's `vibevm/vibespecs/`. A marker on a paragraph without an anchor, and an id defined twice, are errors that name the line.</p>
+    <p>4. Install the package into its own project:</p>
+    <example id="install-contract" fixture="review-contract">
+      <run>vibe install org.acme/review --assume-yes</run>
+      <expect>Resolving 1 root package…
+
+Materialising 1 package into vibedeps/:
+  org.acme/review@0.1.0
+
+closure diff:
+  → + org.acme/review@0.1.0 (root-edge)
+  → lane vibevm/vibespecs/boot/INDEX.md: 737 -&gt; 781 B
+  → lane vibevm/vibespecs/boot/STATIC.xml: absent -&gt; 2809 B
+
+Materialised 1 package into vibedeps/; regenerated boot artifacts for 1 node(s).</expect>
+    </example>
+    <p>The install copies the package into `vibevm/vibedeps/`, converting both documents to XML. It also compiles the [boot lane](../glossary/index.xml#boot-lane), the ordered list of files an agent reads at session start. The last two lines of the diff are that lane: `INDEX.md` gained the line that names the compiled file, and `STATIC.xml` appeared.</p>
+    <p>5. Open the contract as the agent will read it:</p>
+    <example id="contract-xml" fixture="review-contract-installed">
+      <run>cat vibevm/vibedeps/org.acme.review/0.1.0/vibevm/vibespecs/contract/REVIEW.xml</run>
+      <expect>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;spec xmlns="https://vibevm.org/spec/1"&gt;
+  &lt;title id="root"&gt;Review rules&lt;/title&gt;
+  &lt;status stage="spec" state="done"/&gt;
+  &lt;p&gt;The rules a reviewer holds every change to. Each rule is one anchored
+fact with a status.&lt;/p&gt;
+  &lt;one-idea title="One idea per change"&gt;
+    &lt;p&gt;&lt;ONE-IDEA fact="true" status="spec/done"&gt;A change under review carries one idea, named in its first line.&lt;/ONE-IDEA&gt;&lt;/p&gt;
+  &lt;/one-idea&gt;
+  &lt;tests-first title="Tests before fixes"&gt;
+    &lt;p&gt;&lt;TESTS-FIRST fact="true" status="spec/done"&gt;A change that alters behaviour carries a test that fails without it.&lt;/TESTS-FIRST&gt;&lt;/p&gt;
+  &lt;/tests-first&gt;
+&lt;/spec&gt;</expect>
+    </example>
+    <p>Every part is named after itself. The section `{#one-idea}` became the element `&lt;one-idea&gt;`, with its title as an attribute. The fact became `&lt;ONE-IDEA fact="true" status="spec/done"&gt;`. The `@fact:` prefix and the `@status:` suffix are gone from the text: they were spelling, and the tree keeps only meaning. Inline Markdown, such as backticks and links, rides inside the text unchanged.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-045#INLINE-STAYS-MARKDOWN"/>
+  </anchors-and-facts>
+  <headers title="A header and its implementation">
+    <p>A contract that says everything is expensive. Every word in the boot lane is read by every agent at every session start. So the text that must always be present wants to be short, and the reasoning behind it wants to sit where an agent can reach it when it asks. C solved a problem of this shape in the 1970s with two files, and C++ kept the answer. A header, `.h`, declares in a few lines what a library offers; a translation unit, `.c` or `.cpp`, carries the implementation. Everyone who uses the library includes the header, and nobody pastes the implementation into their own code.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#hpp-cpp-inspiration"/>
+    <p>VibeVM borrows the split for text. A package in the `normal` format keeps two folders under `vibevm/vibespecs/`. `contract/` is the header: small, cheap to load, the surface other packages and agents see. `source/` is the implementation: the heavy body, pulled in only when something asks for it. A C compiler sees the whole program and matches declarations to definitions itself; vibe has no such view of your text, so the contract names its implementation with a `#source` directive. The `simple` format, used when the package manifest omits `format`, has none of this: such a package is carried whole and read because it is present. By contrast, `vibe init package` scaffolds `format = "normal"` unless you choose another format.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#DIR-CONTRACT"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#DIR-SOURCE"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#SOURCE-HACK"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#FORMAT-SIMPLE"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#FORMAT-NORMAL"/>
+    <p>The specifications call this machinery inheritance, as in C++: one document builds on another without copying its text. Two directives do the pulling, and you have met one. `#use` names a document or a section that must be read before the text that uses it; the compiler copies it in ahead, and the copy brings along whatever the copied document pulls in itself. `#source` names the implementation of a contract, and the compiler compiles it in behind the contract. In the compiled file both directives are gone, consumed. A third, `#embed`, splices exactly one addressed node into the place where it stands, a macro rather than an include.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#USE-INLINE"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#SOURCE-DEF"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#EMBED-EXACT-RULE"/>
+  </headers>
+  <split title="Step 4: split the contract from its reasons">
+    <p>1. Create `vibevm/vibespecs/source/details.md` in the package, the implementation of the contract:</p>
+    <fence lang="markdown"># Review rules, the reasons {#details}
+
+## Why one idea per change {#one-idea-why}
+
+@fact:ONE-IDEA-WHY A change with two ideas cannot be reverted one idea at a time, and its review takes twice as long. @status:spec/done
+
+## Why tests before fixes {#tests-first-why}
+
+@fact:TESTS-FIRST-WHY A fix without a failing test proves nothing: the test states what was wrong. @status:spec/done
+
+## What a reviewer checks {#checklist}
+
+- @fact:CHECK-SCOPE The first line names the one idea, and every hunk serves it. @status:spec/done
+- @fact:CHECK-TEST The test fails on the parent commit and passes on this one. @status:spec/done</fence>
+    <p>Every anchor here differs from the contract's, `one-idea-why` beside `one-idea`; the edge cases below say why. The last section is a list in which every item is a fact.</p>
+    <p>2. In `contract/REVIEW.md`, add one line after the first paragraph:</p>
+    <fence lang="markdown">#source spec://org.acme/review/source/details</fence>
+    <p>The address names a whole document, with no anchor, so the compiler takes it from the title down.</p>
+    <p>3. Install again:</p>
+    <example id="install-split" fixture="review-split">
+      <run>vibe install org.acme/review --assume-yes</run>
+      <expect>Resolving 1 root package…
+
+Materialising 1 package into vibedeps/:
+  org.acme/review@0.1.0
+
+closure diff:
+  → lane vibevm/vibespecs/boot/STATIC.xml: 2809 -&gt; 4557 B
+
+Materialised 1 package into vibedeps/; regenerated boot artifacts for 1 node(s).</expect>
+    </example>
+    <p>No package was added, so the lane is the only line of the diff: the compiled file grew by the implementation.</p>
+    <p>4. Ask vibe what an agent reads first:</p>
+    <example id="tree" fixture="review-installed">
+      <run>vibe tree --plain</run>
+      <expect>project: &lt;TMP&gt;/work/review-lab
+STATIC.xml: 4557 bytes, 69 lines, 1 contribution(s)
+packages: 1   roots: 1
+columns: load  T=transitive  C=condition  S=in STATIC.xml
+
+org.acme/review  static   .  .  x</expect>
+    </example>
+    <p>One package, linked `static`, and the `x` says that its text is compiled into `STATIC.xml`.</p>
+    <p>5. Open the compiled file:</p>
+    <example id="static-xml" fixture="review-installed">
+      <run>cat vibevm/vibespecs/boot/STATIC.xml</run>
+      <expect>&lt;!-- vibe:c1 vibevm/vibespecs/boot/STATIC.xml — generated by vibe, do not edit. --&gt;
+&lt;!-- vibe:c1 The static boot lane (PROP-009 §2.3): the highest-priority --&gt;
+&lt;!-- vibe:c1 contributions, compiled anchor-qualified. Read this first, in full. --&gt;
+
+&lt;!-- vibe:c1 RESOLUTION RULES — read these five lines before anything else:
+  1. Labels in this file are qualified: &lt;origin-slug&gt;-%2D&lt;original&gt;. The origin
+     is named by the provenance comment above each block; the original short
+     label is the tail after the last `-%2D`.
+  2. A short label you cannot find here → check the RENAMED ANCHORS table
+     below for its qualified heirs; never guess among look-alikes.
+  3. Full spec:// addresses resolve against package SOURCES under vibevm/vibedeps/,
+     never against this generated file. This file is a cache, not a target.
+  4. `#use spec://… as X` binds a file-local alias; `@!X` is a mandatory read
+     of X's target (same rules as @spec://…). In this compiled file every @!X
+     is already rewritten to its full address.
+  5. An ambiguous or unresolvable short reference is an ERROR to surface with
+     candidates — never silently pick one. --&gt;
+
+&lt;!-- vibe:c1 RENAMED ANCHORS (short → qualified heirs):
+  CHECK-SCOPE → org-acme-%2Dreview-%2DCHECK-SCOPE (org.acme/review)
+  CHECK-TEST → org-acme-%2Dreview-%2DCHECK-TEST (org.acme/review)
+  ONE-IDEA → org-acme-%2Dreview-%2DONE-IDEA (org.acme/review)
+  ONE-IDEA-WHY → org-acme-%2Dreview-%2DONE-IDEA-WHY (org.acme/review)
+  TESTS-FIRST → org-acme-%2Dreview-%2DTESTS-FIRST (org.acme/review)
+  TESTS-FIRST-WHY → org-acme-%2Dreview-%2DTESTS-FIRST-WHY (org.acme/review)
+  checklist → org-acme-%2Dreview-%2Dchecklist (org.acme/review)
+  details → org-acme-%2Dreview-%2Ddetails (org.acme/review)
+  one-idea → org-acme-%2Dreview-%2Done-idea (org.acme/review)
+  one-idea-why → org-acme-%2Dreview-%2Done-idea-why (org.acme/review)
+  root → org-acme-%2Dreview-%2Droot (org.acme/review)
+  tests-first → org-acme-%2Dreview-%2Dtests-first (org.acme/review)
+  tests-first-why → org-acme-%2Dreview-%2Dtests-first-why (org.acme/review) --&gt;
+
+&lt;!-- vibe:c1 vibe:static org.acme/review — vibevm/vibedeps/org.acme.review/0.1.0/vibevm/vibespecs/boot/10-flow-review.xml --&gt;
+
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;spec xmlns="https://vibevm.org/spec/1"&gt;
+  &lt;title id="org-acme--review--root"&gt;Review rules&lt;/title&gt;
+  &lt;status stage="spec" state="done"/&gt;
+  &lt;p&gt;The rules a reviewer holds every change to. Each rule is one anchored
+fact with a status.&lt;/p&gt;
+  &lt;org-acme--review--one-idea title="One idea per change"&gt;
+    &lt;p&gt;&lt;org-acme--review--ONE-IDEA fact="true" status="spec/done"&gt;A change under review carries one idea, named in its first line.&lt;/org-acme--review--ONE-IDEA&gt;&lt;/p&gt;
+  &lt;/org-acme--review--one-idea&gt;
+  &lt;org-acme--review--tests-first title="Tests before fixes"&gt;
+    &lt;p&gt;&lt;org-acme--review--TESTS-FIRST fact="true" status="spec/done"&gt;A change that alters behaviour carries a test that fails without it.&lt;/org-acme--review--TESTS-FIRST&gt;&lt;/p&gt;
+  &lt;/org-acme--review--tests-first&gt;
+  &lt;org-acme--review--details title="Review rules, the reasons"&gt;
+    &lt;org-acme--review--one-idea-why title="Why one idea per change"&gt;
+      &lt;p&gt;&lt;org-acme--review--ONE-IDEA-WHY fact="true" status="spec/done"&gt;A change with two ideas cannot be reverted one idea at a time, and its review takes twice as long.&lt;/org-acme--review--ONE-IDEA-WHY&gt;&lt;/p&gt;
+    &lt;/org-acme--review--one-idea-why&gt;
+    &lt;org-acme--review--tests-first-why title="Why tests before fixes"&gt;
+      &lt;p&gt;&lt;org-acme--review--TESTS-FIRST-WHY fact="true" status="spec/done"&gt;A fix without a failing test proves nothing: the test states what was wrong.&lt;/org-acme--review--TESTS-FIRST-WHY&gt;&lt;/p&gt;
+    &lt;/org-acme--review--tests-first-why&gt;
+    &lt;org-acme--review--checklist title="What a reviewer checks"&gt;
+      &lt;facts ordered="false"&gt;
+        &lt;org-acme--review--CHECK-SCOPE fact="true" status="spec/done"&gt;The first line names the one idea, and every hunk serves it.&lt;/org-acme--review--CHECK-SCOPE&gt;
+        &lt;org-acme--review--CHECK-TEST fact="true" status="spec/done"&gt;The test fails on the parent commit and passes on this one.&lt;/org-acme--review--CHECK-TEST&gt;
+      &lt;/facts&gt;
+    &lt;/org-acme--review--checklist&gt;
+  &lt;/org-acme--review--details&gt;
+  &lt;section title="Review flow"&gt;
+    &lt;p&gt;Before you open a change for review, hold it to the review rules. This
+note pulls the rules in; each rule is one fact with an address, and the
+reasons follow the rules. Cite a rule by its address, for example
+`spec://org.acme/review/contract/REVIEW#ONE-IDEA`.&lt;/p&gt;
+  &lt;/section&gt;
+&lt;/spec&gt;</expect>
+    </example>
+    <p>Read it from the top. The comments come first: the rules an agent applies to the labels in this file, then a table of every renamed anchor. XML forbids two hyphens inside a comment, so the `--` of a label is written `-%2D` there; the elements below carry the real `--`. Then one XML document: the contract first, then the implementation compiled in behind it as one nested section. Last comes the note from the snippet, as a plain `&lt;section&gt;`, because its heading had no anchor. The `#source` and `#use` lines are gone.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#MERGE-SOURCE-ONLY"/>
+    <p>Every anchor now carries the prefix `org-acme--review--`, the label of its origin. Two packages that both name a section `root` cannot collide in one file, and the table at the top says what each short name became. Cite the source document, never this file: it is a cache that changes whenever a package changes.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#COMPILED-LABELS-ARE-QUALIFIED"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#COMPILED-LANE-IS-NOT-A-CITATION-TARGET"/>
+    <p>6. Open the record vibe keeps beside its copy of the package:</p>
+    <example id="slot-record" fixture="review-installed">
+      <run>cat vibevm/vibedeps/org.acme.review/0.1.0/.vibe-slot.toml</run>
+      <expect>schema = 1
+source_hash = "sha256:30fef78663fe343057c2d36d65514d3708d2f5053a2d41b713a749a0b28cc8eb"
+spec_format = "xml"
+converter_recipe = "specdoc/4"
+derived_hash = "sha256:e420b6841c71fab586dfd72fe4720881b77d056e8f7a86217d1174b5fde0feba"
+
+[[file]]
+path = "README.xml"
+sha256 = "c26e751356947bca54346b4099dc297dcdcac44831087d06436b1cb5f51ecec1"
+disposition = "converted"
+source = "README.md"
+
+[[file]]
+path = "vibe.toml"
+sha256 = "42cb5b83bdc0e8ef61bdbb46095688593b05e4ad07bc61b8b346c13be0e753c6"
+disposition = "copied"
+source = "vibe.toml"
+
+[[file]]
+path = "vibevm/vibespecs/boot/10-flow-review.xml"
+sha256 = "925cd961b99debb27cd179a42908bdf006c5103422c2a216ee8fc874d30865d3"
+disposition = "converted"
+source = "vibevm/vibespecs/boot/10-flow-review.md"
+
+[[file]]
+path = "vibevm/vibespecs/contract/REVIEW.xml"
+sha256 = "ebcda3b670be21b409aa07b2600582ceb57cdc7eef8dbb3ef0dfe92dbc4f7a11"
+disposition = "converted"
+source = "vibevm/vibespecs/contract/REVIEW.md"
+
+[[file]]
+path = "vibevm/vibespecs/source/details.xml"
+sha256 = "d35c2052468004ff1fb0dfc7724a496d8773aa280e686ce597fd14615acf6a2d"
+disposition = "converted"
+source = "vibevm/vibespecs/source/details.md"</expect>
+    </example>
+    <p>`spec_format` names the target and `converter_recipe` the converter's version. Each row says whether a file was `copied` or `converted`, with the hash of what landed. Keep the file in mind: step 5 reads it again.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-045#HASH-LAW"/>
+  </split>
+  <equivalent-forms title="The equivalent forms">
+    <p>The constructs this page used, side by side, from its own files:</p>
+    <table>
+      <tr><td>Markdown</td><td>XML</td></tr>
+      <tr><td>`# Review rules {#root}`</td><td>`&lt;title id="root"&gt;Review rules&lt;/title&gt;`</td></tr>
+      <tr><td>`&lt;status stage="spec" state="done"/&gt;`</td><td>the same element, unchanged</td></tr>
+      <tr><td>`## One idea per change {#one-idea}` and the text under it</td><td>`&lt;one-idea title="One idea per change"&gt;…&lt;/one-idea&gt;`</td></tr>
+      <tr><td>a paragraph</td><td>`&lt;p&gt;…&lt;/p&gt;`</td></tr>
+      <tr><td>`@fact:ONE-IDEA … @status:spec/done`</td><td>`&lt;p&gt;&lt;ONE-IDEA fact="true" status="spec/done"&gt;…&lt;/ONE-IDEA&gt;&lt;/p&gt;`</td></tr>
+      <tr><td>`- @fact:CHECK-SCOPE … @status:spec/done`, a list of facts</td><td>`&lt;facts ordered="false"&gt;&lt;CHECK-SCOPE fact="true" status="spec/done"&gt;…&lt;/CHECK-SCOPE&gt;&lt;/facts&gt;`</td></tr>
+      <tr><td>`#source spec://…`, a directive</td><td>`&lt;p&gt;#source spec://…&lt;/p&gt;`, a plain paragraph</td></tr>
+      <tr><td>`# Review flow`, a title without an anchor</td><td>`&lt;title&gt;Review flow&lt;/title&gt;`</td></tr>
+      <tr><td>backticks, emphasis, links, `spec://` addresses</td><td>the same characters inside the text</td></tr>
+    </table>
+    <p>The dialect is closed, and it is small on purpose. It expresses exactly what Markdown can express, so that converting in either direction loses nothing in meaning, and an element outside it is a loud error, never a silent skip. Two anchors have no element of their own: one that starts with a digit, and one that collides with a word of the dialect such as `title` or `list`. For those, a generic `&lt;section id="…"&gt;` or `&lt;fact id="…"&gt;` stands in, and every reader accepts both spellings. The one exception to the rule of equivalence is the vocabulary of documentation packages, this manual among them: their runnable examples and live citations have no Markdown form, and project to Markdown one way only.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-045#XML-DIALECT-IS-THE-MD-SUBSET"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-045#FACTS-GROUP-ELEMENT"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-045#DOC-VOCAB-REOPENING"/>
+  </equivalent-forms>
+  <round-trip title="Step 5: convert, and see nothing change">
+    <p>You wrote Markdown and shipped XML. The last step shows that the XML you would have written by hand is the same file, to the byte.</p>
+    <p>1. Ask the converter what a conversion would lose:</p>
+    <example id="convert-dry-run" fixture="review-installed">
+      <run>vibe refactor convert-source --to xml --dry-run vibevm/vibepacks/org.acme/review/v0.1.0/vibevm/vibespecs</run>
+      <expect>dry-run ir-stable-loss vibevm/vibepacks/org.acme/review/v0.1.0/vibevm/vibespecs/boot/10-flow-review.md
+--- source
++++ reverse-projection
+@@ -8,2 +8,3 @@
+ #use spec://org.acme/review/contract/REVIEW#root
+
++
+
+dry-run ir-stable-loss vibevm/vibepacks/org.acme/review/v0.1.0/vibevm/vibespecs/contract/REVIEW.md
+--- source
++++ reverse-projection
+@@ -16,2 +16,3 @@
+ @fact:TESTS-FIRST A change that alters behaviour carries a test that fails without it. @status:spec/done
+
++
+
+dry-run ir-stable-loss vibevm/vibepacks/org.acme/review/v0.1.0/vibevm/vibespecs/source/details.md
+--- source
++++ reverse-projection
+@@ -14,2 +14,3 @@
+ - @fact:CHECK-TEST The test fails on the parent commit and passes on this one. @status:spec/done
+
++
+
+summary converted=0 already=0 lossy-confirmed=0 refused=0 skipped-generated=0 skipped-foreign=0 skipped-harness=0 dry-run=3</expect>
+    </example>
+    <p>The converter parses each file into the tree, prints the XML, reads that back and prints Markdown again, then compares. The verdict `ir-stable-loss` means that the tree survived and the bytes did not, and the diff shows what changed. Here it is one blank line at the end of each file, added by the Markdown printer. Without `--force` the command refuses a file over such a loss. A change of meaning it refuses always, because that would be a defect of the converter, never of your file.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-051#HONESTY-BY-REVERSE"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-051#FORCE-AND-PROMPT"/>
+    <p>2. Convert the three documents. The command writes each `.xml` beside its `.md` and deletes the `.md` in one act. The tree never holds a document in both forms:</p>
+    <fence lang="shell">vibe refactor convert-source --to xml --force vibevm/vibepacks/org.acme/review/v0.1.0/vibevm/vibespecs</fence>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-051#ONE-DOCUMENT-ONE-FORM-ON-CONVERT"/>
+    <p>3. In the package manifest, point `source` at the new file, `vibevm/vibespecs/boot/10-flow-review.xml`.</p>
+    <p>4. Install again:</p>
+    <example id="install-xml" fixture="review-xml">
+      <run>vibe install org.acme/review --assume-yes</run>
+      <expect>Resolving 1 root package…
+
+Materialising 1 package into vibedeps/:
+  org.acme/review@0.1.0
+
+  → closure unchanged (1 packages)
+
+Materialised 1 package into vibedeps/; regenerated boot artifacts for 1 node(s).</expect>
+    </example>
+    <p>5. Open the record again:</p>
+    <example id="slot-record-after" fixture="review-xml-installed">
+      <run>cat vibevm/vibedeps/org.acme.review/0.1.0/.vibe-slot.toml</run>
+      <expect>schema = 1
+source_hash = "sha256:6c7b5d64df7efadb3ebb7ba950902e3e3e1cc1a0a9c0a06f464c55a9f01bd209"
+spec_format = "xml"
+converter_recipe = "specdoc/4"
+derived_hash = "sha256:908b2213850eba6789f655e7cfac4722328659e1eb5ea5017b8eb71055a152dc"
+
+[[file]]
+path = "README.xml"
+sha256 = "c26e751356947bca54346b4099dc297dcdcac44831087d06436b1cb5f51ecec1"
+disposition = "converted"
+source = "README.md"
+
+[[file]]
+path = "vibe.toml"
+sha256 = "018fe59c3ed0b41a24ad236798f5b8198c6ad983a58a9c72d7f73897a4d56e62"
+disposition = "copied"
+source = "vibe.toml"
+
+[[file]]
+path = "vibevm/vibespecs/boot/10-flow-review.xml"
+sha256 = "925cd961b99debb27cd179a42908bdf006c5103422c2a216ee8fc874d30865d3"
+disposition = "copied"
+source = "vibevm/vibespecs/boot/10-flow-review.xml"
+
+[[file]]
+path = "vibevm/vibespecs/contract/REVIEW.xml"
+sha256 = "ebcda3b670be21b409aa07b2600582ceb57cdc7eef8dbb3ef0dfe92dbc4f7a11"
+disposition = "copied"
+source = "vibevm/vibespecs/contract/REVIEW.xml"
+
+[[file]]
+path = "vibevm/vibespecs/source/details.xml"
+sha256 = "d35c2052468004ff1fb0dfc7724a496d8773aa280e686ce597fd14615acf6a2d"
+disposition = "copied"
+source = "vibevm/vibespecs/source/details.xml"</expect>
+    </example>
+    <p>Compare it with the record of step 4. Each of the three documents is now `copied`, and the hash of each is the hash it had as `converted`. What the converter wrote from your Markdown is what the install wrote from it, to the byte. The compiled file did not change either:</p>
+    <example id="tree-after" fixture="review-xml-installed">
+      <run>vibe tree --plain</run>
+      <expect>project: &lt;TMP&gt;/work/review-lab
+STATIC.xml: 4557 bytes, 69 lines, 1 contribution(s)
+packages: 1   roots: 1
+columns: load  T=transitive  C=condition  S=in STATIC.xml
+
+org.acme/review  static   .  .  x</expect>
+    </example>
+    <p>The same bytes, the same lines. This is what one model underneath means in practice. The form you write in is your choice; the text that reaches the agent is the same either way. A project with `spec_format = "markdown"` runs the same road the other way. The Markdown it writes from your XML is your original file plus that one blank line.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-045#INHERITANCE-PARITY"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-045#TARGET-MD"/>
+  </round-trip>
+  <what-appeared title="What appeared on disk">
+    <p>Your package lives under `vibevm/vibepacks/org.acme/review/v0.1.0/`: a manifest, a README and three XML documents, yours to edit. vibe's copy of it lives under `vibevm/vibedeps/org.acme.review/0.1.0/`, with the record `.vibe-slot.toml` beside it, and is rewritten at every install. `vibevm/vibespecs/boot/` holds the compiled `STATIC.xml` and `INDEX.md`, whose `static` line names the compiled file, next to your two boot files, which no install touches. `vibe.lock`, the project's [lock file](../glossary/index.xml#lock-file), pins the package to its version and its hash.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#TWO-TREES"/>
+  </what-appeared>
+  <edge-cases title="Edge cases and rules">
+    <p>Under `spec_format = "xml"`, a source section must not reuse an anchor of the contract, and the note's title carries no anchor. The compiler merges sections that share an anchor, and the merged result does not compile into `STATIC.xml` today. The install stops with `fact id … is defined twice`; the copy of the package is already on disk, and the lock is not written. Two documents whose titles are both `{#root}` collide the same way. Under the default `spec_format` the same package compiles.</p>
+    <p>A dot inside an anchor is a path, not a character. `{#verification.timeout}` cannot be addressed, while `#verification.timeout` reaches a section `timeout` nested under a section `verification`. An anchor is a letter followed by letters, digits, `_` and `-`.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#URI-TREE-PATH"/>
+    <p>`vibe init package` honours `--link static` and `--link dynamic`; omitting `--link` writes `link = "dynamic"`. For this flow, pass `--link static` when creating the package or set the link in the manifest, as step 2 does.</p>
+    <p>With `link = "dynamic"` there is no compiled file. `INDEX.md` names the note itself, and the agent that opens it meets the `#use` line and must follow it on its own.</p>
+    <p>`vibe explain` answers only for a package that carries a [traceability map](../glossary/index.xml#traceability-map). For this one it says so and stops.</p>
+    <p>`vibe facts check` catches a misspelt state in the element form, `state="finished"`, and names the value. In the shorthand, `@status:spec/finished` is not read as a marker at all, and the file passes as clean. The states are `plan`, `work`, `done`, `hold` and `void`; the stages are `idea`, `spec`, `impl`, `test`, `doc`, `freeze` and `unknown`.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#STATUS-ELEMENT"/>
+  </edge-cases>
+</spec>

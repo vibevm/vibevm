@@ -1,0 +1,4 @@
+# A neutral author, so a fixture created by `vibe init` never carries the
+# name of whoever ran the check.
+[init]
+last_author = "vibevm docs fixtures"

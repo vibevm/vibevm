@@ -1,0 +1,13 @@
+# Step 5 before its install: the three Markdown sources converted to XML
+# in place, and the manifest pointed at the converted note.
+schema = 1
+
+[fixture]
+from = "review-installed"
+cwd = "work/review-lab"
+
+[[fixture.step]]
+run = "vibe refactor convert-source --to xml --force vibevm/vibepacks/org.acme/review/v0.1.0/vibevm/vibespecs"
+
+[[fixture.step]]
+edit = { path = "work/review-lab/vibevm/vibepacks/org.acme/review/v0.1.0/vibe.toml", from = "source = \"vibevm/vibespecs/boot/10-flow-review.md\"", to = "source = \"vibevm/vibespecs/boot/10-flow-review.xml\"" }

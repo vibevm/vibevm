@@ -1,0 +1,62 @@
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.1rem 0.45rem;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--line-strong);
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-2);
+  white-space: nowrap;
+}
+
+.badge--primary {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  color: var(--text);
+}
+
+.badge--official {
+  border-color: var(--line-strong);
+  color: var(--text-2);
+}
+
+.badge--community {
+  border-color: var(--line);
+  color: var(--text-3);
+}
+
+/* The other axis: how the document came to exist, not where it stands.
+   It is drawn as the quietest of the marks — a dashed outline over the
+   sunk ground — because it is a statement of fact beside a card and not
+   a warning about it. The text token is the audited `--text-2`, so the
+   mark is as legible as the standings it stands beside. */
+.badge--generated {
+  border-style: dashed;
+  border-color: var(--line-strong);
+  background: var(--bg-sink);
+  color: var(--text-2);
+}
+
+/* The third axis: whose words these are. Quieter than a standing and
+   drawn as an outline over the page's own ground, because it is one more
+   fact about the document rather than a rank among documents. The `ai`
+   and `human` marks differ in weight and not in hue — a colour would
+   make one of the two read as a warning, and the field is not a
+   judgement (`##CARD-AUTHORSHIP`). */
+.badge--authorship {
+  border-color: var(--line);
+  background: none;
+  color: var(--text-2);
+}
+
+.badge--authorship-human {
+  border-color: var(--line-strong);
+}
+
+.badge__star {
+  color: var(--accent-hover);
+}

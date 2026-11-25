@@ -1,0 +1,7 @@
+# The machine-level registry every fixture resolves through: the copy of
+# the packages these examples install, which lives inside the sandbox.
+# The placeholder below is substituted with that directory when the
+# sandbox is laid down.
+[[registry]]
+name = "local"
+url = "file:///${REGISTRY}"

@@ -1,0 +1,253 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">TCG-ORACLE-GO v0.1 — the gopls oracle process model</title>
+  <status stage="spec" state="done"/>
+  <p><status-line fact="true" status="impl/done">**Status: v0.1 — authored with GO-AI-NATIVE-PLAN v0.1 (Phase 3),
+implemented by its Phase 7.**</status-line></p>
+  <p><companion-documents fact="true" status="impl/done">The component brief is
+[`tools/vibe-agentic-tcg-go.xml`](../tools/vibe-agentic-tcg-go.xml); the
+message grammar is
+[`TCG-PROTOCOL-GO-v0.1`](TCG-PROTOCOL-GO-v0.1.xml).</companion-documents></p>
+  <p><DOCUMENT-OWNS-THE-ORACLE-PROCESS fact="true" status="impl/done">This document owns
+the oracle PROCESS: resolution, LSP lifecycle, configuration, overlays,
+quiescence, the fidelity posture, and latency.</DOCUMENT-OWNS-THE-ORACLE-PROCESS></p>
+  <p><QUANTITIES-ARE-CAMPAIGN-MEASURED fact="true" status="spec/done">Where the sibling Rust
+mechanism cites measured spike facts, this one names the same
+quantities as campaign-measured — *the bench harness
+(`go-ai-native-tcg bench`) is the instrument; no Go corpus or baseline
+has yet been taken, so the figures below are posted targets rather
+than measured ones. Creating the Go test codebase to measure against
+is deliberately far-future work (the corpus could be LLM-generated or
+fuzzer-generated); it is not being built now* — a target moves only
+with a committed REPORT reason.</QUANTITIES-ARE-CAMPAIGN-MEASURED></p>
+  <resolution title="1. The process and its resolution">
+    <p><kind-line-resolution fact="true" status="impl/done">`req r1`</kind-line-resolution></p>
+    <p><ORACLE-IS-THE-CONSUMERS-OWN-GOPLS fact="true" status="impl/done">The oracle process is the CONSUMER's own `gopls` binary — the stack
+never bundles, links, or vendors an analyzer.</ORACLE-IS-THE-CONSUMERS-OWN-GOPLS></p>
+    <p><resolution-order-lead fact="true" status="impl/done">Resolution order, run
+from the project root so `go.work`/module context is honoured, each
+failure recipe-carrying and never silently skipped:</resolution-order-lead></p>
+    <facts ordered="true">
+      <RESOLUTION-GOPLS-ON-PATH fact="true" status="impl/done">the `GO_AI_NATIVE_GOPLS` env override when set (a set-but-not-a-file value refuses with the recipe, without probing further), then `gopls` on PATH;</RESOLUTION-GOPLS-ON-PATH>
+      <RESOLUTION-GOBIN fact="true" status="impl/done">`$GOBIN/gopls`, then `$(go env GOBIN)/gopls`;</RESOLUTION-GOBIN>
+      <RESOLUTION-GOPATH-BIN fact="true" status="impl/done">`$(go env GOPATH)/bin/gopls`;</RESOLUTION-GOPATH-BIN>
+      <RESOLUTION-HARD-FAILURE fact="true" status="impl/done">hard failure: the bridge's `gopls-missing` error with the recipe
+   `go install golang.org/x/tools/gopls@latest`.</RESOLUTION-HARD-FAILURE>
+    </facts>
+    <p><STACK-OBLIGES-THE-MACHINE fact="true" status="impl/done">Installing this stack OBLIGES the machine to carry go ≥ 1.24 and gopls
+(the same posture as rust-analyzer for the Rust stack and node ≥ 22.6
+for the TS one): inside the stack's own test suite an absent tool is a
+recipe-carrying FAILURE, never a skip; outside the stack no obligation
+exists.</STACK-OBLIGES-THE-MACHINE></p>
+    <p><INIT-RESULT-CARRIES-PATH-AND-VERSION fact="true" status="spec/done">The resolved path and the server's reported version land in
+the `init` result. *Specified, not built — half of it. The version half
+ships: `init_result` emits `gopls_version`
+(`crates/go-ai-native-tcg/src/serve.rs:74-84`), beside `position_encoding`,
+`pull_diagnostics` and `ready`. The path half does not: the path IS resolved —
+`resolve_gopls` (`crates/go-ai-native-tcg-bridge/src/lib.rs:145`) returns it —
+but it is never put into the result. The Rust stack states the same fact and
+fails it the same way.*</INIT-RESULT-CARRIES-PATH-AND-VERSION></p>
+  </resolution>
+  <session title="2. LSP session and capabilities">
+    <p><kind-line-session fact="true" status="impl/done">`req r1`</kind-line-session></p>
+    <p><BRIDGE-SPEAKS-LSP-3-17-OVER-STDIO fact="true" status="impl/done">The bridge speaks LSP 3.17 over the child's stdio (Content-Length
+framing).</BRIDGE-SPEAKS-LSP-3-17-OVER-STDIO></p>
+    <p><initialize-declares-lead fact="true" status="impl/done">The `initialize` request declares:</initialize-declares-lead></p>
+    <facts ordered="false">
+      <INITIALIZE-DECLARES-UTF-8 fact="true" status="impl/done">utf-8 in
+  `general.positionEncodings` (fallback: utf-16 positions converted
+  through the line's text, unit-tested on non-ASCII content),</INITIALIZE-DECLARES-UTF-8>
+      <INITIALIZE-DECLARES-PULL-DIAGNOSTICS fact="true" status="impl/done">pull diagnostics (`textDocument.diagnostic`),</INITIALIZE-DECLARES-PULL-DIAGNOSTICS>
+      <INITIALIZE-DECLARES-PUBLISH-DIAGNOSTICS fact="true" status="impl/done">publish-diagnostics handling,</INITIALIZE-DECLARES-PUBLISH-DIAGNOSTICS>
+      <INITIALIZE-DECLARES-WORK-DONE-PROGRESS fact="true" status="impl/done">and `window.workDoneProgress`.</INITIALIZE-DECLARES-WORK-DONE-PROGRESS>
+    </facts>
+    <p><FEATURES-KEY-OFF-THE-GRANTED-SET fact="true" status="impl/done">Every downstream feature keys off the
+GRANTED set — a capability the server does not grant degrades per §6
+into a well-formed error or a documented fallback, never a crash.</FEATURES-KEY-OFF-THE-GRANTED-SET></p>
+    <p><BRIDGE-ANSWERS-THE-SERVERS-REQUESTS fact="true" status="impl/done">The bridge answers the server's own requests:
+`workspace/configuration` (with §3's config object),
+`window/workDoneProgress/create` and `client/registerCapability` (null
+results).</BRIDGE-ANSWERS-THE-SERVERS-REQUESTS></p>
+    <p><DIAGNOSTICS-CHANNEL-HISTORY fact="true" status="spec/done">**Diagnostics channel, stated honestly.** gopls has historically
+PUSHED diagnostics (`textDocument/publishDiagnostics`) and gained pull
+support later than rust-analyzer; which channel the shipped gopls
+grants is pinned by the Phase-7 live chain and recorded in the
+differential corpus. *Specified, not built — the history is true, the
+recording is not. The channel IS negotiated at run time and carried on the
+capabilities (`pull_diagnostics`,
+`crates/go-ai-native-tcg-bridge/src/client.rs:33`), but nothing records
+which one the shipped gopls granted: `research/tcg-bench/` holds a
+TypeScript corpus (`corpus/`) and a Rust one (`corpus-rust/`) and no Go
+corpus at all, so there is no differential corpus for this to be recorded
+in.*</DIAGNOSTICS-CHANNEL-HISTORY></p>
+    <p><BRIDGE-SUPPORTS-BOTH-DIAGNOSTIC-CHANNELS fact="true" status="impl/done">The bridge supports BOTH: prefer the pull channel
+when granted; otherwise collect pushed diagnostics for the target
+document with a bounded settle window after `didOpen`/`didChange`.</BRIDGE-SUPPORTS-BOTH-DIAGNOSTIC-CHANNELS></p>
+    <p><VALIDATE-ANSWERS-ONE-DOCUMENT fact="true" status="impl/done">Either way `validate` answers one document's diagnostics — never a
+whole-workspace sweep.</VALIDATE-ANSWERS-ONE-DOCUMENT></p>
+  </session>
+  <config title="3. Configuration">
+    <p><kind-line-config fact="true" status="impl/done">`req r1`</kind-line-config></p>
+    <p><BRIDGE-SHIPS-ONE-CONFIGURATION-OBJECT fact="true" status="impl/done">The bridge ships one configuration object, passed as
+`initializationOptions` and repeated in every
+`workspace/configuration` answer.</BRIDGE-SHIPS-ONE-CONFIGURATION-OBJECT></p>
+    <p><config-is-minimal-and-documented-lead fact="true" status="impl/done">v0.1 keeps it minimal and DOCUMENTED
+— gopls's defaults are production-grade (its diagnostics are not
+gated behind experimental flags the way rust-analyzer's E0308-class
+ones are; the Rust bridge's config lesson transfers as a posture, not
+as content):</config-is-minimal-and-documented-lead></p>
+    <facts ordered="false">
+      <CONFIG-STATICCHECK-STAYS-OFF fact="true" status="impl/done">staticcheck integration stays OFF (the floor runs
+  staticcheck itself; one tool, one truth),</CONFIG-STATICCHECK-STAYS-OFF>
+      <CONFIG-ANALYSES-STAY-AT-DEFAULTS fact="true" status="impl/done">analyses stay at gopls
+  defaults,</CONFIG-ANALYSES-STAY-AT-DEFAULTS>
+      <CONFIG-FUTURE-KNOBS-EXTEND-ONE-OBJECT fact="true" status="impl/done">and any future knob (build tags, env) extends this one
+  object in one place.</CONFIG-FUTURE-KNOBS-EXTEND-ONE-OBJECT>
+    </facts>
+  </config>
+  <overlays title="4. Overlays and versions">
+    <p><kind-line-overlays fact="true" status="impl/done">`req r1`</kind-line-overlays></p>
+    <p><overlay-is-an-lsp-owned-document-lead fact="true" status="impl/done">An overlay is an LSP-owned text document:</overlay-is-an-lsp-owned-document-lead></p>
+    <facts ordered="false">
+      <OVERLAY-DIDOPEN-CLAIMS-THE-DOCUMENT fact="true" status="impl/done">`didOpen {uri, version: 1,
+  text}` claims the document (the server stops reading disk for it),</OVERLAY-DIDOPEN-CLAIMS-THE-DOCUMENT>
+      <OVERLAY-DIDCHANGE-REPLACES-IT fact="true" status="impl/done">`didChange` with full-text sync and a MONOTONICALLY increasing
+  per-document version replaces it,</OVERLAY-DIDCHANGE-REPLACES-IT>
+      <OVERLAY-DIDCLOSE-RELEASES-IT fact="true" status="impl/done">`didClose` releases it back to disk.</OVERLAY-DIDCLOSE-RELEASES-IT>
+    </facts>
+    <p><proven-rules-are-law-here-lead fact="true" status="impl/done">The rules the TS and Rust campaigns proved are law here and the bridge
+enforces them structurally:</proven-rules-are-law-here-lead></p>
+    <facts ordered="false">
+      <OVERLAY-VERSIONS-NEVER-REPEAT-OR-RESET fact="true" status="impl/done">versions never repeat within an
+  overlay's lifetime (a monotonic counter per open document, never derived
+  from content); clearing an overlay (`update {content: null}`) closes the
+  document and a later reopen starts again at 1 —
+  `crates/go-ai-native-tcg-bridge/src/oracle.rs`, and the bridge's own
+  `overlay_versions_are_monotonic_and_close_resets` test;</OVERLAY-VERSIONS-NEVER-REPEAT-OR-RESET>
+      <VALIDATE-WITHOUT-CONTENT-READS-DISK fact="true" status="impl/done">`validate` WITHOUT inline content reads the disk file and opens it
+  with that text, so version bookkeeping has exactly one owner (the
+  bridge) and a later disk edit is picked up by the next validate's
+  `didChange`;</VALIDATE-WITHOUT-CONTENT-READS-DISK>
+      <OVERLAID-FILE-NEED-NOT-EXIST-ON-DISK fact="true" status="impl/done">an overlaid file need not exist on disk — a hypothetical new file in
+  an existing package participates via `didOpen` alone;</OVERLAID-FILE-NEED-NOT-EXIST-ON-DISK>
+      <UPDATE-NULL-MAPS-TO-DIDCLOSE fact="true" status="impl/done">`update {content: null}` maps to `didClose`.</UPDATE-NULL-MAPS-TO-DIDCLOSE>
+    </facts>
+  </overlays>
+  <fidelity title="5. The fidelity posture (gopls is go/types, not the compiler)">
+    <p><kind-line-fidelity fact="true" status="impl/done">`req r1`</kind-line-fidelity></p>
+    <p><fidelity-spectrum-lead fact="true" status="impl/done">The three stacks now span a fidelity spectrum, and this oracle's place
+on it is spec, not fine print:</fidelity-spectrum-lead></p>
+    <facts ordered="false">
+      <FIDELITY-TS-ORACLE-IS-THE-COMPILER fact="true" status="spec/done">The TS oracle IS the compiler (the LanguageService is tsc's engine —
+  agreement by construction).</FIDELITY-TS-ORACLE-IS-THE-COMPILER>
+      <FIDELITY-RUST-ANALYZER-IS-NOT-RUSTC fact="true" status="spec/done">rust-analyzer is NOT rustc (an independent, deliberately partial
+  analysis).</FIDELITY-RUST-ANALYZER-IS-NOT-RUSTC>
+      <FIDELITY-GOPLS-STANDS-ON-GO-TYPES fact="true" status="spec/done">**gopls stands on `go/types` — the reference library implementation
+  of the Go specification, the same framework `go vet` builds on —
+  while the gc compiler type-checks with `types2`, go/types'
+  deliberately-synchronized port.** The delta is a maintained-identical
+  pair whose divergences are treated as bugs upstream: far tighter
+  than rust-analyzer↔rustc, still not identity.</FIDELITY-GOPLS-STANDS-ON-GO-TYPES>
+    </facts>
+    <p><consequences-lead fact="true" status="impl/done">Consequences, all normative:</consequences-lead></p>
+    <facts ordered="false">
+      <CLEAN-VALIDATE-DOES-NOT-CERTIFY-A-CLEAN-FLOOR fact="true" status="impl/done">A clean `validate` does NOT certify a clean floor. The floor
+  (`go-ai-native floor` → gofmt/vet/build/test) remains the truth;
+  consumer-facing docs repeat it.</CLEAN-VALIDATE-DOES-NOT-CERTIFY-A-CLEAN-FLOOR>
+      <DIFFERENTIAL-CORPUS-PINS-DIAGNOSTIC-CLASSES fact="true" status="spec/done">The differential corpus curates diagnostic classes and pins each to
+  the floor's own verdict (`go build` / `go vet` exit + message class)
+  through a committed mapping table: type mismatch, undeclared name,
+  wrong argument count, unknown field, missing return, unused
+  import/variable. *Specified, not built: there is no Go corpus and no
+  mapping table. The corpora that exist are
+  `research/tcg-bench/corpus/` (TypeScript, 7 cases) and
+  `research/tcg-bench/corpus-rust/` (Rust, 9 cases); no `corpus-go`
+  exists anywhere in the tree. The six classes named above are a
+  curation nobody has performed yet.*</DIFFERENTIAL-CORPUS-PINS-DIAGNOSTIC-CLASSES>
+      <KNOWN-ASYMMETRIES-ARE-DOCUMENTED-GAP-CASES fact="true" status="impl/done">Known asymmetries are DOCUMENTED-GAP corpus cases, not omissions —
+  the standing candidates to probe in Phase 7: diagnostics gated on
+  saved-vs-overlay state, `go.mod`-dependent resolution under a pure
+  overlay, and vet-only findings (printf shapes) that the floor
+  reports and the oracle may not. Each observed asymmetry becomes a
+  corpus case asserting exactly that shape, so the gap list never
+  rots.</KNOWN-ASYMMETRIES-ARE-DOCUMENTED-GAP-CASES>
+    </facts>
+  </fidelity>
+  <degradation title="6. Quiescence, degradation, never crashes">
+    <p><kind-line-degradation fact="true" status="impl/done">`req r1`</kind-line-degradation></p>
+    <p><workspace-load-after-initialized fact="true" status="spec/done">After `initialized`, the server loads the workspace (go.mod parsing,
+package metadata, cache priming).</workspace-load-after-initialized></p>
+    <p><READINESS-WAIT-IS-DEADLINE-BOUNDED fact="true" status="impl/done">The bridge bounds its readiness wait
+by a deadline keyed on `workDoneProgress` end events for the initial
+load; a deadline pass degrades: answers carry `degraded: true`, so
+callers can distinguish warm truth from cold best-effort.</READINESS-WAIT-IS-DEADLINE-BOUNDED></p>
+    <p><PROGRESS-DRAIN-HEURISTIC-IS-INHERITED-AS-A-WARNING fact="true" status="impl/done">The Rust
+campaign's falsified progress-drain heuristic is inherited as a
+WARNING, not a mechanism: no wait strategy is trusted until the
+Phase-7 live chain pins gopls's actual signalling, and a replay test
+pins whatever is chosen.</PROGRESS-DRAIN-HEURISTIC-IS-INHERITED-AS-A-WARNING></p>
+    <p><b5-extends-to-the-whole-session-lead fact="true" status="impl/done">B5 extends to the whole session:</b5-extends-to-the-whole-session-lead></p>
+    <facts ordered="false">
+      <UNKNOWN-OP-ANSWERS-A-PROTOCOL-ERROR fact="true" status="impl/done">an op the relay does not know answers a protocol error naming the
+  known set;</UNKNOWN-OP-ANSWERS-A-PROTOCOL-ERROR>
+      <ANALYZER-CRASH-ENDS-THE-SESSION fact="true" status="impl/done">an analyzer crash surfaces `oracle-crashed` op-grain and ends the
+  session (the product registry owns respawn-once);</ANALYZER-CRASH-ENDS-THE-SESSION>
+      <NO-INPUT-MAY-POISON-THE-SESSION fact="true" status="impl/done">no input may poison the session.</NO-INPUT-MAY-POISON-THE-SESSION>
+    </facts>
+  </degradation>
+  <lifecycle title="7. Process lifecycle and Windows discipline">
+    <p><kind-line-lifecycle fact="true" status="impl/done">`req r1`</kind-line-lifecycle></p>
+    <p><ONE-LONG-LIVED-CHILD-PER-ROOT-SESSION fact="true" status="impl/done">One long-lived child per (root, session).</ONE-LONG-LIVED-CHILD-PER-ROOT-SESSION></p>
+    <p><GRACEFUL-EXIT-IS-THE-LSP-DANCE fact="true" status="impl/done">Graceful exit is the LSP
+dance — `shutdown` request, `exit` notification — with kill-on-drop as
+the backstop; the no-zombie property is test-asserted.</GRACEFUL-EXIT-IS-THE-LSP-DANCE></p>
+    <p><PATHS-BECOME-URIS-AFTER-VERBATIM-PREFIX-STRIPPING fact="true" status="impl/done">Paths become
+URIs only after verbatim-prefix stripping (`\\?\` breaks child argv
+and URI builders — the standing house lesson).</PATHS-BECOME-URIS-AFTER-VERBATIM-PREFIX-STRIPPING></p>
+    <p><STDOUT-CARRIES-LSP-FRAMES-ONLY fact="true" status="impl/done">stdout carries LSP
+frames only; gopls's own stderr chatter is drained and discarded by
+the reader (surfaced only in bridge debug logging), so protocol
+streams stay clean.</STDOUT-CARRIES-LSP-FRAMES-ONLY></p>
+  </lifecycle>
+  <latency title="8. Latency posture">
+    <p><kind-line-latency fact="true" status="impl/done">`req r1`</kind-line-latency></p>
+    <p><TARGETS-ARE-POSTED-AND-MEASURED-NEVER-GATED fact="true" status="impl/done">Targets are POSTED and MEASURED, never CI-gated (the standing split:
+gate what cannot flake, record what can).</TARGETS-ARE-POSTED-AND-MEASURED-NEVER-GATED></p>
+    <p><posted-targets-lead fact="true" status="impl/done">Posted targets for
+demo-class trees:</posted-targets-lead></p>
+    <facts ordered="false">
+      <TARGET-WARM-VALIDATE fact="true" status="impl/done">warm `validate` p50 &lt; 500 ms,</TARGET-WARM-VALIDATE>
+      <TARGET-COMPLETE fact="true" status="spec/done">`complete` p50 &lt; 300 ms — posted, not yet measured:
+  the bench harness (`crates/go-ai-native-tcg/src/bench.rs`) records
+  per-case `warm_ms` for `validate` only and computes no percentile of
+  any kind; the measurement corpus is deliberately far-future work
+  (`BACKLOG.md` B-042),</TARGET-COMPLETE>
+      <TARGET-COLD-INIT fact="true" status="impl/done">cold init-to-ready &lt; 15 s.</TARGET-COLD-INIT>
+    </facts>
+    <p><BENCH-HARNESS-RECORDS-DISTRIBUTIONS fact="true" status="spec/done">The bench harness
+(`go-ai-native-tcg bench`) records distributions per run; the Phase-7
+ledger entry carries the first measured set on `research/go-demo`,
+and a target that moves, moves in a committed REPORT with a reason.
+*Specified, not built — the harness, not the ledger entry. The harness
+ships and does record a per-case distribution: `run_bench`
+(`crates/go-ai-native-tcg/src/bench.rs:106`) collects `warm_ms` over three
+warm passes per case. What does not exist is the measured set:
+`research/tcg-bench/reports/` holds `bench-2026-07-07-baseline.json`
+(TypeScript) and `bench-rust-2026-07-07-baseline.json` (Rust) and no Go
+run at all, so nothing has ever been measured on `research/go-demo` and
+there is no committed REPORT for a target to move against.*</BENCH-HARNESS-RECORDS-DISTRIBUTIONS></p>
+    <p><LARGE-WORKSPACE-COLD-INIT-WARNING fact="true" status="spec/done">Large-workspace consumers are warned about the product's 60 s
+first-request ceiling; the relay's eager init at `serve` start spends
+the cold cost as early as possible. *Specified, not built — the eager
+init is real, the 60 s ceiling is not a number this stack has anywhere.
+The relay does spend the cold cost up front: `serve` boots gopls before
+the first host frame (`crates/go-ai-native-tcg/src/serve.rs:235`). A
+large-workspace warning also exists, one document over — the tcg brief's
+`##RISK-COLD-INIT-ON-LARGE-WORKSPACES` — but it is a spec-layer risk
+record, not anything the product emits to a consumer at run time. And the
+60 s figure is supported by nothing: the shipped readiness budget is
+`READINESS_BUDGET = 45 s` (`crates/go-ai-native-tcg/src/lib.rs:32`) and
+this document's own `##TARGET-COLD-INIT` posts `&lt; 15 s`. Three numbers,
+and 60 is not one of them.*</LARGE-WORKSPACE-COLD-INIT-WARNING></p>
+  </latency>
+</spec>

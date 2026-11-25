@@ -1,0 +1,12 @@
+# `hello-vibe` with the registry declared in the PROJECT's own manifest.
+# `vibe outdated` and `vibe update` read `[[registry]]` from `vibe.toml`
+# and do not fall back to the machine-level registry that `install` and
+# `cache add` are happy with, so the pages that document them need a
+# project that declares one.
+schema = 1
+
+[fixture]
+from = "hello-vibe"
+
+[[fixture.step]]
+run = "vibe registry add local ${REGISTRY} --path hello-vibe"

@@ -1,0 +1,33 @@
+# go-ai-native-tcg — bin `go-ai-native-tcg`: the persistent enriching
+# relay (`serve`) an MCP host drives, the one-shot validate/scope/
+# complete/type forms, and the differential/latency bench harness
+# (TCG-PROTOCOL-GO v0.1). Enrichment is IN-PROCESS: the gate's own rule
+# assembly over the gate's own fact extractor — no second engine, no
+# drift.
+[package]
+name = "go-ai-native-tcg"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+authors.workspace = true
+license-file.workspace = true
+publish.workspace = true
+repository.workspace = true
+homepage.workspace = true
+
+[[bin]]
+name = "go-ai-native-tcg"
+path = "src/main.rs"
+
+[dependencies]
+anyhow.workspace = true
+clap.workspace = true
+conform-core.workspace = true
+go-ai-native-conform.workspace = true
+go-ai-native-extract-bridge.workspace = true
+go-ai-native-tcg-bridge.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+specmark.workspace = true
+tempfile.workspace = true
+thiserror.workspace = true

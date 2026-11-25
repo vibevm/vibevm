@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">Two</title>
+  <status stage="doc" state="work" audience="user"/>
+  <p p="1"><fact id="LEAD-TWO" status="doc/work">The second page of the pair, whose middle block is a list.</fact></p>
+  <list ordered="false" p="2">
+    <item>A first item.</item>
+    <item>A second item.</item>
+  </list>
+  <p p="3"><fact id="TAIL-TWO" status="doc/work">And a closing paragraph after it.</fact></p>
+</spec>

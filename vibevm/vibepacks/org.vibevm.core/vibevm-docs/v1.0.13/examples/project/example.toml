@@ -1,0 +1,9 @@
+# A project created in the current folder rather than in a new one, which
+# is what the authoring pages start from.
+schema = 1
+
+[fixture]
+from = "empty"
+
+[[fixture.step]]
+run = "vibe init"

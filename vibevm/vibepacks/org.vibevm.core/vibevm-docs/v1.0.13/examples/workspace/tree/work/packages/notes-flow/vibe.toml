@@ -1,0 +1,10 @@
+[package]
+group = "org.acme"
+name = "notes-flow"
+kind = "flow"
+version = "0.1.0"
+epoch = 1
+authors = ["vibevm docs fixtures"]
+license = "UPL-1.0"
+description = ""
+format = "normal"

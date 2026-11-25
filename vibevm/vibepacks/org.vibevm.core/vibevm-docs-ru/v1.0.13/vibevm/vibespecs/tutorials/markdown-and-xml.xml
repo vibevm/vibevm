@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">Продвинутые Markdown и XML</title>
+  <status stage="doc" state="work" audience="user,author"/>
+  <p>Эта страница берёт пакет, который вы пишете в Markdown, и показывает XML, который вместо него читает ваш агент. По дороге вы узнаете, зачем VibeVM превращает каждый текст в XML и почему автору это ничего не стоит. Узнаете, как назвать правило так, чтобы машина могла на него указать. И научитесь делить длинный текст на короткий заголовочный файл и длинное тело — так программисты на C и C++ делят библиотеку. Вы соберёте один маленький пакет руками, посмотрите, как он компилируется, и докажете, что две формы — одно и то же. Заложите около получаса; агент не понадобится.</p>
+  <what-you-need title="Что понадобится">
+    <table>
+      <tr><td>Что</td><td>Зачем</td><td>Где взять</td></tr>
+      <tr><td>`vibe`</td><td>создаёт проект, конвертирует текст и компилирует его</td><td>[Установить vibe](../start/install-vibe.xml)</td></tr>
+      <tr><td>текстовый редактор</td><td>три коротких файла вы пишете руками</td><td>любой</td></tr>
+      <tr><td>около получаса</td><td>весь путь, без агента</td><td></td></tr>
+    </table>
+  </what-you-need>
+  <why-xml title="Почему всё становится XML">
+    <p>В проекте, который об этом просит, каждый текст, принесённый пакетом, ложится на диск как XML, в какой бы форме его ни написал автор. Эти тексты — [спецификации](../glossary/index.xml#specification): правила, которые пакет задаёт агентам, работающим под ним; а причина конверсии — читатель. Модель, которая читает `&lt;TESTS-FIRST fact="true" status="spec/done"&gt;`, знает, где правило начинается, где кончается, как называется и в каком оно состоянии, не угадывая по вёрстке. Проза заставляет модель выводить все четыре ответа самой.</p>
+    <p>Измерения согласны с интуицией. В эталонном исследовании Юань Суй с коллегами дали GPT-3.5 и GPT-4 одни и те же таблицы, записанные шестью способами: от простого текста с разделителями до CSV, JSON, XML, HTML и Markdown ([WSDM 2024](https://arxiv.org/abs/2305.13062)). На семи видах вопросов разметка, называющая свои части, обошла тот же текст в прозе. Лучше всех оказался HTML — на 6,76 процента по цифре самой статьи. В одной задаче, где нужно сказать, где начинаются и кончаются части таблицы, XML набрал 96,00 процента против 93,00 у простого текста и 92,33 у Markdown. Исследование про таблицы, и ровно до этого места страница его и доводит.</p>
+    <p>Совет производителя говорит то же с другой стороны. Руководство Anthropic по промптам для Claude — рекомендация, а не исследование — советует оборачивать каждый вид содержимого в свой XML-тег, чтобы модель разбирала длинный промпт без двусмысленности ([руководство](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices)). Олег Чирухин, автор VibeVM, обнаружил это на собственной практике раньше, чем об этом сказала хоть одна опубликованная работа. Цель `xml` — форма, в которой живут проекты этого руководства, и та, которую спецификация называет будущей основной.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-045#TARGET-XML"/>
+    <p>Имена значат не меньше скобок. Раздел становится элементом, названным по себе самому, `&lt;tests-first title="Tests before fixes"&gt;`. Правило становится элементом, названным по своему идентификатору, с одним опознавательным атрибутом, `fact="true"`, так что читатель, ничего не знающий о вашем словаре, находит каждое правило одной проверкой. Первый читатель этого диалекта — агент, а тегу, который говорит, что в нём лежит, легенда не нужна.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-045#NAMED-SECTION-ELEMENTS"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-045#NAMED-FACT-ELEMENTS"/>
+    <p>Одно предостережение для тех, кто обучает модели. Свидетельства выше — про текст, который модель читает. Для текста, который модель пишет, всё наоборот: принуждение ответа к JSON, XML или YAML может стоить качества рассуждений ([Тэм с коллегами, EMNLP 2024](https://arxiv.org/abs/2408.02442)). VibeVM задаёт форму тому, что агент читает, и никогда — тому, что он отвечает, так что этот результат его не касается.</p>
+  </why-xml>
+  <one-model title="Markdown и XML: одна модель под капотом">
+    <p>Под капотом две формы — одна сущность. Каждый документ, Markdown или XML, разбирается в одно дерево: заголовок, статус и разделы, вложенные по глубине заголовков. Внутри разделов лежат абзацы, списки, таблицы, блоки кода и цитаты, и некоторые из них несут [факт](../glossary/index.xml#fact) — одно именованное правило со статусом. vibe никогда не переписывает текст Markdown в текст XML. Он разбирает в дерево и печатает из него, в любую сторону.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-045#PIVOT-MODEL"/>
+    <p>Авторы компиляторов называют такое дерево *промежуточным представлением*, IR: единственная форма, в которую разбирает каждый фронтенд и из которой печатает каждый бэкенд. Компилятору для трёх языков и четырёх процессоров нужны три фронтенда и четыре бэкенда, а не двенадцать переводчиков, и правило, один раз сформулированное о дереве, действует для всех языков. У VibeVM та же форма: два фронтенда и два бэкенда, Markdown и XML с каждой стороны.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#DOCUMENT-IR"/>
+    <p>Дерево нужно ему по тем же двум причинам. Без него каждой паре форм понадобился бы свой конвертер, а конвертеры расходятся. Обзор кода в 2026 году нашёл внутри vibe четыре читателя Markdown, каждый со своим чуть иным диалектом: болезнь, от которой одно общее дерево и должно лечить. И каждый инструмент, читающий спецификацию, читает XML через то же дерево: проверка фактов, компилятор, который собирает список чтения агента, маршрутизатор, который разрешает адрес. Поэтому документ в XML и его двойник в Markdown дают каждому инструменту один и тот же ответ.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-045#PROJECTION-READ"/>
+    <p>У дерева есть будущее за пределами конверсии. Компилятор называет его уровни — от текста одного документа до всего достижимого замыкания проекта, — и плагин компилятора может их читать и переписывать. Агент с длинным горизонтом когда-нибудь сможет планировать поверх этого замыкания: не стена текста, а граф именованных единиц с адресами. Это направление, а не возможность, которую можно запустить сегодня. И сам VibeVM — не агент. Он никогда не читает ваши правила, чтобы по ним действовать; он готовит текст, дерево и адреса для того агента, которого запускаете вы.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-054#IR-LEVELS"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-054#PASS-TIER-LAW"/>
+    <p>Вывод для вас прост. Пишите спецификации своих пакетов в Markdown — в форме, с которой уже справляются ваш редактор и ваши рецензенты. Каждое свойство формы XML придёт само: именованные элементы, факты, которые проверяет машина, адрес у каждого правила. Шаги ниже делают ровно это и в конце это доказывают.</p>
+  </one-model>
+  <create-project title="Шаг 1: проект, который материализуется в XML">
+    <p>1. Создайте проект в пустой папке, как на странице [Создать первый проект](../start/first-project.xml). Имя станет именем папки:</p>
+    <example ref="init"/>
+    <p>2. Откройте `review-lab/vibe.toml`, [манифест](../glossary/index.xml#manifest) проекта, и добавьте одну строку под `[project]`:</p>
+    <fence lang="toml">[project]
+spec_format = "xml"
+name = "review-lab"</fence>
+    <p>3. Дальше работайте внутри папки: `cd review-lab`.</p>
+    <p>Эта строка решает, в какой форме ляжет каждый текст, который приносит пакет. С `xml` vibe конвертирует то, что автор написал в Markdown, пока копирует пакет в проект, а XML копирует как есть. Ваши собственные файлы не конвертируются никогда. Без этой строки каждый файл сохраняет форму, в которой его написал автор.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-045#SETTING"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-045#TARGET-XML"/>
+  </create-project>
+  <scaffold title="Шаг 2: создать заготовку пакета">
+    <p>1. Добавьте в проект пакет. Это `flow`, пакет рабочих правил для агента, и он просит формат `normal`, смысл которого объясняет шаг 4:</p>
+    <example ref="init-package"/>
+    <p>2. Откройте манифест, который написала заготовка:</p>
+    <example ref="manifest"/>
+    <p>3. Измените две строки: дайте пакету `description` и поставьте `link = "static"`. Конец файла станет таким:</p>
+    <fence lang="toml">description = "The team's code review rules, as a contract with its reasons."
+format = "normal"
+
+[boot_snippet]
+source = "vibevm/vibespecs/boot/10-flow-review.md"
+category = "flow"
+link = "static"</fence>
+    <p>[Тип связи](../glossary/index.xml#link-type) (*link type*) говорит, как текст пакета доходит до агента. При `static` vibe компилирует текст в тот единственный файл, который агент читает первым, целиком, в начале каждой сессии. При `dynamic`, выборе заготовки, он перечисляет файл, чтобы агент открыл его сам. Эта страница берёт `static`, чтобы вы увидели компилятор за работой.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#LINK-STATIC"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#LINK-DYNAMIC"/>
+  </scaffold>
+  <anchors-and-facts title="Шаг 3: якоря и факты, в Markdown">
+    <p>Пакету нужны два документа. Первый — заметка, которую агент читает в начале сессии, [стартовый фрагмент](../glossary/index.xml#boot-snippet) (*boot snippet*) пакета. Второй — контракт: сами правила, каждое со своим адресом.</p>
+    <p>1. Замените заметку заготовки, `vibevm/vibepacks/org.acme/review/v0.1.0/vibevm/vibespecs/boot/10-flow-review.md`, на эту:</p>
+    <fence lang="markdown"># Review flow
+
+Before you open a change for review, hold it to the review rules. This
+note pulls the rules in; each rule is one fact with an address, and the
+reasons follow the rules. Cite a rule by its address, for example
+`spec://org.acme/review/contract/REVIEW#ONE-IDEA`.
+
+#use spec://org.acme/review/contract/REVIEW#root</fence>
+    <p>Строка, начинающаяся с `#use`, — директива: инструкция компилятору, а не проза. Она втягивает контракт перед заметкой, так что агент встречает правила раньше заметки, которая на них ссылается. Файлы этой страницы написаны по-английски, как и вывод команд, чтобы примеры совпадали с тем, что вы увидите у себя.</p>
+    <p>2. Создайте `vibevm/vibespecs/contract/REVIEW.md` в том же пакете:</p>
+    <fence lang="markdown"># Review rules {#root}
+
+&lt;status stage="spec" state="done"/&gt;
+
+The rules a reviewer holds every change to. Each rule is one anchored
+fact with a status.
+
+## One idea per change {#one-idea}
+
+@fact:ONE-IDEA A change under review carries one idea, named in its first line. @status:spec/done
+
+## Tests before fixes {#tests-first}
+
+@fact:TESTS-FIRST A change that alters behaviour carries a test that fails without it. @status:spec/done</fence>
+    <p>Прочитайте файл так, как читает машина. Заголовок несёт [якорь](../glossary/index.xml#anchor) в фигурных скобках, `{#one-idea}`: имя, которым пользуется ссылка, часть адреса после `#`. Абзац, который открывается `@fact:ONE-IDEA`, — факт, одно заякоренное правило со статусом. `@status:spec/done` в его конце говорит, что правило решено и ещё не построено. Элемент `&lt;status&gt;` под заголовком — тот же маркер для всего документа. Якоря заголовков и идентификаторы фактов делят одно пространство имён, поэтому ни один не повторяется в документе дважды.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#FACT-ANCHOR-SYNTAX"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#ANCHORED-WHEN-MARKED"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#SHORTHAND-FORMS"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#FACT-ID-GRAMMAR"/>
+    <p>Регистр идентификатора — сигнал. Идентификаторы в верхнем регистре помечают правила с обязывающей силой; в нижнем — заголовки, вводные и заметки. Адрес первого правила — `spec://org.acme/review/contract/REVIEW#ONE-IDEA`. Он складывается из [координаты](../glossary/index.xml#coordinate) пакета, пути документа под `vibevm/vibespecs/` без расширения и якоря. Адрес не меняется, когда файл меняет форму.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#DECISION-TWO-REGISTERS"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-045#ADDRESSING-UNCHANGED"/>
+    <p>3. Проверьте разметку пакета:</p>
+    <example ref="facts-check"/>
+    <p>Проверка читает каждый документ под `vibevm/vibespecs/` пакета. Маркер на абзаце без якоря и идентификатор, определённый дважды, — ошибки, которые называют строку.</p>
+    <p>4. Установите пакет в его собственный проект:</p>
+    <example ref="install-contract"/>
+    <p>Установка копирует пакет в `vibevm/vibedeps/`, конвертируя оба документа в XML. Она же компилирует [стартовую полосу](../glossary/index.xml#boot-lane) (*boot lane*) — упорядоченный список файлов, которые агент читает в начале сессии. Последние две строки диффа — это она: в `INDEX.md` появилась строка с именем скомпилированного файла, а `STATIC.xml` возник.</p>
+    <p>5. Откройте контракт таким, каким его прочитает агент:</p>
+    <example ref="contract-xml"/>
+    <p>Каждая часть названа по себе самой. Раздел `{#one-idea}` стал элементом `&lt;one-idea&gt;` с заголовком в атрибуте. Факт стал `&lt;ONE-IDEA fact="true" status="spec/done"&gt;`. Префикс `@fact:` и суффикс `@status:` из текста исчезли: они были написанием, а дерево хранит только смысл. Строчная разметка Markdown — обратные кавычки, ссылки — едет внутри текста без изменений.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-045#INLINE-STAYS-MARKDOWN"/>
+  </anchors-and-facts>
+  <headers title="Заголовочный файл и его реализация">
+    <p>Контракт, который говорит всё, обходится дорого. Каждое слово стартовой полосы читает каждый агент в начале каждой сессии. Поэтому текст, который должен быть перед глазами всегда, хочет быть коротким, а рассуждение за ним хочет лежать там, куда агент дотянется, когда спросит. C решил задачу такой формы в 1970-е двумя файлами, и C++ сохранил это решение. Заголовочный файл, `.h`, в нескольких строках объявляет, что предлагает библиотека; единица трансляции, `.c` или `.cpp`, несёт реализацию. Все, кто пользуется библиотекой, включают заголовок, и никто не вставляет реализацию в собственный код.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#hpp-cpp-inspiration"/>
+    <p>VibeVM заимствует это разделение для текста. Пакет в формате `normal` держит под `vibevm/vibespecs/` две папки. `contract/` — заголовок: маленький, дешёвый в загрузке, поверхность, которую видят другие пакеты и агенты. `source/` — реализация: тяжёлое тело, которое втягивается только тогда, когда кто-то попросит. Компилятор C видит всю программу и сам сводит объявления с определениями; у vibe такого взгляда на ваш текст нет, поэтому контракт сам называет свою реализацию директивой `#source`. У формата `simple`, который применяется, если в манифесте пакета не задан `format`, ничего этого нет: такой пакет несут целиком и читают потому, что он есть. А `vibe init package` создаёт `format = "normal"`, если вы не выбрали другой формат.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#DIR-CONTRACT"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#DIR-SOURCE"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#SOURCE-HACK"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#FORMAT-SIMPLE"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#FORMAT-NORMAL"/>
+    <p>Спецификации называют этот механизм наследованием, как в C++: один документ строится на другом, не копируя его текст. Втягивают две директивы, и с одной вы уже знакомы. `#use` называет документ или раздел, который нужно прочитать раньше текста, который им пользуется; компилятор копирует его вперёд, и копия приводит с собой всё, что втягивает сам скопированный документ. `#source` называет реализацию контракта, и компилятор компилирует её вслед за контрактом. В скомпилированном файле обеих директив уже нет — они израсходованы. Третья, `#embed`, вклеивает ровно один адресованный узел на то место, где стоит: макрос, а не include.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#USE-INLINE"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#SOURCE-DEF"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#EMBED-EXACT-RULE"/>
+  </headers>
+  <split title="Шаг 4: отделить контракт от его причин">
+    <p>1. Создайте в пакете `vibevm/vibespecs/source/details.md`, реализацию контракта:</p>
+    <fence lang="markdown"># Review rules, the reasons {#details}
+
+## Why one idea per change {#one-idea-why}
+
+@fact:ONE-IDEA-WHY A change with two ideas cannot be reverted one idea at a time, and its review takes twice as long. @status:spec/done
+
+## Why tests before fixes {#tests-first-why}
+
+@fact:TESTS-FIRST-WHY A fix without a failing test proves nothing: the test states what was wrong. @status:spec/done
+
+## What a reviewer checks {#checklist}
+
+- @fact:CHECK-SCOPE The first line names the one idea, and every hunk serves it. @status:spec/done
+- @fact:CHECK-TEST The test fails on the parent commit and passes on this one. @status:spec/done</fence>
+    <p>Каждый якорь здесь отличается от якорей контракта: `one-idea-why` рядом с `one-idea`; особые случаи ниже объясняют почему. Последний раздел — список, в котором каждый пункт — факт.</p>
+    <p>2. В `contract/REVIEW.md` добавьте одну строку после первого абзаца:</p>
+    <fence lang="markdown">#source spec://org.acme/review/source/details</fence>
+    <p>Адрес называет целый документ, без якоря, так что компилятор берёт его от заголовка и ниже.</p>
+    <p>3. Установите снова:</p>
+    <example ref="install-split"/>
+    <p>Ни один пакет не добавлен, поэтому полоса — единственная строка диффа: скомпилированный файл вырос на реализацию.</p>
+    <p>4. Спросите vibe, что агент читает первым:</p>
+    <example ref="tree"/>
+    <p>Один пакет, связанный как `static`, и `x` говорит, что его текст скомпилирован в `STATIC.xml`.</p>
+    <p>5. Откройте скомпилированный файл:</p>
+    <example ref="static-xml"/>
+    <p>Читайте сверху. Сначала комментарии: правила, по которым агент трактует метки в этом файле, затем таблица всех переименованных якорей. XML запрещает два дефиса подряд внутри комментария, поэтому `--` в метке там записано как `-%2D`; элементы ниже несут настоящие `--`. Затем один документ XML: сначала контракт, за ним реализация, вкомпилированная одним вложенным разделом. Последней идёт заметка из фрагмента — простой `&lt;section&gt;`, потому что у её заголовка не было якоря. Строк `#source` и `#use` больше нет.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#MERGE-SOURCE-ONLY"/>
+    <p>Каждый якорь теперь несёт префикс `org-acme--review--` — метку своего происхождения. Два пакета, у которых раздел назван `root`, не столкнутся в одном файле, а таблица наверху говорит, чем стало каждое короткое имя. Ссылайтесь на исходный документ и никогда на этот файл: это кэш, который меняется всякий раз, когда меняется пакет.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#COMPILED-LABELS-ARE-QUALIFIED"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#COMPILED-LANE-IS-NOT-A-CITATION-TARGET"/>
+    <p>6. Откройте запись, которую vibe хранит рядом со своей копией пакета:</p>
+    <example ref="slot-record"/>
+    <p>`spec_format` называет цель, `converter_recipe` — версию конвертера. Каждая строка говорит, был файл скопирован (`copied`) или сконвертирован (`converted`), и несёт хэш того, что легло на диск. Держите этот файл в уме: шаг 5 прочитает его снова.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-045#HASH-LAW"/>
+  </split>
+  <equivalent-forms title="Эквивалентные формы">
+    <p>Конструкции, которыми пользовалась эта страница, бок о бок, из её собственных файлов:</p>
+    <table>
+      <tr><td>Markdown</td><td>XML</td></tr>
+      <tr><td>`# Review rules {#root}`</td><td>`&lt;title id="root"&gt;Review rules&lt;/title&gt;`</td></tr>
+      <tr><td>`&lt;status stage="spec" state="done"/&gt;`</td><td>тот же элемент, без изменений</td></tr>
+      <tr><td>`## One idea per change {#one-idea}` и текст под ним</td><td>`&lt;one-idea title="One idea per change"&gt;…&lt;/one-idea&gt;`</td></tr>
+      <tr><td>абзац</td><td>`&lt;p&gt;…&lt;/p&gt;`</td></tr>
+      <tr><td>`@fact:ONE-IDEA … @status:spec/done`</td><td>`&lt;p&gt;&lt;ONE-IDEA fact="true" status="spec/done"&gt;…&lt;/ONE-IDEA&gt;&lt;/p&gt;`</td></tr>
+      <tr><td>`- @fact:CHECK-SCOPE … @status:spec/done`, список фактов</td><td>`&lt;facts ordered="false"&gt;&lt;CHECK-SCOPE fact="true" status="spec/done"&gt;…&lt;/CHECK-SCOPE&gt;&lt;/facts&gt;`</td></tr>
+      <tr><td>`#source spec://…`, директива</td><td>`&lt;p&gt;#source spec://…&lt;/p&gt;`, простой абзац</td></tr>
+      <tr><td>`# Review flow`, заголовок без якоря</td><td>`&lt;title&gt;Review flow&lt;/title&gt;`</td></tr>
+      <tr><td>обратные кавычки, выделение, ссылки, адреса `spec://`</td><td>те же символы внутри текста</td></tr>
+    </table>
+    <p>Диалект закрыт и мал нарочно. Он выражает ровно то, что выражает Markdown, поэтому конверсия в любую сторону не теряет смысла, а элемент вне диалекта — громкая ошибка, а не молчаливый пропуск. У двух якорей нет собственного элемента: у того, что начинается с цифры, и у того, что совпадает со словом самого диалекта, таким как `title` или `list`. Для них встают общие `&lt;section id="…"&gt;` и `&lt;fact id="…"&gt;`, и каждый читатель принимает оба написания. Единственное исключение из правила эквивалентности — словарь пакетов документации, к которым принадлежит и это руководство: у их выполняемых примеров и живых цитат нет формы в Markdown, и в Markdown они проецируются только в одну сторону.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-045#XML-DIALECT-IS-THE-MD-SUBSET"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-045#FACTS-GROUP-ELEMENT"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-045#DOC-VOCAB-REOPENING"/>
+  </equivalent-forms>
+  <round-trip title="Шаг 5: сконвертировать и увидеть, что ничего не изменилось">
+    <p>Вы написали Markdown и отгрузили XML. Последний шаг показывает, что XML, который вы написали бы руками, — тот же файл, байт в байт.</p>
+    <p>1. Спросите конвертер, что потеряет конверсия:</p>
+    <example ref="convert-dry-run"/>
+    <p>Конвертер разбирает каждый файл в дерево, печатает XML, читает его обратно и снова печатает Markdown, а затем сравнивает. Вердикт `ir-stable-loss` значит, что дерево уцелело, а байты нет, и дифф показывает, что изменилось. Здесь это одна пустая строка в конце каждого файла, которую добавляет принтер Markdown. Без `--force` команда отказывает файлу из-за такой потери. В изменении смысла она отказывает всегда, потому что это был бы дефект конвертера, а не вашего файла.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-051#HONESTY-BY-REVERSE"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-051#FORCE-AND-PROMPT"/>
+    <p>2. Сконвертируйте три документа. Команда пишет каждый `.xml` рядом с его `.md` и удаляет `.md` тем же действием. Дерево никогда не держит документ в обеих формах:</p>
+    <fence lang="shell">vibe refactor convert-source --to xml --force vibevm/vibepacks/org.acme/review/v0.1.0/vibevm/vibespecs</fence>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-051#ONE-DOCUMENT-ONE-FORM-ON-CONVERT"/>
+    <p>3. В манифесте пакета направьте `source` на новый файл, `vibevm/vibespecs/boot/10-flow-review.xml`.</p>
+    <p>4. Установите снова:</p>
+    <example ref="install-xml"/>
+    <p>5. Откройте запись ещё раз:</p>
+    <example ref="slot-record-after"/>
+    <p>Сравните её с записью шага 4. Каждый из трёх документов теперь `copied`, и хэш каждого — тот же, что был у него как у `converted`. То, что конвертер написал из вашего Markdown, — это то, что из него написала установка, байт в байт. Скомпилированный файл тоже не изменился:</p>
+    <example ref="tree-after"/>
+    <p>Те же байты, те же строки. Вот что значит на практике одна модель под капотом. Форма, в которой вы пишете, — ваш выбор; текст, который доходит до агента, один и тот же. Проект с `spec_format = "markdown"` проходит ту же дорогу в обратную сторону. Markdown, который он пишет из вашего XML, — ваш исходный файл плюс та самая пустая строка.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-045#INHERITANCE-PARITY"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-045#TARGET-MD"/>
+  </round-trip>
+  <what-appeared title="Что появилось на диске">
+    <p>Ваш пакет живёт под `vibevm/vibepacks/org.acme/review/v0.1.0/`: манифест, README и три документа XML, которые правите вы. Копия vibe живёт под `vibevm/vibedeps/org.acme.review/0.1.0/` вместе с записью `.vibe-slot.toml` и переписывается при каждой установке. В `vibevm/vibespecs/boot/` лежат скомпилированный `STATIC.xml` и `INDEX.md`, чья строка `static` называет скомпилированный файл, а рядом — два ваших стартовых файла, которых ни одна установка не трогает. `vibe.lock`, [лок-файл](../glossary/index.xml#lock-file) проекта, закрепляет за пакетом его версию и хэш.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#TWO-TREES"/>
+  </what-appeared>
+  <edge-cases title="Особые случаи и правила">
+    <p>При `spec_format = "xml"` раздел источника не должен повторять якорь контракта, а заголовок заметки не несёт якоря. Компилятор сливает разделы с общим якорем, и результат слияния сегодня не компилируется в `STATIC.xml`. Установка останавливается с `fact id … is defined twice`; копия пакета уже на диске, а лок-файл не записан. Два документа, чьи заголовки оба `{#root}`, сталкиваются так же. При `spec_format` по умолчанию тот же пакет компилируется.</p>
+    <p>Точка внутри якоря — путь, а не символ. К `{#verification.timeout}` нельзя обратиться, тогда как `#verification.timeout` доходит до раздела `timeout`, вложенного в раздел `verification`. Якорь — это буква, за которой идут буквы, цифры, `_` и `-`.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#URI-TREE-PATH"/>
+    <p>`vibe init package` учитывает `--link static` и `--link dynamic`; без `--link` команда пишет `link = "dynamic"`. Для этого flow передайте `--link static` при создании пакета или задайте связь в манифесте, как делает шаг 2.</p>
+    <p>При `link = "dynamic"` скомпилированного файла нет. `INDEX.md` называет саму заметку, и агент, который её откроет, встретит строку `#use` и должен будет сам по ней пойти.</p>
+    <p>`vibe explain` отвечает только за пакет, который несёт [карту прослеживаемости](../glossary/index.xml#traceability-map) (*traceability map*). Про этот он так и говорит и останавливается.</p>
+    <p>`vibe facts check` ловит опечатку в состоянии в форме элемента, `state="finished"`, и называет значение. В короткой форме `@status:spec/finished` вовсе не читается как маркер, и файл проходит как чистый. Состояния — `plan`, `work`, `done`, `hold` и `void`; стадии — `idea`, `spec`, `impl`, `test`, `doc`, `freeze` и `unknown`.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#STATUS-ELEMENT"/>
+  </edge-cases>
+</spec>

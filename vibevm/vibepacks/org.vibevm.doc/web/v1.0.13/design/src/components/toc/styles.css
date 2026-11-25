@@ -1,0 +1,115 @@
+/* The table of contents in both of its shapes. The sidebar is the same
+   `<details>`, forced open with its summary taken away; nothing switches
+   elements, only how one is laid out. */
+
+.toc {
+  margin: 0 0 1.6rem;
+  font-size: 0.85rem;
+}
+
+/* The page's own headings, where there is no column to show them in.
+   ---------------------------------------------------------------------
+   The same control as the manual's above it, one step quieter: an
+   outline instead of a raised box, smaller, in the second text tone.
+   The pair has to read as navigation and not as two labels — and as ONE
+   of the two being the way out of this page and the other only a way
+   around it, which is why the manual's keeps the ground and this does
+   not. It is the same 44px target: a phone does not care which of them
+   matters more. */
+.toc__summary {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 2.75rem;
+  padding: 0.45rem 0.85rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  background: none;
+  color: var(--text-2);
+  font-family: var(--font-sans);
+  font-size: 0.86rem;
+  cursor: pointer;
+  list-style: none;
+  transition:
+    border-color var(--speed) ease,
+    color var(--speed) ease;
+}
+
+.toc__summary::-webkit-details-marker {
+  display: none;
+}
+
+.toc__summary::after {
+  content: "▸";
+  margin-left: auto;
+  font-size: 0.8em;
+  color: var(--text-3);
+  transition: transform var(--speed) ease;
+}
+
+.toc[open] > .toc__summary::after {
+  transform: rotate(90deg);
+}
+
+.toc__summary:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.toc__summary:hover::after {
+  color: var(--accent);
+}
+
+/* Opened, the list stands clear of the control that opened it; in the
+   column there is no control, and the sidebar rule below puts the gap
+   back to what it was. */
+.toc__summary + .toc__list {
+  margin-top: 0.7rem;
+}
+
+.toc__list {
+  margin: 0.5rem 0 0;
+  padding: 0;
+  list-style: none;
+  border-left: 1px solid var(--line);
+}
+
+.toc__item a {
+  display: block;
+  padding: 0.16rem 0 0.16rem 0.7rem;
+  margin-left: -1px;
+  border-left: 2px solid transparent;
+  color: var(--text-2);
+  line-height: 1.35;
+  transition:
+    color var(--speed) ease,
+    border-color var(--speed) ease;
+}
+
+.toc__item a:hover {
+  color: var(--text);
+}
+
+.toc__item--h3 a {
+  padding-left: 1.5rem;
+  font-size: 0.94em;
+}
+
+.toc__item a.is-active {
+  border-left-color: var(--accent);
+  color: var(--accent);
+}
+
+/* The sidebar shape. The class is put on the page by the behaviour, from
+   the window's width and the reader's own column width together. */
+.has-sidebar .toc {
+  position: sticky;
+  top: 5rem;
+  max-height: calc(100vh - 7rem);
+  overflow-y: auto;
+  margin: 0;
+}
+
+.has-sidebar .toc__summary {
+  display: none;
+}

@@ -1,0 +1,10 @@
+# The first project of the manual, finished: the redbook's 27 packages
+# installed from the local registry, the lock written, and the boot lane
+# generated as XML because the manifest pinned the format.
+schema = 1
+
+[fixture]
+from = "hello-vibevm-empty"
+
+[[fixture.step]]
+run = "vibe install org.vibevm.world/redbook --path hello-vibevm --assume-yes"

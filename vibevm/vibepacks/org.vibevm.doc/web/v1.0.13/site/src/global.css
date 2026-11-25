@@ -1,0 +1,5 @@
+/* The application's one stylesheet import: the design system's base,
+   which pulls the tokens and the fonts behind it. Components bring their
+   own styles with them (`useStyles$`), so nothing else belongs here. */
+
+@import "@vibe-docs/design/base.css";

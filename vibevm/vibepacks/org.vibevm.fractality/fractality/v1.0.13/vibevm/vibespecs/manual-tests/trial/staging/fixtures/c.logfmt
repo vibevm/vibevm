@@ -1,0 +1,1 @@
+level=error msg="db timeout" retry=3 db=primary

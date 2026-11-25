@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">The manifest: vibe.toml</title>
+  <status stage="doc" state="work" audience="user,author"/>
+  <p>`vibe.toml` is the one file you write to describe a project or a package: its name, what it depends on, where packages come from, and what it delivers. This page lists every table and field with its meaning.</p>
+  <one-file title="One file, three roles">
+    <p>Every node, whether a consumer project, a publishable package or a workspace root, has a file named `vibe.toml`. The tables present decide the role: `[project]` marks a consumer that is never published, `[package]` a publishable package, `[workspace]` a coordinator of members; the first two exclude each other, the third composes with either or with neither.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#ONE-MANIFEST"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#PACKAGE-XOR-PROJECT"/>
+    <p>Unknown keys are rejected, not ignored: a [manifest](../glossary/index.xml#manifest) written for a newer vibe than the one reading it fails to parse with the offending key named.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#DENY-UNKNOWN-FIELDS"/>
+  </one-file>
+  <package-table title="[package]">
+    <table>
+      <tr><td>Field</td><td>Meaning</td></tr>
+      <tr><td>`name`</td><td>the package name, kebab-case, unique within its group</td></tr>
+      <tr><td>`group`</td><td>the publisher's namespace, a reversed domain such as `org.vibevm.world`; mandatory; `(group, name)` is the identity</td></tr>
+      <tr><td>`kind`</td><td>one of the eight kinds; metadata, not identity</td></tr>
+      <tr><td>`version`</td><td>semantic version of this package</td></tr>
+      <tr><td>`epoch`, `format`</td><td>the package's manifest epoch and its content form (`simple` by default, `normal` for the contract-and-source layout)</td></tr>
+      <tr><td>`authors`, `license`, `description`, `homepage`, `keywords`</td><td>the card every registry shows</td></tr>
+      <tr><td>`title`, `abstract`</td><td>the human-readable name and the four-question summary shown on documentation shelves; required for `doc` packages, optional otherwise</td></tr>
+      <tr><td>`authorship`</td><td>who wrote the prose of a `doc` package: `human`, `ai` or `mixed`; a reader's filter, not the commits' attribution</td></tr>
+      <tr><td>`describes`</td><td>the Package URL of an upstream library this package documents or wraps, for version-matched discovery</td></tr>
+      <tr><td>`publish`</td><td>the publishing posture of a workspace member</td></tr>
+    </table>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#GROUP-MANDATORY"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#GROUP-GRAMMAR"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#CARD-FIELDS"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#CARD-AUTHORSHIP"/>
+    <p>`[project]` carries the same descriptive fields for a consumer, without a version line or a kind.</p>
+  </package-table>
+  <requirements title="[requires] and its neighbours">
+    <table>
+      <tr><td>Table</td><td>Meaning</td></tr>
+      <tr><td>`[requires.packages]`</td><td>one key per required coordinate, the value a constraint string or an inline table with `version`, a `git` or `path` source, `link` for the boot inclusion type, and the visibility marks `access`, `friend` and `exclude`</td></tr>
+      <tr><td>`[visibility]`</td><td>`friends`, `unfriend`, `allow-friends` and `ignore-concept-warnings` for the package as a whole; see [Dependency visibility](../model/dependency-visibility.xml)</td></tr>
+      <tr><td>`[override]` (table)</td><td>rewrites the visibility marks of edges you do not own, keyed `"a -&gt; b"`, or a provider's `allow-friends`, keyed by its coordinate</td></tr>
+      <tr><td>`[requires] capabilities`</td><td>abstract abilities any provider may satisfy, `namespace:name@constraint`</td></tr>
+      <tr><td>`[[requires_any]]`</td><td>a disjunction: exactly one of `one_of` must be satisfied</td></tr>
+      <tr><td>`[provides] capabilities`</td><td>the abilities this package offers</td></tr>
+      <tr><td>`[obsoletes]`, `[conflicts]`</td><td>packages this one supersedes, and packages that cannot coexist with it</td></tr>
+      <tr><td>`[features]`</td><td>optional, additive content sets with a `default` list; features may depend on features</td></tr>
+      <tr><td>`[compatibility]`</td><td>`min_vibe_version` and `requires_kinds`</td></tr>
+    </table>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#SCHEMA-LINK-FIELD"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#FEATURES-TABLE"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#CAP-REQUIRES-PACKAGES"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#CAP-REQUIRES-CAPABILITIES"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#CAP-REQUIRES-ANY"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#CAP-PROVIDES"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#CAP-OBSOLETES"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#CAP-CONFLICTS"/>
+    <p>A [feature](../glossary/index.xml#feature) adds content and never removes or contradicts any; `default` lists the features active when nothing is said, and `--no-default-features` omits them. When two packages require one package with different features, the resolver materialises it once with the union. On the command line `vibe install &lt;coordinate&gt; --features a,b`, `--no-default-features` and `--all-features` control activation.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#KEEP-ADDITIVE"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#KEEP-DEFAULT"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#KEEP-UNIFICATION"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#CLI-INSTALL-FEATURES"/>
+  </requirements>
+  <sources title="Where packages come from">
+    <table>
+      <tr><td>Table</td><td>Meaning</td></tr>
+      <tr><td>`[[registry]]`</td><td>an ordered list of package sources: `name`, `url` (the organisation root), `naming`, `auth`, optional `index_url` and `token_env`</td></tr>
+      <tr><td>`[[mirror]]`</td><td>an alternative address for one registry or for any, tried by `priority` and verified by fingerprint</td></tr>
+      <tr><td>`[[override]]`</td><td>a replacement source for one coordinate, short-circuiting the registries</td></tr>
+      <tr><td>`[boot]`</td><td>workspace-wide loading settings; today a default `link`</td></tr>
+      <tr><td>`[i18n]`</td><td>`preferred` and `fallback` languages in a project; `canonical` and `available` in a package</td></tr>
+      <tr><td>`[workspace] members`</td><td>the member paths of a workspace, globs allowed</td></tr>
+    </table>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#REGISTRY-ARRAY"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#MIRROR-LAYER"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#I18N-DECISION"/>
+    <p>A localised file sits beside the canonical one with a language tag before the extension, `README.ru.md` next to `README.md`. Every package ships the canonical form of every file it lists, and translations only add to it, so a project with no translation in its preferred language installs without an error. `vibe install --language ru` sets the preference for one run.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#SIDECAR-PATTERN"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#I18N-CANONICAL-INVARIANT"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#PREF-CLI-FLAG"/>
+  </sources>
+  <deliveries title="What a package delivers">
+    <table>
+      <tr><td>Table</td><td>Meaning</td><td>Legal in</td></tr>
+      <tr><td>`[boot_snippet]`</td><td>`source`, the snippet file inside the package, and `category` for its place in the boot order; optional `when` and a suggested `link`</td><td>every kind but `doc`</td></tr>
+      <tr><td>`[[skill]]`</td><td>`name`, `path`, `description`, optional target `agents`: a [skill](../glossary/index.xml#skill) an agent may install</td><td>every kind</td></tr>
+      <tr><td>`[[binary]]`</td><td>`name` and `crate`: a tool vibe builds on install and runs through `vibe bin exec`</td><td>code-bearing kinds; not `doc`</td></tr>
+      <tr><td>`[[mcp_server]]`</td><td>`name`, `binary`, `args`: a server registered into agents</td><td>`mcp` only</td></tr>
+      <tr><td>`[[extension]]`</td><td>`id`, `point`, `handler`, optional selector and config: a contribution to the lifecycle</td><td>packages and projects</td></tr>
+      <tr><td>`[[extension]]` at `slot:pre-install` or `slot:post-install`</td><td>a `script` handler with its `base` path, and `applies_to` naming the package: an install script, which replaces the retired `[hooks]` table</td><td>packages and projects</td></tr>
+      <tr><td>`[[command]]`</td><td>`id`, optional description and a typed script handler: an explicit `vibe run` entry</td><td>projects/workspace hosts only</td></tr>
+      <tr><td>`[[embedded_source]]`</td><td>an immutable external source a package refers to without vendoring it</td><td>bridge packages</td></tr>
+    </table>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#SCHEMA-BOOT-SNIPPET"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-018#SKILL-TABLE-SHAPE"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-054#HOST-RUN-COMMANDS"/>
+    <p>A [skill](../glossary/index.xml#skill) is a manifest section, never a kind of its own. `include` narrows which files of `path` are projected into an agent's skill folder, and its absence projects the whole tree. A skill may take its body from a declared `[[embedded_source]]` and add resources below a `references/` folder, under the same include selection and traversal checks.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-018#SKILL-SECTION-NOT-KIND"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#INCLUDE-SELECTIVE"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-018#SKILL-EXTERNAL-SHAPE"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-018#SKILL-EXTERNAL-LAWS"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-025#BINARY-TABLE"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-027#TABLE-ONLY-IN-KIND"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-054#CONTRIB-GRAMMAR"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-054#POINT-GRAMMAR"/>
+  </deliveries>
+  <documentation-tables title="Documentation and its subjects">
+    <table>
+      <tr><td>Table</td><td>Meaning</td><td>Legal in</td></tr>
+      <tr><td>`[[documents]]`</td><td>`package` and a `version` constraint: a [subject](../glossary/index.xml#subject) this documentation describes; required, repeatable</td><td>`doc`</td></tr>
+      <tr><td>`[documentation]`</td><td>`primary` (at most one coordinate) and `official` (any number): the documentation a package names as its own</td><td>every kind</td></tr>
+      <tr><td>`[translates]`</td><td>`package` and `version` of the documentation this translation mirrors</td><td>`doc`</td></tr>
+      <tr><td>`[navigation]`</td><td>`pinned`, the document paths listed first; `[[navigation.section]]` rows with `id` and `title` for the folders of the page tree; `[[navigation.chapter]]` rows with `id`, `title`, `pages` and an optional `appendix` for the learning path, which a translation names with `id` and `title` only</td><td>`doc`</td></tr>
+      <tr><td>`[glossary]`</td><td>`page`: the document path of the page that defines the package's words; each top-level section of that page is one entry</td><td>`doc`</td></tr>
+      <tr><td>`[media]`</td><td>`icon`, `banner`, `preview`: source image files within the card limits</td><td>every kind</td></tr>
+    </table>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#REL-DOCUMENTS-REQUIRED"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#REL-DOCUMENTATION-UNVERSIONED"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#LOC-PACKAGE-PER-LANGUAGE"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#CARD-MEDIA-SOURCE"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#NAV-PINNED"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#NAV-CHAPTERS"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-057#GLOSSARY-DECLARED"/>
+  </documentation-tables>
+  <example-manifest title="A complete example">
+    <derived kind="manifest-field" ref="org.vibevm.core/vibevm-docs"/>
+    <p>The manifest of this manual, generated from the package itself, shows a `doc` package with a card, a [subject](../glossary/index.xml#subject) and a [skill](../glossary/index.xml#skill).</p>
+  </example-manifest>
+</spec>

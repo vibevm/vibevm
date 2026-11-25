@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">MT-02 — Linux/macOS Bash launcher deployment</title>
+  <status stage="test" state="work" comment="requires a real Linux or macOS host"/>
+  <purpose title="Purpose">
+    <p><PURPOSE fact="true" status="test/work">Prove that the package's `posix`
+    profile publishes the exact Bash launcher as executable
+    `$VIBE_SETTINGS/opt/bin/claudez` (production default:
+    `~/.vibe/opt/bin/claudez`), without changing PATH or copying credentials, and
+    that its process contract preserves cwd, argv and exit.</PURPOSE></p>
+  </purpose>
+  <step-deploy title="Step 1 — deploy into an isolated settings root">
+    <fence lang="bash">export VIBE_SETTINGS="$scratch/home/.vibe"
+vibe deploy --profile posix --path "$installed_slot"</fence>
+    <p><EXPECTED-DEPLOY fact="true" status="test/work">Expected: exit 0; exactly one
+    launcher exists at `$VIBE_SETTINGS/opt/bin/claudez`; its SHA-256 equals the
+    installed package's `launchers/claudez`; its permission mode is exactly
+    `0755`; deployment state owns that file and no token file exists under the
+    isolated settings root.</EXPECTED-DEPLOY></p>
+  </step-deploy>
+  <step-contract title="Step 2 — fake-Claude process contract">
+    <p><STEP-CONTRACT fact="true" status="test/work">Put a fake `claude` first on a
+    scratch PATH and point `ZAI_API_TOKEN_FILE` at a non-secret fixture. The fake
+    executable checks the expected provider/model/state variables without
+    printing the bearer, records cwd and argv, and exits 37. Invoke the deployed
+    launcher from a different cwd with arguments containing spaces.</STEP-CONTRACT></p>
+    <p><EXPECTED-CONTRACT fact="true" status="test/work">Expected: launcher exit 37;
+    recorded cwd equals the caller's cwd; argv is byte-for-byte the supplied
+    sequence; provider/model/state checks pass; stdout/stderr contain no fixture
+    bearer; no file outside scratch changes.</EXPECTED-CONTRACT></p>
+  </step-contract>
+  <step-inverse title="Step 3 — drift and inverse">
+    <fence lang="bash">vibe undeploy --profile posix --path "$installed_slot"</fence>
+    <p><EXPECTED-INVERSE fact="true" status="test/work">Expected: unchanged receipt-owned
+    launcher is removed and neighbors remain. Repeating after redeploy with mode
+    changed from `0755` refuses or enters the specified recovery path; it never
+    reports content-only freshness.</EXPECTED-INVERSE></p>
+  </step-inverse>
+  <pass title="Pass criteria">
+    <p><PASS fact="true" status="test/work">All three steps match their expected
+    paragraphs and a human signs off the real host behavior.</PASS></p>
+  </pass>
+</spec>

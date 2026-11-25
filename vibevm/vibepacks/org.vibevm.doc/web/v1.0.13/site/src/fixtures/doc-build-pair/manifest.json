@@ -1,0 +1,64 @@
+{
+  "schema_version": 1,
+  "package": {
+    "group": "com.example.docs",
+    "name": "pair",
+    "version": "0.1.0",
+    "publisher": "com.example.docs",
+    "title": "The Pair",
+    "description": "Two pages, so a translation has something to mirror.",
+    "abstract": "What it covers: two pages, one with an example and a section, one with a list.\nFor whom: whoever changes the translation check and needs a source to check against.\nWhat it assumes known: nothing; it documents nothing real.\nWhat it leaves out: everything else.",
+    "lang": "en",
+    "status": "community",
+    "subjects": [
+      {
+        "package": "com.example/subject",
+        "version": "^1.0",
+        "status": "community"
+      }
+    ],
+    "audiences": [
+      "user"
+    ],
+    "media": {
+      "icon": "media/0cdb95e4dac1acee.svg",
+      "banner": "media/0ec2a469411f8371.svg",
+      "preview": "media/689144792e19badd.png"
+    },
+    "rendered_at": "2026-09-12T16:54:10.710034600Z"
+  },
+  "pages": [
+    {
+      "path": "guide/two.xml",
+      "title": "Two",
+      "genre": "concept",
+      "audiences": [
+        "user"
+      ],
+      "anchors": [
+        "root",
+        "LEAD-TWO",
+        "TAIL-TWO"
+      ],
+      "summary": "The second page of the pair, whose middle block is a list.",
+      "reading_time_min": 1
+    },
+    {
+      "path": "guide/one.xml",
+      "title": "One",
+      "genre": "concept",
+      "audiences": [
+        "user"
+      ],
+      "anchors": [
+        "root",
+        "LEAD-ONE",
+        "why",
+        "WHY-ONE"
+      ],
+      "summary": "The first page of the pair, which a translation mirrors block for block.",
+      "reading_time_min": 1,
+      "reviewed_at": "2026-09-11T00:00:00Z"
+    }
+  ]
+}

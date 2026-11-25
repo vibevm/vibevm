@@ -1,0 +1,17 @@
+/* The documentation's own row of controls. It wraps rather than
+   scrolls: a control a reader cannot see is a control they do not have,
+   and a sideways scrollbar in a header is how that happens. */
+
+.doc-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 0 0 1.25rem;
+}
+
+/* The platform pills bring their own bottom margin, for the column they
+   normally stand in. In the row they are one item among several. */
+.doc-bar .tab-pills {
+  margin-bottom: 0;
+}

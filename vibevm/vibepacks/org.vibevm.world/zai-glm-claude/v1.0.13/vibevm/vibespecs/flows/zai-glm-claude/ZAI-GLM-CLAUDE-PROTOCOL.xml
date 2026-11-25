@@ -1,0 +1,315 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">z.ai GLM through Claude Code — parent/worker protocol</title>
+  <status stage="spec" state="done"/>
+
+  <scope title="1. Scope">
+    <p><SCOPE fact="true" status="spec/done">This protocol governs a parent agent in any
+    harness that commissions z.ai GLM workers through the ordinary Claude Code
+    CLI. It covers launcher configuration, task routing, cwd/session identity,
+    packets, reports, observation, terminal-state classification, recovery and
+    acceptance. It does not grant a worker central authority, prescribe one
+    repository's Cargo limits, or promise that a provider quota remains open.</SCOPE></p>
+    <p><PORTABLE-CORE fact="true" status="spec/done">The same process contract binds a
+    Claude parent and a Codex parent. Harness adapters differ only in how they
+    start and observe a child process; packet bytes, worker authority, cwd,
+    launcher, deliverables and acceptance are identical.</PORTABLE-CORE></p>
+  </scope>
+
+  <authority title="2. Authority and routing">
+    <p><PARENT-AUTHORITY fact="true" status="spec/done">The parent owns architecture,
+    public semantics, unresolved ambiguity, destructive decisions, write-set
+    routing, acceptance, staging, commits, integration and final gates. A GLM
+    worker executes or advises; it never promotes its own result.</PARENT-AUTHORITY></p>
+    <p><DELEGATION-CALCULUS fact="true" status="spec/done">Delegate when independent
+    verification is cheaper than generation. Prefer GLM for substantial,
+    explicit work with a cheap oracle, broad local extraction and templated
+    mechanical transformations. Keep tiny deterministic edits and ambiguity
+    that is the design parent-side. Difficulty and volume are not reasons to
+    weaken the intended solution.</DELEGATION-CALCULUS></p>
+    <p><ADVISORY-REVIEW fact="true" status="spec/done">An independent GLM review is useful
+    evidence, but authoritative acceptance review remains parent-side. Model
+    diversity counts only when the review names exact evidence and the parent
+    reproduces the decisive claim.</ADVISORY-REVIEW></p>
+  </authority>
+
+  <installation title="3. Installed launcher surface">
+    <p><INSTALL-THEN-DEPLOY fact="true" status="spec/done">Package materialisation and
+    user-state deployment are separate phases. `vibe install` brings the package
+    protocol into the project. The package's explicit host deploy profile,
+    run against its resolved slot, publishes `claudez.ps1` plus `claudez.cmd`
+    for `windows`, or executable `claudez` for `posix`, under
+    `&lt;settings-root&gt;/opt/bin`; default settings make that `~/.vibe/opt/bin`.
+    Until target OS applicability lands, no default profile is declared or
+    inferred. Receipts, drift checks, recovery and undeploy belong to the deploy
+    engine.</INSTALL-THEN-DEPLOY></p>
+    <p><NO-INSTALL-HOOK-COPY fact="true" status="spec/done">Never replace the deploy phase
+    with a post-install hook or manual copy. Those paths lose receipt ownership,
+    collision detection, recovery and inverse operation.</NO-INSTALL-HOOK-COPY></p>
+    <p><PATH-NOT-MUTATED fact="true" status="spec/done">The package does not edit PATH.
+    The operator or surrounding VibeVM installation owns whether
+    `&lt;settings-root&gt;/opt/bin` is already discoverable; with default settings
+    that path is `~/.vibe/opt/bin`. A parent may always invoke the launcher by
+    absolute path.</PATH-NOT-MUTATED></p>
+  </installation>
+
+  <launcher title="4. Launcher contract">
+    <facts ordered="true">
+      <LAUNCHER-THIN fact="true" status="spec/done">The launcher validates prerequisites,
+      constructs one child environment and returns the exact child exit. The
+      PowerShell and Bash forms preserve the caller's argument vector; the Bash
+      form replaces its own process with `exec`, and PowerShell restores every
+      process environment member it temporarily replaced. `claudez.cmd` is a
+      command-shell convenience shim and therefore has ordinary `cmd.exe`
+      reparsing semantics; callers needing exact empty or pathological quoting/
+      backslash arguments invoke `claudez.ps1` directly. No form contains
+      scheduling, packet parsing, retry or acceptance policy.</LAUNCHER-THIN>
+      <LAUNCHER-CLAUDE-FIRST fact="true" status="spec/done">Resolve the Claude Code command
+      before reading a credential. Missing Claude fails with a remediation and
+      no credential read.</LAUNCHER-CLAUDE-FIRST>
+      <LAUNCHER-TOKEN fact="true" status="spec/done">The token source defaults to
+      `~/.vibe/zai.api.token` and may be overridden by `ZAI_API_TOKEN_FILE`.
+      Missing or empty input fails closed. Errors may print the source path,
+      never the value.</LAUNCHER-TOKEN>
+      <LAUNCHER-ENDPOINT fact="true" status="spec/done">The endpoint defaults to the z.ai
+      Anthropic-compatible HTTPS origin. Any `ZAI_GLM_BASE_URL` override is
+      trusted operator configuration but still must be an absolute HTTPS URL
+      with a nonempty host and no userinfo or fragment. Validate it before
+      opening the token source, so invalid routing cannot expose a bearer.</LAUNCHER-ENDPOINT>
+      <LAUNCHER-STATE fact="true" status="spec/done">State defaults to
+      `~/.claude-glm`; `ZAI_GLM_CONFIG_DIR` and the compatibility alias
+      `CLAUDEZ_CONFIG_DIR` may override it. Persistent isolated state is what
+      makes exact-cwd continuation possible without contaminating the user's
+      ordinary Claude state.</LAUNCHER-STATE>
+      <LAUNCHER-MODELS fact="true" status="spec/done">The current defaults request
+      `glm-5.3[1m]` for Claude's Opus/Sonnet aliases and `glm-5-turbo` for the
+      Haiku alias. `ZAI_GLM_BIG_MODEL` and `ZAI_GLM_SMALL_MODEL` override the
+      requests. These strings are configuration, never proof of the resolved
+      model.</LAUNCHER-MODELS>
+      <LAUNCHER-RUNTIME fact="true" status="spec/done">The default endpoint is
+      `https://api.z.ai/api/anthropic`, timeout is `3000000` ms, thinking budget
+      request is `32000`, and nonessential Claude traffic is disabled. The
+      corresponding `ZAI_GLM_BASE_URL`, `ZAI_GLM_API_TIMEOUT_MS` and
+      `ZAI_GLM_MAX_THINKING` settings are explicit overrides; legacy
+      `CLAUDEZ_MAX_THINKING` remains a lower-precedence compatibility input.</LAUNCHER-RUNTIME>
+    </facts>
+    <p><CONFIG-SOURCES-NOT-SECRETS fact="true" status="spec/done">Configuration sources,
+    model request strings and paths may be reported. Credential contents may
+    not. A worker packet never asks the worker to inspect its own provider
+    environment.</CONFIG-SOURCES-NOT-SECRETS></p>
+  </launcher>
+
+  <identity title="5. Cwd, process and conversation identity">
+    <p><CONVERSATION-KEY fact="true" status="spec/done">Continuation identity is the pair
+    `(CLAUDE_CONFIG_DIR, cwd)`. A different launcher state directory or cwd is a
+    different conversation even when the prompt text is identical.</CONVERSATION-KEY></p>
+    <facts ordered="false">
+      <ONE-WRITER-PER-CWD fact="true" status="spec/done">One cwd has at most one live
+      writing worker. Read-only reviewers may overlap; writers with intersecting
+      product paths are serialized.</ONE-WRITER-PER-CWD>
+      <SCOPED-CWD fact="true" status="spec/done">Pin cwd in the process launch or a scoped
+      `Push-Location`/subshell. Never use a persistent bare `cd`: it silently
+      retargets every later correction, not only the next command.</SCOPED-CWD>
+      <FRESH fact="true" status="spec/done">Fresh work uses `claudez -p &lt;pointer&gt;`.
+      The pointer names the packet and repeats the visible-artifact/report/no-
+      commit invariants.</FRESH>
+      <CONTINUE fact="true" status="spec/done">A correction uses
+      `claudez -c -p &lt;correction&gt;` only after the prior process is terminal and
+      from the exact original cwd. It repairs named findings; it does not defend
+      the prior verdict.</CONTINUE>
+    </facts>
+  </identity>
+
+  <packet title="6. Packet contract">
+    <p><PACKET-FILE fact="true" status="spec/done">Large context travels in a file inside
+    the worker cwd, never as a giant command argument. Every named input must
+    actually exist in that cwd or be an explicit readable absolute path.</PACKET-FILE></p>
+    <facts ordered="true">
+      <PACKET-ROLE fact="true" status="spec/done">Name worker role and the authority it
+      does not have.</PACKET-ROLE>
+      <PACKET-TASK fact="true" status="spec/done">State one bounded outcome and the exact
+      required inputs.</PACKET-TASK>
+      <PACKET-PERIMETER fact="true" status="spec/done">Close the expected write perimeter;
+      permit only reasoned, nonintersecting expansion disclosed in the report.</PACKET-PERIMETER>
+      <PACKET-ACCEPTANCE fact="true" status="spec/done">Name observable success,
+      compatibility and failure/negative criteria. Empty output needs a positive
+      control proving the instrument can fire.</PACKET-ACCEPTANCE>
+      <PACKET-VERIFY fact="true" status="spec/done">List narrow self-verification commands
+      and preserve the gate child's real exit. A broad substitute or piped tail
+      is not equivalent.</PACKET-VERIFY>
+      <PACKET-AMBIGUITY fact="true" status="spec/done">An ambiguity that changes public
+      grammar, architecture, security or scope stops with an exact blocker;
+      workers do not silently design.</PACKET-AMBIGUITY>
+      <PACKET-HANDOFF fact="true" status="spec/done">Leave product work as ordinary visible
+      unstaged files plus a durable report. No commit, index, stash, hidden
+      worktree, patch-only copy or external-only deliverable.</PACKET-HANDOFF>
+    </facts>
+    <p><PACKET-TEMPLATE fact="true" status="spec/done">Copy-ready form:
+    @spec://org.vibevm.world/zai-glm-claude/flows/zai-glm-claude/packet-template#root.</PACKET-TEMPLATE></p>
+  </packet>
+
+  <permissions title="7. Permission and tool posture">
+    <p><NORMAL-TOOLS fact="true" status="spec/done">Launch with an explicit noninteractive
+    permission mode and a normal task-capable tool surface. Read/search tools,
+    shell, read-only Git archaeology, formatters, generators and exact tests are
+    ordinary worker instruments. A tiny allow-list is appropriate only when the
+    restriction itself is the experiment.</NORMAL-TOOLS></p>
+    <p><HANDOFF-IS-SAFETY fact="true" status="spec/done">Safety comes from a bounded packet,
+    dedicated cwd, visible unstaged handoff and parent review—not from starving a
+    capable worker of the tools required to reason.</HANDOFF-IS-SAFETY></p>
+  </permissions>
+
+  <report title="8. Durable report">
+    <p><REPORT-SKELETON-EARLY fact="true" status="spec/done">Create the report skeleton
+    after the first meaningful product slice, with every not-yet-run gate marked
+    `PENDING`. Update it before long tests. Turn caps, provider limits and process
+    loss can end the next call.</REPORT-SKELETON-EARLY></p>
+    <p><REPORT-SHAPE fact="true" status="spec/done">A normal implementation report targets
+    roughly 140 lines and caps at 150 unless a large evidence matrix genuinely
+    needs more. It contains: advisory verdict; exact changed files and why;
+    criterion-by-criterion evidence; negative/RED proofs; commands with real
+    exits and counts; decisions; perimeter expansion/external effects; and exact
+    leftovers.</REPORT-SHAPE></p>
+    <p><REPORT-NOT-VERDICT fact="true" status="spec/done">The report reduces acceptance
+    cost but cannot replace it. Screen `PASS`, `TASK-DONE`, a confident summary
+    and a green producer test remain advisory.</REPORT-NOT-VERDICT></p>
+  </report>
+
+  <observe title="9. Observation and terminal taxonomy">
+    <p><OUTPUT-POLICY fact="true" status="spec/done">For long runs through a parent process
+    tool, prefer ordinary text output plus the bounded report. Stream JSON is
+    useful for a short metadata probe or when redirected to a file outside model
+    ingestion; feeding thinking-token events back into context wastes the
+    parent budget and may fill pipes.</OUTPUT-POLICY></p>
+    <facts ordered="false">
+      <TERMINAL-RESULT fact="true" status="spec/done">When structured output exists, its
+      terminal result plus process exit is authoritative transport state. Grep
+      hits for `TASK-DONE`, log size and mtime are not: prompt text and thinking
+      telemetry can produce all three.</TERMINAL-RESULT>
+      <GLM-IDENTITY-PROOF fact="true" status="spec/done">A test claiming that GLM executed
+      must inspect the separate child process's terminal metadata. For current
+      Claude Code JSON, a nonempty `modelUsage` key set names the models that
+      served the run; the proof requires GLM identities there plus a nonempty
+      child `session_id`. The packet also asks the worker which model it is and
+      requires that self-report to equal one of the independently observed usage
+      keys. Either half alone is insufficient. Parent-created artifacts or a
+      configured alias cannot establish which model executed.</GLM-IDENTITY-PROOF>
+      <OBSERVE-LIVE fact="true" status="spec/done">Judge liveness from the exact process,
+      last non-telemetry event, visible artifact changes and report progress.
+      None alone is completion.</OBSERVE-LIVE>
+      <TERMINAL-COMPLETE fact="true" status="spec/done">Normal terminal success means the
+      transport ended; inspect deliverables before any code verdict.</TERMINAL-COMPLETE>
+      <TERMINAL-ERROR fact="true" status="spec/done">Gateway error, 429, timeout and account
+      exhaustion are provider state. Confirm once; do not spin retries.</TERMINAL-ERROR>
+      <TERMINAL-CAP fact="true" status="spec/done">Turn-cap exhaustion preserves partial
+      work and is never PASS. Drafting the report early makes it recoverable.</TERMINAL-CAP>
+      <TERMINAL-STALL fact="true" status="spec/done">Initial or final-turn silence is a
+      stall only after a bounded observation window and exact-process evidence;
+      stop only that process.</TERMINAL-STALL>
+      <TERMINAL-CANCEL fact="true" status="spec/done">A parent task cancellation may leave
+      the child alive. Recheck the exact process before reading or cleaning its
+      cwd.</TERMINAL-CANCEL>
+    </facts>
+  </observe>
+
+  <quota title="10. Quota and model identity">
+    <p><QUOTA-DOMAINS fact="true" status="spec/done">Concurrent processes using one
+    credentialed launcher share that account's quota window. Another launcher
+    or account has independent state but no presumed entitlement; probe it
+    independently before real work.</QUOTA-DOMAINS></p>
+    <p><NO-RETRY-WALL fact="true" status="spec/done">On a known quota wall, preserve the
+    worker cwd/report/diff and reroute the remaining bounded work. Do not retry
+    against a published reset time or discard good artifacts because the runner
+    exited nonzero.</NO-RETRY-WALL></p>
+    <p><VERSIONED-CALIBRATION fact="true" status="spec/done">Model behavior belongs to the
+    resolved version observed on that run. Historic GLM-5.2 evidence and current
+    `glm-5.3[1m]` requests are not interchangeable claims. Use the capability
+    playbooks as priors and update them from reviewed runs:
+    @spec://org.vibevm.world/zai-glm-claude/flows/zai-glm-claude/playbooks/glm-big#root
+    and
+    @spec://org.vibevm.world/zai-glm-claude/flows/zai-glm-claude/playbooks/glm-turbo#root.</VERSIONED-CALIBRATION></p>
+  </quota>
+
+  <recovery title="11. Recovery and cleanup">
+    <facts ordered="true">
+      <RECOVERY-CENSUS fact="true" status="spec/done">Inspect exact process state, cwd,
+      visible diff, report and last event before taking action.</RECOVERY-CENSUS>
+      <RECOVERY-PRESERVE fact="true" status="spec/done">A dead transport is not a code
+      verdict. Preserve every unique artifact and classify which verification
+      tail did not run.</RECOVERY-PRESERVE>
+      <RECOVERY-CONTINUE fact="true" status="spec/done">For a correctable defect, turn cap
+      or stalled tail, prefer same-cwd continuation when its retained context
+      makes repair cheaper. Otherwise write a fresh bounded packet for the
+      remainder; do not blindly retransmit the original task.</RECOVERY-CONTINUE>
+      <RECOVERY-KILL fact="true" status="spec/done">Stop only the exact marked process or
+      process chain. Never kill by broad executable name or unrelated task tree.</RECOVERY-KILL>
+      <CLEANUP fact="true" status="spec/done">Remove a worker cwd/worktree only after its
+      process is dead, product diff is accepted/rejected, durable findings have a
+      home and no unique untracked artifact remains. Never prune registration
+      while leaving a directory whose later `git -C` can retarget to an ancestor
+      repository.</CLEANUP>
+    </facts>
+  </recovery>
+
+  <acceptance title="12. Parent acceptance loop">
+    <facts ordered="true">
+      <ACCEPT-INVENTORY fact="true" status="spec/done">Compare the actual changed-file set
+      to the packet perimeter and report; classify every extra/missing path.</ACCEPT-INVENTORY>
+      <ACCEPT-READ fact="true" status="spec/done">Read the complete diff or artifact as a
+      pull request against mandate and architecture.</ACCEPT-READ>
+      <ACCEPT-REPRODUCE fact="true" status="spec/done">Repeat the decisive narrow command
+      with its real child exit and test count. A zero-test success is no proof.</ACCEPT-REPRODUCE>
+      <ACCEPT-MODEL fact="true" status="spec/done">For a live provider test, separately
+      verify terminal GLM model metadata and child session identity, ask the
+      worker for its own exact model identity, and cross-check the two; do not
+      infer execution identity from the launcher filename or requested alias.</ACCEPT-MODEL>
+      <ACCEPT-NEGATIVE fact="true" status="spec/done">Where false-green risk is material,
+      run the named counterexample or mutation and restore it. The task packet
+      may deliberately reduce this tier only by an explicit owner ruling; the
+      final report then says reduced, never full.</ACCEPT-NEGATIVE>
+      <ACCEPT-DISPOSITION fact="true" status="spec/done">Issue one explicit disposition:
+      accept, same-cwd repair, recommission the remainder, or discard. Only then
+      may integration or cleanup proceed.</ACCEPT-DISPOSITION>
+    </facts>
+  </acceptance>
+
+  <harness-adapters title="13. Harness adapters">
+    <p><SETTINGS-ROOT-RESOLUTION fact="true" status="spec/done">Both parent adapters
+    resolve the configured VibeVM settings root: use `VIBE_SETTINGS` when set,
+    otherwise the default `~/.vibe`. They never reconstruct an explicitly
+    relocated settings root from the home directory.</SETTINGS-ROOT-RESOLUTION></p>
+    <p><CODEX-ADAPTER fact="true" status="spec/done">Codex uses its process/terminal tool
+    with `workdir` set to the worker cwd. It passes a short prompt pointer and
+    observes the returned session/process id. It does not use a native subagent
+    call when the requested worker is specifically the z.ai GLM lane.</CODEX-ADAPTER></p>
+    <p><CLAUDE-ADAPTER fact="true" status="spec/done">Claude uses Bash or PowerShell from a
+    scoped cwd and retains the exact process/session handle. The CLI spelling,
+    packet and continuation law are otherwise identical.</CLAUDE-ADAPTER></p>
+    <fence lang="powershell">$settingsRoot = if ($env:VIBE_SETTINGS) {
+  $env:VIBE_SETTINGS
+} else {
+  Join-Path $env:USERPROFILE '.vibe'
+}
+$launcher = Join-Path $settingsRoot 'opt/bin/claudez.ps1'
+$pointer = 'Read PACKET.md in this cwd first and follow it exactly.'
+Push-Location -LiteralPath $workerCwd
+try {
+  &amp; $launcher -p $pointer --permission-mode bypassPermissions
+  $workerExit = $LASTEXITCODE
+}
+finally { Pop-Location }</fence>
+    <p><ARGV-AND-EXIT fact="true" status="spec/done">Do not insert a shell pipeline between
+    a canonical PowerShell/Bash launcher and its exit capture. Redirect output
+    first when needed, then capture the launcher child status immediately. Use
+    the PowerShell launcher rather than the CMD convenience shim when exact
+    Windows argument-vector preservation is part of the task.</ARGV-AND-EXIT></p>
+  </harness-adapters>
+
+  <provenance title="14. Provenance and resolved contradictions">
+    <p><PROVENANCE-POINTER fact="true" status="spec/done">The source census, historical
+    observations and contradictions resolved while forming this self-contained
+    protocol are retained at
+    @spec://org.vibevm.world/zai-glm-claude/flows/zai-glm-claude/provenance#root.
+    Those records explain the rules; this protocol is the installed contract.</PROVENANCE-POINTER></p>
+  </provenance>
+</spec>

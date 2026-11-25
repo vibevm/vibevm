@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">Applicable law</title>
+  <status stage="doc" state="work" audience="user,author"/>
+  <p>This page says which law governs dealings with the VibeVM project, such as publishing a package for everyone to install, and how the project treats personal data. Read it before you publish, and before you use VibeVM in work bound by strict rules on data protection.</p>
+  <usual-law title="The law that usually applies">
+    <p>In dealings with VibeVM, the law usually means the law of the city of Saint Petersburg, Russia. Publishing a package to the central [registry](../glossary/index.xml#registry) is one such dealing, and the page [Publish a package to the central registry](../howto/publish-to-the-central-registry.xml) describes it.</p>
+  </usual-law>
+  <other-law title="When other law applies">
+    <p>In some cases the law of another jurisdiction may apply: Switzerland, the Netherlands, or one of four states of the United States, namely New Hampshire, Florida, Nevada or Texas.</p>
+    <p>Where law other than Russian law must apply, the default is the law of the city of Houston, Texas. Another law applies instead when the circumstances call for it, or when it is named explicitly.</p>
+  </other-law>
+  <personal-data title="Personal data">
+    <p>The VibeVM project tries to respect the local law of each country on personal data. This includes Russia's Federal Law No. 152-FZ «On Personal Data» and the local laws of the states of the United States.</p>
+  </personal-data>
+  <gdpr title="The GDPR">
+    <p>The GDPR, the European Union's General Data Protection Regulation, is a harder case. The authors of the project do not live in Europe, so adapting the project to the GDPR may prove difficult and incomplete.</p>
+    <p>If you live in a country that requires strict compliance with the GDPR, or your work requires it, you may be better off not using VibeVM until a special announcement.</p>
+  </gdpr>
+</spec>

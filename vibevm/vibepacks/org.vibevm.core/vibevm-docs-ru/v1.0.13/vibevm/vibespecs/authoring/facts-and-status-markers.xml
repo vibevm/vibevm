@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">Факты и маркеры статуса</title>
+  <status stage="doc" state="work" audience="author"/>
+  <p>Любой нормативный документ — список обещаний, и у каждого обещания есть состояние: предложено, строится, сделано, отброшено. vibe читает это состояние из маленького маркера, написанного рядом с обещанием, в Markdown или в форме XML, и одна команда говорит вам, когда маркер испорчен или стоит не на месте. Эта страница — грамматика этих маркеров.</p>
+  <example ref="facts-check"/>
+  <the-marker title="Маркер">
+    <p>Маркер — один элемент в форме XML, `&lt;status stage="…" state="…"/&gt;`, встроенный в Markdown или родной для диалекта. Точечный маркер самозакрывающийся; незакрытый не well-formed и считается ошибкой. Сокращение `@status:spec/done` значит то же, что элемент, а `@status:impl` само по себе значит `impl/work`, с одним исключением: `@status:unknown` значит `unknown/hold`. Старые написания без `status:` по-прежнему читаются. Каждый словарь закрыт: значение вне таблиц — ошибка с подсказкой ближайшего законного значения.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#STATUS-ELEMENT"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#POINT-SELF-CLOSING"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#SHORTHAND-FORMS"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#SHORTHAND-BARE"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#VOCAB-CLOSED"/>
+  </the-marker>
+  <anchors title="Якоря">
+    <p>У помеченной единицы должен быть адрес. В Markdown [якорь](../glossary/index.xml#anchor) — это `@fact:ID` первым токеном абзаца или элемента списка. Идентификатор начинается с буквы и продолжается буквами, цифрами, подчёркиванием и дефисом, и он делит одно адресное пространство с якорями заголовков, так что дубликат между двумя формами — ошибка. Маркер на единице без якоря — ошибка. Сканер игнорирует блоки кода, встроенный код и адреса, так что маркер, процитированный внутри них, — текст, а не маркер.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#FACT-ANCHOR-SYNTAX"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#FACT-ID-GRAMMAR"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#ANCHORED-WHEN-MARKED"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#FENCE-AWARE"/>
+  </anchors>
+  <placement title="Где стоит маркер">
+    <p>Мест четыре. Маркер документа стоит в преамбуле или сразу после первого заголовка, когда документ им открывается. Маркер раздела стоит один на строке после своего заголовка; это единственная законная отдельная позиция в теле. Маркер абзаца сидит внутри текста самого абзаца, первым или последним токеном. Каждый элемент списка — собственная единица, на любом уровне вложенности, и его маркер сидит внутри текста элемента. Маркер, стоящий один между двумя абзацами, — ошибка; догадки о ближайшем абзаце нет. Единица несёт не больше одного маркера статуса и сколько угодно маркеров действия.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#PLACE-DOCUMENT"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#PLACE-SECTION"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#PLACE-PARAGRAPH"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#PLACE-LIST-ITEM"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#NO-ORPHAN-MARKER"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#MULTI-MARKERS"/>
+  </placement>
+  <rollup title="Как статус спускается и поднимается">
+    <p>Маркер узла покрывает потомков, у которых своего нет. Вычисленный статус узла без маркера — худший из его детей, и `unknown` побеждает снизу.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#ROLLUP-DOWNWARD"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#ROLLUP-UPWARD"/>
+  </rollup>
+  <actions title="Действия, стадии и аудитории">
+    <p>Рядом со статусом маркер может нести действие, что должно произойти дальше, а `actionstage` его сужает: `action="remove" actionstage="doc"` значит, что удалить надо документацию об этом, тогда как `stage` по-прежнему описывает саму единицу. Действие `doc` с `audience` — обязательство документации: страница, написанная для этой аудитории, должна процитировать [факт](../glossary/index.xml#fact), и `vibe doc check --coverage` проверяет, что такая есть.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#ACTIONSTAGE-NARROWS"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#AUDIENCE-DOC-USE"/>
+  </actions>
+  <requires title="Что закрывает факт">
+    <p>Факт может сказать, что его закрывает: `@requires:implementation,verification` прямо перед его финальным статусом в Markdown или атрибут `requires` в форме XML. Виды — закрытый список: `specification`, `implementation`, `verification`, `documentation`, `decision`, `research`, `plan`, `disposition` и `external`. Они называют артефакты закрытия, а не жанры: исследовательская заметка может требовать реализации.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#REQUIRES-GRAMMAR"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#REQUIRED-ARTIFACT-KINDS"/>
+  </requires>
+  <the-tool title="Инструмент">
+    <p>`vibe facts check` — это линт, а `--exhaustive` требует маркер на каждом абзаце; `vibe progress check` — переходный псевдоним, который печатает новое написание. Наблюдаемые файлы названы включающими глобами в `facts.toml` в корне пакета: глобы, которые говорят, что наблюдается, и никогда не список исключений.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#BOUNDARY-CLI"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#CONFIG-FILE"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#INCLUDE-STYLE"/>
+  </the-tool>
+  <edge-cases title="Особые случаи и правила">
+    <p>Документ, написанный до квалифицированного написания, продолжает разбираться: старые формы `@spec/done` и `##ID` значат то же, что новые. Конвертация файла между Markdown и XML сохраняет каждый маркер, потому что маркер — часть модели, а не синтаксиса.</p>
+  </edge-cases>
+</spec>

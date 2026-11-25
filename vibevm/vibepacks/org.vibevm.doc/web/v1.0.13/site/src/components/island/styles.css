@@ -1,0 +1,10 @@
+/* The region itself is not styled — everything visible inside it belongs
+   to the prose stylesheet, which is written against the pipeline's
+   vocabulary. All this does is give the region a box of its own, so that
+   a page with no island is visibly a page with no island rather than a
+   layout that silently collapsed. */
+
+.island {
+  display: block;
+  min-height: 1px;
+}

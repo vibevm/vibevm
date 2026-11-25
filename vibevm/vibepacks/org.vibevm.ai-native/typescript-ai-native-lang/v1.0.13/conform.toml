@@ -1,0 +1,50 @@
+# conform.toml — посадочная политика дисциплины этого пакетного воркспейса.
+#
+# Движок дисциплины наводится на собственные исходники (B-057). Слот авторский:
+# вендор-копий на уровне `crates/*` он не держит (вендор-копии движка лежат в
+# `crates/vendor/`, у которого нет своих src/ и tests/, — поэтому сканер его не
+# видит; см. RP1 первого замера).
+#
+# Посадочный принцип — «расширяемый по мере готовности список», как в хостовой
+# политике проекта: под гейтом стоят крейты, уже приведённые к дисциплине;
+# крейты с долгом объявлены в `[[rust.exempt]]` С ПРИЧИНОЙ, чтобы долг был
+# назван, а не заморожен молча. Замеров правил, не зависящих от `gated`, первый
+# прогон не дал — baseline остаётся пустым.
+
+max_file_lines = 600
+
+[rust]
+roots = ["crates/*"]
+exclude_substrings = ["/generated/"]
+
+gated = [
+    "typescript-ai-native-cli",
+]
+
+[[rust.exempt]]
+unit = "typescript-ai-native-conform-frontend"
+reason = "ещё не приведён к дисциплине: 1 находка (seam-has-doctest). Входит в gated, когда швы обретут доктесты, а слой ошибок — ссылки на требования"
+
+[[rust.exempt]]
+unit = "typescript-ai-native-conform"
+reason = "ещё не приведён к дисциплине: 2 находки (seam-has-doctest). Входит в gated, когда швы обретут доктесты, а слой ошибок — ссылки на требования"
+
+[[rust.exempt]]
+unit = "typescript-ai-native-extract-bridge"
+reason = "ещё не приведён к дисциплине: 13 находок (error-enum-cites-req, error-message-cites-req, seam-has-doctest). Входит в gated, когда швы обретут доктесты, а слой ошибок — ссылки на требования"
+
+[[rust.exempt]]
+unit = "typescript-ai-native-specmap-scan"
+reason = "ещё не приведён к дисциплине: 4 находки (seam-has-doctest). Входит в gated, когда швы обретут доктесты, а слой ошибок — ссылки на требования"
+
+[[rust.exempt]]
+unit = "typescript-ai-native-specmap"
+reason = "ещё не приведён к дисциплине: 2 находки (seam-has-doctest). Входит в gated, когда швы обретут доктесты, а слой ошибок — ссылки на требования"
+
+[[rust.exempt]]
+unit = "typescript-ai-native-tcg-bridge"
+reason = "ещё не приведён к дисциплине: 21 находка (error-enum-cites-req, error-message-cites-req, seam-has-doctest). Входит в gated, когда швы обретут доктесты, а слой ошибок — ссылки на требования"
+
+[[rust.exempt]]
+unit = "typescript-ai-native-tcg"
+reason = "ещё не приведён к дисциплине: 10 находок (no-unwrap-in-domain, seam-has-doctest). Входит в gated, когда швы обретут доктесты, а слой ошибок — ссылки на требования"

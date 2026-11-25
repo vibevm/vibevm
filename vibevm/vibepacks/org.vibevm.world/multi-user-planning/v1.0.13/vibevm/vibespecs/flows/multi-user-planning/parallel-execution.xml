@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">Parallel work within an existing campaign</title>
+  <status stage="spec" state="done"/>
+  <scope title="1. Increase useful concurrency without replacing the plan">
+    <p><PARALLEL-SCOPE fact="true" status="spec/done">Use parallelism to finish
+accepted outcomes sooner under the current owner instruction. Keep the complete
+schema-1 plan, task ids, dependencies, acceptance obligations and existing
+campaign fields. A parallel frontier is a derived view, not another queue,
+execution authority, dependency editor or product scheduler. Planning-only
+instructions and execution holds still apply.</PARALLEL-SCOPE></p>
+    <p><TWO-WORK-SHAPES fact="true" status="spec/done">The coordinator may
+dispatch independent existing tasks whose declared prerequisites are accepted,
+or divide one ready task into bounded disjoint worker packets under that task's
+existing id. In the second case, the union must establish the entire parent
+obligation before its acceptance advances. Packet labels are temporary work
+identities, not new plan nodes or a way to accept a partial parent. Do not remove
+or bypass a dependency merely because the next task looks parallelizable.</TWO-WORK-SHAPES></p>
+    <p><PREPARATION-BOUNDARY fact="true" status="spec/done">Read-only
+inventory, test design or review can accompany production when each has a
+separate useful question and named available inputs. Preparation for later work
+does not start its blocked implementation, treat a proposed interface as
+accepted, or satisfy its prerequisites. A reviewer may inspect a candidate as a
+candidate; dependent implementation waits for its required acceptance tier.
+Return missing inputs as preparation findings rather than filling them with
+assumptions.</PREPARATION-BOUNDARY></p>
+  </scope>
+  <binding title="2. Bind the work before fan-out">
+    <p><SHARED-CONTRACT fact="true" status="spec/done">Before related
+workers start, capture the governing accepted contract and relevant source
+snapshot, prerequisite artifacts and exact task obligations. Settle shared
+interfaces centrally first. A shared base commit alone is insufficient when
+dirty files, generated inputs or external configuration affect that contract.
+Workers report any input drift or missing rule before relying on it.</SHARED-CONTRACT></p>
+    <p><PARALLEL-PACKET fact="true" status="spec/done">A packet names the
+existing task id and role; the relevant standing files and permanent anchors;
+accepted inputs and their identities; exact read and write perimeters; shared
+resources and their owner; selected checks and expected cases; artifact/report
+location and recoverable job identity when available; integration owner and
+safe stop. State what the coordinator will integrate. Keep the packet bounded:
+workers load the named instructions, not the whole boot lane, personal context
+or campaign. Missing context is a packet defect.</PARALLEL-PACKET></p>
+    <p><OUTER-PERIMETER fact="true" status="spec/done">Narrow worker paths
+within the existing task's authorized outer perimeter. Broad task directories
+are not evidence of disjointness. Needed shared registration, manifest, schema
+or generated-output changes must have an authorized owner; a worker cannot
+silently widen its packet to include them. If the outer task omitted a necessary
+path, reconcile that bounded scope defect under the existing authority before
+dispatch. A supplied binding describes a perimeter; it does not grant access.</OUTER-PERIMETER></p>
+    <p><READ-WRITE-CONFLICTS fact="true" status="spec/done">Check both
+write/write overlap and a writer changing another worker's read subject. Include
+directory ancestry, actual path aliases, generated inputs, configuration and
+semantic interface dependencies. Disjoint filenames alone do not prove
+independence. Use a captured immutable input, isolate and later reconcile, or
+serialize the conflicting work. Unknown paths, patterns, external roots or
+input closure need binding; never interpret unknown as conflict-free. Refresh
+these judgments when the input or actual diff changes.</READ-WRITE-CONFLICTS></p>
+    <p><INTEGRATION-OWNER fact="true" status="spec/done">Name one integration
+owner for shared registration files, manifests, schemas, generators and their
+outputs. Workers may return separate proposals for that owner; they do not race
+to edit the common file. Set integration order before applying those proposals.
+An isolated worktree can retain overlapping candidate changes safely but does
+not prove their semantic independence or make them accepted. Reconcile each
+candidate on the resulting acceptance tree.</INTEGRATION-OWNER></p>
+  </binding>
+  <pipeline title="3. Match production to review and machine capacity">
+    <p><PIPELINE-SUBJECTS fact="true" status="spec/done">Production of one
+independent task, preparation or precheck of another stable candidate, and
+central acceptance of a third may overlap. Freeze or identify each inspected
+subject so a reviewer does not unknowingly judge changing bytes. Worker review
+is evidence for the coordinator, never delegated acceptance authority. Choose
+additional independent review when its question and expected value justify it;
+do not require a producer/reviewer/tester trio for every small edit.</PIPELINE-SUBJECTS></p>
+    <p><REVIEW-CAPACITY fact="true" status="spec/done">Size the active work
+window by observed production, review and integration capacity. When viable
+unjudged candidates accumulate faster than the coordinator can process them,
+prioritize judgment and stop adding producers until the backlog is manageable.
+Prefer work that removes the actual bottleneck; agent count and simultaneous
+activity are not outcome measures. No universal worker count is imposed.</REVIEW-CAPACITY></p>
+    <p><HEAVY-RESOURCES fact="true" status="spec/done">Worker concurrency
+and expensive command concurrency are separate decisions. Name the build
+directory, Docker daemon or namespace, port, database, generator output or other
+shared resource relevant to each command, with an owner and compatible access
+mode. Account for observed memory, CPU, disk and provider capacity. Serialize
+contending heavy commands when parallel execution only duplicates work, blocks
+on a tool lock or harms throughput. Metadata is not a live resource reservation;
+check actual jobs and resource use before starting. Unknown capacity is a
+reason to bind or measure narrowly, not to invent a global quota.</HEAVY-RESOURCES></p>
+    <p><PARALLEL-VERIFICATION fact="true" status="spec/done">Apply
+`verification-selection.xml` to every packet: select affected build targets and
+cases before execution, retain compatible build artifacts, and avoid a cold
+target directory or full suite per worker. Share build caches only where the
+toolchain and concurrent access are compatible. An artifact cache is not a
+passing test. One stable integrated run may serve several obligations with a
+separate claim-to-result mapping for each; never defer a prerequisite gate until
+after its dependent action. Mutations remain suspicion-triggered and their
+episode budget is shared across workers and retries for the same subject.</PARALLEL-VERIFICATION></p>
+  </pipeline>
+  <analysis title="4. A read-only frontier, never a dispatcher">
+    <p><FRONTIER-HELPER fact="true" status="spec/done">The optional
+`steward-parallel` skill runs `scripts/parallel_frontier.py` against a complete
+existing plan and its task descriptions. The helper emits schema-1 JSON with
+`ready`, `active`, `review_queue`, `blocked`, `conflicts` and `proposed_batches`.
+It checks declared dependencies and reports known path/resource intersections
+and missing bindings. Suppressing ancestor states keep descendants out of new
+dispatch proposals; recorded active jobs and candidates remain visible for
+reconciliation. It never writes plans or repositories, launches jobs,
+accepts work or grants authority; `dispatch_authorized` is always `false` and
+`policy_state` is `requires-binding`.</FRONTIER-HELPER></p>
+    <p><FRONTIER-BINDINGS fact="true" status="spec/done">Optional JSON
+bindings carry schema 1, the plan id, revision and SHA-256 of the exact raw TOML,
+plus per-task exact read/write paths and resource ids/access modes. They are a
+local, disposable explanation of the analysis inputs, not an accepted plan,
+shared index, live lock or persisted global worker queue. Bindings must narrow
+the existing task metadata and refer to that exact plan snapshot. The initial
+helper accepts repository-contained paths; an external documentation repository
+requires its own explicit binding and coordination outside that path model.
+Do not disguise external input as a guessed local path.</FRONTIER-BINDINGS></p>
+    <p><FRONTIER-LIMITS fact="true" status="spec/done">Even with exact
+perimeters, the coordinator still verifies current source identities, surviving
+jobs, actual resource capacity, semantic independence and current authority.
+The helper's candidate batches are inspection suggestions, not launch recipes
+or proof that other writers are absent. Resolve missing bindings within current
+authority; this read-only check creates no additional owner approval ritual.
+Use it when choosing a parallel window or diagnosing review contention, not as
+a compulsory ceremony before every atom.</FRONTIER-LIMITS></p>
+  </analysis>
+  <continuity title="5. Interrupted coordinators and incoming documentation">
+    <p><PARALLEL-RECOVERY fact="true" status="spec/done">If the coordinator
+loses quota or disappears, workers may finish only their existing bounded
+packets and then stop at the declared boundary. They do not expand the window,
+launch replacement jobs or claim acceptance. A resumed coordinator discovers
+live jobs, retained candidate artifacts and consumed retry episodes before
+dispatching replacements. Resolve unknown effects before replay and stop or
+isolate an old writer before starting a conflicting replacement, under
+`interruption-recovery.xml`. Missing narration is not worker failure.</PARALLEL-RECOVERY></p>
+    <p><DOCUMENTATION-INPUT fact="true" status="spec/done">Documentation
+being prepared elsewhere remains an unavailable input until its source and
+ownership are supplied. Do not guess paths, treat another worker's changing
+tree as frozen, or overwrite its files. Once supplied, capture its repository
+or source root, version or content identity, active writer and write ownership,
+build commands, and source-to-generated-output mapping. Update only affected
+packets, topic mappings and proof selections. Initial inventory or reference
+checks may run in parallel within an authorized ready task on that captured
+input; existing documentation dependencies and final reconciliation gates
+remain in force.</DOCUMENTATION-INPUT></p>
+    <p><NARROW-RECONCILIATION fact="true" status="spec/done">An incoming
+documentation revision or integrated code change invalidates the results whose
+relevant inputs moved. Rebind those inputs, refresh affected topic/claim
+mappings and rerun the necessary checks. Keep unchanged accepted evidence and
+the complete campaign route. Adaptation of packets and derived views does not
+require reauthoring all tasks; an actual conflict in mandate or architecture is
+resolved explicitly rather than hidden by parallel execution.</NARROW-RECONCILIATION></p>
+  </continuity>
+</spec>

@@ -1,0 +1,103 @@
+/* The constellation. One rule per kind of thing; the choreography is in
+   the markup, as a `--d` delay on each element. */
+
+.dep-graph {
+  width: 100%;
+  max-width: 420px;
+  height: auto;
+  /* The pulse ring grows past the root node's own box. */
+  overflow: visible;
+}
+
+.dep-graph__edge {
+  stroke: var(--accent);
+  stroke-width: 1.25;
+  fill: none;
+  opacity: 0.32;
+  /* `pathLength="1"` on every line makes one dash pattern fit them all. */
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: dep-graph-draw 1.1s ease forwards;
+  animation-delay: var(--d, 0s);
+}
+
+.dep-graph__node {
+  fill: var(--bg-raise);
+  stroke: var(--accent);
+  stroke-width: 1.5;
+  opacity: 0;
+  /* Without `fill-box` the scale would pivot on the SVG's origin and the
+     node would fly in from the corner instead of growing in place. */
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: dep-graph-pop 0.5s cubic-bezier(0.2, 0.9, 0.3, 1.2) forwards;
+  animation-delay: var(--d, 0s);
+}
+
+.dep-graph__node--solid {
+  fill: var(--accent);
+}
+
+.dep-graph__pulse {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 1.5;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: dep-graph-pulse 3.4s ease-out infinite;
+  animation-delay: 1.4s;
+}
+
+@keyframes dep-graph-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes dep-graph-pop {
+  from {
+    opacity: 0;
+    transform: scale(0.4);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes dep-graph-pulse {
+  0% {
+    opacity: 0.5;
+    transform: scale(1);
+  }
+  70% {
+    opacity: 0;
+    transform: scale(2.6);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(2.6);
+  }
+}
+
+/* `base.css` already collapses every animation for a reader who asked
+   for stillness, which leaves each of these at its end state — drawn
+   edges, opaque nodes, a finished pulse. Saying it again here is not
+   redundancy: this component is the one with motion worth naming, and a
+   reader of the file should see the still version without having to
+   reason about a global rule and `animation-fill-mode`. */
+@media (prefers-reduced-motion: reduce) {
+  .dep-graph__edge {
+    animation: none;
+    stroke-dashoffset: 0;
+    opacity: 0.32;
+  }
+  .dep-graph__node {
+    animation: none;
+    opacity: 1;
+  }
+  .dep-graph__pulse {
+    animation: none;
+    opacity: 0;
+  }
+}

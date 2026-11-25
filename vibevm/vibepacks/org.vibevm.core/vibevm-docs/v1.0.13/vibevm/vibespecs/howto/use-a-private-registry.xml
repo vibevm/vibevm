@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">Use a private registry</title>
+  <status stage="doc" state="work" audience="user"/>
+  <p>A company can keep its packages in its own place and still use vibe unchanged. This page points a project or a whole machine at that place, with or without a search catalogue beside it, and keeps the public one as a fallback.</p>
+  <prompt id="private-registry">Add the private registry named acme at git@github.com:acme-specs as the first registry of the VibeVM project in the current folder, authenticated over SSH, keep the public vibespecs registry as a fallback, and test that both are reachable.
+    <needs>the vibevm skill installed for your agent; an SSH key that the private host accepts, loaded in the agent; a project with `vibe.toml`</needs>
+    <outcome>`vibe registry list` shows `acme` first and `vibespecs` second; `vibe registry test` reports both reachable</outcome>
+    <assert>vibe registry list --quiet</assert>
+    <assert>vibe registry test</assert>
+  </prompt>
+  <what-happens title="What happens">
+    <p>The agent runs `vibe registry add acme git@github.com:acme-specs --auth ssh --position primary`, which writes a new [registry](../glossary/index.xml#registry) block at the top of the [manifest](../glossary/index.xml#manifest)'s list. From now on every resolution asks `acme` first and the public registry second, and a package that exists in both comes from `acme`. `vibe registry test` probes each registry for reachability and authentication without fetching anything.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#REGISTRY-WALK-ORDER"/>
+  </what-happens>
+  <by-hand title="By hand">
+    <p>1. Add the registry to the project. The address is the organisation root, not a package repository:</p>
+    <example id="registry-add" fixture="hello-vibe">
+      <run>vibe registry add acme git@github.com:acme-specs --path hello-vibe --position primary</run>
+      <expect>  → Added `[[registry]]` `acme` as primary → git@github.com:acme-specs on host github.com (adapter: github)
+
+vibe registry add: `acme` registered (1 total registry).</expect>
+    </example>
+    <p>2. Choose the authentication regime with `--auth`. The values are `none` for public read, `ssh` for keys and `credential-helper` for the system's git helper. `token-env` reads a token from an environment variable named after the host.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#AUTH-REGIMES"/>
+    <p>3. Probe with `vibe registry test`: it reports, per registry, whether the organisation answered and which authentication it accepted, without fetching anything.</p>
+  </by-hand>
+  <machine-wide title="For every project on a machine">
+    <p>Put the same registry block into `~/.vibe/registry.toml`. It is merged after each project's own list, so projects that name their registries are unaffected and projects that do not inherit the machine's. A project that names no registry, as `vibe init` creates them today, uses the machine's list, which is how a company's default becomes every new project's default.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-010#USER-LEVEL-REGISTRIES"/>
+  </machine-wide>
+  <redirects title="Delegating a package to another registry">
+    <p>A registry may point at a package that lives elsewhere. Instead of the package, the repository named after it carries one file, `vibe-redirect.toml`, with a `[redirect]` table: `target_url` names the repository where the package really is, and `ref_policy` says which tag to fetch there, the same tag by default or one `pinned_ref` for every version. A consumer installing the package sees no difference; the resolver follows the pointer once, never a chain, and records the stub's address in the [lock file](../glossary/index.xml#lock-file) as `via_redirect`.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#REDIRECT-STUB"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#REDIRECT-MARKER-FILE"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#RD-STEP-HOP-LIMIT"/>
+    <p>The versions a consumer can see are the tags of the stub, not of the target: the registry's owner admits each version by tagging the stub. `vibe registry redirect` creates a stub, `redirect-sync` copies the target's tags into it after confirmation, and `redirect-update` changes the pointer. When a stub's target changes, because the maintainer moved to another host, a consumer accepts the switch with `--trust-redirect`; vibe never follows a changed target silently.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#REDIRECT-TAG-VISIBILITY"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#REDIRECT-CLI"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#RD-TRUST-FLAG"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#REDIRECT-SYNC-HELPER"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#REDIRECT-LOCKFILE-FIELD"/>
+  </redirects>
+  <tokens title="Tokens">
+    <p>A token never lands in a file vibe writes and never appears in its output. With `--auth token-env` vibe reads it from `VIBEVM_REGISTRY_TOKEN_&lt;HOST&gt;` at run time and sends it over an encrypted connection only. Keep the variable in your shell profile or among your CI secrets, not in the repository.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#TOKEN-NEVER-ON-DISK"/>
+  </tokens>
+  <edge-cases title="Edge cases and rules">
+    <p>A private registry without an [index](../glossary/index.xml#index-registry) still works; searches skip it and installs clone what they need. Add an index repository beside the packages and point `VIBEVM_INDEX_URL_ACME` at it to make searches and cold installs fast.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#INDEX-OPTIONAL"/>
+    <p>A [mirror](../glossary/index.xml#mirror) is not a second registry. Use `vibe registry set-mirror` for an alternative address of the same packages, verified against the same [fingerprints](../glossary/index.xml#fingerprint); use `registry add` for a different source of packages.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#MIRROR-WALK-SEMANTICS"/>
+    <p>In a script that must notice a private registry being down, pass `--auth-required` to `vibe install`: an authentication error then stops the install instead of walking on to the public fallback.</p>
+  </edge-cases>
+</spec>

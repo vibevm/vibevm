@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">The newcomer's route</title>
+  <status stage="doc" state="work" audience="user"/>
+  <p>You have a coding agent and a project. VibeVM gives that agent the right text to read before it starts working, and keeps that text in step with what your team decided. This page walks you from an empty folder to a project your agent understands, one short step at a time.</p>
+  <step-1 title="Step 1: understand what you are installing">
+    <p>Read [What VibeVM is](what-vibevm-is.xml) first. It takes five minutes and gives you the one idea everything else rests on: instruction text for an agent is a dependency, and dependencies are installed, versioned and shared like libraries. The rule to remember is that installing never edits what you wrote.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#INCLUDE-RULE"/>
+  </step-1>
+  <step-2 title="Step 2: install vibe">
+    <p>Follow [Install vibe](install-vibe.xml). On Windows it is an archive and a script; elsewhere it is a clone and a script. You are done when a new terminal answers `vibe --version`. Everything vibe owns lives under one folder in your home directory, and you can move that folder with one environment variable.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-010#THE-SETTINGS-HOME-IS-DOT-VIBE-NOT-XDG"/>
+  </step-2>
+  <step-3 title="Step 3: create a project and specify its first program">
+    <p>Follow [Create your first project](first-project.xml). You create a folder, install the redbook, a collection of working practices, and look at how its packages landed on disk. Then you open your agent in the folder and write the [specification](../glossary/index.xml#specification) of a small calculator, by hand or with the agent. The practices are a way of working; the agent reads them at every session start from then on. Note the plan vibe shows before it writes anything: nothing is installed until you say yes.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#IDENTITY-TUPLE"/>
+  </step-3>
+  <step-4 title="Step 4: look at what appeared">
+    <p>Read [What a project contains](what-a-project-contains.xml) with the new folder open beside it. Two files are yours, one tree is yours, one tree is vibe's, and the generated files carry the reading list. Knowing who writes what is the difference between a project that stays consistent and one that fights its own tool.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#TWO-TREES"/>
+  </step-4>
+  <step-5 title="Step 5: see how the agent reads it">
+    <p>Read [The boot lane](../model/boot-lane.xml). The agent opens the instruction file, reads one generated file in full, and follows a list for the rest. It never runs vibe to start. When you later add packages, remove them or update them, the lane is regenerated and the agent's next session reads the new one.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#SESSION-START-ORDER"/>
+  </step-5>
+  <after title="After the route">
+    <p>From here the manual branches. To work day to day, the pages under *How to* cover [installing](../howto/install-a-package.xml), [updating](../howto/update-packages.xml), [removing](../howto/remove-a-package.xml), [working offline](../howto/work-offline.xml) and [publishing](../howto/publish-a-package.xml). To understand the machinery, the pages under *Model* explain [packages and kinds](../model/packages-and-kinds.xml), [registries](../model/registries.xml), the [lock file](../glossary/index.xml#lock-file) and the machine [store](../glossary/index.xml#store), and [versions](../model/versions.xml). To let your agent do the work, [Give your agent the vibevm skill](../agent/give-your-agent-the-skill.xml) comes next. To turn the calculator's specification into a program, the advanced tutorial [Build Hello VibeVM in AI-Native Rust](../tutorials/ai-native-rust.xml) installs Rust and a discipline that keeps code tied to its specification. And whenever a command refuses, [From an error message to the rule](../diagnostics/errors.xml) names the rule it enforced.</p>
+  </after>
+</spec>

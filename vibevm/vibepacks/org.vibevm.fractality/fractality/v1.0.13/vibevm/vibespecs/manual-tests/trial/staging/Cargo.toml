@@ -1,0 +1,10 @@
+# Standalone on purpose: the empty [workspace] table keeps this
+# fixture crate out of the fractality Cargo workspace it lives under.
+[workspace]
+
+[package]
+name = "mini_logfmt"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]

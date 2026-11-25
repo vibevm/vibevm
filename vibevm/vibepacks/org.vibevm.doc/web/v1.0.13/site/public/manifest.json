@@ -1,0 +1,10 @@
+{
+  "name": "VibeVM documentation",
+  "short_name": "VibeVM",
+  "description": "The VibeVM manual and the packages it documents.",
+  "start_url": "/",
+  "display": "browser",
+  "background_color": "#faf9f5",
+  "theme_color": "#d97757",
+  "icons": []
+}

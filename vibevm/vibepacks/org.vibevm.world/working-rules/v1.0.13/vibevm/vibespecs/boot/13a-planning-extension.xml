@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">Working rules — the planning extension</title>
+  <p><COMPLETION-LIST-IS-THE-PLAN fact="true" status="impl/done">The planning package is installed as well, so a lead's
+completion list is the open nodes under the goal node of its plan, not a
+separate file. Before using the list, read
+the extension page: `vibevm/vibedeps/org.vibevm.world.working-rules/1.0.12/rules/with-multi-user-planning.md`.</COMPLETION-LIST-IS-THE-PLAN></p>
+</spec>

@@ -1,0 +1,44 @@
+//! Core model of the fractality agent operating system.
+//!
+//! Everything that must mean the same thing to the mission-control daemon,
+//! the pod supervisor, the CLI, and worker backends lives here: identifiers,
+//! the run-state machine, the task packet (the universal seam, plan D7),
+//! journal events and their replay fold (D9), API DTOs for the client and
+//! pod legs of the mission-control bus (D10), claim-check file references
+//! and node/scope identity (D19), and the `WorkerBackend` trait.
+//!
+//! This crate is deliberately dependency-light (serde + toml + ulid +
+//! camino); anything that talks to the OS or the network belongs to the
+//! daemon, pod, or client crates.
+//!
+//! Canonical spec: `fractality/v1.0.0/spec/plans/FRACTALITY-IGNITION-PLAN-v0.1.md`
+//! (Decisions D1–D19) and `spec/PROP-001-foundation.md` (invariants I1–I7).
+
+pub mod api;
+pub mod credibility;
+pub mod error;
+pub mod fileref;
+pub mod ids;
+pub mod journal;
+pub mod journal_fold;
+pub mod needgate;
+pub mod node;
+pub mod packet;
+pub mod profile;
+pub mod routing;
+pub mod run;
+pub mod session;
+pub mod time;
+pub mod worker;
+
+pub use credibility::{CredibilityFact, worker_credibility};
+pub use error::CoreError;
+pub use fileref::FileRef;
+pub use ids::{PodId, RunId, ScopeId, SessionId};
+pub use needgate::{Decision, DecisionEnvelope, DecisionRecord, GateInputs, Verdict};
+pub use packet::{Packet, WorkspaceMode};
+pub use profile::{Profile, ProfilesFile};
+pub use routing::{CapabilityClass, ClassPolicy, RoutingPolicy};
+pub use run::{Collected, KillReason, RunRecord, RunState, UsageTotals};
+pub use session::{InitiativeCounters, SessionRecord};
+pub use worker::{RunContext, WorkerBackend, WorkerSpec};

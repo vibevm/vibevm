@@ -1,0 +1,880 @@
+/* `/roadmap/` — the road page.
+   ---------------------------------------------------------------------
+   Six stages after Developer Preview 1, in the owner's order, drawn in
+   the family's suprematist language: a hero where the road is one long
+   ink diagonal with the stations standing on it, then the same stations
+   large, one plate each, walked down a rail from the marker that says
+   where the project stands today. The page's own accent is terracotta —
+   the project's colour, because a roadmap is the project's own plan —
+   and every stage carries the colours of what it is: ink for the thing
+   built, gold for the specification, cobalt for the machine's tooling,
+   Zap's green for Zap.
+
+   Every colour is a semantic token (PROP-057 `##STACK-DESIGN-FLOOR`).
+   Motion is CSS over markup the server wrote, twice over, as on the map
+   at the foot of the landing: the hero animates once at load, above the
+   fold; each stage's plate draws itself as it enters the window where the
+   browser can drive that from scrolling, and with the same choreography
+   as delays where it cannot. A reader who asked for stillness gets every
+   drawing finished and still. */
+
+.rm-page {
+  --why-accent: var(--accent);
+  --why-accent-bright: var(--accent-hover);
+  --why-accent-soft: var(--accent-soft);
+  --rm-ink-soft: color-mix(in srgb, var(--text) 28%, transparent);
+  --rm-gap: clamp(36px, 6vh, 64px);
+  --rm-node: 32px;
+}
+
+/* --- Hero ------------------------------------------------------------- */
+
+.rm-hero {
+  padding-top: clamp(40px, 8vh, 96px);
+}
+
+.rm-title {
+  max-width: 20ch;
+}
+
+.rm-lead {
+  margin: 24px 0 0;
+  max-width: 36rem;
+  font-size: 18.5px;
+  line-height: 1.62;
+  color: var(--text-2);
+}
+
+.rm-canvas {
+  margin: clamp(28px, 5vh, 52px) 0 0;
+}
+
+/* The road's ground: the canvases' sink, lit by the project's terracotta
+   at the foot of the road and by the specification's gold at its top —
+   the two ends of the argument, before a shape is drawn. */
+.rm-canvas__frame {
+  width: 100%;
+  overflow: hidden;
+  border-block: 1px solid var(--line);
+  background:
+    radial-gradient(
+      40% 90% at 10% 100%,
+      color-mix(in srgb, var(--accent) 10%, transparent),
+      transparent 62%
+    ),
+    radial-gradient(
+      38% 80% at 84% 0%,
+      color-mix(in srgb, var(--accent-gold) 9%, transparent),
+      transparent 62%
+    ),
+    var(--bg-sink);
+}
+
+.rm-road {
+  display: block;
+  width: min(1200px, 100%);
+  margin-inline: auto;
+  height: auto;
+}
+
+/* A phone rides in a little, but never so far that either end of the
+   road leaves the window: the circle at its foot and the system at its
+   top are the two things the picture is about. */
+@media (max-width: 700px) {
+  .rm-road {
+    width: 112%;
+    max-width: none;
+    margin-left: -6%;
+  }
+}
+
+.rm-canvas figcaption {
+  margin-top: 10px;
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  line-height: 1.55;
+  color: var(--text-3);
+}
+
+/* --- Section scaffolding ------------------------------------------------ */
+
+.rm-section {
+  padding-block: clamp(36px, 7vh, 84px) 0;
+}
+
+.rm-k {
+  margin: 0 0 14px;
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.rm-h {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(27px, 3.6vw, 40px);
+  line-height: 1.12;
+  letter-spacing: -0.015em;
+  color: var(--text);
+  text-wrap: balance;
+  max-width: 27ch;
+}
+
+/* --- The route: a rail down the page, from the marker through six stages */
+
+.rm-route {
+  position: relative;
+  margin-top: clamp(28px, 5vh, 48px);
+  padding-bottom: clamp(28px, 5vh, 48px);
+}
+
+/* The one floor under the whole route — the deterministic line every
+   canvas of the family stands on, here under the stages themselves. */
+.rm-route::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 2px;
+  background: var(--line-strong);
+}
+
+.rm-stages {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.rm-here,
+.rm-stage {
+  position: relative;
+  display: grid;
+  grid-template-columns: 44px minmax(0, 320px) minmax(0, 1fr);
+  column-gap: clamp(18px, 3vw, 36px);
+  align-items: start;
+}
+
+.rm-stage {
+  margin-top: var(--rm-gap);
+}
+
+/* The rail: each item draws its own segment from the centre of its node
+   down to the centre of the next one, across the gap between them, so
+   the line is continuous without any one element knowing the height of
+   the whole. The last stage ends the rail at its node. */
+.rm-here::before,
+.rm-stage::before {
+  content: "";
+  position: absolute;
+  left: calc(var(--rm-node) / 2 - 1px);
+  top: calc(var(--rm-node) / 2);
+  bottom: calc(-1 * var(--rm-gap) - var(--rm-node) / 2);
+  width: 2px;
+  background: var(--rm-ink-soft);
+}
+
+.rm-stage:last-child::before {
+  display: none;
+}
+
+/* Every part of an item stands on its first row, and says so. Without
+   the row written down, the grid's sparse auto-placement puts a text
+   whose column is LEFT of the figure placed before it on a new row — so
+   every second stage would set its words under its emblem rather than
+   beside it. The phone layout below rewrites the rows it stacks. */
+.rm-here__dot,
+.rm-stage__n,
+.rm-here__fig,
+.rm-stage__fig,
+.rm-here__text,
+.rm-stage__text {
+  grid-row: 1;
+}
+
+/* The marker's node: the terracotta circle — you are here. */
+.rm-here__dot {
+  position: relative;
+  z-index: 1;
+  grid-column: 1;
+  width: var(--rm-node);
+  height: var(--rm-node);
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 0 5px var(--accent-soft);
+}
+
+/* A stage's node: a square on the rail with the stage's number in it —
+   the path of squares the hero draws, walked. */
+.rm-stage__n {
+  position: relative;
+  z-index: 1;
+  grid-column: 1;
+  display: grid;
+  place-items: center;
+  width: var(--rm-node);
+  height: var(--rm-node);
+  background: var(--bg-raise);
+  border: 1.5px solid var(--text);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--text);
+}
+
+.rm-here__fig,
+.rm-stage__fig {
+  grid-column: 2;
+  margin: 0;
+  min-width: 0;
+}
+
+.rm-here__text,
+.rm-stage__text {
+  grid-column: 3;
+  min-width: 0;
+  padding-top: 2px;
+}
+
+/* Every second stage puts its words on the left and its emblem on the
+   right, so the eye walks the road in a zigzag rather than down a table
+   — and the rail on the left is the one constant it zigzags against. */
+.rm-stage:nth-child(even) {
+  grid-template-columns: 44px minmax(0, 1fr) minmax(0, 320px);
+}
+
+.rm-stage:nth-child(even) .rm-stage__fig {
+  grid-column: 3;
+}
+
+.rm-stage:nth-child(even) .rm-stage__text {
+  grid-column: 2;
+}
+
+/* The emblem's plate: the canvases' sink with one pool of the stage's
+   own colour in a corner, as every hero canvas of the family is lit. */
+.rm-plate {
+  --rm-pool: var(--accent);
+  overflow: hidden;
+  aspect-ratio: 320 / 220;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  background:
+    radial-gradient(
+      60% 90% at 18% 0%,
+      color-mix(in srgb, var(--rm-pool) 9%, transparent),
+      transparent 62%
+    ),
+    color-mix(in srgb, var(--bg-sink) 90%, transparent);
+}
+
+.rm-stage--zap .rm-plate {
+  --rm-pool: var(--accent-zap);
+}
+
+.rm-stage--community .rm-plate,
+.rm-stage--linux .rm-plate {
+  --rm-pool: var(--accent-gold);
+}
+
+.rm-stage--ide .rm-plate {
+  --rm-pool: var(--intent-machine);
+}
+
+.rm-em {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.rm-here__k {
+  margin: 0 0 8px;
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.rm-here__name,
+.rm-stage__name {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(22px, 2.4vw, 28px);
+  font-weight: 600;
+  line-height: 1.2;
+  color: var(--text);
+  text-wrap: balance;
+}
+
+.rm-stage__sub {
+  margin: 10px 0 0;
+  max-width: 34rem;
+  font-size: 17px;
+  font-weight: 500;
+  line-height: 1.5;
+  color: var(--text);
+}
+
+.rm-here__body,
+.rm-stage__body {
+  margin: 12px 0 0;
+  max-width: 38rem;
+  font-size: 15.5px;
+  line-height: 1.66;
+  color: var(--text-2);
+}
+
+/* The one way out a stage has, when it has one: a line in the drafting
+   face, with the address in the page's accent. */
+.rm-stage__home {
+  margin: 14px 0 0;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--text-3);
+}
+
+.rm-stage__home a {
+  color: var(--accent);
+  transition: color 0.2s ease;
+}
+
+.rm-stage__home a:hover {
+  color: var(--accent-hover);
+}
+
+/* --- Section breaks ------------------------------------------------------ */
+
+.rm-break {
+  display: flex;
+  justify-content: center;
+  padding-block: clamp(34px, 6vh, 64px) 0;
+}
+
+.rm-mark {
+  width: 76px;
+  height: 16px;
+}
+
+.rm-mark__human {
+  fill: var(--accent);
+}
+
+.rm-mark__spec {
+  fill: var(--accent-gold);
+}
+
+.rm-mark__machine {
+  fill: var(--intent-machine);
+}
+
+/* --- The rule on the band -------------------------------------------------- */
+
+.rm-band {
+  margin-top: clamp(40px, 7vh, 72px);
+  background: var(--band-paper);
+  padding-block: clamp(44px, 8vh, 88px);
+}
+
+.rm-band__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr);
+  gap: clamp(28px, 4.5vw, 64px);
+  align-items: center;
+}
+
+.rm-band__k {
+  margin: 0 0 22px;
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ochre-ink);
+}
+
+.rm-band__quote {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(24px, 3.4vw, 37px);
+  line-height: 1.28;
+  letter-spacing: -0.012em;
+  color: var(--band-ink);
+  border-left: 3px solid var(--gold-raw);
+  padding-left: 22px;
+  text-wrap: balance;
+}
+
+.rm-band__body {
+  margin: 22px 0 0;
+  max-width: 44rem;
+  font-size: 15.5px;
+  line-height: 1.65;
+  color: var(--band-body);
+}
+
+.rm-band__fig {
+  justify-self: end;
+  width: 100%;
+  max-width: 360px;
+}
+
+.rm-glyph {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* The glyph sits on the cream band, so its tones are the band's. */
+.rm-glyph__bar {
+  stroke: var(--band-ink);
+  stroke-width: 3;
+}
+
+.rm-glyph__here {
+  fill: var(--band-accent);
+}
+
+.rm-glyph__step {
+  fill: var(--band-ink);
+}
+
+.rm-glyph__step--last {
+  fill: var(--ochre-ink);
+}
+
+/* --- The three ways out ------------------------------------------------------ */
+
+.rm-ties-wrap {
+  padding-bottom: clamp(56px, 10vh, 110px);
+}
+
+.rm-ties {
+  margin-top: 24px;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.rm-tie {
+  --rm-tie-accent: var(--accent);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+  border-radius: 14px;
+  padding: 22px;
+  border: 1px solid color-mix(in srgb, var(--rm-tie-accent) 35%, transparent);
+  background:
+    radial-gradient(
+      70% 60% at 80% 0%,
+      color-mix(in srgb, var(--rm-tie-accent) 10%, transparent),
+      transparent 60%
+    ),
+    var(--bg-raise);
+  transition:
+    border-color 0.2s ease,
+    transform var(--speed) ease;
+}
+
+.rm-tie:hover {
+  border-color: color-mix(in srgb, var(--rm-tie-accent) 60%, transparent);
+  transform: translateY(-2px);
+}
+
+.rm-tie--vision {
+  --rm-tie-accent: var(--accent-gold);
+}
+
+.rm-tie--docs {
+  --rm-tie-accent: var(--text);
+}
+
+.rm-tie__k {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-3);
+}
+
+.rm-tie b {
+  font-family: var(--font-display);
+  font-size: 19px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.rm-tie p {
+  margin: 0;
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: var(--text-2);
+}
+
+.rm-tie__link {
+  margin-top: auto;
+  padding-top: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--rm-tie-accent);
+}
+
+/* --- The drawings, coloured ---------------------------------------------------- */
+
+.rm-road__cross path,
+.rm-em__cross path {
+  stroke: var(--text);
+  opacity: 0.09;
+}
+
+.rm-s-tick path {
+  stroke: var(--text);
+  opacity: 0.14;
+}
+
+.rm-road__horizon {
+  fill: color-mix(in srgb, var(--accent-gold) 7%, transparent);
+}
+
+.rm-road__floor,
+.rm-s-floor {
+  stroke: var(--text-2);
+  stroke-width: 1.5;
+  opacity: 0.7;
+}
+
+.rm-road__drops path {
+  stroke: var(--text);
+  opacity: 0.12;
+  stroke-dasharray: 2 6;
+}
+
+.rm-road__bar {
+  stroke: var(--text);
+  stroke-width: 10;
+  opacity: 0.88;
+}
+
+.rm-road__halo {
+  stroke: color-mix(in srgb, var(--accent) 34%, transparent);
+  stroke-width: 1.4;
+}
+
+.rm-road__node {
+  fill: var(--bg-raise);
+  stroke: var(--text);
+  stroke-width: 1.6;
+}
+
+.rm-road__edges path,
+.rm-s-edge {
+  stroke: var(--text);
+  stroke-width: 1.2;
+  opacity: 0.5;
+}
+
+.rm-s-hair {
+  stroke: var(--text);
+  opacity: 0.16;
+}
+
+.rm-s-ink {
+  fill: var(--text);
+}
+
+.rm-s-terra {
+  fill: var(--accent);
+}
+
+.rm-s-gold {
+  fill: var(--accent-gold);
+}
+
+.rm-s-cobalt {
+  fill: var(--intent-machine);
+}
+
+.rm-s-hollow {
+  fill: none;
+  stroke: var(--text);
+  stroke-width: 1.5;
+}
+
+.rm-s-bracket path {
+  stroke: var(--text);
+  stroke-width: 2;
+}
+
+.rm-s-shelf {
+  stroke: var(--text);
+  stroke-width: 1.6;
+  opacity: 0.8;
+}
+
+.rm-s-dash {
+  stroke: var(--text);
+  stroke-width: 1.2;
+  opacity: 0.45;
+  stroke-dasharray: 3 4;
+}
+
+.rm-s-plane {
+  fill: color-mix(in srgb, var(--text) 6%, transparent);
+  stroke: var(--text);
+  stroke-width: 2.5;
+}
+
+.rm-s-hub path {
+  stroke: var(--accent-gold);
+  stroke-width: 1.4;
+  opacity: 0.65;
+}
+
+/* Zap's own marks, in Zap's own green — the page it comes from. */
+.rm-s-ring {
+  stroke: color-mix(in srgb, var(--accent-zap) 30%, transparent);
+  stroke-width: 1.1;
+  stroke-dasharray: 1.5 8;
+  stroke-linecap: round;
+}
+
+.rm-s-orbit {
+  stroke: var(--accent-zap);
+  stroke-width: 1.6;
+}
+
+.rm-s-orbit-arrow {
+  stroke: var(--accent-zap);
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.rm-s-zap {
+  fill: var(--accent-zap);
+}
+
+.rm-s-zap-hollow {
+  fill: var(--bg-raise);
+  stroke: var(--accent-zap);
+  stroke-width: 1.4;
+}
+
+.rm-s-zap-halo {
+  fill: color-mix(in srgb, var(--accent-zap) 13%, transparent);
+}
+
+.rm-s-zap-ring {
+  stroke: var(--accent-zap);
+  stroke-width: 1.2;
+  opacity: 0.65;
+}
+
+.rm-em__stars circle {
+  fill: var(--zap-star);
+}
+
+/* The one endless motion on the page: the rings turn once in four
+   minutes, as they do on the page they come from. */
+.rm-em__orbits {
+  transform-origin: 128px 112px;
+  animation: rm-orbit 240s linear infinite;
+}
+
+/* --- The choreography ------------------------------------------------------------- */
+
+/* `pathLength="1"` on every drawn stroke makes one dash pattern draw them
+   all; `--at` is the element's place in the sequence. Without a scroll
+   timeline it is a delay of that many × 50ms from load. */
+.rm-draw {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: rm-draw 0.8s ease forwards;
+  animation-delay: calc(var(--at, 0) * 50ms);
+}
+
+.rm-pop {
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: rm-pop 0.55s cubic-bezier(0.2, 0.9, 0.3, 1.2) forwards;
+  animation-delay: calc(var(--at, 0) * 50ms);
+}
+
+.rm-fade {
+  opacity: 0;
+  animation: rm-fade 0.6s ease forwards;
+  animation-delay: calc(var(--at, 0) * 50ms);
+}
+
+.rm-slide-l,
+.rm-slide-r,
+.rm-rise {
+  opacity: 0;
+  animation: rm-arrive 0.8s cubic-bezier(0.2, 0.8, 0.25, 1) forwards;
+  animation-delay: calc(var(--at, 0) * 50ms);
+}
+
+.rm-slide-l {
+  transform: translateX(-46px);
+}
+
+.rm-slide-r {
+  transform: translateX(46px);
+}
+
+.rm-rise {
+  transform: translateY(26px);
+}
+
+/* With a scroll timeline, a stage's plate drives its own drawing: `--at`
+   becomes a percentage of the plate's entry into the window, and each
+   element begins at that point and is done fifty points later, so the
+   last of them is finished before the plate has fully arrived. The hero
+   is not in this — it stands above the fold and has already played. */
+@supports (animation-timeline: view()) {
+  .rm-plate {
+    view-timeline: --rm-plate block;
+  }
+
+  .rm-plate .rm-draw,
+  .rm-plate .rm-pop,
+  .rm-plate .rm-fade,
+  .rm-plate .rm-slide-l,
+  .rm-plate .rm-slide-r,
+  .rm-plate .rm-rise {
+    animation-timeline: --rm-plate;
+    animation-range: entry calc(var(--at, 0) * 1%) entry
+      calc(var(--at, 0) * 1% + 50%);
+    animation-delay: 0s;
+    animation-fill-mode: both;
+  }
+}
+
+@keyframes rm-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes rm-pop {
+  from {
+    opacity: 0;
+    transform: scale(0.45);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes rm-fade {
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes rm-arrive {
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes rm-orbit {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* --- Responsive -------------------------------------------------------------------- */
+
+/* Under a laptop's width the zigzag folds: every stage puts its emblem
+   over its words in the one column beside the rail, and the rail
+   narrows with its nodes. */
+@media (max-width: 900px) {
+  .rm-page {
+    --rm-node: 28px;
+  }
+
+  .rm-here,
+  .rm-stage,
+  .rm-stage:nth-child(even) {
+    grid-template-columns: 36px minmax(0, 1fr);
+    row-gap: 16px;
+  }
+
+  .rm-here__fig,
+  .rm-stage__fig,
+  .rm-stage:nth-child(even) .rm-stage__fig {
+    grid-column: 2;
+    grid-row: 1;
+    max-width: 420px;
+  }
+
+  .rm-here__text,
+  .rm-stage__text,
+  .rm-stage:nth-child(even) .rm-stage__text {
+    grid-column: 2;
+    grid-row: 2;
+    padding-top: 0;
+  }
+
+  .rm-stage__n {
+    font-size: 11px;
+  }
+
+  .rm-band__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .rm-band__fig {
+    justify-self: start;
+    max-width: 300px;
+  }
+
+  .rm-ties {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 520px) {
+  .rm-band__quote {
+    padding-left: 16px;
+  }
+}
+
+/* --- Motion safety -------------------------------------------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+  .rm-draw {
+    animation: none;
+    stroke-dashoffset: 0;
+  }
+  .rm-pop,
+  .rm-fade {
+    animation: none;
+    opacity: 1;
+  }
+  .rm-slide-l,
+  .rm-slide-r,
+  .rm-rise {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+  .rm-em__orbits {
+    animation: none;
+  }
+  .rm-tie:hover {
+    transform: none;
+  }
+}

@@ -1,0 +1,91 @@
+#!/usr/bin/env bash
+# vibe:zai-glm-claude launcher epoch=1 owner=org.vibevm.world/zai-glm-claude
+# Launch Claude Code against the z.ai Anthropic-compatible API while preserving
+# the caller's working directory and forwarding every command-line argument.
+set -euo pipefail
+
+# Resolve Claude Code before consulting credential storage.
+if ! claude_command="$(command -v claude)"; then
+  printf '%s\n' 'claudez: claude command was not found on PATH' >&2
+  exit 127
+fi
+
+base_url="${ZAI_GLM_BASE_URL:-https://api.z.ai/api/anthropic}"
+remainder="${base_url#https://}"
+authority="${remainder%%[/?#]*}"
+if [[ "$base_url" != https://* || -z "$authority" || "$authority" == :* || \
+      "$authority" == '[]'* || "$authority" == *'@'* || "$base_url" == *'#'* || \
+      "$base_url" == *[[:space:][:cntrl:]]* ]]; then
+  printf '%s\n' 'claudez: invalid z.ai endpoint: ZAI_GLM_BASE_URL must be an absolute HTTPS URL with a nonempty authority and no userinfo, fragment, whitespace, or control characters' >&2
+  exit 1
+fi
+if [[ ! "$authority" =~ ^(\[[0-9A-Fa-f:.]+\]|[A-Za-z0-9.-]+)(:[0-9]+)?$ ]]; then
+  printf '%s\n' 'claudez: invalid z.ai endpoint: ZAI_GLM_BASE_URL authority is malformed' >&2
+  exit 1
+fi
+
+if [[ -n "${ZAI_API_TOKEN_FILE:-}" ]]; then
+  token_file="$ZAI_API_TOKEN_FILE"
+elif [[ -n "${HOME:-}" ]]; then
+  token_file="${HOME}/.vibe/zai.api.token"
+else
+  printf '%s\n' 'claudez: HOME is not set and ZAI_API_TOKEN_FILE was not provided' >&2
+  exit 1
+fi
+if [[ ! -f "$token_file" ]]; then
+  printf 'claudez: token file not found: %s\n' "$token_file" >&2
+  exit 1
+fi
+
+if [[ ! -r "$token_file" ]]; then
+  printf 'claudez: unable to read token file: %s\n' "$token_file" >&2
+  exit 1
+fi
+
+if ! token="$(<"$token_file")"; then
+  printf 'claudez: unable to read token file: %s\n' "$token_file" >&2
+  exit 1
+fi
+
+# Match PowerShell's Trim() without sending the credential through another
+# process or placing it in an argument list.
+token="${token#"${token%%[![:space:]]*}"}"
+token="${token%"${token##*[![:space:]]}"}"
+if [[ -z "$token" ]]; then
+  printf 'claudez: token file is empty: %s\n' "$token_file" >&2
+  exit 1
+fi
+
+big_model="${ZAI_GLM_BIG_MODEL:-glm-5.3[1m]}"
+small_model="${ZAI_GLM_SMALL_MODEL:-glm-5-turbo}"
+
+export ANTHROPIC_BASE_URL="$base_url"
+export ANTHROPIC_AUTH_TOKEN="$token"
+export ANTHROPIC_DEFAULT_OPUS_MODEL="$big_model"
+export ANTHROPIC_DEFAULT_SONNET_MODEL="$big_model"
+export ANTHROPIC_DEFAULT_HAIKU_MODEL="$small_model"
+export API_TIMEOUT_MS="${ZAI_GLM_API_TIMEOUT_MS:-3000000}"
+export CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC=1
+
+if [[ -n "${ZAI_GLM_MAX_THINKING:-}" ]]; then
+  export MAX_THINKING_TOKENS="$ZAI_GLM_MAX_THINKING"
+elif [[ -n "${CLAUDEZ_MAX_THINKING:-}" ]]; then
+  export MAX_THINKING_TOKENS="$CLAUDEZ_MAX_THINKING"
+else
+  export MAX_THINKING_TOKENS=32000
+fi
+
+if [[ -n "${ZAI_GLM_CONFIG_DIR:-}" ]]; then
+  export CLAUDE_CONFIG_DIR="$ZAI_GLM_CONFIG_DIR"
+elif [[ -n "${CLAUDEZ_CONFIG_DIR:-}" ]]; then
+  export CLAUDE_CONFIG_DIR="$CLAUDEZ_CONFIG_DIR"
+else
+  if [[ -z "${HOME:-}" ]]; then
+    printf '%s\n' 'claudez: HOME is not set and no GLM config directory was provided' >&2
+    exit 1
+  fi
+  export CLAUDE_CONFIG_DIR="${HOME}/.claude-glm"
+fi
+
+unset token
+exec "$claude_command" "$@"

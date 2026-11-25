@@ -1,0 +1,15 @@
+# The slot after step 3 of the tutorial and before its install: the
+# manifest edited by hand (a description, `link = "static"`), the note
+# rewritten and the contract written, both in Markdown. The two documents
+# are the page's own fences and live in `tree/`.
+schema = 1
+
+[fixture]
+from = "review-slot"
+cwd = "work/review-lab"
+
+[[fixture.step]]
+edit = { path = "work/review-lab/vibevm/vibepacks/org.acme/review/v0.1.0/vibe.toml", from = "link = \"dynamic\"", to = "link = \"static\"" }
+
+[[fixture.step]]
+edit = { path = "work/review-lab/vibevm/vibepacks/org.acme/review/v0.1.0/vibe.toml", from = "description = \"\"", to = "description = \"The team's code review rules, as a contract with its reasons.\"" }

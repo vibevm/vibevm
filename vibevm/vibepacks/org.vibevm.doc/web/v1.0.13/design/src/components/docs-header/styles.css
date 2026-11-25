@@ -1,0 +1,114 @@
+/* How tall the bar is, published for whatever has to stand clear of it.
+   ---------------------------------------------------------------------
+   It is declared HERE rather than among the tokens, and that is the
+   mechanism: this stylesheet is loaded exactly when a header is on the
+   page, so the variable exists exactly when the header does. The reader
+   `vibe` serves from a machine's own store has no site header at all —
+   its route tree does not carry this layout — and there the fallback
+   answers, so the reading controls sit where they always did instead of
+   holding a gap open under nothing. */
+:root {
+  --site-header-h: 64px;
+  /* How much of the page the bar actually COVERS: its height plus the gap
+     the reading controls keep under it. It is a second name because the
+     two answers differ on a phone — the bar wraps into two rows there and
+     `--site-header-h` deliberately stays the one-row height (see the note
+     at the foot of this file) — and whatever is scrolled to under the bar
+     has to clear what the bar covers rather than what it says it is. */
+  --site-header-cover: calc(var(--site-header-h) + 0.7rem);
+}
+
+.docs-header {
+  position: sticky;
+  top: 0;
+  /* Above the reading controls, which stand clear of the bar but whose
+     panels open into the band below it — and so does this one's language
+     list. Whichever a reader opens, the header's is the one they just
+     reached for. */
+  z-index: 40;
+  background: var(--bg);
+  border-bottom: 1px solid var(--line);
+}
+
+.docs-header__inner {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1.25rem;
+  height: var(--site-header-h);
+}
+
+.docs-header__brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.7rem;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 1.15rem;
+  letter-spacing: -0.01em;
+  color: var(--text);
+  transition: color var(--speed) ease;
+}
+
+.docs-header__brand:hover .docs-header__name {
+  color: var(--accent);
+}
+
+/* The mark keeps the accent whatever the word beside it is doing: it was
+   the accent on the first site, in both maps of the palette, and a mark
+   that changed colour when the name was hovered would read as two
+   controls rather than one. The size is the original's — 26px — and it
+   is the element the drawing takes `currentColor` from. */
+.docs-header__mark {
+  display: block;
+  flex: none;
+  width: 26px;
+  height: 26px;
+  color: var(--accent);
+}
+
+.docs-header__name {
+  font-weight: 600;
+  transition: color var(--speed) ease;
+}
+
+.docs-header__actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-left: auto;
+}
+
+/* On a phone the bar carries a name, a search field, two languages and
+   three themes, and they do not fit across one line — the row simply ran
+   off the right of the screen and took the page's width with it. It
+   wraps instead of dropping one of them: every widget in this bar is
+   something only this bar offers, and a control a reader cannot see is a
+   control they do not have. The two rows cost about forty pixels of
+   height, once, at the top of the page.
+
+   `--site-header-h` stays what it was on purpose. It is read by the
+   reading controls to stand clear of the bar, and at this width they no
+   longer stand under it at all — they are at the bottom of the screen. */
+@media (max-width: 640px) {
+  /* The second row is what it costs, and what it covers says so — this
+     is the one value that does follow the wrap. */
+  :root {
+    --site-header-cover: calc(var(--site-header-h) + 3rem);
+  }
+
+  .docs-header__inner {
+    flex-wrap: wrap;
+    height: auto;
+    gap: 0.6rem;
+    padding-block: 0.7rem;
+  }
+
+  .docs-header__actions {
+    width: 100%;
+    margin-left: 0;
+    justify-content: space-between;
+  }
+}

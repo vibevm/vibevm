@@ -1,0 +1,15 @@
+# The manual's working project: one flow package installed from the local
+# registry, the lock written, the boot lane generated.
+schema = 1
+
+[fixture]
+from = "hello-vibe-empty"
+
+[[fixture.step]]
+run = "vibe install org.vibevm.world/wal --path hello-vibe --assume-yes"
+
+# `vibe list --json` prints one document; the report schema is the
+# contract it is published under, and a document with no entry here is
+# reported UNCHECKED rather than passed.
+[jtd]
+list = "schemas/list_report.jtd.json"
