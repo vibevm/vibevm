@@ -8,6 +8,13 @@ Format roughly follows [Keep a Changelog](https://keepachangelog.com/), grouped 
 
 ## [Unreleased]
 
+## [1.0.13] — Unreleased
+
+- **Issued alias decisions stay outside installation progress.** A direct interactive install prints the alias decision on its own line before the first progress frame. Global application installation announces the accepted alias decision once; speculative remap selection does not announce a rejected route.
+- **Artifact locations are grouped without losing their source.** `vibe artifacts where` separates release locations from package inputs, preserves filenames when wrapping narrow output, and retains source details in quiet mode.
+- **Retired application inventory is handled without execution.** Valid historical `vibe-user-applications/1` inventory is treated as empty rather than importing or executing its entries. Before a write replaces it, its original bytes are backed up; an existing backup or an invalid or unsupported inventory is refused without overwriting it.
+- **Unknown slots and uninstalled applications remain distinct refusals.** Application execution keeps `unknown_slot` separate from `not_installed` and names the command needed to address the actual refusal.
+
 ## [1.0.12] — 2026-11-23
 
 - **Every vibevm-owned package now follows the vibevm version and is published as 1.0.12.** The packages under `vibevm/vibepacks/` moved from 1.0.0 to 1.0.12, including exact pins between them; a project that asks for `^1.0.0` resolves to 1.0.12. Agent packages keep their upstream products' versions. The vibevm repository itself is opted in to the composed system prompt.
