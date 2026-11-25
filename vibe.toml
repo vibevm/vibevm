@@ -8,22 +8,18 @@ spec_format = "xml"
 authors = ["Oleg Chirukhin"]
 
 [requires.packages]
-"flow:org.vibevm.world/omnichannel" = "^1.0.12"
-"flow:org.vibevm.world/working-rules" = "^1.0.12"
-"org.vibevm.doc/web" = "^1.0.12"
-"stack:org.vibevm.ai-native/rust-ai-native" = "^1.0.12"
-"stack:org.vibevm.ai-native/typescript-ai-native" = "^1.0.12"
-
-[requires.packages."flow:org.vibevm.fractality/delegation-first"]
-version = "^1.0.12"
-link = "dynamic"
+"flow:org.vibevm.world/omnichannel" = "^1.0.13"
+"flow:org.vibevm.world/working-rules" = "^1.0.13"
+"org.vibevm.doc/web" = "^1.0.13"
+"stack:org.vibevm.ai-native/rust-ai-native" = "^1.0.13"
+"stack:org.vibevm.ai-native/typescript-ai-native" = "^1.0.13"
 
 [requires.packages."flow:org.vibevm.world/multi-user-planning"]
-version = "^1.0.12"
+version = "^1.0.13"
 link = "static-transitive"
 
 [requires.packages."org.vibevm.world/redbook"]
-version = "^1.0.12"
+version = "^1.0.13"
 link = "static-transitive"
 exclude = [
   "org.vibevm.world/wal",
