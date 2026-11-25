@@ -107,6 +107,7 @@ thiserror.workspace = true
 toml.workspace = true
 reqwest.workspace = true
 tracing.workspace = true
+tracing-core = "=0.1.36"
 tracing-subscriber.workspace = true
 zip.workspace = true
 # The pinned px upstream archives (`tar.gz` on Linux and macOS, PROP-019 `#companion-tools`).

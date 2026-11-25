@@ -120,7 +120,23 @@ pub(crate) fn open_alias(
     offline: bool,
     progress: &vibe_core::progress::Progress,
 ) -> Result<LayoutRoot> {
-    open(reg, mirrors, operation, offline, progress).map_err(|error| {
+    struct Unrendered;
+    impl vibe_core::progress::ProgressObserver for Unrendered {
+        fn observe(&self, _: vibe_core::progress::ProgressEvent) {}
+    }
+    // A real observer prevents nested transfer scopes from inheriting the
+    // visible parent. Control and accounting remain the invocation's own.
+    let scoped = vibe_core::progress::Progress::new(Arc::new(Unrendered))
+        .with_cancellation(progress.cancellation().clone())
+        .with_transfers(progress.transfers().cloned());
+    let parent = tracing::dispatcher::get_default(Clone::clone);
+    let subscriber = AliasOpeningSubscriber { parent };
+    let opened = tracing::subscriber::with_default(subscriber, || {
+        vibe_registry::git_backend::transfers::observed(Some(&scoped), None, None, || {
+            open(reg, mirrors, operation, offline, &scoped)
+        })
+    });
+    opened.map_err(|error| {
         let git = match error.downcast_ref::<RegistryError>() {
             Some(RegistryError::Git(git)) => git,
             Some(RegistryError::GitOperation { detail }) => &detail.source,
@@ -157,6 +173,76 @@ pub(crate) fn open_alias(
             reg.name,
         )
     })
+}
+
+/// Forward the invocation's tracing unchanged except the duplicate capture
+/// warning while the alias opener owns its eventual refusal.
+struct AliasOpeningSubscriber {
+    parent: tracing::Dispatch,
+}
+
+impl tracing::Subscriber for AliasOpeningSubscriber {
+    fn enabled(&self, metadata: &tracing::Metadata<'_>) -> bool {
+        self.parent.enabled(metadata)
+    }
+
+    fn new_span(&self, span: &tracing::span::Attributes<'_>) -> tracing::span::Id {
+        self.parent.new_span(span)
+    }
+
+    fn record(&self, span: &tracing::span::Id, values: &tracing::span::Record<'_>) {
+        self.parent.record(span, values);
+    }
+
+    fn record_follows_from(&self, span: &tracing::span::Id, follows: &tracing::span::Id) {
+        self.parent.record_follows_from(span, follows);
+    }
+
+    fn event(&self, event: &tracing::Event<'_>) {
+        let metadata = event.metadata();
+        let capture = metadata.target() == "vibe_registry"
+            && metadata.module_path() == Some("vibe_registry::git_registry::native")
+            && metadata.file().is_some_and(|file| {
+                file.replace('\\', "/").ends_with("git_registry/native.rs")
+            })
+            && *metadata.level() == tracing::Level::WARN;
+        struct Message(bool);
+        impl tracing::field::Visit for Message {
+            fn record_debug(&mut self, field: &tracing::field::Field, value: &dyn std::fmt::Debug) {
+                if field.name() == "message" {
+                    self.0 = format!("{value:?}") == "registry snapshot candidate failed";
+                }
+            }
+        }
+        if capture {
+            let mut message = Message(false);
+            event.record(&mut message);
+            if message.0 {
+                return;
+            }
+        }
+        self.parent.event(event);
+    }
+
+    fn enter(&self, span: &tracing::span::Id) {
+        self.parent.enter(span);
+    }
+
+    fn exit(&self, span: &tracing::span::Id) {
+        self.parent.exit(span);
+    }
+
+    fn clone_span(&self, span: &tracing::span::Id) -> tracing::span::Id {
+        self.parent.clone_span(span)
+    }
+
+    fn try_close(&self, span: tracing::span::Id) -> bool {
+        self.parent.try_close(span)
+    }
+
+    fn current_span(&self) -> tracing_core::span::Current {
+        self.parent.current_span()
+    }
 }
 
 /// A contact refusal travels as itself, so a caller can tell a policy
