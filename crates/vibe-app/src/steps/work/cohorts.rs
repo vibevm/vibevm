@@ -188,8 +188,7 @@ pub(super) fn cleanup(
                     .canonicalize()
                     .ok()
                     .is_some_and(|p| selected.contains(&p));
-                if !selected_parent
-                    && !(all && absent)
+                if !(selected_parent || all && absent)
                     && pending::retained_for(settings, &state)?.is_some()
                 {
                     return Err(StepError::ResumeMismatch{work:entry.path.clone(),reason:format!("work is retained for `{}`; finish that owner or explicitly clean its whole cohort",pending::continuation_command(parent))}.into());
