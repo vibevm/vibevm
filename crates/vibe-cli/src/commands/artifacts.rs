@@ -25,6 +25,8 @@ use crate::cli::{ArtifactsArgs, ArtifactsCommand, ArtifactsWhereArgs};
 use crate::commands::vvm::bundle::release_source::{self, ReleaseSource};
 use crate::output;
 
+mod display;
+
 /// The JSON protocol name of the report (`cli-artifacts-where-report`).
 const PROTOCOL: &str = "vibe-artifacts-where/1";
 
@@ -56,7 +58,7 @@ fn run_where(ctx: &output::Context, args: ArtifactsWhereArgs, offline: bool) -> 
     if ctx.is_json() {
         return ctx.emit_json(&report);
     }
-    render(ctx, &report, args.package.as_deref());
+    display::render(ctx, &report, args.package.as_deref());
     Ok(())
 }
 
@@ -185,69 +187,6 @@ fn status(searched: &[PathBuf], sha256: &str) -> DropStatus {
     }
 }
 
-/// The wire value spelled for a human; the one mapping, so the text and the
-/// JSON can never disagree.
-fn status_label(status: &DropStatus) -> &'static str {
-    match status {
-        DropStatus::Present => "present",
-        DropStatus::Mismatch => "mismatch",
-        DropStatus::Missing => "missing",
-        DropStatus::NoDrop => "no-drop",
-    }
-}
-
 fn hex(bytes: &[u8]) -> String {
     bytes.iter().map(|byte| format!("{byte:02x}")).collect()
-}
-
-fn render(ctx: &output::Context, report: &ArtifactsWhereReport, package: Option<&str>) {
-    let release = &report.release;
-    let mut text = format!(
-        "vibe releases: {} {} ({})",
-        release_source::kind_label(release.source.clone()),
-        release.location,
-        release.from
-    );
-    match &release.example_dir {
-        Some(dir) => {
-            text.push_str(&format!(
-                "\n  put each release's files into `<drop>/v<version>/`, e.g. `{dir}`:"
-            ));
-            for file in &release.files {
-                text.push_str(&format!("\n    {file}"));
-            }
-            text.push_str("\n  (a bare `vibevm-<version>-<target>.zip` is accepted too)");
-        }
-        None => text.push_str("\n  no release drop: releases are downloaded from the source"),
-    }
-    match &report.packages {
-        Some(drop) => text.push_str(&format!(
-            "\npackage payloads: {drop}\n  an input of `G/N@V` named `F` (sha256 `D`) is looked for at \
-             `<drop>/G/N/V/F`, `<drop>/G/N/F`, `<drop>/D/F`, `<drop>/F`"
-        )),
-        None => text.push_str(
-            "\npackage payloads: no drop — set `[artifacts] packages = \"<dir>\"` in ~/.vibe/config.toml",
-        ),
-    }
-    if let Some(package) = package {
-        if report.inputs.is_empty() {
-            text.push_str(&format!("\n{package}: no downloaded inputs"));
-        }
-        for input in &report.inputs {
-            text.push_str(&format!(
-                "\n{package} [{}] {} `{}` sha256 {}: {}",
-                input.option,
-                input.input,
-                input.file.as_deref().unwrap_or("<unnamed>"),
-                input.sha256,
-                status_label(&input.status)
-            ));
-            if let Some(first) = input.searched.first()
-                && input.status != DropStatus::Present
-            {
-                text.push_str(&format!("\n    put it at `{first}`"));
-            }
-        }
-    }
-    ctx.summary(&text);
 }
