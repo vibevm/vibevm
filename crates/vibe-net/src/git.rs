@@ -307,10 +307,18 @@ pub fn apply_for_args(
     args: &[&str],
     cwd: Option<&std::path::Path>,
 ) {
-    match for_args(&crate::current(), binary, args, cwd) {
+    let session = crate::current();
+    match for_args(&session, binary, args, cwd) {
         Ok(net) => net.apply(command),
         Err(error) => {
-            tracing::warn!("{error}");
+            let occurrence = std::sync::Arc::as_ptr(&session) as usize as u64;
+            let cause = match &error {
+                NetError::Px(error) => error.diagnostic_cause(),
+                NetError::Trust(_) => "trust",
+                NetError::Scratch(_) => "scratch",
+            };
+            tracing::warn!(target: "vibe_net::route", diagnostic_code = "network_route",
+                occurrence, cause, "configured route unavailable");
             for name in ["HTTPS_PROXY", "HTTP_PROXY"] {
                 command.env(name, crate::http::UNROUTABLE);
             }

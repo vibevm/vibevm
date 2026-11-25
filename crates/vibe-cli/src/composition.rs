@@ -17,6 +17,7 @@ pub(crate) mod cancellation;
 pub(crate) mod native_helper;
 pub(crate) mod network;
 pub(crate) mod remap;
+pub(crate) mod startup_notes;
 pub(crate) mod templates;
 pub(crate) mod transfers;
 
@@ -28,6 +29,11 @@ pub(crate) mod transfers;
 /// config" without re-loading the file mid-run. Empty when no
 /// promotions happened.
 static PROMOTED_FROM_USER_CONFIG: OnceLock<BTreeSet<String>> = OnceLock::new();
+static CONFIG_PROBLEM: OnceLock<startup_notes::ConfigProblem> = OnceLock::new();
+
+pub(crate) fn config_problem() -> Option<&'static startup_notes::ConfigProblem> {
+    CONFIG_PROBLEM.get()
+}
 
 /// Public read-only accessor consumed by `vibe show config`. Returns
 /// an empty set if `promote_user_config_env` has not yet run (e.g.
@@ -127,10 +133,7 @@ pub(crate) fn promote_user_config_env() -> vibe_core::user_config::TransferConfi
     let cfg = match UserConfig::load() {
         Ok(c) => c,
         Err(e) => {
-            eprintln!(
-                "{}",
-                output::language::warning(&format!("user-level config could not be read: {e}"))
-            );
+            let _ = CONFIG_PROBLEM.set(startup_notes::ConfigProblem::new(&e));
             let _ = PROMOTED_FROM_USER_CONFIG.set(BTreeSet::new());
             return Default::default();
         }
@@ -421,20 +424,25 @@ pub(crate) use outcome::finish;
 /// `main.rs` has a file budget, and the read is the same read at the same
 /// root.
 pub(crate) fn init_tracing() {
-    use tracing_subscriber::{EnvFilter, fmt};
+    use tracing_subscriber::{EnvFilter, filter::filter_fn, fmt, prelude::*};
 
-    // `rustls-platform-verifier` logs every refused chain at ERROR through
-    // the `log` bridge, including the trial verifications `vibe dl` makes
-    // to work out *which* part of the trust set accepted a server
-    // (PROP-068 `#dl`). vibe reports that outcome itself, with the chain
-    // and the fix, so the crate's own line is noise on a successful
-    // download. It is silenced by default and not at all when `$VIBE_LOG`
-    // is set, which stays the one switch that decides what is logged.
-    let filter = EnvFilter::try_from_env("VIBE_LOG")
-        .unwrap_or_else(|_| EnvFilter::new("warn,rustls_platform_verifier=off"));
-    let _ = fmt()
-        .with_env_filter(filter)
+    let explicit = EnvFilter::try_from_env("VIBE_LOG").ok();
+    let debug = explicit.is_some();
+    // Keep unrelated payloads and explicit debug output unchanged. Only
+    // classified events use the bridge; registry fallback chatter and trial
+    // certificate verification are excluded from ordinary logging by default.
+    let filter = explicit
+        .unwrap_or_else(|| EnvFilter::new("warn,rustls_platform_verifier=off"));
+    let ordinary = fmt::layer()
         .with_target(false)
         .with_writer(std::io::stderr)
+        .with_filter(filter_fn(move |metadata| {
+            !startup_notes::classified(metadata)
+                && (debug || !startup_notes::registry_fallback(metadata))
+        }))
+        .with_filter(filter);
+    let _ = tracing_subscriber::registry()
+        .with(startup_notes::diagnostics().clone())
+        .with(ordinary)
         .try_init();
 }
