@@ -114,7 +114,12 @@ pub(super) fn import_running_if_unmanaged(
     }
     let _lock = InstallLock::acquire(store)?;
     let now = chrono::Utc::now().to_rfc3339();
-    let outcome = import::perform_import(
+    let perform = if live_rows(ctx) {
+        import::perform_site_import
+    } else {
+        import::perform_import
+    };
+    let outcome = perform(
         ctx,
         store,
         &import::ImportRequest {
@@ -137,6 +142,15 @@ pub(super) fn import_running_if_unmanaged(
         reused: outcome.reused,
         planned: false,
     }))
+}
+
+/// Compact live rows are a terminal-only projection, never a machine stream.
+pub(super) fn live_rows(ctx: &output::Context) -> bool {
+    !ctx.is_json()
+        && !ctx.is_quiet()
+        && !ctx.is_machine_progress()
+        && std::io::stdout().is_terminal()
+        && std::io::stderr().is_terminal()
 }
 
 /// The directory the running vibe sits in — on a closed network, the
