@@ -236,6 +236,11 @@ impl Context {
         self.write_trailer(Stream::Out, self.trailer_text_at(true, what, Some(record)));
     }
 
+    /// The run verdict with its retained result written last and in full.
+    pub(crate) fn trailer_verdict_at(&self, ok: bool, what: &str, record: &str) {
+        self.write_trailer(Stream::Out, self.trailer_text_at(ok, what, Some(record)));
+    }
+
     fn write_trailer(&self, stream: Stream, text: String) {
         if self.suppress_output || self.is_json() {
             return;
