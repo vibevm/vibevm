@@ -60,6 +60,27 @@ pub(super) fn render(rows: &[DoctorRow], width: usize, rule: usize) -> String {
     )
 }
 
+/// Close only a completed, clean diagnosis, after its rows and hints.
+#[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-067#trailer")]
+pub(super) fn close_diagnosis(
+    ctx: &crate::output::Context,
+    checks: usize,
+    repair_requested: bool,
+    problems: usize,
+    elapsed: std::time::Duration,
+) {
+    if repair_requested || problems != 0 {
+        return;
+    }
+    let unit = if checks == 1 { "check" } else { "checks" };
+    ctx.summary(&crate::output::language::trailer(
+        true,
+        "doctor found no problems",
+        vec![Meta::Count(format!("{checks} {unit}")), Meta::Time(elapsed)],
+        None,
+    ));
+}
+
 /// Describe the durable environment using state words, not Rust debug values.
 #[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-067#list")]
 pub(super) fn environment_row(observation: &EnvironmentObservation) -> DoctorRow {
@@ -174,6 +195,144 @@ mod tests {
     use crate::commands::vvm::doctor::network;
     use crate::commands::vvm::env::{ProbeStatus, TargetKind};
     use vibe_net::doctor::{Check, Status};
+
+    #[test]
+    #[specmark::verifies("spec://org.vibevm.core/vibevm/common/PROP-067#trailer")]
+    fn doctor_diagnosis_ends_with_one_trailer() {
+        use std::io::Read;
+        use std::process::{Command, Stdio};
+        use std::time::{Duration, Instant};
+
+        const CHILD: &str = "VIBE_F22B_DIAGNOSIS_CHILD";
+        if std::env::var(CHILD).as_deref() == Ok("1") {
+            diagnosis_child();
+            return;
+        }
+        let home = tempfile::tempdir().unwrap();
+        let settings = tempfile::tempdir().unwrap();
+        let capture = tempfile::tempdir().unwrap();
+        let stdout_path = capture.path().join("stdout");
+        let stderr_path = capture.path().join("stderr");
+        let full_name = format!(
+            "{}::doctor_diagnosis_ends_with_one_trailer",
+            module_path!().split_once("::").unwrap().1
+        );
+        let mut child = Command::new(std::env::current_exe().unwrap())
+            .args(["--exact", &full_name, "--nocapture", "--test-threads=1"])
+            .env_clear()
+            .env(CHILD, "1")
+            .env("HOME", home.path())
+            .env("USERPROFILE", home.path())
+            .env("VIBE_SETTINGS", settings.path())
+            .env("NO_COLOR", "1")
+            .env("COLUMNS", "120")
+            .stdin(Stdio::null())
+            .stdout(std::fs::File::create(&stdout_path).unwrap())
+            .stderr(std::fs::File::create(&stderr_path).unwrap())
+            .spawn()
+            .expect("launch the exact current test binary");
+        let started = Instant::now();
+        let status = loop {
+            if let Some(status) = child.try_wait().unwrap() {
+                break status;
+            }
+            if started.elapsed() > Duration::from_secs(15) {
+                child.kill().unwrap();
+                child.wait().unwrap();
+                panic!("diagnosis child timed out");
+            }
+            std::thread::sleep(Duration::from_millis(10));
+        };
+        let read_bounded = |path: &Path| {
+            let mut text = String::new();
+            std::fs::File::open(path)
+                .unwrap()
+                .take(65_537)
+                .read_to_string(&mut text)
+                .unwrap();
+            assert!(text.len() <= 65_536, "child output exceeded capture limit");
+            text
+        };
+        let stdout = read_bounded(&stdout_path);
+        let stderr = read_bounded(&stderr_path);
+        assert!(status.success(), "child failed: {status}\n{stdout}\n{stderr}");
+        assert!(stdout.contains("running 1 test"), "{stdout}");
+        assert!(stdout.contains("1 passed; 0 failed"), "{stdout}");
+        assert!(stderr.contains("Checking completed diagnosis"), "{stderr}");
+        for (case, count) in [("local", 5), ("network", 9), ("singular", 1), ("quiet", 5)] {
+            let begin = format!("F22B-BEGIN-{case}\n");
+            let end = format!("F22B-END-{case}\n");
+            assert_eq!(stdout.matches(&begin).count(), 1, "{stdout}");
+            assert_eq!(stdout.matches(&end).count(), 1, "{stdout}");
+            let actual = stdout.split_once(&begin).unwrap().1.split_once(&end).unwrap().0;
+            let unit = if count == 1 { "check" } else { "checks" };
+            let expected = format!("✻ doctor found no problems · {count} {unit} · 1s");
+            assert_eq!(actual.lines().last(), Some(expected.as_str()), "{actual}");
+            assert_eq!(actual.matches('✻').count(), 1, "{actual}");
+            assert!(!actual.contains("step"), "{actual}");
+            assert!(!actual.contains("all good."), "{actual}");
+            if case == "quiet" {
+                assert_eq!(actual, format!("{expected}\n"));
+            } else {
+                assert!(actual.contains("fixture hint"), "{actual}");
+            }
+        }
+        for case in ["repaired", "declined", "failed", "json"] {
+            let begin = format!("F22B-BEGIN-{case}\n");
+            let end = format!("F22B-END-{case}\n");
+            assert_eq!(stdout.matches(&begin).count(), 1, "{stdout}");
+            assert_eq!(stdout.matches(&end).count(), 1, "{stdout}");
+            let actual = stdout.split_once(&begin).unwrap().1.split_once(&end).unwrap().0;
+            assert!(!actual.contains("doctor found no problems"), "{actual}");
+            assert!(!actual.contains('✻'), "{actual}");
+        }
+    }
+
+    fn diagnosis_child() {
+        use crate::cli::AgentModeArg;
+        use crate::output::{Context, ProgressMode};
+        use std::time::Duration;
+
+        for (case, count, repair, problems) in [
+            ("local", 5, false, 0),
+            ("network", 5, false, 0),
+            ("singular", 1, false, 0),
+            ("quiet", 5, false, 0),
+            ("repaired", 5, true, 0),
+            ("declined", 5, true, 0),
+            ("failed", 5, false, 1),
+            ("json", 5, false, 0),
+        ] {
+            let ctx = Context::from_flags(
+                case == "quiet",
+                case == "json",
+                None,
+                true,
+                AgentModeArg::Cli,
+            )
+            .with_progress(false, ProgressMode::Plain);
+            let checks = ctx.progress().task("Checking completed diagnosis");
+            let rows = (0..count)
+                .map(|index| {
+                    let step = checks.progress().task(format!("Checking fixture {index}"));
+                    step.finish();
+                    shim_row(&format!("fixture-{index}"), true)
+                })
+                .chain(
+                    ["px", "proxy", "connect", "tls"]
+                        .into_iter()
+                        .filter(|_| case == "network")
+                        .map(|step| network::row(&Check::ok(step, "stubbed success"))),
+                )
+                .collect::<Vec<_>>();
+            checks.finish();
+            println!("\nF22B-BEGIN-{case}");
+            ctx.block(&render(&rows, 100, 100));
+            ctx.hint("fixture hint");
+            close_diagnosis(&ctx, rows.len(), repair, problems, Duration::from_secs(1));
+            println!("F22B-END-{case}");
+        }
+    }
 
     #[test]
     #[specmark::verifies("spec://org.vibevm.core/vibevm/common/PROP-067#list")]
