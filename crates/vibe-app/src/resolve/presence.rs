@@ -36,23 +36,18 @@ fn from_resolver(
     name: &str,
 ) -> Result<Option<Vec<semver::Version>>, ResolveError> {
     let mut found = None;
-    let mut merge = |contribution: Result<Option<Vec<semver::Version>>, RegistryError>| {
-        match contribution {
-            Ok(Some(versions)) => found.get_or_insert_with(Vec::new).extend(versions),
-            Ok(None) | Err(RegistryError::UnknownPackage { .. }) => {}
-            Err(error) => {
-                return Err(ResolveError::Registry {
-                    spelling: format!("{group}/{name}"),
-                    reason: error.to_string(),
-                });
-            }
+    let local_versions = |local: &vibe_registry::LocalRegistry| {
+        match local.list_versions(group, name) {
+            Ok(versions) => Ok(Some(versions)),
+            Err(RegistryError::UnknownPackage { .. }) => Ok(None),
+            Err(error) => Err(error),
         }
-        Ok(())
     };
+    let mut merge = |contribution| merge_presence(&mut found, contribution, group, name);
     match resolver {
-        InstallResolver::Local(local, _) => merge(local.list_versions(group, name).map(Some))?,
+        InstallResolver::Local(local, _) => merge(local_versions(local))?,
         InstallResolver::LockedLocal { local, held, .. } => {
-            merge(local.list_versions(group, name).map(Some))?;
+            merge(local_versions(local))?;
             merge(held.list_versions_with_presence(group, name))?;
         }
         InstallResolver::Multi(multi, _) => {
@@ -62,7 +57,7 @@ fn from_resolver(
             locals, declared, ..
         } => {
             for local in locals {
-                merge(local.list_versions(group, name).map(Some))?;
+                merge(local_versions(local))?;
             }
             if let Some(multi) = declared {
                 merge(multi.list_versions_with_presence(group, name))?;
@@ -74,6 +69,27 @@ fn from_resolver(
         versions.dedup();
     }
     Ok(found)
+}
+
+// Presence-aware owners encode confirmed absence as Ok(None). An error,
+// including UnknownPackage retained after an indeterminate walk, stays an error.
+fn merge_presence(
+    found: &mut Option<Vec<semver::Version>>,
+    contribution: Result<Option<Vec<semver::Version>>, RegistryError>,
+    group: &Group,
+    name: &str,
+) -> Result<(), ResolveError> {
+    match contribution {
+        Ok(Some(versions)) => found.get_or_insert_with(Vec::new).extend(versions),
+        Ok(None) => {}
+        Err(error) => {
+            return Err(ResolveError::Registry {
+                spelling: format!("{group}/{name}"),
+                reason: error.to_string(),
+            });
+        }
+    }
+    Ok(())
 }
 
 #[cfg(test)]
@@ -346,6 +362,25 @@ mod tests {
         // A concrete template domain returns from the existing registry walk;
         // refresh disables cache reuse, so an extra enumeration would be counted.
         assert_eq!(calls.load(Ordering::SeqCst), 1);
+    }
+
+    #[test]
+    fn fix13_global_presence_indeterminate_unknown_is_not_absence() {
+        let group = Group::parse("org.example").unwrap();
+        for earlier in [None, Some(Vec::new())] {
+            let mut found = earlier.clone();
+            let error = RegistryError::UnknownPackage {
+                group: group.clone(),
+                name: "tool".into(),
+            };
+            let reason = error.to_string();
+            assert!(matches!(
+                merge_presence(&mut found, Err(error), &group, "tool"),
+                Err(ResolveError::Registry { spelling, reason: actual })
+                    if spelling == "org.example/tool" && actual == reason
+            ));
+            assert_eq!(found, earlier);
+        }
     }
 
     #[test]
