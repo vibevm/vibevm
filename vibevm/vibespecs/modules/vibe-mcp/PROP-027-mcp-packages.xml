@@ -171,6 +171,7 @@ visibly instead of succeeding with no entry.</REG-PACKAGE-DISCOVERY></p>
   `org.vibevm` local binaries are allow-listed; another group's local
   binary requires `--assume-yes` (or is refused with a recipe). URL-only
   packages build no code; they carry no secret or authentication token.</CONSENT-GATE-INHERITED>
+        <PROJECT-INSTALL-REGISTRATION-INTENT fact="true" status="spec/plan">On project install, each explicit `--register-mcp GROUP/NAME` requests and consents to project-scoped registration of only that resolved MCP package's declared servers. The install owner validates selectors before writes and dispatches the existing addressed registration operation after materialization. An absent selector, unattended mode, consent to install dependencies, and a package-authored hook do not grant this intent. Do not run both a package registration hook and the addressed operation for the same request. With stdin closed, report the actual registration outcome; leave user-scoped and unrelated entries unchanged.</PROJECT-INSTALL-REGISTRATION-INTENT>
         <CONSENT-WRITE-SCOPE fact="true" status="impl/done">Registration writes touch ONLY the target agent's config
   files and only managed entries; server processes receive the project
   root as cwd and NO secrets from vibe.</CONSENT-WRITE-SCOPE>
