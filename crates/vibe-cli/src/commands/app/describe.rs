@@ -303,6 +303,20 @@ mod tests {
             .iter()
             .map(|id| lines.iter().position(|line| line.trim() == *id).unwrap())
             .collect();
+        let snapshots: Vec<_> = starts
+            .iter()
+            .copied()
+            .enumerate()
+            .map(|(index, start)| {
+                let end = starts.get(index + 1).copied().unwrap_or(lines.len());
+                let block = &lines[start..end];
+                let first_child = block
+                    .iter()
+                    .position(|line| line.contains("feature docs:"))
+                    .unwrap();
+                format!("parent {index} physical lines: {:?}", &block[..first_child])
+            })
+            .collect();
         let has_not_portable = |text: &str| {
             let tokens: Vec<_> = text.split_whitespace().collect();
             tokens.windows(2).any(|pair| pair == ["not", "portable"])
@@ -317,7 +331,7 @@ mod tests {
                 .expect("each parent must retain its first feature child");
             assert!(
                 has_not_portable(&block[..first_child].join(" ")),
-                "parent {index} must retain separate not and portable tokens"
+                "parent {index} must retain separate not and portable tokens; {snapshots:#?}"
             );
             let parent: String = block[..first_child]
                 .iter()

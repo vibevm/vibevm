@@ -348,8 +348,18 @@ fn lossless_lines(lines: &mut Vec<String>, text: &str, width: usize, role: Role)
             let mut next = line.clone();
             next.push(ch);
             if !line.is_empty() && measure(&next) > width {
-                lines.push(paint(role, &line));
-                line.clear();
+                let boundary = line
+                    .rfind(char::is_whitespace)
+                    .filter(|at| !line[..*at].trim().is_empty());
+                if let Some(at) = boundary {
+                    let after = at + line[at..].chars().next().unwrap().len_utf8();
+                    let remainder = line.split_off(after);
+                    lines.push(paint(role, &line));
+                    line = remainder;
+                } else {
+                    lines.push(paint(role, &line));
+                    line.clear();
+                }
             }
             line.push(ch);
         }
