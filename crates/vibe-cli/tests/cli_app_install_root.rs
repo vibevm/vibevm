@@ -102,6 +102,55 @@ fn ok(output: &Output) -> String {
     String::from_utf8_lossy(&output.stdout).into_owned()
 }
 
+#[test]
+fn empty_app_list_renders_places() {
+    let fixture = Fixture::new();
+    let user = UserScratch::new();
+    let home = fixture.root.path();
+    for args in [vec!["app", "list"], vec!["app", "-g", "list"]] {
+        let run = |extra: &[&str]| {
+            user.vibe()
+                .current_dir(home)
+                .env("HOME", home)
+                .env("USERPROFILE", home)
+                .env("VIBEVM_INSTALL_ROOT", home)
+                .args(&args)
+                .args(extra)
+                .output()
+                .unwrap()
+        };
+        let text = ok(&run(&["--plain"]));
+        let lines: Vec<_> = text.lines().map(str::trim).collect();
+        let pos = lines
+            .iter()
+            .position(|s| *s == "no applications installed")
+            .unwrap();
+        assert_eq!(lines[pos + 1], "");
+        assert!(lines[pos + 2].contains("places"), "{text}");
+        assert!(
+            row_starts(lines[pos + 3], &["commands", "~/opt/bin"]),
+            "{text}"
+        );
+        assert!(
+            row_starts(
+                lines[pos + 4],
+                &[
+                    "new",
+                    "installations",
+                    "~/opt/apps",
+                    "·",
+                    "library",
+                    "install-root"
+                ]
+            ),
+            "{text}"
+        );
+        assert_eq!(ok(&run(&["--quiet"])).trim(), "0 installed application(s)");
+        let json: Value = serde_json::from_str(&ok(&run(&["--json"]))).unwrap();
+        assert_eq!(json["installations"], serde_json::json!([]));
+    }
+}
+
 /// Run a PATH proxy directly, with nothing of vibe's in its environment.
 fn run(proxy: &Path) -> String {
     let output = Command::new(proxy)
@@ -139,14 +188,21 @@ fn applications_follow_the_install_root_and_earlier_ones_keep_working() {
 
     let listed = ok(&fixture.vibe(&user, Some(&base), &["app", "list"]));
     assert!(
-        listed.contains(&format!("commands: {}", bin.display())),
+        row_starts(&listed, &["commands", bin.to_str().unwrap()]),
         "{listed}"
     );
     assert!(
-        listed.contains(&format!(
-            "new installations: {} (library `install-root`)",
-            store.join("apps").display()
-        )),
+        row_starts(
+            &listed,
+            &[
+                "new",
+                "installations",
+                store.join("apps").to_str().unwrap(),
+                "·",
+                "library",
+                "install-root"
+            ]
+        ),
         "{listed}"
     );
     assert!(
