@@ -74,6 +74,15 @@ pub(super) struct ProgressRenderer {
     verbose: bool,
     /// The step logs this run knows, shared by both renderers.
     logs: StepLogs,
+    deferred: std::sync::atomic::AtomicBool,
+}
+
+/// Restores this invocation's human display on every early return.
+pub(super) struct InputDisplayGuard(Arc<ProgressRenderer>);
+impl Drop for InputDisplayGuard {
+    fn drop(&mut self) {
+        self.0.release_input();
+    }
 }
 
 enum Renderer {
@@ -151,6 +160,7 @@ impl ProgressRenderer {
                 renderer: Renderer::Plain(plain),
                 verbose,
                 logs: StepLogs::default(),
+                deferred: std::sync::atomic::AtomicBool::new(false),
             })
         }
     }
@@ -172,6 +182,7 @@ impl ProgressRenderer {
             }),
             verbose,
             logs: StepLogs::default(),
+            deferred: std::sync::atomic::AtomicBool::new(false),
         }
     }
 
@@ -190,7 +201,25 @@ impl ProgressRenderer {
             renderer: Renderer::Plain(Arc::new(PlainRenderer::new(writer))),
             verbose,
             logs: StepLogs::default(),
+            deferred: std::sync::atomic::AtomicBool::new(false),
         })
+    }
+
+    /// Defer only the short input-qualification interval, never machine events.
+    pub(super) fn defer_input(self: &Arc<Self>) -> InputDisplayGuard {
+        self.deferred.store(true, Ordering::SeqCst);
+        if let Renderer::Interactive(renderer) = &self.renderer {
+            renderer.multi.set_draw_target(ProgressDrawTarget::hidden());
+        }
+        InputDisplayGuard(self.clone())
+    }
+
+    pub(super) fn release_input(&self) {
+        if self.deferred.swap(false, Ordering::SeqCst) {
+            if let Renderer::Interactive(renderer) = &self.renderer {
+                renderer.multi.set_draw_target(ProgressDrawTarget::stderr_with_hz(12));
+            }
+        }
     }
 
     pub(super) fn suspend<R>(&self, render: impl FnOnce() -> R) -> R {
@@ -241,7 +270,8 @@ impl ProgressRenderer {
 impl ProgressObserver for ProgressRenderer {
     fn observe(&self, event: ProgressEvent) {
         match &self.renderer {
-            Renderer::Interactive(renderer) => renderer.observe(event, self.verbose, &self.logs),
+            Renderer::Interactive(renderer) => renderer.observe(
+                event, self.verbose, &self.logs, self.deferred.load(Ordering::SeqCst)),
             Renderer::Plain(renderer) => renderer.observe(event, self.verbose, &self.logs),
         }
     }
@@ -259,7 +289,7 @@ fn ending(kind: &ProgressEventKind) -> Option<End> {
 }
 
 impl InteractiveRenderer {
-    fn observe(&self, event: ProgressEvent, verbose: bool, logs: &StepLogs) {
+    fn observe(&self, event: ProgressEvent, verbose: bool, logs: &StepLogs, deferred: bool) {
         let Ok(mut tasks) = self.tasks.lock() else {
             return;
         };
@@ -267,7 +297,7 @@ impl InteractiveRenderer {
             return;
         };
         if let Some(end) = ending(&event.kind) {
-            self.terminal_row(&mut tasks, event.task_id, &end, event.elapsed, logs);
+            self.terminal_row(&mut tasks, event.task_id, &end, event.elapsed, logs, deferred);
             return;
         }
         match event.kind {
@@ -285,7 +315,7 @@ impl InteractiveRenderer {
                 // `#trailer`). A plain stream still says so while it waits.
                 // The first block of the list stands one blank line off the
                 // block before it; its row will then join it with none.
-                if !headline.command
+                if !deferred && !headline.command
                     && headline.depth == 0
                     && language::before(Stream::Err, STEPS) == "\n"
                 {
@@ -365,7 +395,7 @@ impl InteractiveRenderer {
                     } else if let Some(task) = tasks.get_mut(&event.task_id) {
                         push_tail(&self.multi, task, &line, &panel);
                     }
-                } else if verbose && let Some(task) = tasks.get(&event.task_id) {
+                } else if !deferred && verbose && let Some(task) = tasks.get(&event.task_id) {
                     let _ = self.multi.println(format!(
                         "{}{}",
                         task.headline.under(),
@@ -421,6 +451,7 @@ impl InteractiveRenderer {
         end: &End,
         elapsed: Duration,
         logs: &StepLogs,
+        deferred: bool,
     ) {
         let width = self.shapes.lock().map(|s| s.name_width).unwrap_or(0);
         if let Ok(mut shapes) = self.shapes.lock() {
@@ -440,6 +471,9 @@ impl InteractiveRenderer {
             return;
         }
         let text = row(collapsed(&task.headline, id, width, end, elapsed, logs));
+        if deferred {
+            return;
+        }
         if !self.stderr {
             let _ = self.multi.println(text);
             return;
@@ -462,6 +496,40 @@ impl super::Context {
             .as_ref()
             .and_then(|renderer| renderer.stopped_at())
     }
+}
+
+#[cfg(test)]
+#[test]
+fn alias_decision_prints_once_outside_panel() {
+    use vibe_core::progress::Progress;
+    let renderer = Arc::new(ProgressRenderer::interactive(false));
+    let guard = renderer.defer_input();
+    let progress = Progress::new(renderer.clone());
+    let parent = progress.task("Installing packages");
+    // Cross both sides of the former event-buffer boundary while keeping
+    // only live renderer state. Completed children must not be replayed.
+    for count in 0..257 {
+        let child = parent.progress().task(format!("child {count}"));
+        child.detail(format!("detail {count}"));
+        child.finish();
+        if count == 255 || count == 256 {
+            assert!(renderer.deferred.load(Ordering::SeqCst));
+            assert_eq!(renderer.active_task_count(), 1);
+            if let Renderer::Interactive(inner) = &renderer.renderer {
+                assert!(inner.multi.is_hidden());
+            }
+        }
+    }
+    let child = parent.progress().task("Resolving dependencies");
+    child.detail("latest state");
+    assert_eq!(renderer.active_task_count(), 2);
+    renderer.release_input();
+    assert!(!renderer.deferred.load(Ordering::SeqCst));
+    assert_eq!(renderer.active_task_count(), 2);
+    child.finish();
+    parent.stop();
+    drop(guard);
+    assert_eq!(renderer.active_task_count(), 0);
 }
 
 #[cfg(test)]

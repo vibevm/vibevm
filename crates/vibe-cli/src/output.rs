@@ -337,7 +337,6 @@ impl Context {
             verbose: false,
         }
     }
-
     /// The invocation's `--no-recommends` posture
     /// (`PROP-077#NO-RECOMMENDS-FLAG`).
     #[must_use]
@@ -345,13 +344,11 @@ impl Context {
         self.no_recommends = no_recommends;
         self
     }
-
     /// Whether this invocation declined the author's recommendations
     /// (`PROP-077#NO-RECOMMENDS-FLAG`).
     pub fn no_recommends(&self) -> bool {
         self.no_recommends
     }
-
     /// Selects the invocation's CLI progress renderer after all global flags
     /// have been resolved. Quiet and JSON modes remain completely silent.
     pub fn with_progress(mut self, verbose: bool, mode: ProgressMode) -> Self {
@@ -367,7 +364,6 @@ impl Context {
         }
         self
     }
-
     /// Selects the machine renderer (PROP-060 `#MACHINE-STREAM`) in every
     /// output mode; nothing suspends it and it never writes stdout.
     pub fn with_machine_progress(mut self) -> Self {
@@ -378,18 +374,15 @@ impl Context {
         }
         self
     }
-
     /// Whether observations go to the machine renderer.
     pub fn is_machine_progress(&self) -> bool {
         self.machine_progress
     }
-
     /// Returns the current progress scope for explicitly threaded library
     /// work. Cloning it is an `Arc` clone.
     pub fn progress(&self) -> Progress {
         self.progress.clone().with_transfers(self.transfers.clone())
     }
-
     /// Attach the invocation's transfers (the composition root's, once).
     pub fn with_transfers(mut self, transfers: Transfers) -> Self {
         self.transfers = Some(transfers);
@@ -399,7 +392,6 @@ impl Context {
     pub fn transfers(&self) -> Option<Transfers> {
         self.transfers.clone()
     }
-
     /// Clones this output context beneath a task-created progress scope.
     /// Rendering policy stays invocation-owned and is not reconstructed.
     pub fn with_progress_scope(&self, progress: Progress) -> Self {
@@ -417,15 +409,24 @@ impl Context {
         };
         scoped
     }
-
     /// The invocation's verbose flag, independent of progress animation.
     pub(crate) fn verbose_requested(&self) -> bool {
         self.verbose
     }
-
     /// Whether detailed human progress is active for this context.
     pub fn is_verbose(&self) -> bool {
         self.verbose && self.progress_renderer.is_some()
+    }
+    /// Defer interactive input display; control and accounting remain live.
+    pub(crate) fn defer_input_progress(&self) -> Option<impl Drop> {
+        self.progress_renderer.as_ref().filter(|renderer| renderer.is_interactive())
+            .map(|renderer| renderer.defer_input())
+    }
+    /// Release input display after the single qualification pass.
+    pub(crate) fn release_input_progress(&self) {
+        if let Some(renderer) = &self.progress_renderer {
+            renderer.release_input();
+        }
     }
 
     /// Pauses animated progress and plain heartbeats while output or a prompt

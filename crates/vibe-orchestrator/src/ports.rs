@@ -161,6 +161,11 @@ impl std::fmt::Debug for InstallNarration<'_> {
 /// fn takes(_: &dyn InstallObserver) {}
 /// ```
 pub trait InstallObserver: Send + Sync {
+    /// All explicit roots have passed the existing single qualification pass.
+    /// Surfaces may now release display deferred around input decisions.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#short-name")]
+    fn roots_qualified(&self) {}
+
     /// Invocation-owned progress tree selected by the surface. The default is
     /// inert so hosted/test observers retain their exact behaviour.
     fn progress(&self) -> vibe_core::progress::Progress {
