@@ -59,25 +59,21 @@ pub(super) fn json(rows: &[LinkDir]) -> Vec<serde_json::Value> {
         .collect()
 }
 
-/// One human line per link directory, in doctor's own shape.
-pub(super) fn lines(rows: &[LinkDir]) -> Vec<String> {
+/// One measured human check row per slot link directory.
+#[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-067#list")]
+pub(super) fn rows(rows: &[LinkDir]) -> Vec<super::view::DoctorRow> {
+    use super::view::{DoctorRow, Mark};
     rows.iter()
-        .map(|row| {
-            let target = match &row.target {
+        .map(|row| DoctorRow {
+            mark: if row.on_path { Mark::Ok } else { Mark::Miss },
+            name: format!("slot {}", row.slot),
+            value: row.dir.display().to_string(),
+            notes: vec![match &row.target {
                 Some(target) => format!("→ {}", target.display()),
-                None => "(no link: the slot is off or its payload directory is absent)".to_owned(),
-            };
-            format!(
-                "{} slot `{}` path dir {} {} {target}",
-                if row.on_path { "ok  " } else { "MISS" },
-                row.slot,
-                row.dir.display(),
-                if row.on_path {
-                    "(on PATH)"
-                } else {
-                    "(NOT on PATH)"
-                }
-            )
+                None => "no link · the slot is off or its payload directory is absent".into(),
+            }],
+            states: vec![if row.on_path { "on PATH" } else { "not on PATH" }.into()],
+            children: Vec::new(),
         })
         .collect()
 }
