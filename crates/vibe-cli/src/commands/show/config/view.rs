@@ -7,7 +7,13 @@ use crate::output::language::{Cell, List, Meta, Row, rule_at};
 
 /// Draw the configuration report as lists under section rules.
 #[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-067#list")]
-pub(super) fn render(report: &ConfigReport, width: usize, rule: usize) -> String {
+pub(super) fn render(
+    report: &ConfigReport,
+    width: usize,
+    rule: usize,
+    effective: &[Row],
+    verbose: bool,
+) -> String {
     let mut sections = Vec::new();
     let mut section = |label: &str, list: List| {
         if !list.rows.is_empty() {
@@ -25,7 +31,7 @@ pub(super) fn render(report: &ConfigReport, width: usize, rule: usize) -> String
         let mut meta = vec![
             Meta::note(format!("ref {}", registry.refname)),
             Meta::note(format!("naming {}", registry.naming)),
-            Meta::State(registry.provenance.into()),
+            Meta::State(super::layer_view::provenance(report, registry.provenance)),
         ];
         if index == 0 {
             meta.push(Meta::State("primary".into()));
@@ -43,7 +49,7 @@ pub(super) fn render(report: &ConfigReport, width: usize, rule: usize) -> String
     section("mirrors", List::new(report.mirrors.iter().map(|mirror| {
         Row::new(vec![Cell::text(&mirror.of), Cell::text(&mirror.url)]).meta(vec![
             Meta::note(format!("priority {}", mirror.priority)),
-            Meta::State(mirror.provenance.into()),
+            Meta::State(super::layer_view::provenance(report, mirror.provenance)),
         ])
     }).collect()).meta_column());
     section("overrides", List::new(report.overrides.iter().map(|entry| {
@@ -55,7 +61,7 @@ pub(super) fn render(report: &ConfigReport, width: usize, rule: usize) -> String
         if let Some(reason) = &entry.reason {
             meta.push(Meta::note(reason));
         }
-        meta.push(Meta::State(entry.provenance.into()));
+        meta.push(Meta::State(super::layer_view::provenance(report, entry.provenance)));
         Row::new(vec![Cell::text(&entry.pkgref), Cell::text("→"), Cell::text(source)]).meta(meta)
     }).collect()).meta_column());
 
@@ -103,10 +109,17 @@ pub(super) fn render(report: &ConfigReport, width: usize, rule: usize) -> String
         Row::new(vec![Cell::text("version selection"), Cell::text(report.versions.select)])
             .meta(vec![Meta::State(report.versions.provenance.into())]),
     ]).meta_column());
+    section("effective choices", List::new(effective.to_vec()).meta_column());
     section("environment", List::new(report.env.iter().map(|entry| {
-        Row::new(vec![Cell::text(entry.name), Cell::text(entry.value.as_deref().unwrap_or("unset"))])
-            .meta(vec![Meta::State(entry.provenance.into())])
-    }).collect()).meta_column());
+        let mut row = Row::new(vec![Cell::text(entry.name), Cell::text(entry.value.as_deref().unwrap_or("unset"))])
+            .meta(vec![Meta::State(entry.provenance.into())]);
+        if verbose {
+            for line in crate::output::language::wrap(entry.description, width.saturating_sub(4)) {
+                row = row.child(line);
+            }
+        }
+        row
+    }).collect()).meta_column().children_under(0));
     section("invoked by", List::new(vec![
         Row::new(vec![Cell::text(report.invoked_by_resolution.value.as_deref().unwrap_or("unset"))])
             .meta(vec![Meta::State(report.invoked_by_resolution.provenance.into())]),
@@ -176,8 +189,15 @@ mod tests {
 
 ── invoked by ──────────────────────────────────────────────────────────────────────────────────────
   unset  [none]";
-        let rendered = render(&report, 100, 100);
-        assert_eq!(rendered, expected);
+        let rendered = render(&report, usize::MAX, 100, &[], false);
+        // Source paths now name the files consulted rather than historical
+        // shorthand. Column gaps depend on those actual path lengths.
+        let compact = |text: &str| text.split_whitespace().collect::<Vec<_>>().join(" ");
+        let expected = expected
+            .replace("[vibe.toml]", "[/srv/app/vibe.toml]")
+            .replace("[~/.vibe/registry.toml]", &format!("[{}]", super::super::layer_view::provenance(&report, "~/.vibe/registry.toml")))
+            .replace("[site-profile.toml]", &format!("[{}]", super::super::layer_view::provenance(&report, "site-profile.toml")));
+        assert_eq!(compact(&rendered), compact(&expected));
         assert!(!rendered.contains("Publish token."));
     }
 }
