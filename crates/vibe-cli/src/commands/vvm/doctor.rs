@@ -29,7 +29,11 @@ mod environment;
 mod layout;
 #[path = "doctor_paths.rs"]
 mod paths;
+#[path = "doctor_view.rs"]
+mod view;
+use crate::output::language::{rule_width, viewport};
 use layout::{diagnostic_records, instance_layout, same_record};
+use view::{DoctorRow, Mark};
 
 fn needs_build_tools(origin: Option<Origin>) -> bool {
     origin != Some(Origin::Binary)
@@ -43,6 +47,7 @@ pub(super) fn run_doctor_cmd(
     env: &VvmEnv,
     args: VvmDoctorArgs,
 ) -> anyhow::Result<()> {
+    let started = std::time::Instant::now();
     let progress = ctx.progress();
     let checks = progress.task("Checking self installation");
     let store = match env.store() {
@@ -284,65 +289,52 @@ pub(super) fn run_doctor_cmd(
         return Ok(());
     }
 
-    ctx.heading("vibe self doctor");
-    for note in &settings_notes {
-        ctx.step(note);
+    let mut rows = Vec::new();
+    rows.push(view::environment_row(&durable_environment));
+    rows.extend(
+        tools
+            .iter()
+            .map(|tool| view::tool_row(tool, build_tools_required)),
+    );
+    if build_tools_required {
+        let (linker, url) = tools::linker_hint();
+        rows.push(DoctorRow {
+            mark: Mark::Note,
+            name: "linker".into(),
+            value: linker.into(),
+            notes: vec![url.into()],
+            states: Vec::new(),
+            children: Vec::new(),
+        });
     }
-    ctx.step(&format!("durable environment target: {} ({:?}); observation {:?}, managed block {:?}, PATH entry {:?}; login effectiveness unknown (not probed)",
-        durable_environment.target.as_deref().unwrap_or("unavailable"), durable_environment.shell,
-        durable_environment.observation, durable_environment.managed_block, durable_environment.path_entry));
-    if let Some(error) = &durable_environment.error {
-        ctx.diagnostic(error);
-    }
-    for t in &tools {
-        match (&t.version, build_tools_required) {
-            (Some(v), false) => ctx.step(&format!(
-                "info {} {} (optional for binary instance)",
-                t.name, v
-            )),
-            (None, false) => ctx.step(&format!(
-                "skip {} not found (not required by binary instance)",
-                t.name
-            )),
-            (Some(v), true) if t.ok => ctx.step(&format!("ok   {} {}", t.name, v)),
-            (Some(v), true) => ctx.step(&format!(
-                "MISS {} {} (need >= {}) — {}",
-                t.name, v, t.min_version, t.help_url
-            )),
-            (None, true) => ctx.step(&format!("MISS {} not found — {}", t.name, t.help_url)),
-        }
-    }
-    let (linker, lurl) = tools::linker_hint();
-    ctx.step(&format!("also {linker} — {lurl}"));
-    ctx.step(&format!(
-        "{} shim dir {} {}",
-        if on_path { "ok  " } else { "MISS" },
-        shim_dir.display(),
-        if on_path {
-            "(on PATH)"
-        } else {
-            "(NOT on PATH)"
-        }
-    ));
-    for (name, ok) in &final_shim_statuses {
-        ctx.step(&format!(
-            "{} stable {name} shim",
-            if *ok { "ok  " } else { "MISS" }
-        ));
-    }
-    for line in paths::lines(&link_dirs) {
-        ctx.step(&line);
-    }
-    match &active {
-        Some(r) if !active_missing => {
-            ctx.step(&format!("ok   active {} #{}", r.version_id(), r.instance))
-        }
-        Some(r) => ctx.step(&format!(
-            "MISS active {} — its binary is gone",
-            r.version_id()
-        )),
-        None => ctx.step("-    no active version (set one with `vibe self use <selector>`)"),
-    }
+    rows.push(view::shim_dir_row(&shim_dir, on_path));
+    rows.extend(
+        final_shim_statuses
+            .iter()
+            .map(|(name, ok)| view::shim_row(name, *ok)),
+    );
+    rows.extend(paths::rows(&link_dirs));
+    let (mark, value, notes) = match &active {
+        Some(record) if !active_missing => (
+            Mark::Ok,
+            format!("{}#{}", record.version_id(), record.instance),
+            Vec::new(),
+        ),
+        Some(record) => (
+            Mark::Miss,
+            record.version_id().to_string(),
+            vec!["its binary is gone".into()],
+        ),
+        None => (Mark::Note, "none".into(), vec!["vibe self use <selector>".into()]),
+    };
+    rows.push(DoctorRow {
+        mark,
+        name: "active".into(),
+        value,
+        notes,
+        states: Vec::new(),
+        children: Vec::new(),
+    });
     if let Some(record) = running
         && active
             .as_ref()
@@ -351,73 +343,112 @@ pub(super) fn run_doctor_cmd(
         let ok = store
             .binary_path(&record.version_id(), record.instance)
             .is_file();
-        ctx.step(&format!(
-            "{} running {}",
-            if ok { "ok  " } else { "MISS" },
-            record.selector()
-        ));
+        rows.push(DoctorRow {
+            mark: if ok { Mark::Ok } else { Mark::Miss },
+            name: "running".into(),
+            value: record.selector().to_string(),
+            notes: Vec::new(),
+            states: if ok { Vec::new() } else { vec!["binary missing".into()] },
+            children: Vec::new(),
+        });
     }
     for (role, record, layout) in &instances {
-        if layout.kind.starts_with("bundle") {
-            for (name, ok) in [
-                ("vibe", layout.vibe),
-                ("vibe-index", layout.vibe_index),
-                ("source", layout.source),
-                (DISTRIBUTION_SOURCE_ARCHIVE_FILENAME, layout.source_archive),
-                ("DISTRIBUTION.json", layout.manifest),
-                ("authenticated manifest root", layout.manifest_root),
-                ("full integrity", layout.integrity),
-            ] {
-                ctx.step(&format!(
-                    "{} {role} {} bundle {name}",
-                    if ok { "ok  " } else { "MISS" },
-                    record.selector()
-                ));
-            }
+        let (kind, flags) = if layout.kind.starts_with("bundle") {
+            (
+                "bundle",
+                vec![
+                    ("vibe", layout.vibe),
+                    ("vibe-index", layout.vibe_index),
+                    ("source", layout.source),
+                    (DISTRIBUTION_SOURCE_ARCHIVE_FILENAME, layout.source_archive),
+                    ("DISTRIBUTION.json", layout.manifest),
+                    ("authenticated manifest root", layout.manifest_root),
+                    ("full integrity", layout.integrity),
+                ],
+            )
         } else if layout.kind == "source-build" {
-            for (name, ok) in [
-                ("vibe", layout.vibe),
-                ("vibe-index", layout.vibe_index),
-                ("source", layout.source),
-                ("placement manifest", layout.placement_manifest),
-                ("full integrity", layout.integrity),
-            ] {
-                ctx.step(&format!(
-                    "{} {role} {} source-build {name}",
-                    if ok { "ok  " } else { "MISS" },
-                    record.selector()
-                ));
-            }
+            (
+                "source-build",
+                vec![
+                    ("vibe", layout.vibe),
+                    ("vibe-index", layout.vibe_index),
+                    ("source", layout.source),
+                    ("placement manifest", layout.placement_manifest),
+                    ("full integrity", layout.integrity),
+                ],
+            )
         } else {
-            ctx.step(&format!(
-                "{} {role} {} legacy single-binary import (partial); upgrade: `vibe self update --force`",
-                if layout.integrity { "info" } else { "MISS" }, record.selector()
-            ));
+            ("legacy single-binary import", vec![("full integrity", layout.integrity)])
+        };
+        let missing = flags
+            .iter()
+            .filter_map(|(name, ok)| (!ok).then_some(*name))
+            .collect::<Vec<_>>();
+        let legacy = kind == "legacy single-binary import";
+        let mut children = Vec::new();
+        if !missing.is_empty() {
+            children.push(format!("missing {}", missing.join(", ")));
         }
+        if legacy {
+            children.push("upgrade with vibe self update --force".into());
+        }
+        rows.push(DoctorRow {
+            mark: if !missing.is_empty() {
+                Mark::Miss
+            } else if legacy {
+                Mark::Note
+            } else {
+                Mark::Ok
+            },
+            name: format!("{role} instance"),
+            value: record.selector().to_string(),
+            notes: vec![kind.into()],
+            states: vec![if missing.is_empty() { "complete" } else { "incomplete" }.into()],
+            children,
+        });
     }
     // PROP-030: the embedded registry the active source install exposes for
     // every project (its in-tree `packages/`).
-    match &embedded_registry {
-        Some(root) => ctx.step(&format!(
-            "ok   embedded registry {} (source install; precedence embedded-first)",
-            root.display()
-        )),
-        None => ctx.step("-    no embedded registry (the active version is not a source install)"),
+    let (mark, value, notes) = match &embedded_registry {
+        Some(root) => (
+            Mark::Ok,
+            root.display().to_string(),
+            vec!["source install".into(), "embedded first".into()],
+        ),
+        None => (Mark::Note, "none".into(), vec!["not a source install".into()]),
+    };
+    rows.push(DoctorRow {
+        mark,
+        name: "embedded registry".into(),
+        value,
+        notes,
+        states: Vec::new(),
+        children: Vec::new(),
+    });
+    rows.extend(network.iter().flatten().map(network::row));
+    ctx.block(&view::render(&rows, viewport(), rule_width()));
+    for note in &settings_notes {
+        ctx.hint(note);
     }
-
-    for check in network.iter().flatten() {
-        ctx.step(&network::line(check));
+    if let Some(error) = &durable_environment.error {
+        ctx.diagnostic(error);
     }
 
     if fixed {
-        ctx.summary("repair completed: shims written and durable PATH requested; current process PATH is unchanged, login effectiveness was not probed.");
+        ctx.trailer("repair completed · shims written and durable PATH requested");
         if !on_path {
             ctx.hint("refresh the launcher/terminal environment and recheck PATH; a correct durable entry does not require repeated profile repair");
         }
     }
 
+    view::close_diagnosis(
+        ctx,
+        rows.len(),
+        args.fix,
+        remaining_problems,
+        started.elapsed(),
+    );
     if remaining_problems == 0 {
-        ctx.summary("all good.");
         Ok(())
     } else {
         Err(VvmError::DoctorProblems {
@@ -428,113 +459,5 @@ pub(super) fn run_doctor_cmd(
 }
 
 #[cfg(test)]
-mod tests {
-    use super::*;
-    use crate::commands::vvm::model::{InstallRecord, Kind, Profile};
-    use crate::commands::vvm::store::{BINARY_NAME, VersionStore};
-
-    #[test]
-    fn binary_instances_do_not_require_a_source_build_toolchain() {
-        assert!(!needs_build_tools(Some(Origin::Binary)));
-        assert!(needs_build_tools(Some(Origin::External)));
-        assert!(needs_build_tools(Some(Origin::Managed)));
-        assert!(needs_build_tools(None));
-    }
-
-    fn binary_record(source_path: Option<String>) -> InstallRecord {
-        InstallRecord {
-            kind: Kind::Tag,
-            id: "1.0.0".into(),
-            instance: 1,
-            commit: "a".repeat(40),
-            toolchain: "prebuilt".into(),
-            profile: Profile::Release,
-            installed_at: "now".into(),
-            origin: Origin::Binary,
-            source_path,
-            payload_sha256: Some("b".repeat(64)),
-            distribution_manifest_sha256: None,
-        }
-    }
-
-    #[test]
-    fn doctor_distinguishes_legacy_imports_from_complete_and_broken_bundles() {
-        let temp = tempfile::tempdir().unwrap();
-        let store = VersionStore::new(temp.path());
-        let legacy = binary_record(None);
-        let home = store.instance_dir(&legacy.version_id(), legacy.instance);
-        std::fs::create_dir_all(&home).unwrap();
-        std::fs::write(home.join(BINARY_NAME), b"legacy").unwrap();
-        let legacy_layout = instance_layout(&store, &legacy);
-        assert_eq!(legacy_layout.kind, "legacy-single-binary");
-        assert!(
-            !legacy_layout.integrity,
-            "missing placement manifest is corrupt"
-        );
-
-        let source = store.instance_source_dir(&legacy.version_id(), legacy.instance);
-        let modern = binary_record(Some(source.display().to_string()));
-        std::fs::create_dir_all(store.instance_bin_dir(&modern.version_id(), modern.instance))
-            .unwrap();
-        std::fs::create_dir_all(&source).unwrap();
-        std::fs::write(
-            store.index_binary_path(&modern.version_id(), modern.instance),
-            b"index",
-        )
-        .unwrap();
-        std::fs::write(home.join("DISTRIBUTION.json"), b"manifest").unwrap();
-        std::fs::write(
-            home.join(DISTRIBUTION_SOURCE_ARCHIVE_FILENAME),
-            b"source zip",
-        )
-        .unwrap();
-        let complete = instance_layout(&store, &modern);
-        assert!(
-            complete.kind == "bundle-unrooted"
-                && complete.vibe_index
-                && complete.source
-                && complete.source_archive
-                && complete.manifest
-        );
-        assert!(
-            !complete.integrity,
-            "dummy manifest is not a verified bundle"
-        );
-        assert!(!complete.manifest_root);
-        std::fs::remove_dir_all(&source).unwrap();
-        let broken = instance_layout(&store, &modern);
-        assert_eq!(broken.kind, "bundle-unrooted");
-        assert!(!broken.source);
-
-        let mut source_record = legacy.clone();
-        source_record.origin = Origin::External;
-        source_record.instance = 2;
-        source_record.source_path = Some(temp.path().display().to_string());
-        let source_home = store.instance_dir(&source_record.version_id(), 2);
-        std::fs::create_dir_all(source_home.join("bin")).unwrap();
-        std::fs::write(source_home.join("bin").join(BINARY_NAME), b"vibe").unwrap();
-        let source_layout = instance_layout(&store, &source_record);
-        assert_eq!(source_layout.kind, "source-build");
-        assert!(
-            !source_layout.source,
-            "an arbitrary directory is not a source root"
-        );
-        assert!(!source_layout.vibe_index);
-        assert!(!source_layout.placement_manifest);
-        assert!(!source_layout.integrity);
-    }
-
-    #[test]
-    fn active_and_distinct_running_instances_are_diagnosed_separately() {
-        let mut running = binary_record(None);
-        let mut active = running.clone();
-        running.instance = 1;
-        active.instance = 2;
-        let rows = diagnostic_records(Some(&active), Some(&running));
-        assert_eq!(rows.len(), 2);
-        assert_eq!(rows[0].0, "active");
-        assert_eq!(rows[0].1.instance, 2);
-        assert_eq!(rows[1].0, "running");
-        assert_eq!(rows[1].1.instance, 1);
-    }
-}
+#[path = "doctor_tests.rs"]
+mod tests;

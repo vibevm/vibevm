@@ -120,6 +120,29 @@ pub(super) fn mirror_record(
 /// The largest history bundle `--keep-history` stores (per repository).
 const MAX_BUNDLE_BYTES: u64 = 100 * 1024 * 1024;
 
+fn oversized_history(size: u64) -> bool {
+    size > MAX_BUNDLE_BYTES
+}
+
+fn history_warning(repo: &str, size: u64) -> String {
+    format!(
+        "history of {repo} is {}, above the {} MiB limit · bundle not stored",
+        output::language::bytes(size),
+        MAX_BUNDLE_BYTES / (1024 * 1024)
+    )
+}
+
+#[test]
+fn oversized_history_names_size_and_limit() {
+    assert_eq!(
+        history_warning("repo", 142_300_000),
+        "history of repo is 142.3 MB, above the 100 MiB limit · bundle not stored"
+    );
+    assert!(oversized_history(142_300_000));
+    assert!(!oversized_history(MAX_BUNDLE_BYTES));
+    assert!(oversized_history(MAX_BUNDLE_BYTES + 1));
+}
+
 /// `--keep-history`: one `git bundle` of every tag and branch per source
 /// repository the run saw, written when the target's bundle carries other
 /// refs; above [`MAX_BUNDLE_BYTES`] a bundle is skipped with a warning.
@@ -148,11 +171,8 @@ pub(super) fn history_bundles(
         let file = scratch.join(format!("{repo}.bundle"));
         reader.history_bundle(&repository, &file)?;
         let size = std::fs::metadata(&file).map(|m| m.len()).unwrap_or(0);
-        if size > MAX_BUNDLE_BYTES {
-            ctx.step(&format!(
-                "warning: the history of {repo} is {size} bytes, above the {MAX_BUNDLE_BYTES}-byte \
-                 limit; its bundle is not stored"
-            ));
+        if oversized_history(size) {
+            ctx.diagnostic(&history_warning(&repo, size));
             continue;
         }
         let relative = record::bundle_path(&source.name, &repo);

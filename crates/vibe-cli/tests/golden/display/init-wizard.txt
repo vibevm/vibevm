@@ -12,7 +12,10 @@
 ✓ created  AGENTS.md
 ✓ created  GEMINI.md
 
-  next: edit vibevm/vibespecs/boot/00-core.md and vibevm/vibespecs/common as your project takes shape
-  next: install packages with vibe install <group>/<name> (e.g. org.vibevm.world/wal)
+  edit these as your project takes shape
+  vibevm/vibespecs/boot/00-core.md
+  vibevm/vibespecs/common
+  install a package, for example
+  vibe install org.vibevm.world/wal
 
-✻ initialized project demo · 11 files created · 0 kept · <time>
+✻ initialized project demo · 11 files created · <time> · <root>/demo

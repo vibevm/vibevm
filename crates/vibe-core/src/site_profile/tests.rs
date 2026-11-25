@@ -128,6 +128,33 @@ fn each_invalid_value_is_refused_naming_file_key_and_fix() {
 }
 
 #[test]
+fn parse_error_carries_its_code_and_leaves_the_diagnostic_to_its_source() {
+    let error = SiteProfile::parse(
+        "schema = 1\nname = \"corp\"\n[proxy]\nmode = \"on\"\n",
+        "/srv/bad-site.toml",
+    )
+    .expect_err("an unknown proxy mode is refused");
+    let message = error.to_string();
+    assert!(
+        message.starts_with("site_profile_invalid: /srv/bad-site.toml is not a valid site profile (violates "),
+        "{message}"
+    );
+    assert!(
+        message.ends_with("; fix: repair the TOML at the reported location)"),
+        "{message}"
+    );
+    assert!(
+        !message.contains("unknown variant"),
+        "the diagnostic is the source's: {message}"
+    );
+    let source = std::error::Error::source(&error)
+        .expect("the diagnostic is chained")
+        .to_string();
+    assert!(source.contains("unknown variant"), "{source}");
+    assert!(source.contains("line 4"), "{source}");
+}
+
+#[test]
 fn windows_drive_paths_are_absolute_for_a_profile_validated_anywhere() {
     let profile = SiteProfile::parse(
         "schema = 1\n[artifacts]\nvibe = 'D:/corp/vibe-releases'\npackages = '\\\\\\\\nas\\\\drop'\n",

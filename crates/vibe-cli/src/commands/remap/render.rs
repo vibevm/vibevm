@@ -11,7 +11,7 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-066#display");
 
 use vibe_wire::generated::remap_explanation as explanation;
 
-use crate::output::language::{Role, paint, rule};
+use crate::output::language::{Role, paint, rule, rule_at};
 use vibe_wire::generated::remap_listing as wire;
 use vibe_wire::generated::remap_offer as offer_doc;
 
@@ -121,20 +121,26 @@ fn package_state(state: &wire::PackageState) -> &'static str {
 
 /// `vibe remap explain` (`PROP-066#precedence`): the declared origin, the
 /// matching rows in winning order, the chosen target and the digest.
-pub(super) fn explain(document: &explanation::RemapExplanation) -> String {
-    let mut out = format!("{}\n\n", rule(&format!("{} fetch", document.kind), None));
-    out.push_str(&labelled(
+pub(super) fn explain(document: &explanation::RemapExplanation, rule: usize) -> String {
+    let count = document.matches.len();
+    let right = format!("{count} matching row{}", if count == 1 { "" } else { "s" });
+    let mut out = format!(
+        "{}\n",
+        rule_at(&format!("explain {} fetch", document.kind), Some(&right), rule)
+    );
+    out.push_str(&head(
         "origin",
-        document.origin.as_deref().unwrap_or("(none declared)"),
+        document.origin.as_deref().unwrap_or("none declared"),
     ));
-    out.push_str(&labelled(
+    out.push_str(&head(
         "digest",
-        document.digest.as_deref().unwrap_or("(none declared)"),
+        document.digest.as_deref().unwrap_or("none declared"),
     ));
-    out.push_str(&labelled("policy", explain_policy(&document.policy)));
-    out.push('\n');
+    out.push_str(&head("policy", explain_policy(&document.policy)));
     if document.matches.is_empty() {
-        out.push_str("  no remap row matches this fetch\n");
+        out.push_str(&head("rows", "no remap row matches this fetch"));
+    } else {
+        out.push('\n');
     }
     for found in &document.matches {
         out.push_str(&numbered(
@@ -179,20 +185,23 @@ pub(super) fn explain(document: &explanation::RemapExplanation) -> String {
             out.push_str(&labelled("note", &paint(Role::Warn, explain_note(note))));
         }
     }
-    out.push('\n');
+    if !document.matches.is_empty() {
+        out.push('\n');
+    }
     match (&document.chosen, document.denied) {
         (_, true) => out.push_str(&format!(
             "  {}\n",
             paint(Role::Alert, "refused before any connection (remap_denied)")
         )),
-        (Some(chosen), false) => out.push_str(&format!(
-            "  {}  {}\n",
-            paint(Role::Dim, "chosen"),
-            paint(Role::Accent, chosen)
-        )),
-        (None, false) => out.push_str("  nothing to fetch\n"),
+        (Some(chosen), false) => out.push_str(&head("chosen", &paint(Role::Accent, chosen))),
+        (None, false) => out.push_str(&head("chosen", "nothing to fetch")),
     }
     out.trim_end().to_owned()
+}
+
+/// An explanation header label at the same left edge as its chosen target.
+fn head(label: &str, value: &str) -> String {
+    format!("  {}  {value}\n", paint(Role::Dim, &format!("{label:<LABEL$}")))
 }
 
 /// One indented `label   value` line under a row's key kind, the label

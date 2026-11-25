@@ -222,3 +222,58 @@ fn exec_is_not_app_run_and_takes_any_command() {
         "{out}"
     );
 }
+
+/// An absent slot and an absent named installation keep distinct refusal codes.
+#[test]
+#[specmark::spec(verifies = "spec://org.vibevm.core/vibevm/common/PROP-075#VERSION-EXEC-SPELLING")]
+fn unknown_slot_refusal_names_search_and_list() {
+    let r = AppRegistry::new();
+    runtime(&r, "1.0.0", "one");
+    let run = |args: &[&str]| {
+        let mut command = r.user.vibe();
+        command
+            .current_dir(r.root.path())
+            .env("HOME", r.home())
+            .env("USERPROFILE", r.home())
+            .env("VIBE_SETTINGS", r.settings())
+            .args(args);
+        for variable in [
+            "VIBE_AGENT_COMMAND",
+            "VIBE_AGENT_ARGS",
+            "VIBE_INVOKED_BY",
+            "VIBE_APP_USE",
+        ] {
+            command.env_remove(variable);
+        }
+        command.output().unwrap()
+    };
+    ok(&run(&[
+        "install",
+        "-g",
+        "org.example/runtime@1.0.0",
+        "--registry",
+        r.registry().to_str().unwrap(),
+        "--offline",
+        "--unattended",
+        "--json",
+    ]));
+
+    let error = failed(&run(&["app", "exec", "nosuch", "--", "true"]));
+    assert!(error.starts_with("✗ unknown_slot  "), "{error}");
+    let missing = failed(&run(&["app", "run", "org.example/runtime@9.9.9", "main"]));
+    assert!(missing.starts_with("✗ not_installed  "), "{missing}");
+    assert!(missing.contains("org.example/runtime@9.9.9"), "{missing}");
+    assert!(!missing.contains("unknown_slot"), "{missing}");
+    assert!(
+        error.contains(
+            "✗ unknown_slot  slot nosuch has no installed provider in this home\n  \
+             fix   vibe search nosuch\n        \
+             vibe app list\n  \
+             see   spec://org.vibevm.core/vibevm/common/PROP-059#alternatives"
+        ),
+        "{error}"
+    );
+    assert_eq!(error.matches("vibe search nosuch").count(), 1, "{error}");
+    assert_eq!(error.matches("vibe app list").count(), 1, "{error}");
+    assert!(!error.contains('`'), "{error}");
+}

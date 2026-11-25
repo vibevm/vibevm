@@ -4,6 +4,65 @@ use super::*;
 use specmark::verifies;
 use vibe_core::remap::{LoadedSource, Provenance, RowDecl};
 
+#[test]
+fn remap_view_preview_draws_rows_not_json() {
+    let result = serde_json::from_value::<
+        vibe_wire::generated::remap_preview_result::RemapPreviewResult,
+    >(serde_json::json!({
+        "protocol": "vibe-remap-preview/1",
+        "package": "org.corp/intranet",
+        "version": "1.2.0",
+        "source": {"kind": "local-owned-offer", "content_hash": "sha256:abc"},
+        "selected_values": {"port": 8080, "region": "eu", "unset": null}
+    }))
+    .unwrap();
+    let heading = crate::output::language::rule_at(
+        "preview of org.corp/intranet@1.2.0",
+        Some("local owned offer"),
+        80,
+    );
+    assert_eq!(
+        preview::view(&result, 80, 80),
+        format!("{heading}\n  content  sha256:abc\n  port     8080\n  region   eu\n  unset    none")
+    );
+    let refusal = |package: &str, input: &str| {
+        preview::offline_refusal(package, std::path::Path::new(input))
+    };
+    assert!(refusal("org.example/nothing", "in.toml").contains(
+        "fix: `vibe remap preview org.example/nothing --input in.toml --offline`"
+    ));
+    assert!(refusal("org.example/with space", "input dir/in.toml").contains(
+        "fix: `vibe remap preview 'org.example/with space' --input 'input dir/in.toml' --offline`"
+    ));
+    assert!(refusal("org.example/it's", "input's.toml").contains(
+        "fix: `vibe remap preview 'org.example/it'\\''s' --input 'input'\\''s.toml' --offline`"
+    ));
+    for unsafe_text in ["bad\nvalue", "bad\rvalue", "bad\tvalue", "bad\u{1b}value", "bad`value"] {
+        for diagnostic in [refusal(unsafe_text, "in.toml"), refusal("org.example/nothing", unsafe_text)] {
+            assert!(!diagnostic.chars().any(char::is_control), "{diagnostic:?}");
+            assert_eq!(diagnostic.matches('`').count(), 2, "{diagnostic:?}");
+            assert!(diagnostic.contains("fix: `vibe remap preview PACKAGE --input INPUT --offline`"));
+        }
+    }
+}
+
+#[test]
+fn remap_view_explain_has_one_left_edge() {
+    let document = explanation(
+        &Locator::default(),
+        &Artifact::new(ArtifactKind::AppInput)
+            .with_url("https://github.com/org/repo/archive/v1.tar.gz"),
+        true,
+    );
+    let heading = crate::output::language::rule_at("explain any fetch", Some("0 matching rows"), 80);
+    assert_eq!(
+        render::explain(&document, 80),
+        format!(
+            "{heading}\n  origin  https://github.com/org/repo/archive/v1.tar.gz\n  digest  none declared\n  policy  allow\n  rows    no remap row matches this fetch\n  chosen  https://github.com/org/repo/archive/v1.tar.gz"
+        )
+    );
+}
+
 fn row(body: &str, layer: Layer, source: &str, index: usize) -> RemapRow {
     toml::from_str::<RowDecl>(body)
         .expect("row parses")
@@ -145,7 +204,7 @@ fn explain_lists_two_competing_rows_in_winning_order() {
     );
     assert!(!document.denied);
 
-    let text = render::explain(&document);
+    let text = render::explain(&document, 80);
     assert!(text.contains("origin  https://github.com/vibespecs/index"));
     assert!(text.contains("1. prefix    https://github.com/vibespecs/"));
     assert!(text.contains("2. prefix    https://github.com/"));
@@ -160,7 +219,7 @@ fn explain_reports_a_refusal_and_names_no_chosen_target() {
     let document = explanation(&locator(), &artifact, true);
     assert!(document.denied);
     assert!(document.chosen.is_none());
-    assert!(render::explain(&document).contains("remap_denied"));
+    assert!(render::explain(&document, 80).contains("remap_denied"));
 }
 
 #[test]

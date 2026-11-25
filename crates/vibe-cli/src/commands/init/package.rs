@@ -85,7 +85,7 @@ pub(super) fn prepare_package(
     // dropped without a word; refuse it before the container exists.
     if args.link.is_some() && matches!(kind, PackageKind::Doc | PackageKind::Remap) {
         bail!(
-            "`--link` sets a boot snippet, and a `{kind}` package carries none \
+            "link_without_boot_snippet: --link sets a boot snippet, and a {kind} package carries none \
              (violates spec://org.vibevm.core/vibevm/common/PROP-024#INIT-ROOT-ROLE; \
              fix: drop `--link`, or pick a kind with a boot lane such as `--kind tool`)",
             kind = kind.as_str(),
@@ -148,9 +148,19 @@ pub(super) fn create_package_in_project(
         app,
     } = prepared;
     prompts::maybe_save_author(user_config, &fields.authors);
-    ctx.heading(&format!(
-        "Creating package `{group}/{name}` in `{}`",
-        path.display()
+    let mut descriptor = kind.as_str().to_owned();
+    if let Some(app) = &app {
+        let tables: toml::Value = toml::from_str(&app.manifest_tail()?)?;
+        let steps = tables["installer_options"][0]["steps"].as_array();
+        let has = |kind: &str| steps.is_some_and(|steps| {
+            steps.iter().any(|step| step.get("kind").and_then(toml::Value::as_str) == Some(kind))
+        });
+        let way = if has("archive") { "prebuilt" } else if has("sources") { "source" } else { "recipe" };
+        descriptor.push_str(&format!(", {way}"));
+    }
+    ctx.rule(&format!(
+        "creating package {group}/{name} ({descriptor}) in {}",
+        crate::output::language::short_path(&display_pathbuf(&path))
     ));
 
     outcomes.extend(create_package_dirs_from_fields(

@@ -24,6 +24,11 @@ impl Index {
         }
         let header: Header = serde_json::from_slice(bytes).map_err(|e| e.to_string())?;
         let document = match header.protocol.as_str() {
+            retired::PROTOCOL => {
+                retired::validate(bytes, None)?;
+                // Retired dispatcher records are inert, not modern installations.
+                return Ok((Self::default(), 1));
+            }
             LEGACY_PROTOCOL => upgrade_seven::promote(upgrade_six::promote(upgrade_five::promote(
                 upgrade_four::promote(upgrade::promote(
                     serde_json::from_slice::<

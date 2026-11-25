@@ -3,6 +3,8 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-019#companion-tools");
 
+mod status;
+
 use std::path::Path;
 
 use anyhow::{Context, Result, bail};
@@ -135,6 +137,12 @@ pub(in crate::commands::vvm) fn run_px_cmd(
     env: &VvmEnv,
     args: crate::cli::VvmPxArgs,
 ) -> Result<()> {
+    if matches!(args.command, crate::cli::VvmPxCommand::Status) && !ctx.is_machine_progress() {
+        return match status::run(ctx, env)? {
+            PxVerdict::Ok => Ok(()),
+            PxVerdict::Unusable(reason) => Err(anyhow::anyhow!(reason)),
+        };
+    }
     let task = ctx.progress().task("px");
     let verdict = px_verb(ctx, env, args, &task.progress());
     match &verdict {
@@ -159,93 +167,7 @@ fn px_verb(
     let pin = vibe_net::px_store::PxPin::embedded();
     let root = companions::store_root(&store);
     match args.command {
-        crate::cli::VvmPxCommand::Status => {
-            let asset = companions::pinned_asset(pin);
-            let installed = companions::installed(&root);
-            let name = asset.map(|asset| pin.release_asset_name(asset));
-            let directory = vibe_net::px_store::stored_dir(&root, pin);
-            // What the route would actually run, by the same lookup every
-            // operation uses: `px_path`, then the store, then `tools/px/`
-            // beside the binary, then PATH. An empty store is a problem
-            // only when px mode has nothing else to run.
-            let route = vibe_core::net::route();
-            let needed = route.px().is_some();
-            let program = route
-                .px()
-                .and_then(|settings| vibe_net::locate_px(settings).ok());
-            let usable = !needed || program.is_some();
-            if ctx.is_json() {
-                ctx.emit_json(&serde_json::json!({
-                    "version": pin.version,
-                    "asset": name,
-                    "store": directory,
-                    "installed": installed.as_ref().map(|found| &found.program),
-                    "in_store": installed.is_some(),
-                    "needed": needed,
-                    "program": program,
-                    "source": installed.as_ref().and_then(|found| found.source.clone()),
-                    "sha256": installed.as_ref().and_then(|found| found.sha256.clone()),
-                    "installed_at": installed
-                        .as_ref()
-                        .and_then(|found| found.installed_at.clone()),
-                    "px_version": installed.as_ref().and_then(|found| found.version.clone()),
-                    "ok": usable,
-                }))?;
-                return Ok(unusable_verdict(usable, pin, &directory, name.as_deref()));
-            }
-            let line = match (&installed, &name) {
-                (Some(found), _) => {
-                    format!("px is installed: `{}`", found.program.display())
-                }
-                (None, Some(name)) => format!(
-                    "no px is installed in `{}`; `vibe self px install` reads `{name}` from the release source or drop, and `--from <archive|directory|executable>` takes a px of your own",
-                    root.display()
-                ),
-                (None, None) => format!(
-                    "no px is installed in `{}`, and px has no default build for this platform; `vibe self px install --from <archive|directory|executable>` installs one of your own",
-                    root.display()
-                ),
-            };
-            // What vibe knows about those exact bytes: where it read them,
-            // the SHA-256 it measured, and what the program says it is.
-            // Nothing here is a verdict — px is not checked against any
-            // digest (`PROP-019#companion-tools`).
-            let mut extra = Vec::new();
-            if let Some(found) = &installed {
-                if let Some(version) = &found.version {
-                    extra.push(format!("  reports: {version}"));
-                }
-                if let Some(source) = &found.source {
-                    extra.push(format!("  read from: {source}"));
-                }
-                if let Some(sha256) = &found.sha256 {
-                    extra.push(format!("  sha256: {sha256}"));
-                }
-                if let Some(at) = &found.installed_at {
-                    extra.push(format!("  installed: {at}"));
-                }
-            }
-            // The px in use when it is not the store's, so a report of an
-            // empty store is not read as "no px at all".
-            match (&installed, &program) {
-                (None, Some(program)) => extra.push(format!(
-                    "`[proxy] mode = \"px\"` runs `{}` instead",
-                    program.display()
-                )),
-                (None, None) if needed => extra.push(
-                    "`[proxy] mode = \"px\"` has no px to run: the next network command will fail"
-                        .to_owned(),
-                ),
-                _ => {}
-            }
-            ctx.suspend_progress(|| {
-                println!("{line}");
-                for row in &extra {
-                    println!("{row}");
-                }
-            });
-            Ok(unusable_verdict(usable, pin, &directory, name.as_deref()))
-        }
+        crate::cli::VvmPxCommand::Status => status::run(ctx, env),
         // A px the operator names is installed from their own files, of
         // any version and on any target, without a digest in the way
         // (`PROP-019#companion-tools`); only a px vibe DOWNLOADS goes
@@ -517,8 +439,28 @@ pub(super) fn px_beside_with(
     dir: &Path,
     progress: &Progress,
 ) -> Result<companions::PxOutcome> {
+    px_beside_rows(store, pin, dir, progress, false)
+}
+
+/// Compact terminal vocabulary at the site import boundary only.
+#[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-067#collapse")]
+pub(in crate::commands::vvm) fn px_beside_for_site(
+    store: &crate::commands::vvm::store::VersionStore,
+    dir: &Path,
+    progress: &Progress,
+) -> Result<companions::PxOutcome> {
+    px_beside_rows(store, vibe_net::px_store::PxPin::embedded(), dir, progress, true)
+}
+
+fn px_beside_rows(
+    store: &crate::commands::vvm::store::VersionStore,
+    pin: &vibe_net::px_store::PxPin,
+    dir: &Path,
+    progress: &Progress,
+    site_rows: bool,
+) -> Result<companions::PxOutcome> {
     use companions::PxOutcome;
-    let task = progress.task("Installing px");
+    let task = progress.task(if site_rows { "px" } else { "Installing px" });
     let outcome = companions::install_beside(store, pin, dir);
     match &outcome {
         Ok(PxOutcome::AlreadyInstalled(program)) => {
@@ -527,6 +469,9 @@ pub(super) fn px_beside_with(
         Ok(PxOutcome::Installed { program, from }) => {
             task.detail(format!("`{}` from `{from}`", program.display()));
             task.finish();
+        }
+        Ok(PxOutcome::Unavailable { asset, .. }) if site_rows => {
+            task.skip(format!("no {asset} beside the binary"));
         }
         Ok(PxOutcome::Unavailable { asset, .. }) => task.skip(format!(
             "no `{asset}` beside the binary; `[proxy] mode = \"px\"` uses `px_path` or px on PATH"

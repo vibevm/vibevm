@@ -380,6 +380,22 @@ fn search_finds_by_name_and_marks_the_issued_ones() {
     );
 }
 
+/// A grouped result retains the public CLI JSON shape.
+#[test]
+fn search_json_preserves_hit_shape() {
+    let site = Site::new();
+    let found = site.vibe(&["search", "--json", "qwen"]);
+    ok(&found, "vibe search --json qwen");
+    let parsed: serde_json::Value = serde_json::from_str(&stdout(&found)).unwrap();
+    let hit = parsed["hits"]
+        .as_array()
+        .expect("hits is an array")
+        .iter()
+        .find(|hit| hit["name"] == "qwen-code")
+        .unwrap_or_else(|| panic!("no qwen-code hit: {parsed}"));
+    assert!(hit.get("group").is_none(), "{parsed}");
+}
+
 /// The three authoring refusals a maintainer meets.
 #[test]
 #[specmark::spec(

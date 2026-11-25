@@ -18,6 +18,7 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-075#ACTIVATION-HOOK");
 
 use specmark::spec;
+use std::io::IsTerminal;
 use std::path::PathBuf;
 
 use anyhow::{Context, Result, bail};
@@ -33,9 +34,10 @@ pub fn run(ctx: &output::Context, args: HookArgs) -> Result<()> {
     let shell = Shell::parse(&args.shell)?;
     if matches!(shell, Shell::Cmd | Shell::Posix) {
         bail!(
-            "vibe hook takes bash, zsh, fish or pwsh; cmd has no prompt hook and `vibe shell` is \
-             the way there (violates \
-             spec://org.vibevm.core/vibevm/common/PROP-075#ACTIVATION-HOOK)"
+            "unsupported_shell: {} has no prompt hook; vibe hook takes bash, zsh, fish or pwsh \
+             (violates spec://org.vibevm.core/vibevm/common/PROP-075#ACTIVATION-HOOK; \
+             fix: `vibe shell`)",
+            shell.as_str()
         );
     }
     let settings = global::settings_root()?;
@@ -55,26 +57,32 @@ pub fn run(ctx: &output::Context, args: HookArgs) -> Result<()> {
         );
     };
     let rc = rc_path(shell, &home);
-    if !args.yes && ctx.is_unattended() {
+    if !args.yes
+        && (ctx.is_unattended()
+            || !std::io::stdin().is_terminal()
+            || !std::io::stdout().is_terminal())
+    {
+        let short = output::language::short_path(&rc.display().to_string());
         bail!(
-            "consent_required: `vibe hook {}` would write a managed block into `{}`, and this \
+            "consent_required: vibe hook {} would write a managed block into {short}, and this \
              run has nobody to ask (violates \
-             spec://org.vibevm.core/vibevm/common/PROP-075#ACTIVATION-HOOK; fix: rerun with \
-             --yes, or `vibe hook {} --print` and install the block yourself)",
+             spec://org.vibevm.core/vibevm/common/PROP-075#ACTIVATION-HOOK; \
+             fix: `vibe hook {} --yes`, or `vibe hook {} --print`)",
             shell.as_str(),
-            rc.display(),
+            shell.as_str(),
             shell.as_str()
         );
     }
     if !args.yes {
-        let accepted = ctx.suspend_progress(|| {
+        let short = output::language::short_path(&rc.display().to_string());
+        let accepted = ctx.with_terminal_released(|| {
             crate::output::prompts::confirm_then(
-                &format!("write the vibe version hook into `{}`?", rc.display()),
+                &format!("write the vibe version hook into {short}"),
                 true,
-                "vibe hook",
+                "hook",
                 |accepted| {
                     if accepted {
-                        "writing the block".to_owned()
+                        format!("write into {short}")
                     } else {
                         "nothing written".to_owned()
                     }
@@ -87,12 +95,15 @@ pub fn run(ctx: &output::Context, args: HookArgs) -> Result<()> {
             return Ok(());
         }
     }
-    vibe_app::ensure_block(HOOK_BLOCK, &rc, &body).map_err(anyhow::Error::msg)?;
-    ctx.summary(&format!(
-        "vibe hook: {} block written into `{}`; open a new shell or source it to apply now",
-        shell.as_str(),
-        rc.display()
-    ));
+    let changed = vibe_app::ensure_block(HOOK_BLOCK, &rc, &body).map_err(anyhow::Error::msg)?;
+    if changed {
+        ctx.hint("open a new shell, or source the file to apply it now");
+    }
+    let verdict = if changed { "written" } else { "unchanged" };
+    ctx.trailer_at(
+        &format!("hook {verdict} for {}", shell.as_str()),
+        &rc.display().to_string(),
+    );
     Ok(())
 }
 

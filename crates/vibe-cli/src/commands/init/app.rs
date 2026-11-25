@@ -29,9 +29,11 @@ pub(super) struct Scaffold {
     recipe: Option<(&'static str, String)>,
 }
 
+/// An application-authoring refusal: the code, the reason and the spec it violates.
 pub(super) fn refused(reason: impl std::fmt::Display) -> anyhow::Error {
     anyhow::anyhow!(
-        "violates REQ spec://org.vibevm.core/vibevm/common/PROP-059#declaration: {reason}; fix surface: init --app-* authoring inputs"
+        "app_authoring_invalid: {reason} (violates spec://org.vibevm.core/vibevm/common/PROP-059#declaration; \
+         fix: `vibe init --help`)"
     )
 }
 
@@ -200,7 +202,11 @@ fn source(args: &InitAppArgs) -> Result<(String, String)> {
         return Err(refused("--app-source-url must be an HTTP(S) URL"));
     }
     let hash = args.source_sha256.as_ref().ok_or_else(|| {
-        refused("source/prebuilt requires --app-source-sha256; provide the actual digest")
+        anyhow::anyhow!(
+            "app_source_digest_required: a source or prebuilt installer needs the input's SHA-256 \
+             (violates spec://org.vibevm.core/vibevm/common/PROP-059#declaration; \
+             fix: supply --app-source-sha256 <64-hex> for the declared source URL)"
+        )
     })?;
     Ok((url.clone(), hash.clone()))
 }

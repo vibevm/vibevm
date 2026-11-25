@@ -120,21 +120,22 @@ fn write(path: &Path, text: &str) -> Result<(), String> {
 }
 
 /// Make `path` hold exactly one block of `markers` around `body`, leaving
-/// every byte outside that block as it was.
+/// every byte outside that block as it was. Returns `true` after inserting or
+/// replacing the block, or `false` when it already matches without writing.
 #[specmark::spec(
     implements = "spec://org.vibevm.world/managed-blocks/flows/managed-blocks/MANAGED-BLOCKS-PROTOCOL#root"
 )]
-pub fn ensure_block(markers: BlockMarkers, path: &Path, body: &str) -> Result<(), String> {
+pub fn ensure_block(markers: BlockMarkers, path: &Path, body: &str) -> Result<bool, String> {
     let path = target(path);
     let current = read(&path)?.unwrap_or_default();
     let wanted = block(markers, body);
     let next = match find(markers, &current) {
-        Some((start, end)) if current[start..end] == wanted => return Ok(()),
+        Some((start, end)) if current[start..end] == wanted => return Ok(false),
         Some((start, end)) => format!("{}{wanted}{}", &current[..start], &current[end..]),
         None if current.is_empty() || current.ends_with('\n') => format!("{current}{wanted}"),
         None => format!("{current}\n{wanted}"),
     };
-    write(&path, &next)
+    write(&path, &next).map(|()| true)
 }
 
 /// Remove the block of `markers` from `path`, if it holds one.
@@ -173,9 +174,50 @@ pub fn managed_startup_files(home: &Path) -> Vec<(PathBuf, bool)> {
 }
 
 pub(super) fn ensure(path: &Path, body: &str) -> Result<(), String> {
-    ensure_block(ENV_BLOCK, path, body)
+    ensure_block(ENV_BLOCK, path, body).map(|_| ())
 }
 
 pub(super) fn remove(path: &Path) -> Result<(), String> {
     remove_block(ENV_BLOCK, path)
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn managed_block_reports_change() {
+        let temp = tempfile::tempdir().unwrap();
+        let path = temp.path().join("startup");
+        let prefix = "# user prefix\n";
+        let suffix = "# user suffix without newline";
+        fs::write(&path, prefix).unwrap();
+
+        assert_eq!(ensure_block(ENV_BLOCK, &path, "first body"), Ok(true));
+        let inserted = fs::read_to_string(&path).unwrap();
+        assert_eq!(inserted, format!("{prefix}{}", block(ENV_BLOCK, "first body")));
+        fs::write(&path, format!("{inserted}{suffix}")).unwrap();
+        let before = fs::read(&path).unwrap();
+        assert_eq!(ensure_block(ENV_BLOCK, &path, "first body"), Ok(false));
+        assert_eq!(fs::read(&path).unwrap(), before);
+
+        assert_eq!(ensure_block(ENV_BLOCK, &path, "replacement"), Ok(true));
+        assert_eq!(
+            fs::read_to_string(&path).unwrap(),
+            format!("{prefix}{}{suffix}", block(ENV_BLOCK, "replacement"))
+        );
+
+        // A directory at the temporary sibling prevents writes portably,
+        // while an exact match must still succeed without touching it.
+        let sibling = temp
+            .path()
+            .join(format!(".startup.vibe-{}.tmp", std::process::id()));
+        fs::create_dir(&sibling).unwrap();
+        let before = fs::read(&path).unwrap();
+        assert_eq!(ensure_block(ENV_BLOCK, &path, "replacement"), Ok(false));
+        assert_eq!(fs::read(&path).unwrap(), before);
+        let error = ensure_block(ENV_BLOCK, &path, "cannot write").unwrap_err();
+        assert!(error.starts_with("writing `"), "{error}");
+        assert_eq!(fs::read(&path).unwrap(), before);
+    }
 }

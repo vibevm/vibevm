@@ -52,6 +52,7 @@ use vibe_wire::generated::remap_listing as wire;
 
 use crate::cli::{RemapArgs, RemapCommand, RemapExplainArgs, RemapListArgs};
 use crate::output;
+use crate::output::language::rule_width;
 
 /// The `vibe-remap/1` documents both views emit.
 const PROTOCOL: &str = "vibe-remap/1";
@@ -143,19 +144,20 @@ fn run_explain(
     if args.json || ctx.is_json() {
         return ctx.emit_json(&document);
     }
-    ctx.summary(&format!(
-        "{} matching row(s); {}",
-        document.matches.len(),
-        match (&document.chosen, document.denied) {
-            (_, true) => "refused before any connection".to_owned(),
-            (Some(chosen), false) => format!("chosen {chosen}"),
-            (None, false) => "nothing to fetch".to_owned(),
-        }
-    ));
     if ctx.is_quiet() {
+        ctx.summary(&format!(
+            "{} matching row{}; {}",
+            document.matches.len(),
+            if document.matches.len() == 1 { "" } else { "s" },
+            match (&document.chosen, document.denied) {
+                (_, true) => "refused before any connection".to_owned(),
+                (Some(chosen), false) => format!("chosen {chosen}"),
+                (None, false) => "nothing to fetch".to_owned(),
+            }
+        ));
         return Ok(());
     }
-    ctx.block(&render::explain(&document));
+    ctx.block(&render::explain(&document, rule_width()));
     Ok(())
 }
 
