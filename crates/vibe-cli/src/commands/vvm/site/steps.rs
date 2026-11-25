@@ -149,7 +149,6 @@ pub(super) fn live_rows(ctx: &output::Context) -> bool {
     !ctx.is_json()
         && !ctx.is_quiet()
         && !ctx.is_machine_progress()
-        && output::language::colour_on()
         && std::io::stdout().is_terminal()
         && std::io::stderr().is_terminal()
 }

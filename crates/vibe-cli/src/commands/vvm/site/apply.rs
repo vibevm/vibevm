@@ -148,27 +148,31 @@ pub(in crate::commands::vvm) fn run_apply_cmd(
     )?;
     if !dry_run && super::steps::live_rows(ctx) {
         let files = Files::resolve()?;
-        let profile = ctx.progress().task(format!(
-            "profile  {} written to {}",
-            prepared.profile.name.as_deref().unwrap_or("site profile"),
-            output::language::short_path(&files.profile.display().to_string()),
-        ));
-        profile.finish();
-        for warning in &report.warnings {
-            ctx.diagnostic(warning);
+        let unchanged = report.files.iter().any(|file| {
+            file.path == files.profile.display().to_string()
+                && file.change == FileChangeKind::Unchanged
+        });
+        let name = prepared.profile.name.as_deref().unwrap_or("site profile");
+        let path = output::language::short_path(&files.profile.display().to_string());
+        let profile = ctx.progress().task(if unchanged {
+            format!("profile  {name} at {path}")
+        } else {
+            format!("profile  {name} written to {path}")
+        });
+        if unchanged {
+            profile.skip("profile unchanged");
+        } else {
+            profile.finish();
         }
-        if let Some(path) = &report.path {
-            for hint in [&path.activation_hint, &path.fix_hint].into_iter().flatten() {
-                ctx.step(hint);
-            }
+        // Only these operations have already been drawn live. Keep the
+        // existing renderer's remaining sections, hints and single trailer.
+        let mut view = report.clone();
+        view.files.clear();
+        view.imported = None;
+        if report.imported.is_some() {
+            view.px = None;
         }
-        for next in &report.next_steps {
-            ctx.step(next);
-        }
-        if let Some(what) = super::report_text::trailer_what(&report) {
-            ctx.trailer_at(&what, &files.receipt.display().to_string());
-        }
-        Ok(())
+        report::emit(&view, ctx)
     } else {
         report::emit(&report, ctx)
     }

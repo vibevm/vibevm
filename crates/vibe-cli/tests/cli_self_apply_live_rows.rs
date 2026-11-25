@@ -128,8 +128,12 @@ fn self_apply_live_rows_in_order_and_one_receipt() {
     assert_eq!(fs::read_dir(&loose).unwrap().count(), 1);
     assert_eq!(fs::read_dir(&store).unwrap().count(), 0);
     let profile = root.path().join("corp.toml");
-    fs::write(&profile, "schema = 1\nname = \"corp\"\n").unwrap();
-    let result = Command::new("/usr/bin/python3")
+    fs::write(&profile, format!(
+        "schema = 1\nname = \"corp\"\n[artifacts]\npackages = \"{}\"\n",
+        root.path().join("payloads").display(),
+    )).unwrap();
+    let mut command = Command::new("/usr/bin/python3");
+    command
         .env_clear()
         .env("PATH", "/usr/bin:/bin")
         .env("HOME", &home)
@@ -148,14 +152,19 @@ fn self_apply_live_rows_in_order_and_one_receipt() {
         .arg(&binary)
         .args(["self", "apply"])
         .arg(&profile)
-        .args(["--no-fix-path", "--offline"])
-        .output()
-        .expect("isolated bounded PTY child");
+        .args(["--no-fix-path", "--offline"]);
+    let result = command.output().expect("isolated bounded PTY child");
     assert!(result.status.success(), "PTY setup failed: {:?}", String::from_utf8_lossy(&result.stderr));
     let (status, screen): (i32, String) = serde_json::from_slice(&result.stdout).unwrap();
     let excerpt = screen.chars().take(6000).collect::<String>();
     assert_eq!(status, 0, "self apply failed: {excerpt:?}");
-    let rows = screen.lines().filter(|line| line.starts_with("✓ ") || line.starts_with("○ ")).collect::<Vec<_>>();
+    assert!(screen.contains("effective settings"), "retained settings: {excerpt:?}");
+    assert!(screen.contains("where releases and payloads go"), "retained destinations: {excerpt:?}");
+    assert!(screen.contains("PATH") && screen.contains("--fix-path"), "retained PATH and hint: {excerpt:?}");
+    let rows = screen.lines().filter(|line| {
+        (line.starts_with("✓ ") || line.starts_with("○ "))
+            && line.split_whitespace().nth(1) != Some("PATH")
+    }).collect::<Vec<_>>();
     let names = rows.iter().map(|line| line.split_whitespace().nth(1).unwrap()).collect::<Vec<_>>();
     assert_eq!(names, ["verify", "px", "copy", "record", "profile"], "completed operations: {excerpt:?}");
     for (index, title) in [(0, "local import payload"), (2, "import payload")] {
@@ -187,6 +196,25 @@ fn self_apply_live_rows_in_order_and_one_receipt() {
     let receipt = settings.join("site-profile.receipt.toml");
     let suffix = format!(" · {}", receipt.display());
     let elapsed = trailer.strip_prefix(prefix).and_then(|s| s.strip_suffix(&suffix)).unwrap_or_else(|| panic!("last trailer fields: {trailer:?}"));
+    assert!(valid_elapsed(elapsed));
+    assert!(receipt.is_file());
+    // The same real invocation without colour must retain content and must
+    // observe its own unchanged profile, not aggregate receipt/settings writes.
+    command.env("NO_COLOR", "1");
+    let repeated = command.output().expect("isolated repeated apply");
+    assert!(repeated.status.success());
+    let (status, repeated): (i32, String) = serde_json::from_slice(&repeated.stdout).unwrap();
+    assert_eq!(status, 0);
+    assert!(repeated.contains("profile unchanged"), "repeat: {repeated:?}");
+    assert!(!repeated.contains("written to"), "false profile write: {repeated:?}");
+    assert!(repeated.contains("effective settings"));
+    assert!(repeated.contains("where releases and payloads go"));
+    assert!(repeated.contains("PATH") && repeated.contains("--fix-path"));
+    assert_eq!(repeated.matches("✻ ").count(), 1);
+    let trailer = repeated[repeated.find("✻ ").unwrap()..].lines().collect::<String>();
+    assert!(trailer.starts_with("✻ site profile corp already applied · nothing changed · 1 step · "));
+    assert!(trailer.ends_with(&suffix));
+    let elapsed = trailer.strip_suffix(&suffix).unwrap().rsplit_once(" · ").unwrap().1;
     assert!(valid_elapsed(elapsed));
     assert!(receipt.is_file());
     assert!(!home.join(".bashrc").exists());
