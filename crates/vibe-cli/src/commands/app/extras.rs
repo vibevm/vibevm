@@ -29,7 +29,10 @@ use super::display::StepDisplay;
 use super::global::{self, Observation, Packages};
 use crate::cli::{AppExtrasArgs, ExtrasCommand, ExtrasTargetArgs};
 use crate::output;
-use crate::output::language::{Role, paint};
+use crate::output::language::{Role, paint, rule_width, viewport};
+
+#[path = "extras/render.rs"]
+mod render;
 
 #[path = "extras/settings.rs"]
 mod settings;
@@ -235,7 +238,7 @@ fn apply(
             },
         )
     })?;
-    report_run(ctx, &document)?;
+    report_run(ctx, &document, true)?;
     Ok(Some(i32::from(!document.ok)))
 }
 
@@ -293,7 +296,7 @@ pub(crate) fn after_install(
             {
                 return;
             }
-            let _ = report_run(ctx, &document);
+            let _ = report_run(ctx, &document, false);
         }
         Err(error) => {
             // A package with no adapter at all is the ordinary case, not a
@@ -345,7 +348,7 @@ fn verb(
             },
         )
     })?;
-    report_run(ctx, &document)?;
+    report_run(ctx, &document, true)?;
     Ok(Some(i32::from(!document.ok)))
 }
 
@@ -354,114 +357,32 @@ fn report_listing(ctx: &output::Context, document: &extras_wire::ApplicationExtr
     if ctx.is_json() {
         return ctx.emit_json(document);
     }
-    for row in &document.ecosystems {
-        ctx.summary(&format!("  {} ({})", row.name, row.id));
-        for recommendation in &row.recommendations {
-            // A recommendation the user dropped is shown as dropped and
-            // not as unchosen: the two are different acts, and only one of
-            // them is reversible with `--feature`.
-            let mark = match (recommendation.enabled, recommendation.dropped) {
-                (_, true) => "[-]",
-                (true, false) => "[x]",
-                (false, false) => "[ ]",
-            };
-            ctx.summary(&format!(
-                "    {mark} {} — {} ({})",
-                paint(Role::Accent, &recommendation.item),
-                recommendation.name,
-                recommendation.id
-            ));
+    if ctx.is_quiet() {
+        for line in render::listing_quiet(document) {
+            ctx.summary(&line);
         }
-        if !row.add.is_empty() {
-            ctx.summary(&format!("    yours {}", row.add.join(" ")));
-        }
-        if row.items.is_empty() {
-            ctx.summary("    no items would be installed");
-        } else {
-            ctx.summary(&format!("    list {}", row.items.join(" ")));
-        }
-        if !row.applied.is_empty() {
-            ctx.summary(&format!(
-                "    last applied {}{}",
-                row.applied.join(" "),
-                row.applied_at
-                    .as_deref()
-                    .map(|at| format!(" at {at}"))
-                    .unwrap_or_default()
-            ));
-        }
-        match (&row.observed_failed, row.observed.is_empty()) {
-            (Some(reason), _) => {
-                ctx.summary(&format!(
-                    "    not observed: {}",
-                    super::report::prose(reason)
-                ));
-            }
-            (None, true) => ctx.summary("    installed none"),
-            (None, false) => {
-                ctx.summary(&format!("    installed {}", row.observed.join(" ")));
-            }
-        }
+        return Ok(());
     }
-    // A stale line in the user's own settings is reported once, here, and
-    // otherwise ignored (PROP-075 `#SLOT-EXTRAS`).
-    for notice in &document.notices {
-        ctx.summary(&format!("  note: {}", super::report::prose(notice)));
-    }
-    ctx.trailer(&format!(
-        "vibe app extras list: slot `{}` at {}, {} ecosystem(s)",
-        document.slot,
-        document.version,
-        document.ecosystems.len()
-    ));
+    ctx.block(&render::listing_text(document, viewport(), rule_width()));
     Ok(())
 }
 
-/// A run's report: the machine document, or one line per adapter with what
-/// failed and how to retry exactly that. **Nothing is ever rolled back.**
-fn report_run(ctx: &output::Context, document: &wire::ApplicationEcosystem) -> Result<()> {
+/// A run reports one block per adapter; only an explicit action owns a trailer.
+fn report_run(
+    ctx: &output::Context,
+    document: &wire::ApplicationEcosystem,
+    trailer: bool,
+) -> Result<()> {
     if ctx.is_json() {
         return ctx.emit_json(document);
     }
-    for row in &document.adapters {
-        let mark = match row.outcome {
-            wire::Outcome::Done => "done",
-            wire::Outcome::Failed => "failed",
-            wire::Outcome::Skipped => "skipped",
-        };
-        ctx.summary(&format!("  {} — {mark}", row.name));
-        if let Some(reason) = &row.reason
-            && row.outcome != wire::Outcome::Skipped
-        {
-            ctx.summary(&format!("    {}", super::report::prose(reason)));
-        }
-        if !row.observed.is_empty() {
-            ctx.summary(&format!("    installed {}", row.observed.join(" ")));
-        }
-        if let Some(log) = &row.log {
-            ctx.summary(&format!("    log {}", paint(Role::Accent, log)));
-        }
-        if let Some(retry) = &row.retry {
-            ctx.summary(&format!("    retry {}", paint(Role::Accent, retry)));
-        }
+    let text = render::run_text(document, viewport());
+    if !text.is_empty() {
+        ctx.block(&text);
     }
-    for notice in &document.notices {
-        ctx.summary(&format!("  note: {}", super::report::prose(notice)));
+    if trailer {
+        let (ok, what) = render::run_trailer(document);
+        ctx.trailer_verdict_at(ok, &what, &document.work);
     }
-    if !document.work.is_empty() {
-        ctx.summary(&format!(
-            "  work directory kept {}",
-            paint(Role::Accent, &document.work)
-        ));
-    }
-    ctx.trailer(&format!(
-        "vibe app extras: slot `{}` {}",
-        document.slot,
-        if document.ok {
-            "done"
-        } else {
-            "some ecosystem work did not finish; the version is installed and unchanged"
-        }
-    ));
     Ok(())
 }

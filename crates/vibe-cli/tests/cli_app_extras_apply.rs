@@ -14,6 +14,8 @@
 #![cfg(all(test, target_os = "linux"))]
 
 mod common;
+#[path = "common/extras_trailer.rs"]
+mod extras_trailer;
 
 use std::fs;
 use std::path::{Path, PathBuf};
@@ -90,7 +92,6 @@ fn runtime(r: &AppRegistry, version: &str) -> PathBuf {
     );
     root
 }
-
 fn verb_script(root: &Path, name: &str, body: &str) {
     let dir = root.join("eco");
     fs::create_dir_all(&dir).unwrap();
@@ -105,7 +106,6 @@ fn verb_script(root: &Path, name: &str, body: &str) {
 fn config(r: &AppRegistry, body: &str) {
     fs::write(r.settings().join("config.toml"), body).unwrap();
 }
-
 fn config_text(r: &AppRegistry) -> String {
     fs::read_to_string(r.settings().join("config.toml")).unwrap_or_default()
 }
@@ -126,7 +126,6 @@ fn isolated_vibe(r: &AppRegistry, args: &[&str]) -> std::process::Output {
         .output()
         .unwrap()
 }
-
 fn app(r: &AppRegistry, verb: &[&str], package: &str, extra: &[&str]) -> std::process::Output {
     let registry = r.registry();
     let mut args = verb.to_vec();
@@ -168,7 +167,6 @@ fn applied(r: &AppRegistry) -> Vec<String> {
         })
         .collect()
 }
-
 fn ecosystem_of<'a>(document: &'a Value, id: &str) -> &'a Value {
     document["ecosystems"]
         .as_array()
@@ -350,7 +348,19 @@ fn a_failing_apply_never_touches_the_runtime_and_names_its_retry() {
         document["adapters"][0]["retry"],
         "vibe app extras apply runtime --ecosystem npm"
     );
-    assert!(Path::new(document["work"].as_str().unwrap()).exists());
+    let work = Path::new(document["work"].as_str().unwrap());
+    assert!(work.exists());
+    let before = r.index();
+    extras_trailer::assert_failed_trailer(&r, work.parent().unwrap());
+    let after = r.index();
+    assert_eq!(before["slots"], after["slots"], "slot defaults unchanged");
+    let key = "org.example/runtime@1.0.0";
+    let mut prior = before["installations"][key].clone();
+    let mut current = after["installations"][key].clone();
+    prior.as_object_mut().expect("installed record").remove("extras");
+    current.as_object_mut().expect("installed record").remove("extras");
+    assert_eq!(prior, current, "runtime installation unchanged");
+    assert!(applied(&r).is_empty(), "failed adapter never ran the runtime");
 }
 
 /// `vibe app extras add|drop|import` edit the user's own file and install
