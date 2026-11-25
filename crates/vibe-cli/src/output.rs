@@ -414,6 +414,7 @@ impl Context {
         self.verbose
     }
     /// Whether detailed human progress is active for this context.
+    #[cfg(test)]
     pub fn is_verbose(&self) -> bool {
         self.verbose && self.progress_renderer.is_some()
     }

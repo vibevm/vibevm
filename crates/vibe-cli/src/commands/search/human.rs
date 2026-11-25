@@ -31,23 +31,9 @@ pub(super) fn render(ctx: &output::Context, report: &SearchReport) -> Result<()>
 
 /// The search answer at a fixed viewport.
 ///
-/// ```text
-/// ── search node ────────────────── 2 hits · 2 registries searched
-///   app   org.vibevm.node/node-runtime  1.0.0  corp · score 1
-///         └ A test application package for node-runtime
-///   flow  wal                           -      mirror · score 1  [full-scan]
-///   searched corp · mirror
-///
-/// ── short names ────────────────────────────────────────────────
-///   node  org.vibevm.node/node-runtime · corp
-///   type these bare; every other hit needs its group/name
-///
-/// ── registries ─────────────────────────────────────────────────
-/// ✗ broken  unreachable
-///   └ probe of http://x/repomd.json failed
-/// ○ quiet   no index URL
-///   └ set VIBEVM_INDEX_URL_<R> to search it
-/// ```
+/// Results retain kind, qualified name, version and registry provenance.
+/// Separate measured sections explain issued short names and registry failures;
+/// descriptions and remedies remain child rows under the corresponding result.
 #[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-067#list")]
 fn view(report: &SearchReport, width: usize, rule: usize) -> String {
     let mut parts = Vec::new();

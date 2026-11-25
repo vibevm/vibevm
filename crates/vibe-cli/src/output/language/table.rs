@@ -200,5 +200,13 @@ mod tests {
             .map(str::trim)
             .collect();
         assert!(kept.contains(&value));
+        // The viewport adapter has the same lossless contract as fixed-width rendering.
+        let viewport_rendered = table.render();
+        let viewport_kept: String = viewport_rendered
+            .lines()
+            .filter_map(|line| line.split('│').nth(2))
+            .map(str::trim)
+            .collect();
+        assert!(viewport_kept.contains(&value));
     }
 }
