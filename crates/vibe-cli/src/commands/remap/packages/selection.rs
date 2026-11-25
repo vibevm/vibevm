@@ -57,10 +57,11 @@ pub(crate) fn claims_with_progress(
     )
     .ok()?;
     let mut candidates = Vec::with_capacity(args.packages.len());
+    let mut decisions = Vec::new();
     for raw in &args.packages {
         progress.checkpoint().ok()?;
         let parsed = PackageRef::parse(raw).ok()?;
-        let pkgref = crate::commands::short_name::qualify(
+        let (pkgref, decision) = crate::commands::short_name::qualify_for_route(
             &resolver,
             &parsed,
             &Lockfile::empty("remap-preflight", "0"),
@@ -72,7 +73,9 @@ pub(crate) fn claims_with_progress(
             return None;
         }
         candidates.push(candidate);
+        if let Some(decision) = decision { decisions.push(decision); }
     }
+    for decision in decisions { decision.publish(); }
     Some(Selection {
         resolver,
         candidates,

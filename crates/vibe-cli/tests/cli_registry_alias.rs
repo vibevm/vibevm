@@ -177,7 +177,7 @@ fn an_offered_spelling_reaches_the_package_it_names() {
     ok(&resolved, "vibe app installers qwen");
     let said = stderr(&resolved);
     assert!(
-        said.contains("qwen → org.vibevm.qwen/qwen-code (alias in registry corp)"),
+        said.contains("qwen → org.vibevm.qwen/qwen-code · alias in registry corp"),
         "the provenance line must name the registry that decided: {said}"
     );
 }
@@ -333,7 +333,7 @@ fn an_issued_name_resolves_offline() {
     let resolved = site.vibe(&["app", "installers", "--offline", "qwen"]);
     ok(&resolved, "vibe app installers --offline qwen");
     assert!(
-        stderr(&resolved).contains("qwen → org.vibevm.qwen/qwen-code (alias in registry corp)"),
+        stderr(&resolved).contains("qwen → org.vibevm.qwen/qwen-code · alias in registry corp"),
         "{}",
         stderr(&resolved)
     );
@@ -550,7 +550,7 @@ fn two_registries_agreeing_on_one_spelling_are_one_candidate() {
     ok(&resolved, "agreement is not a collision");
     assert!(
         stderr(&resolved)
-            .contains("qwen → org.vibevm.qwen/qwen-code (alias in registries corp, other)"),
+            .contains("qwen → org.vibevm.qwen/qwen-code · alias in registries corp, other"),
         "the provenance line names both holders: {}",
         stderr(&resolved)
     );

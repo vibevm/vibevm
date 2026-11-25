@@ -223,11 +223,26 @@ pub fn qualify(
     pkgref: &PackageRef,
     lockfile: &Lockfile,
 ) -> Result<PackageRef> {
-    if pkgref.is_qualified() {
-        return Ok(pkgref.clone());
-    }
-    match resolve(resolver, &pkgref.name, lockfile)? {
-        ShortNameOutcome::Resolved(group) => Ok(PackageRef {
+    let (qualified, decision) = qualify_for_route(resolver, pkgref, lockfile)?;
+    if let Some(decision) = decision { decision.publish(); }
+    Ok(qualified)
+}
+
+/// A speculative remap route publishes its decision only if it owns the request.
+pub(super) struct RouteAliasDecision(String);
+impl RouteAliasDecision {
+    pub(super) fn publish(self) { eprintln!("{}", self.0); }
+}
+
+/// Compute the existing qualification without announcing a rejected route.
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#short-name")]
+pub(super) fn qualify_for_route(
+    resolver: &InstallResolver, pkgref: &PackageRef, lockfile: &Lockfile,
+) -> Result<(PackageRef, Option<RouteAliasDecision>)> {
+    if pkgref.is_qualified() { return Ok((pkgref.clone(), None)); }
+    let mut decision = None;
+    let qualified = match resolve(resolver, &pkgref.name, lockfile)? {
+        ShortNameOutcome::Resolved(group) => Ok::<PackageRef, anyhow::Error>(PackageRef {
             kind: pkgref.kind,
             group: Some(group),
             name: pkgref.name.clone(),
@@ -240,7 +255,10 @@ pub fn qualify(
         // downstream ever sees the short name (PROP-029
         // `#ADDR-SHORT-NAMES`).
         ShortNameOutcome::ResolvedAlias(candidate) => {
-            eprintln!("{} → {}", pkgref.name, candidate.provenance());
+            let provenance = candidate.provenance();
+            let provenance = provenance.replace(" (alias in ", " · alias in ");
+            let message = format!("  {} → {}", pkgref.name, provenance.trim_end_matches(')'));
+            decision = Some(RouteAliasDecision(message));
             Ok(PackageRef {
                 kind: pkgref.kind,
                 group: Some(candidate.target.group.clone()),
@@ -261,7 +279,8 @@ pub fn qualify(
             render_collision(&pkgref.name, &spellings, &hint),
         )
         .into()),
-    }
+    }?;
+    Ok((qualified, decision))
 }
 
 /// Qualify a CLI-supplied pkgref using **only the lockfile** — no

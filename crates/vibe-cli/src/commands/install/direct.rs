@@ -268,6 +268,9 @@ fn run_with_scope_selected(
     scope: ConfirmationScope<'_>,
     completion: Completion,
 ) -> Result<()> {
+    let _input_display = args.packages.iter().any(|raw| {
+        vibe_core::PackageRef::parse(raw).is_ok_and(|reference| !reference.is_qualified())
+    }).then(|| ctx.defer_input_progress());
     let overall = ctx.progress().task("Installing packages");
     let scoped = ctx.with_progress_scope(overall.progress());
     let display = crate::commands::app::display::StepDisplay::open(&scoped, &args.steps);
