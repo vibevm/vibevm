@@ -451,7 +451,8 @@ mod tests {
     /// the install: nothing panics and nothing propagates.
     #[test]
     fn an_unwritable_home_costs_the_evidence_and_not_the_install() {
-        let evidence = StepEvidence::new(Path::new("/vibe-no-such-root-anywhere"));
+        let not_a_directory = tempfile::NamedTempFile::new().unwrap();
+        let evidence = StepEvidence::new(not_a_directory.path());
         evidence.started("org.example/hooked#build@slot(x)");
         assert!(
             evidence
