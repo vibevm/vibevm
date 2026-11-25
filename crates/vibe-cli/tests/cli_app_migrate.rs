@@ -11,6 +11,8 @@
 #![cfg(all(test, target_os = "linux"))]
 
 mod common;
+#[path = "common/migrate_trailer.rs"]
+mod migrate_trailer;
 
 use std::fs;
 use std::path::{Path, PathBuf};
@@ -103,7 +105,8 @@ printf 'carried=%s to=%s out=%s root=%s who=%s\n' \
 "#;
 
 fn install(r: &AppRegistry, version: &str) {
-    ok(&r.app(
+    ok(&migrate_trailer::app(
+        r,
         &["install", "-g"],
         &format!("org.example/stateful@{version}"),
         &["--offline", "--unattended", "--json"],
@@ -116,7 +119,7 @@ fn migrate(r: &AppRegistry, from: &str, to: &str, extra: &[&str]) -> std::proces
     let mut args = vec!["app", "migrate", "stateful", from, to];
     args.extend_from_slice(&["--registry", registry.to_str().unwrap(), "--offline"]);
     args.extend_from_slice(extra);
-    r.vibe(&args)
+    migrate_trailer::vibe(r, &args)
 }
 
 fn entry_of<'a>(document: &'a Value, id: &str) -> &'a Value {
@@ -140,7 +143,6 @@ fn pair(r: &AppRegistry, export: &str, import: &str) {
     install(r, "1.0.0");
     install(r, "2.0.0");
 }
-
 #[test]
 #[specmark::spec(verifies = "spec://org.vibevm.core/vibevm/common/PROP-075#MIGRATION-DECLARATION")]
 fn the_happy_path_carries_the_state_with_each_side_on_its_own_version() {
@@ -170,7 +172,7 @@ fn the_happy_path_carries_the_state_with_each_side_on_its_own_version() {
 
     // The work directory is kept and `vibe app work` lists it.
     assert!(work.is_dir(), "{} is gone", work.display());
-    let listing = json(&r.vibe(&["app", "work", "-g", "--json"]));
+    let listing = json(&migrate_trailer::vibe(&r, &["app", "work", "-g", "--json"]));
     let rows = listing["entries"].as_array().unwrap();
     let row = rows
         .iter()
@@ -181,18 +183,24 @@ fn the_happy_path_carries_the_state_with_each_side_on_its_own_version() {
     // A per-package clean never takes it, because the row is keyed by a
     // version **pair** and not by a package: with no installation work
     // directory kept, that clean has nothing at all to select and refuses.
-    let per_package = failed(&r.vibe(&[
-        "app",
-        "work",
-        "-g",
-        "--clean",
-        "org.example/stateful",
-        "--json",
-    ]));
+    let per_package = failed(&migrate_trailer::vibe(
+        &r,
+        &[
+            "app",
+            "work",
+            "-g",
+            "--clean",
+            "org.example/stateful",
+            "--json",
+        ],
+    ));
     assert!(per_package.contains("work_missing"), "{per_package}");
     assert!(work.is_dir(), "a package clean must not take a migration");
     // The home-wide clean does take it, which is AV-FMT-103.
-    let cleaned = json(&r.vibe(&["app", "work", "-g", "--clean", "--all", "--json"]));
+    let cleaned = json(&migrate_trailer::vibe(
+        &r,
+        &["app", "work", "-g", "--clean", "--all", "--json"],
+    ));
     assert!(
         cleaned["removed"]
             .as_array()
@@ -215,10 +223,9 @@ fn the_happy_path_carries_the_state_with_each_side_on_its_own_version() {
     // Nothing moved the slot's default.
     assert_eq!(r.index()["slots"]["stateful"]["default"], before);
     // A `/7` index is still routable: every command of the slot answers.
-    let listed = r.listed("org.example/stateful@2.0.0");
+    let listed = migrate_trailer::listed(&r, "org.example/stateful@2.0.0");
     assert_eq!(listed["key"], "org.example/stateful@2.0.0");
 }
-
 #[test]
 #[specmark::spec(verifies = "spec://org.vibevm.core/vibevm/common/PROP-075#MIGRATION-FAILURE")]
 fn a_failing_export_changes_nothing_and_never_runs_the_import() {
@@ -246,7 +253,6 @@ fn a_failing_export_changes_nothing_and_never_runs_the_import() {
     let record = &r.index()["installations"]["org.example/stateful@2.0.0"];
     assert_eq!(record["migrated"][0]["result"], "export_failed");
 }
-
 #[test]
 #[specmark::spec(verifies = "spec://org.vibevm.core/vibevm/common/PROP-075#MIGRATION-FAILURE")]
 fn failed_import_keeps_the_new_version() {
@@ -289,7 +295,7 @@ fn failed_import_keeps_the_new_version() {
     );
     assert_eq!(index["slots"]["stateful"]["default"], before);
     assert_eq!(
-        r.listed("org.example/stateful@2.0.0")["key"],
+        migrate_trailer::listed(&r, "org.example/stateful@2.0.0")["key"],
         "org.example/stateful@2.0.0"
     );
     // The work directory is kept, with the export's own evidence in it.
@@ -300,7 +306,6 @@ fn failed_import_keeps_the_new_version() {
         "import_failed"
     );
 }
-
 #[test]
 #[specmark::spec(verifies = "spec://org.vibevm.core/vibevm/common/PROP-075#MIGRATION-FAILURE")]
 fn one_entrys_failure_does_not_stop_anothers() {
@@ -334,8 +339,8 @@ fn one_entrys_failure_does_not_stop_anothers() {
     // entry's own name.
     let work = PathBuf::from(document["work"].as_str().unwrap());
     assert!(work.join("second").is_file() && work.join("logs/second/export.log").is_file());
+    migrate_trailer::assert_mixed_trailer(&r, &work);
 }
-
 #[test]
 #[specmark::spec(verifies = "spec://org.vibevm.core/vibevm/common/PROP-075#MIGRATION-FAILURE")]
 fn resume_re_runs_only_the_import() {
@@ -374,7 +379,6 @@ fn resume_re_runs_only_the_import() {
         "1.0.0\n"
     );
 }
-
 #[test]
 #[specmark::spec(verifies = "spec://org.vibevm.core/vibevm/common/PROP-075#MIGRATION-FAILURE")]
 fn an_unattended_run_without_yes_refuses_and_prints_the_exact_command() {
@@ -398,7 +402,6 @@ fn an_unattended_run_without_yes_refuses_and_prints_the_exact_command() {
             .is_none_or(|rows| rows.is_empty())
     );
 }
-
 #[test]
 #[specmark::spec(verifies = "spec://org.vibevm.core/vibevm/common/PROP-075#MIGRATION-FAILURE")]
 fn only_refuses_an_id_the_new_version_does_not_declare() {
@@ -416,7 +419,6 @@ fn only_refuses_an_id_the_new_version_does_not_declare() {
         "{envelope:#}"
     );
 }
-
 #[test]
 #[specmark::spec(verifies = "spec://org.vibevm.core/vibevm/common/PROP-075#MIGRATION-FAILURE")]
 fn install_of_a_new_version_offers_and_does_not_migrate() {
@@ -430,7 +432,8 @@ fn install_of_a_new_version_offers_and_does_not_migrate() {
     install(&r, "1.0.0");
     // The second install is the one that can offer; it is human output, so
     // the offer is read off stdout rather than a JSON envelope.
-    let second = r.app(
+    let second = migrate_trailer::app(
+        &r,
         &["install", "-g"],
         "org.example/stateful@2.0.0",
         &["--offline", "--unattended"],
@@ -444,12 +447,11 @@ fn install_of_a_new_version_offers_and_does_not_migrate() {
     // It offered and nothing else: no migration ran.
     assert!(!r.home().join("imported").exists());
     assert!(
-        crate::common::app_registry::ok(&r.vibe(&["app", "work", "-g", "--json"]))
+        crate::common::app_registry::ok(&migrate_trailer::vibe(&r, &["app", "work", "-g", "--json"]))
             .contains("\"entries\": []")
             || !r.index().to_string().contains("\"migrated\"")
     );
 }
-
 #[test]
 #[specmark::spec(verifies = "spec://org.vibevm.core/vibevm/common/PROP-065#needs")]
 fn an_unmet_need_refuses_the_entry_before_its_child_starts() {
@@ -489,7 +491,6 @@ fn an_unmet_need_refuses_the_entry_before_its_child_starts() {
     assert!(!work.join("carried").exists());
     assert!(!r.home().join("imported").exists());
 }
-
 #[test]
 #[specmark::spec(verifies = "spec://org.vibevm.core/vibevm/common/PROP-075#MIGRATION-FAILURE")]
 fn a_maintenance_entry_carries_one_version_into_itself() {
@@ -512,21 +513,15 @@ fn a_maintenance_entry_carries_one_version_into_itself() {
         "1.0.0\n"
     );
 }
-
 #[test]
 #[specmark::spec(verifies = "spec://org.vibevm.core/vibevm/common/PROP-075#MIGRATION-FAILURE")]
 fn an_unknown_slot_and_an_uninstalled_version_refuse_before_any_effect() {
     let r = AppRegistry::new();
     pair(&r, EXPORT, IMPORT);
-    let unknown = failed(&r.vibe(&[
-        "app",
-        "migrate",
-        "absent",
-        "1.0.0",
-        "2.0.0",
-        "--all",
-        "--offline",
-    ]));
+    let unknown = failed(&migrate_trailer::vibe(
+        &r,
+        &["app", "migrate", "absent", "1.0.0", "2.0.0", "--all", "--offline"],
+    ));
     assert!(unknown.contains("absent"), "{unknown}");
     let missing = failed(&migrate(&r, "1.0.0", "9.9.9", &["--all"]));
     assert!(missing.contains("9.9.9"), "{missing}");
@@ -536,7 +531,6 @@ fn an_unknown_slot_and_an_uninstalled_version_refuse_before_any_effect() {
             .is_none_or(|rows| rows.is_empty())
     );
 }
-
 #[test]
 fn migration_uses_declared_payload_root_without_public_command_proxies() {
     let r = AppRegistry::new();

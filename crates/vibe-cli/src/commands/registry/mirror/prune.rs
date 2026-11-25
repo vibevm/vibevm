@@ -31,6 +31,8 @@ use super::selection::{Origin, PayloadPlan, Selection};
 use super::templates::StaleSnapshot;
 use crate::output;
 
+pub(super) mod view;
+
 const SPEC: &str = "spec://org.vibevm.core/vibevm/common/PROP-075#MIRROR-PRUNE";
 
 /// What `--prune`, `--prune-payloads` and `--yes` asked for.
@@ -131,6 +133,24 @@ pub(super) fn check(request: Request, selection: &Selection, config: Option<&Pat
         );
     }
     Ok(())
+}
+
+/// Validate using the original argument spellings only for display.
+pub(super) fn check_retry(
+    request: Request,
+    selection: &Selection,
+    retry: &view::Retry<'_>,
+) -> Result<()> {
+    // Preserve the earlier malformed-combination refusal's priority.
+    if request.prune && selection.origin() == Origin::Flags {
+        bail!(
+            "prune_needs_selection: --prune needs a declared selection: \
+             --package and --group are a per-run override and are never recorded \
+             (violates {SPEC}; fix: `{}`)",
+            retry.command("", true)
+        );
+    }
+    check(request, selection, retry.config)
 }
 
 /// Plan the removals against one reading of the target.
@@ -351,14 +371,15 @@ pub(super) fn answer(
     plan: &Plan,
     request: Request,
     dry_run: bool,
+    retry: &view::Retry<'_>,
 ) -> Result<bool> {
     if plan.is_empty() {
         if request.prune && !ctx.is_json() {
-            ctx.step("--prune: the recorded selection still matches everything in the target");
+            view::empty(ctx);
         }
         return Ok(false);
     }
-    show(ctx, plan);
+    view::show(ctx, plan);
     if dry_run {
         return Ok(false);
     }
@@ -369,10 +390,12 @@ pub(super) fn answer(
     let plural = if count == 1 { "" } else { "s" };
     if !attended(ctx) {
         bail!(
-            "prune_consent_required: the plan above removes {count} thing{plural} from the \
-             target, and this run has nobody to ask; nothing was written \
-             (violates {SPEC}; fix: read the plan, then re-run the same command with `--yes`; \
-             `--dry-run --prune` prints it without writing anything either way)"
+            "prune_consent_required: the plan above removes {count} thing{plural}, and this \
+             run has nobody to ask; nothing was written \
+             (violates {SPEC}; fix: read the plan, then `{}`; \
+             or inspect without writing with `{}`)",
+            retry.command("--yes", false),
+            retry.command("--dry-run", false)
         );
     }
     crate::output::prompts::confirm_then(
@@ -409,27 +432,6 @@ pub(super) fn rows(plan: &Plan) -> Vec<wire::PrunedItem> {
 /// Whether this run may ask: a terminal, not `--json`, not `--unattended`.
 fn attended(ctx: &output::Context) -> bool {
     !ctx.is_json() && !ctx.is_unattended() && console::user_attended()
-}
-
-fn show(ctx: &output::Context, plan: &Plan) {
-    if ctx.is_json() {
-        return;
-    }
-    ctx.step(&format!("--prune: {} thing(s) to remove", plan.rows.len()));
-    for row in &plan.rows {
-        let version = row
-            .version
-            .as_deref()
-            .map(|version| format!("@{version}"))
-            .unwrap_or_default();
-        ctx.step(&format!(
-            "  {} {}{version} — {} ({})",
-            row.what.label(),
-            row.package,
-            row.reason,
-            row.path
-        ));
-    }
 }
 
 /// Remove the projected payloads the plan names, after the registry's own

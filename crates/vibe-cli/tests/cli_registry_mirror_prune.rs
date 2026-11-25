@@ -32,7 +32,14 @@ fn publish(root: &Path, group: &str, name: &str, version: &str) {
 }
 
 fn git(cwd: &Path, args: &[&str]) -> String {
+    let user = UserScratch::new();
+    let home = user.settings.with_file_name("home");
+    fs::create_dir_all(&home).unwrap();
     let output = Command::new("git")
+        .env("HOME", &home)
+        .env("USERPROFILE", &home)
+        .env("VIBE_SETTINGS", &user.settings)
+        .env("GIT_CONFIG_GLOBAL", "/dev/null")
         .current_dir(cwd)
         .env("GIT_CONFIG_NOSYSTEM", "1")
         .env("GIT_AUTHOR_NAME", "Test")
@@ -66,9 +73,17 @@ fn project(root: &Path, target: &str) -> PathBuf {
 }
 
 fn vibe(user: &UserScratch, project: &Path, args: &[&str]) -> Output {
+    let home = user.settings.with_file_name("home");
+    fs::create_dir_all(&home).unwrap();
     user.vibe()
+        .env("HOME", &home)
+        .env("USERPROFILE", &home)
+        .env("GIT_CONFIG_GLOBAL", "/dev/null")
         .current_dir(project)
         .env("VIBE_NO_DEFAULT_REGISTRY", "1")
+        .env("TERM", "xterm")
+        .env("COLUMNS", "240")
+        .env("NO_COLOR", "1")
         .env("GIT_CONFIG_NOSYSTEM", "1")
         .args(args)
         .output()
@@ -165,7 +180,7 @@ fn narrowing_without_prune_deletes_nothing_and_a_plan_without_yes_changes_nothin
     let message = refusal(&run(&UserScratch::new(), &narrow, &["--prune"]));
     assert!(message.contains("prune_consent_required"), "{message}");
     assert!(message.contains("nothing was written"), "{message}");
-    assert!(message.contains("`--yes`"), "{message}");
+    assert!(message.contains("--yes"), "{message}");
     assert!(target.join("org.other/tool/v2.0.0/vibe.toml").is_file());
 
     // `--dry-run --prune` prints the plan and stops, successfully.
@@ -210,9 +225,9 @@ fn narrowing_without_prune_deletes_nothing_and_a_plan_without_yes_changes_nothin
         );
         ok(&output) + &String::from_utf8_lossy(&output.stderr)
     };
-    assert!(shown.contains("--prune: 1 thing(s) to remove"), "{shown}");
+    assert!(shown.contains("prune plan · 1 to remove"), "{shown}");
     assert!(
-        shown.contains("version org.other/tool@2.0.0 — no longer selected by `[select]`"),
+        shown.contains("version  org.other/tool@2.0.0  no longer selected by [select]"),
         "{shown}"
     );
     assert!(target.join("org.other/tool/v2.0.0/vibe.toml").is_file());
@@ -346,7 +361,7 @@ fn a_monorepo_prune_reaches_the_pushed_bare_repository() {
     );
     let shown = ok(&output) + &String::from_utf8_lossy(&output.stderr);
     assert!(
-        shown.contains("still matches everything in the target"),
+        shown.contains("recorded selection still matches the target"),
         "{shown}"
     );
 }
@@ -424,4 +439,110 @@ fn a_version_another_source_copied_survives_this_sources_prune() {
         target.join("org.other/tool/v2.0.0/vibe.toml").is_file(),
         "a version another source recorded as copied is never pruned by this source's run"
     );
+}
+
+/// Human plan bytes precede the refusal in a shared destination, not an
+/// invented concatenation of independently captured stdout and stderr.
+#[test]
+#[specmark::spec(verifies = "spec://org.vibevm.core/vibevm/common/PROP-075#MIRROR-PRUNE")]
+fn human_prune_plan_and_consent() {
+    use std::io::{Read, Seek, SeekFrom};
+
+    fn snapshot(root: &Path) -> Vec<(PathBuf, Vec<u8>)> {
+        let mut files = Vec::new();
+        for entry in fs::read_dir(root).unwrap() {
+            let path = entry.unwrap().path();
+            if path.is_dir() {
+                files.extend(snapshot(&path));
+            } else {
+                files.push((path.clone(), fs::read(path).unwrap()));
+            }
+        }
+        files.sort();
+        files
+    }
+
+    let user = UserScratch::new();
+    let tmp = tempfile::tempdir().unwrap();
+    let root = tmp.path();
+    source(root);
+    let target = root.join("target");
+    fs::create_dir_all(&target).unwrap();
+    let project = project(root, &format!(
+        "[[registry]]\nname='dst'\ntype='localdir'\nurl='file://{}'\n",
+        target.display()
+    ));
+    let wide = config(root, "schema = 1\n[select]\nall = true\n");
+    let seeded = vibe(&user, &project, &[
+        "--json", "registry", "mirror", "src", "--into", "dst", "--config",
+        wide.to_str().unwrap(),
+    ]);
+    assert!(seeded.status.success(), "synthetic mirror setup failed");
+    let narrow = root.join("selection ' ; $(not-executed).toml");
+    fs::write(&narrow, "schema = 1\n[select]\ngroups = ['org.other']\n").unwrap();
+    let before = snapshot(&target);
+    let args = [
+        "--plain", "--unattended", "registry", "mirror", "src", "--into", "dst",
+        "--config", narrow.to_str().unwrap(), "--prune",
+    ];
+    let output = vibe(&user, &project, &args);
+    assert!(!output.status.success(), "prune must require consent");
+    let out = String::from_utf8_lossy(&output.stdout);
+    let err = String::from_utf8_lossy(&output.stderr);
+    assert!(out.contains("── prune plan · 2 to remove ─"), "missing human plan rule/count");
+    let rows: Vec<_> = out.lines().filter(|line| line.starts_with("○ version")).collect();
+    assert_eq!(rows.len(), 2, "human plan must enumerate both removals");
+    for (row, version) in rows.iter().zip(["1.0.0", "1.1.0"]) {
+        let expected = format!(
+            "○ version  org.corp/demo@{version}  no longer selected by [select] · org.corp/demo/v{version}"
+        );
+        assert_eq!(*row, expected, "human semantic row differs");
+    }
+    assert!(out.contains("selection from"), "missing selection provenance");
+    assert!(!out.contains("Selecting from"), "duplicate selection heading");
+    assert!(err.contains("prune_consent_required"), "wrong refusal");
+    assert!(err.contains("nothing was written"), "missing no-write explanation");
+    let quoted = format!("'{}'", narrow.to_str().unwrap().replace('\'', "'\"'\"'"));
+    for flag in ["--yes", "--dry-run"] {
+        let expected = format!(
+            "vibe registry mirror src --into dst --config {quoted} --prune {flag}"
+        );
+        assert!(err.contains(&expected), "missing safely quoted truthful retry command");
+    }
+    assert!(!out.contains("SYNTHETIC_PRIVATE_CANARY"), "private canary exposed");
+    assert!(!err.contains("SYNTHETIC_PRIVATE_CANARY"), "private canary exposed");
+    assert_eq!(snapshot(&target), before, "refused prune changed target");
+
+    let home = user.settings.with_file_name("home");
+    fs::create_dir_all(home.join(".vibe")).unwrap();
+    fs::write(home.join(".vibe/registry.toml"),
+        "# SYNTHETIC_PRIVATE_CANARY — ignored because settings is separate\n").unwrap();
+    let mut capture = tempfile::tempfile().unwrap();
+    let status = Command::new(env!("CARGO_BIN_EXE_vibe"))
+        .current_dir(&project)
+        .env("HOME", &home)
+        .env("USERPROFILE", &home)
+        .env("VIBE_SETTINGS", &user.settings)
+        .env("VIBE_REGISTRY_CACHE", &user.cache)
+        .env("VIBEVM_SEARCH_CACHE_DIR", &user.search_cache)
+        .env("VIBE_NO_DEFAULT_REGISTRY", "1")
+        .env("GIT_CONFIG_NOSYSTEM", "1")
+        .env("GIT_CONFIG_GLOBAL", "/dev/null")
+        .env("TERM", "xterm")
+        .env("COLUMNS", "240")
+        .env("NO_COLOR", "1")
+        .args(args)
+        .stdout(capture.try_clone().unwrap())
+        .stderr(capture.try_clone().unwrap())
+        .status().unwrap();
+    assert!(!status.success(), "shared-destination prune must refuse");
+    capture.seek(SeekFrom::Start(0)).unwrap();
+    let mut ordered = String::new();
+    capture.read_to_string(&mut ordered).unwrap();
+    let plan = ordered.find("── prune plan · 2 to remove ─").expect("missing plan");
+    let refusal = ordered.find("prune_consent_required").expect("missing refusal");
+    let last = ordered.find("org.corp/demo/v1.1.0").expect("missing last plan row");
+    assert!(plan < last && last < refusal, "plan must be written before refusal");
+    assert!(!ordered.contains("SYNTHETIC_PRIVATE_CANARY"), "private canary exposed");
+    assert_eq!(snapshot(&target), before, "ordered capture run changed target");
 }

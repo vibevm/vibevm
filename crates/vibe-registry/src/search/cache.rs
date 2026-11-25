@@ -221,6 +221,7 @@ mod tests {
             hit_count: 1,
             hits: vec![SearchHit {
                 kind: PackageKind::Flow,
+                group: Some("org.vibevm".into()),
                 name: "wal".into(),
                 latest_stable: Some("0.1.0".parse().unwrap()),
                 score: 3,

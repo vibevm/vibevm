@@ -99,11 +99,15 @@ impl Fixture {
         }
     }
     fn run(&self, args: &[&str]) -> Output {
-        self.user
-            .vibe()
+        self.run_mode(args, true)
+    }
+    fn run_mode(&self, args: &[&str], json: bool) -> Output {
+        let mut command = self.user.vibe();
+        command
             .current_dir(&self.project)
             .env("HOME", &self.home)
             .env("USERPROFILE", &self.home)
+            .env("VIBE_SETTINGS", &self.user.settings)
             .env("GIT_CONFIG_GLOBAL", "/dev/null")
             .env("GIT_CONFIG_NOSYSTEM", "1")
             // `http` for the dumb-HTTP Git fixture an ordinary (uncontrolled)
@@ -111,12 +115,17 @@ impl Fixture {
             .env("GIT_ALLOW_PROTOCOL", "file:http")
             .env_remove("VIBE_REMAP")
             .args(args)
-            .args(["--unattended", "--json", "--reject-remap"])
-            .output()
-            .unwrap()
+            .args(["--unattended", "--reject-remap"]);
+        if json {
+            command.arg("--json");
+        }
+        command.output().unwrap()
     }
     fn bind(&self, selected: &Path) -> Output {
-        self.run(&[
+        self.bind_mode(selected, true)
+    }
+    fn bind_mode(&self, selected: &Path, json: bool) -> Output {
+        self.run_mode(&[
             "remap",
             "bind-source",
             "org.example/policy",
@@ -124,7 +133,7 @@ impl Fixture {
             self.binding.to_str().unwrap(),
             "--path",
             selected.to_str().unwrap(),
-        ])
+        ], json)
     }
     fn remap_home(&self) -> BTreeMap<PathBuf, Vec<u8>> {
         files(&self.user.settings.join("remap"))
@@ -165,6 +174,36 @@ fn legacy_missing_source_refuses_before_project_or_home_effects_then_explicit_bi
     assert_eq!(success(f.bind(&f.project))["changed"], false);
     assert_eq!(fs::read(f.project.join("vibe.lock")).unwrap(), bytes);
     assert_eq!(f.remap_home(), home);
+}
+#[test]
+fn binding_outcomes_close_human_output_but_leave_json_unadorned() {
+    for json in [false, true] {
+        let f = Fixture::new();
+        let home = f.remap_home();
+        for changed in [true, false] {
+            let output = f.bind_mode(&f.project, json);
+            assert!(output.status.success(), "{output:?}");
+            let stdout = String::from_utf8(output.stdout).unwrap();
+            let stderr = String::from_utf8(output.stderr).unwrap();
+            assert!(!stderr.contains('✻'), "{stderr}");
+            if json {
+                let report: serde_json::Value = serde_json::from_str(&stdout).unwrap();
+                assert_eq!(report["command"], "remap:bind-source");
+                assert_eq!(report["ok"], true);
+                assert_eq!(report["package"], "org.example/policy");
+                assert_eq!(report["binding"], "newly_verified");
+                assert_eq!(report["changed"], changed);
+                assert!(!stdout.contains('✻'), "{stdout}");
+            } else {
+                let outcome = if changed { "recorded, not adopted or activated" } else { "unchanged" };
+                let trailer = stdout.lines().filter(|line| !line.trim().is_empty()).last().unwrap();
+                assert_eq!(stdout.matches('✻').count(), 1, "{stdout}");
+                assert!(trailer.starts_with(&format!("✻ verified source binding for org.example/policy {outcome} · ")), "{stdout}");
+                assert!(trailer.ends_with(&format!(" · {}", f.project.join("vibe.lock").display())), "{stdout}");
+            }
+            assert_eq!(f.remap_home(), home);
+        }
+    }
 }
 #[test]
 #[specmark::spec(verifies = "spec://org.vibevm.core/vibevm/common/PROP-073#LOCKED-SOURCE-LAW")]

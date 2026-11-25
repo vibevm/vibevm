@@ -41,6 +41,12 @@ impl Context {
         self.file_row(Glyph::Skipped, Role::Dim, "kept", path, Some(reason));
     }
 
+    /// A file the command wrote over, and why: a regenerated artifact.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-067#list")]
+    pub fn updated(&self, path: &str, reason: &str) {
+        self.file_row(Glyph::Done, Role::Ok, "updated", path, Some(reason));
+    }
+
     /// A file the command removed.
     #[allow(dead_code)] // used by uninstall
     pub fn removed(&self, path: &str) {
@@ -228,6 +234,11 @@ impl Context {
     /// and in full (`installed branch:main#106 · 2 steps · 41s · <home>`).
     pub(crate) fn trailer_at(&self, what: &str, record: &str) {
         self.write_trailer(Stream::Out, self.trailer_text_at(true, what, Some(record)));
+    }
+
+    /// The run verdict with its retained result written last and in full.
+    pub(crate) fn trailer_verdict_at(&self, ok: bool, what: &str, record: &str) {
+        self.write_trailer(Stream::Out, self.trailer_text_at(ok, what, Some(record)));
     }
 
     fn write_trailer(&self, stream: Stream, text: String) {

@@ -185,10 +185,19 @@ fn a_dry_run_shows_the_projection_with_its_counts_and_bytes_and_writes_nothing()
     // Both options of one version: one declares its size, the other does
     // not, so the total is a lower bound and says so.
     let config = fixture.one_version("1.9.0", None, "'linux-x64', 'win-x64'");
-    let output = vibe(
-        &user,
-        &fixture.project(),
-        &[
+    let home = tempfile::tempdir().unwrap();
+    assert_ne!(home.path(), user.settings);
+    let output = user
+        .vibe()
+        .current_dir(fixture.project())
+        .env("HOME", home.path())
+        .env("USERPROFILE", home.path())
+        .env("VIBE_SETTINGS", &user.settings)
+        .env("VIBE_NO_DEFAULT_REGISTRY", "1")
+        .env("GIT_CONFIG_NOSYSTEM", "1")
+        .env("TERM", "xterm-256color")
+        .env("NO_COLOR", "1")
+        .args([
             "--remap",
             fixture.root.path().join("remap.toml").to_str().unwrap(),
             "registry",
@@ -199,20 +208,17 @@ fn a_dry_run_shows_the_projection_with_its_counts_and_bytes_and_writes_nothing()
             "--config",
             config.to_str().unwrap(),
             "--dry-run",
-        ],
-    );
+        ])
+        .output()
+        .unwrap();
     let shown = ok(&output) + &String::from_utf8_lossy(&output.stderr);
-    assert!(
-        shown.contains("1.9.0: 2 payload input(s) — linux-x64, win-x64"),
-        "{shown}"
-    );
-    assert!(
-        shown.contains(&format!(
-            "payloads: 2 input(s), 0 already in the drop (0 byte(s)), {PAYLOAD_BYTES} byte(s) to \
-             fetch, {PAYLOAD_BYTES} byte(s) in all (a lower bound: 1 input(s) declare no size)"
-        )),
-        "{shown}"
-    );
+    let expected = [
+        "✓ template org.corp/tool@1.0.0  1 version selected · 1.9.0 · 1 to snapshot · 0 already there",
+        "  └ installer option(s) kept: linux-x64, win-x64",
+        "  └ 1.9.0: 2 payload inputs · linux-x64, win-x64",
+        "  └ payloads  2 inputs · 0 in the drop · 0 B in the drop · 4.1 KB to fetch · 4.1 KB in all · lower bound · 1 input without a size",
+    ];
+    assert!(shown.contains(&expected.join("\n")), "{shown}");
     assert!(
         shown.contains(&format!(
             "Projecting payloads into the drop `{}`",

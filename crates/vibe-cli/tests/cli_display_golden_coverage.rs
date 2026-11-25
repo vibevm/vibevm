@@ -240,14 +240,22 @@ fn check_terminal_width_and_warn_colour() {
 fn the_unattended_init_reads_as_its_golden() {
     let user = UserScratch::new();
     let root = tempfile::tempdir().unwrap();
+    let home = root.path().join("home");
+    let settings = root.path().join("settings");
+    fs::create_dir_all(&home).unwrap();
+    fs::create_dir_all(&settings).unwrap();
     let initialised = user
         .vibe()
+        .env("HOME", &home)
+        .env("USERPROFILE", &home)
+        .env("VIBE_SETTINGS", &settings)
         .current_dir(root.path())
         .args(["init", "demo", "--unattended", "--plain", "--name", "demo"])
         .output()
         .unwrap();
     assert!(initialised.status.success(), "{}", screen(&initialised));
-    golden("init-wizard", &normalise(&screen(&initialised), &[]));
+    let canonical = root.path().canonicalize().unwrap();
+    golden("init-wizard", &normalise(&screen(&initialised), &[(canonical.as_path(), "<root>")]));
 }
 
 #[test]

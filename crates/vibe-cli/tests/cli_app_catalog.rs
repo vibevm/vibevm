@@ -75,6 +75,56 @@ fn revision(apps: &AppRegistry) -> u64 {
 }
 
 #[test]
+fn collection_create_ends_with_revision() {
+    let apps = fixture();
+    let run = |args: &[&str]| {
+        apps.user
+            .vibe()
+            .current_dir(apps.root.path())
+            .env("HOME", apps.home())
+            .env("USERPROFILE", apps.home())
+            .env("VIBE_SETTINGS", apps.settings())
+            .env("NO_COLOR", "1")
+            .args(args)
+            .output()
+            .unwrap()
+    };
+    let created = ok(&run(&["app", "collection", "-g", "create", "tools"]));
+    let before = json(&run(&["app", "collection", "-g", "list", "--json"]));
+    let revision = before["revision"].as_u64().unwrap();
+    assert!(revision > 0, "{before}");
+    let lines: Vec<_> = created.lines().collect();
+    assert_eq!(lines.len(), 1, "creation must not list the layer: {created}");
+    let last = lines.last().unwrap();
+    assert!(last.contains("created collection tools"), "{created}");
+    assert!(last.contains(&format!("revision {revision}")), "{created}");
+    let duration = last.rsplit(" · ").next().unwrap();
+    assert!(
+        duration.ends_with('s') && duration[..duration.len() - 1].parse::<u64>().is_ok(),
+        "creation must end with its elapsed seconds: {created}"
+    );
+    assert!(!created.contains("collection(s)"), "{created}");
+    assert!(
+        !created.contains(&apps.settings().display().to_string()),
+        "{created}"
+    );
+
+    let listed = ok(&run(&["app", "collection", "-g", "list"]));
+    let lines: Vec<_> = listed.lines().collect();
+    assert!(lines[0].contains("collections"), "{listed}");
+    assert!(lines[0].contains(&format!("revision {revision}")), "{listed}");
+    assert!(lines[0].starts_with("── "), "{listed}");
+    assert_eq!(lines[1], "  tools", "{listed}");
+    assert_eq!(lines.len(), 2, "{listed}");
+    assert!(!listed.contains("created collection"), "{listed}");
+    let quiet = ok(&run(&["app", "collection", "-g", "list", "--quiet"]));
+    assert_eq!(quiet.lines().count(), 1, "{quiet}");
+    assert!(quiet.contains(&format!("revision {revision}")), "{quiet}");
+    let after = json(&run(&["app", "collection", "-g", "list", "--json"]));
+    assert_eq!(before, after, "a human listing must not change the user layer");
+}
+
+#[test]
 fn the_catalog_carries_keys_a_seeded_collection_and_a_revision_every_edit_moves() {
     let apps = fixture();
     ok(&apps.app(&["install", "-g"], "org.example/editor", &[]));

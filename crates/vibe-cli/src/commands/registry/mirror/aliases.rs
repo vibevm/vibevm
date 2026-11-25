@@ -48,12 +48,7 @@ pub(super) fn alias_merge(
         .map(record::MirrorRecord::carried_aliases)
         .unwrap_or_default();
     let holds = |target: &vibe_index::types::AliasTarget| {
-        target_index.get(&target.group, &target.name).is_some()
-            || planned.iter().any(|p| {
-                matches!(p.decision, Decision::Copy | Decision::Update)
-                    && p.version.group == target.group
-                    && p.version.name == target.name
-            })
+        holds_target(target_index, planned, target)
     };
     let mut merge = crate::commands::registry::alias::mirrored(
         &listing.aliases,
@@ -62,7 +57,54 @@ pub(super) fn alias_merge(
         holds,
     );
     for fault in vibe_index::aliases::check(target_index, &merge.table) {
+        // This gate sees the pre-copy index. Only an absent target that
+        // this plan actually supplies may pass; all other faults still drop.
+        if let vibe_index::aliases::AliasFault::TargetAbsent { alias, target } = &fault {
+            if merge.table.get(alias).is_some_and(|row| {
+                vibe_index::aliases::spell(row) == *target && holds(row)
+            }) {
+                continue;
+            }
+        }
         merge.drop_row(fault.alias());
     }
     Ok(merge)
 }
+
+fn holds_target(
+    index: &vibe_index::index::Index,
+    planned: &[plan::Planned],
+    target: &vibe_index::types::AliasTarget,
+) -> bool {
+    index.get(&target.group, &target.name).is_some()
+        || planned.iter().any(|p| {
+            matches!(p.decision, Decision::Copy | Decision::Update)
+                && p.version.group == target.group
+                && p.version.name == target.name
+        })
+}
+
+/// Explain a dropped row without calling a planned target absent.
+pub(super) fn drop_warning(
+    alias: &str,
+    target: &str,
+    index: &vibe_index::index::Index,
+    planned: &[plan::Planned],
+) -> String {
+    let held = target.split_once('/').is_some_and(|(group, name)| {
+        group.parse().is_ok_and(|group| {
+            holds_target(index, planned, &vibe_index::types::AliasTarget {
+                group,
+                name: name.into(),
+            })
+        })
+    });
+    if held {
+        format!("alias {alias} not carried · row does not stand in the target registry")
+    } else {
+        format!("alias {alias} not carried · mirror holds no {target}")
+    }
+}
+
+#[cfg(test)]
+mod tests;

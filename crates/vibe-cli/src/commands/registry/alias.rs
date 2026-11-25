@@ -47,6 +47,8 @@ use super::layout_root;
 use crate::cli::{RegistryAliasAction, RegistryAliasArgs};
 use crate::output;
 
+mod view;
+
 #[derive(Debug, Serialize)]
 struct AliasRow {
     alias: String,
@@ -301,23 +303,7 @@ fn render(ctx: &output::Context, report: &AliasReport) -> Result<()> {
     if ctx.is_json() {
         return ctx.emit_json(report);
     }
-    if !ctx.is_quiet() {
-        match (report.action, &report.alias, &report.target) {
-            ("add", Some(alias), Some(target)) => {
-                println!("`{alias}` now means {target} in {}", report.registry);
-            }
-            ("unchanged", Some(alias), Some(target)) => {
-                println!("`{alias}` already means {target} in {}", report.registry);
-            }
-            ("remove", Some(alias), _) => {
-                println!("withdrew the alias `{alias}` from {}", report.registry);
-            }
-            _ => {}
-        }
-    }
-    for row in &report.aliases {
-        println!("{} -> {}", row.alias, row.target);
-    }
+    view::render(ctx, report);
     Ok(())
 }
 

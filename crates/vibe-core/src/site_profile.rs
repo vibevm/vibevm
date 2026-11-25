@@ -199,11 +199,9 @@ pub enum SiteProfileError {
         source: std::io::Error,
     },
     #[error(
-        "`{origin}` is not a valid site profile: {diagnostic} \
+        "site_profile_invalid: {origin} is not a valid site profile \
          (violates spec://org.vibevm.core/vibevm/common/PROP-019#site-profile; \
-          fix: repair the TOML at the reported location — the tables are \
-          schema, name, [[registry]], [[mirror]], [[override]], [[remap]], \
-          [source_policy], [artifacts], [self], [proxy], [net], [path], [trust], [ai])"
+          fix: repair the TOML at the reported location)"
     )]
     Parse {
         origin: String,

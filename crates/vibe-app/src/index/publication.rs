@@ -67,6 +67,9 @@ impl Index {
                 reason: error.to_string(),
             })?;
         bytes.push(b'\n');
+        // Validate the incumbent and durably preserve an exact retired /1
+        // document under this actual home's lock before any replacement.
+        retired::before_replacement(settings)?;
         crate::proxies::before_publication(settings, self, image)?;
         write_atomic(&path, &bytes)?;
         // Rewritten from these records on every publication, so an

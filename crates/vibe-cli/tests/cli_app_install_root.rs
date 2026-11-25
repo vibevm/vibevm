@@ -16,6 +16,14 @@ use common::UserScratch;
 use serde_json::Value;
 use sha2::{Digest, Sha256};
 
+/// Whether a line begins with these words, however its columns are padded.
+fn row_starts(text: &str, words: &[&str]) -> bool {
+    text.lines().any(|line| {
+        let mut found = line.split_whitespace();
+        words.iter().all(|word| found.next() == Some(*word))
+    })
+}
+
 /// A local registry holding `org.example/<name>@1.0.0` app packages whose
 /// tar.gz payload carries `bin/<command>`.
 struct Fixture {
@@ -148,11 +156,15 @@ fn applications_follow_the_install_root_and_earlier_ones_keep_working() {
 
     let shown = ok(&fixture.vibe(&user, Some(&base), &["self", "apply", "--show"]));
     assert!(
-        shown.contains(&format!(
-            "applications: commands in {}, payloads in {}",
-            bin.display(),
-            store.join("apps").display()
-        )),
+        row_starts(
+            &shown,
+            &[
+                "applications",
+                store.join("apps").display().to_string().as_str(),
+                "·", "commands", "in",
+                bin.display().to_string().as_str(),
+            ],
+        ),
         "{shown}"
     );
 

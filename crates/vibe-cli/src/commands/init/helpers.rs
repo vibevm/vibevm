@@ -3,6 +3,7 @@
 
 use crate::cli::InitArgs;
 use crate::output;
+use crate::output::language::{Role, hint, paint};
 use anyhow::{Context, Result};
 use serde::Serialize;
 use std::fs;
@@ -99,6 +100,7 @@ pub(super) fn report(
     display_root: &str,
     outcomes: &[Outcome],
 ) -> Result<()> {
+    let human = human_counts(outcomes);
     let mut rows: Vec<Outcome> = Vec::new();
     for outcome in outcomes {
         if let Some(previous) = rows.iter_mut().find(|row| row.path == outcome.path) {
@@ -114,7 +116,7 @@ pub(super) fn report(
         .iter()
         .filter(|o| o.action == Action::Created)
         .count();
-    let kept = outcomes.iter().filter(|o| o.action == Action::Kept).count();
+    let kept = outcomes.iter().filter(|o| o.action != Action::Created).count();
 
     if ctx.is_json() {
         use vibe_wire::generated::init_report::{
@@ -133,7 +135,7 @@ pub(super) fn report(
                     path: o.path.clone(),
                     action: match o.action {
                         Action::Created => OutcomeAction::Created,
-                        Action::Kept => OutcomeAction::Kept,
+                        Action::Kept | Action::Regenerated => OutcomeAction::Kept,
                     },
                     reason: o.reason.to_string(),
                 })
@@ -150,23 +152,65 @@ pub(super) fn report(
         return Ok(());
     }
 
-    // What to do next reads as remarks above the trailer, because the
-    // trailer is the last block of a command (PROP-067 `#trailer`).
-    ctx.hint(&format!(
-        "next: edit {boot_core} and {specs_common} as your project takes shape",
-        boot_core =
-            vibe_core::machine_json_path(&vibe_core::layout::current_boot_dir().join("00-core.md")),
-        specs_common =
-            vibe_core::machine_json_path(&vibe_core::layout::current_specs_root().join("common")),
-    ));
-    // The resolver takes `<group>/<name>`; the example is a package the
-    // default registry really serves, so the advice can be run as printed.
-    ctx.hint("next: install packages with vibe install <group>/<name> (e.g. org.vibevm.world/wal)");
-    ctx.trailer(&format!(
-        "initialized {role} {name} · {created} file{} created · {kept} kept",
+    let (created, regenerated, kept) = human;
+    ctx.block(&next_steps(role, outcomes));
+    let mut what = format!(
+        "initialized {role} {name} · {created} file{} created",
         if created == 1 { "" } else { "s" }
-    ));
+    );
+    if regenerated > 0 {
+        what.push_str(&format!(" · {regenerated} regenerated"));
+    }
+    if kept > 0 {
+        what.push_str(&format!(" · {kept} kept"));
+    }
+    let record = canonical_no_unc(Path::new(display_root))
+        .map(|p| display_pathbuf(&p))
+        .unwrap_or_else(|_| display_root.to_owned());
+    ctx.trailer_at(&what, &record);
     Ok(())
+}
+
+fn human_counts(outcomes: &[Outcome]) -> (usize, usize, usize) {
+    let mut paths = std::collections::BTreeMap::new();
+    for outcome in outcomes {
+        let action = paths.entry(&outcome.path).or_insert(Action::Kept);
+        if outcome.action == Action::Regenerated
+            || (*action != Action::Regenerated && outcome.action == Action::Created)
+        {
+            *action = outcome.action;
+        }
+    }
+    paths.values().fold((0, 0, 0), |(c, r, k), action| match action {
+        Action::Created => (c + 1, r, k),
+        Action::Regenerated => (c, r + 1, k),
+        Action::Kept => (c, r, k + 1),
+    })
+}
+
+fn next_steps(role: &str, outcomes: &[Outcome]) -> String {
+    if role == "package"
+        && let Some(manifest) = outcomes.iter().find(|o| o.reason == "package manifest")
+    {
+        return format!("  {}\n  {}", hint("edit the package manifest next"), manifest.path);
+    }
+    format!(
+        "  {}\n  {}\n  {}\n  {}\n  {}",
+        hint("edit these as your project takes shape"),
+        vibe_core::machine_json_path(&vibe_core::layout::current_boot_dir().join("00-core.md")),
+        vibe_core::machine_json_path(&vibe_core::layout::current_specs_root().join("common")),
+        hint("install a package, for example"),
+        paint(Role::Accent, "vibe install org.vibevm.world/wal"),
+    )
+}
+
+#[cfg(test)]
+#[test]
+fn human_counts_created_then_regenerated() {
+    let outcomes = [Action::Created, Action::Regenerated].map(|action| Outcome {
+        path: "CLAUDE.md".into(), action, reason: "boot artifact",
+    });
+    assert_eq!(human_counts(&outcomes), (0, 1, 0));
 }
 
 // ==== Templates ============================================================
@@ -219,25 +263,19 @@ pub(super) fn generate_boot_artifacts(ctx: &output::Context, path: &Path) -> Res
             .file_name()
             .is_some_and(|name| name == vibe_core::layout::BOOT_ARTIFACTS_LOCK);
         let rel = display_pathbuf(artifact);
-        if existed {
-            ctx.skipped(
-                &rel,
-                if coordination {
-                    "retained"
-                } else {
-                    "regenerated"
-                },
-            );
-        } else {
+        let action = if !existed {
             ctx.created(&rel);
-        }
+            Action::Created
+        } else if coordination {
+            ctx.skipped(&rel, "retained");
+            Action::Kept
+        } else {
+            ctx.updated(&rel, "regenerated");
+            Action::Regenerated
+        };
         outcomes.push(Outcome {
-            path: rel.clone(),
-            action: if existed {
-                Action::Kept
-            } else {
-                Action::Created
-            },
+            path: rel,
+            action,
             reason: if coordination {
                 "boot coordination file"
             } else {
@@ -260,6 +298,7 @@ pub(super) struct Outcome {
 pub(super) enum Action {
     Created,
     Kept,
+    Regenerated,
 }
 
 pub(super) fn ensure_file(

@@ -59,19 +59,21 @@ pub(super) fn run(
     }
 }
 
-/// One human line per step.
-pub(super) fn line(check: &Check) -> String {
-    let mark = match check.status {
-        Status::Ok => "ok  ",
-        Status::Fail => "MISS",
-        Status::Skip => "-   ",
-    };
-    match &check.fix {
-        Some(fix) => format!(
-            "{mark} network {}: {} — fix: {fix}",
-            check.step, check.detail
-        ),
-        None => format!("{mark} network {}: {}", check.step, check.detail),
+/// One human check row per network step, with its fix as a child.
+#[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-067#list")]
+pub(super) fn row(check: &Check) -> super::view::DoctorRow {
+    use super::view::{DoctorRow, Mark};
+    DoctorRow {
+        mark: match check.status {
+            Status::Ok => Mark::Ok,
+            Status::Fail => Mark::Miss,
+            Status::Skip => Mark::Note,
+        },
+        name: format!("network {}", check.step),
+        value: check.detail.clone(),
+        notes: Vec::new(),
+        states: Vec::new(),
+        children: check.fix.iter().map(|fix| format!("fix: {fix}")).collect(),
     }
 }
 

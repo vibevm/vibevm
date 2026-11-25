@@ -1081,11 +1081,11 @@ fn a_system_pac_is_reported_as_resolved_or_as_unresolvable_here() {
     )
     .into_owned();
     assert!(
-        text.contains("proxy pac: windows (system, from site profile)"),
+        text.lines().any(|line| line.split_whitespace().take(8).eq(["proxy", "pac", "windows", "·", "system", "·", "site", "profile"])),
         "{text}"
     );
     assert!(text.contains(resolved), "{text}");
-    assert!(!text.contains("proxy revocation:"), "{text}");
+    assert!(!text.lines().any(|line| line.split_whitespace().take(2).eq(["proxy", "revocation"])), "{text}");
 }
 
 /// A Linux host whose GNOME desktop is set to "automatic proxy
@@ -1205,7 +1205,7 @@ fn the_revocation_setting_is_reported_with_the_layer_that_chose_it() {
     );
     let text = ok(&machine.run(&["self", "apply", "--show"]));
     assert!(
-        text.contains("proxy revocation: off (from site profile)"),
+        text.lines().any(|line| line.split_whitespace().take(6).eq(["proxy", "revocation", "off", "·", "site", "profile"])),
         "{text}"
     );
 
@@ -1328,8 +1328,8 @@ fn a_profile_selecting_px_reports_the_missing_companion_until_it_is_there() {
     human.args(["--unattended", "self", "apply"]).arg(&profile);
     let output = human.output().unwrap();
     let text = ok(&output);
-    assert!(text.contains("px: NOT INSTALLED"), "{text}");
-    assert!(text.contains("proxy mode: px"), "{text}");
+    assert!(text.lines().any(|line| line.split_whitespace().take(4).eq(["✗", "px", "not", "installed"])), "{text}");
+    assert!(text.lines().any(|line| line.split_whitespace().take(3).eq(["proxy", "mode", "px"])), "{text}");
     let stderr = String::from_utf8_lossy(&output.stderr);
     assert!(stderr.contains("vibe self px install --from"), "{stderr}");
 
@@ -1358,8 +1358,8 @@ fn a_profile_selecting_px_reports_the_missing_companion_until_it_is_there() {
         .arg(&profile)
         .output()
         .unwrap());
-    assert!(text.contains("px: already installed"), "{text}");
-    assert!(!text.contains("NOT INSTALLED"), "{text}");
+    assert!(text.lines().any(|line| line.split_whitespace().take(4).eq(["✓", "px", "already", "installed"])), "{text}");
+    assert!(!text.contains("not installed"), "{text}");
 }
 
 /// The px step reads the store of the install root the profile declares,
@@ -1430,7 +1430,7 @@ fn a_profile_naming_its_own_px_asks_nothing_of_the_companion_store() {
         .arg(&profile)
         .output()
         .unwrap());
-    assert!(!text.contains("px:"), "{text}");
+    assert!(!["✓", "○", "✗"].iter().any(|glyph| text.lines().any(|line| line.split_whitespace().take(2).eq([*glyph, "px"]))), "{text}");
 }
 
 /// `vibe self px status` with a px mode and no px is not a success: it
@@ -1573,10 +1573,10 @@ fn an_install_root_of_tilde_lands_in_this_users_home() {
         .output()
         .unwrap());
     assert!(
-        shown.contains(&format!("install root: {}", home.display())),
+        shown.lines().any(|line| line.split_whitespace().take(3).eq(["install", "root", home.display().to_string().as_str()])),
         "{shown}"
     );
-    assert!(!shown.contains("install root: ~"), "{shown}");
+    assert!(!shown.lines().any(|line| line.trim_start().starts_with("install root") && line.contains('~')), "{shown}");
 }
 
 /// Another account's home and a relative directory are both refused, in a
@@ -1675,8 +1675,8 @@ fn px_install_from_a_local_file_takes_any_px_and_status_names_the_bytes() {
         .unwrap();
     let text = ok(&output);
     assert!(text.contains(&program.display().to_string()), "{text}");
-    assert!(text.contains(&format!("sha256: {sha256}")), "{text}");
-    assert!(text.contains("reports: px my-own 9.9.9"), "{text}");
+    assert!(text.contains(&sha256) && text.contains("sha256"), "{text}");
+    assert!(text.contains("reports") && text.contains("px my-own 9.9.9"), "{text}");
     assert!(!text.to_lowercase().contains("verif"), "{text}");
     let doc = json_plain(
         &machine
