@@ -1,0 +1,10 @@
+# The contract-only package installed into the XML project: the slot
+# under `vibevm/vibedeps/` converted to XML, the lane compiled.
+schema = 1
+
+[fixture]
+from = "review-contract"
+cwd = "work/review-lab"
+
+[[fixture.step]]
+run = "vibe install org.acme/review --assume-yes"

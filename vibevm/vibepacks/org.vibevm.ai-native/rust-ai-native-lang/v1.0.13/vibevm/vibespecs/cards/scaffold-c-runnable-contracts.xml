@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">CARD: scaffold-c-runnable-contracts — Runnable Contracts</title>
+  <status stage="spec" state="done"/>
+  <p><status-line fact="true" status="impl/done">**Discipline v0.2 · BETA**</status-line></p>
+  <band-one-identity title="Band 1 — Identity &amp; Recognition">
+    <p><CLASSIFICATION fact="true" status="impl/done">Classification: layer=E (verification); mechanism=scaffold C.</CLASSIFICATION></p>
+    <p><INTENT fact="true" status="impl/done">Intent: Express pre/post-conditions and invariants as EXECUTING assertions or proofs attached to the unit and restated at use sites — so a paged reader gets ground truth without simulating the body.</INTENT></p>
+    <p><ALSO-KNOWN-AS fact="true" status="spec/done">Also Known As: design by contract; debug_assert; refinement; require/ensure; invariant check; Kani contract.</ALSO-KNOWN-AS></p>
+    <p><APPLICABILITY-RECOGNITION fact="true" status="impl/done">Applicability / Recognition: Apply when — a function has a non-obvious precondition; a cross-cell invariant is relied upon far from where it is established (R3-009); a behavioral claim is currently only in prose. *Detector seed:* a comment asserting a property ("x is sorted", "non-empty", "already validated") with no adjacent runnable check → recognition fires (a prose claim is adversarial if it lies, R2C-004).</APPLICABILITY-RECOGNITION></p>
+  </band-one-identity>
+  <band-two-justification title="Band 2 — Justification &amp; Tradeoffs">
+    <p><MOTIVATION fact="true" status="spec/done">Motivation: A weak agent edits a function relying on "input already deduplicated" stated only in a doc-comment three modules away. It cannot do the whole-program inference to confirm. A `debug_assert!(is_unique(&amp;input))` at the use site either holds or fires — the invariant is local ground truth.</MOTIVATION></p>
+    <p><STRUCTURE-AND-PARTICIPANTS fact="true" status="impl/done">Structure &amp; Participants: *Precondition/postcondition* (debug_assert or contract macro) · *Use-site witness* (assertion where the invariant is relied upon) · *Proof* (Kani requires/ensures, for safety-critical) · *Property test* (behavioral backing).</STRUCTURE-AND-PARTICIPANTS></p>
+    <p><COLLABORATIONS fact="true" status="impl/done">Collaborations: Defines "equivalent" for Class D oracles; pairs with Class B (types for protocol, contracts for value invariants); failures emit Class F diagnostics.</COLLABORATIONS></p>
+    <p><GOALS-AND-NON-GOALS fact="true" status="impl/done">Goals / Non-Goals: *Goals:* make load-bearing invariants machine-checked at the point of reliance. *Non-Goals:* NOT proving everything (cost) — proofs for safety-critical, asserts elsewhere; NOT a substitute for the spec that JUSTIFIES the invariant.</GOALS-AND-NON-GOALS></p>
+    <p><CONSEQUENCES fact="true" status="spec/done">Consequences: (+) invariants become local and checkable; (+) a paged reader trusts the assertion, not distant prose. (−) restatements can drift — pair with drift detection or keep them assertions (which fail, not mislead); (−) debug_assert is debug-only — use real checks on untrusted boundaries.</CONSEQUENCES></p>
+    <p><ALTERNATIVES fact="true" status="spec/done">Alternatives: types (Class B) when the invariant is a protocol; a comment (rejected — lies silently); full proof when tractable and critical.</ALTERNATIVES></p>
+    <p><RISKS-AND-ASSUMPTIONS fact="true" status="spec/done">Risks &amp; Assumptions: assumes the invariant is expressible as a runnable predicate. *Sunset:* if types or vibe-tcg make the invariant statically guaranteed, the assert retires there.</RISKS-AND-ASSUMPTIONS></p>
+    <p><EVIDENCE-AND-TRANSFER-STRENGTH fact="true" status="spec/done">Evidence &amp; Transfer-strength: DR1-019 (contracts give success criterion without body, theory), R3-009 (use-site restatement, theory), R2C-004 (prose lies harm, benchmark). Class: benchmark + theory. Tag: **[E-mid]**.</EVIDENCE-AND-TRANSFER-STRENGTH></p>
+  </band-two-justification>
+  <band-three-operation title="Band 3 — Operation">
+    <fence lang="card-ops">trigger: WHEN a prose property claim lacks an adjacent runnable check, OR a cross-cell invariant is used far from its definition THEN apply
+mode: inline
+routine:
+  1. State the invariant as a boolean predicate.
+  2. Add debug_assert!/contract at the definition AND at each use site relying on it.
+  3. For safety-critical invariants, add a Kani requires/ensures proof.
+  4. Back behavioral claims with a property test.
+  5. Replace the prose claim with the assertion (or label it verified, linking the check).
+checker: conform T-sem `invariant-witnessed` (flags declared invariants with unwitnessed use sites) + cargo test
+raid_role: layer=cells; order=after:naming-uniformity; batch=cell
+budget: active_rules=2; first_signal=cargo test -p &lt;cell&gt; (&lt;60s)</fence>
+  </band-three-operation>
+</spec>

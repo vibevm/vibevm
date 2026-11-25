@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">How vibe is built</title>
+  <status stage="doc" state="work" audience="dev"/>
+  <p>vibe is one binary built from a set of Rust libraries, each owning one concern: reading the description of a project, choosing versions, fetching from where packages are published, writing the tree on disk, talking to agents. This page maps the libraries, the seams between them, and the path an install takes through them.</p>
+  <five-layers title="Five layers">
+    <p>Read the product bottom-up. *Identity*: a package is a [coordinate](../glossary/index.xml#coordinate) plus a content [fingerprint](../glossary/index.xml#fingerprint), and the kind is metadata. *[Registry](../glossary/index.xml#registry)*: ordered package sources with mirrors, [overrides](../glossary/index.xml#override) and an optional [index](../glossary/index.xml#index-registry). *[Store](../glossary/index.xml#store)*: every fetched package version kept once per machine.</p>
+    <p>*Materialisation*: the resolved graph copied into the project's dependency tree and recorded in the [lock file](../glossary/index.xml#lock-file). *Computed boot*: the packages' [contributions](../glossary/index.xml#contribution) projected into the two generated files an agent reads. Everything a user sees is one of these five layers or a surface over them.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-000#surfaces"/>
+  </five-layers>
+  <the-crates title="The crates">
+    <table>
+      <tr><td>Concern</td><td>Crates</td><td>What they own</td></tr>
+      <tr><td>core vocabulary</td><td>`vibe-core`, `vibe-wire`</td><td>manifests, the lock file, identities and content hashes; the generated types of every registered machine format</td></tr>
+      <tr><td>specifications</td><td>`vibe-spec`, `vibe-specdoc`, `progress-core`, `vibe-facts`, `vibe-trace`</td><td>addresses and the deterministic router; the document model with its Markdown and XML frontends and backends; the status markup parser and reports; the adoption-facts registry; traceability queries</td></tr>
+      <tr><td>registries and the store</td><td>`vibe-registry`, `vibe-index`, `vibe-publish`, `vibe-package-source`</td><td>git transport, mirrors and overrides, the clone cache and the machine store; the searchable index and its server; publishing; the one production composition of package sources</td></tr>
+      <tr><td>resolution and installation</td><td>`vibe-resolver`, `vibe-install`, `vibe-workspace`, `vibe-safefs`</td><td>the solver seams and cells; plan and apply; workspace discovery, materialisation, the computed boot; capability-relative filesystem mutation</td></tr>
+      <tr><td>the lifecycle</td><td>`vibe-lifecycle`, `vibe-extension-registry`, `vibe-orchestrator`, `vibe-ext`, `vibe-native-loader`, `vibe-llm`, `vibe-scrape`</td><td>the nine-phase model and chaining; the pure extension registry; surface-neutral orchestration; the safe author SDK and the quarantined loader of native extensions; the model provider seam; scrape planning</td></tr>
+      <tr><td>agents and preferences</td><td>`vibe-mcp`, `vibe-agent-projection`, `vibe-settings`, `vibe-actions`, `vibe-requirements`</td><td>the MCP server and integration manager; skill projection into agents; three-level preferences; frontend-agnostic actions; the read-only requirements query</td></tr>
+      <tr><td>surfaces and checks</td><td>`vibe-cli`, `vibe-check`</td><td>the command line; the deterministic project linter</td></tr>
+      <tr><td>documentation</td><td>`vibe-doc`, `vibe-doc-server`, `vibe-doc-shell`</td><td>the page pipeline behind `vibe doc`: build, check, manifest, surface snapshots, the maintenance queue and the site builder; the local reader's server on the loopback address; the reader's shell carried inside the binary</td></tr>
+      <tr><td>reserved and tooling</td><td>`vibe-graph`, `vibe-test-support`, `xtask`</td><td>a reserved task-graph slot; test isolation of the settings home; the maintainer gates: code generation, the traceability map, engine synchronisation, mirroring, the release build</td></tr>
+    </table>
+    <p>The dependency direction is fixed: a surface calls an orchestrator, an orchestrator calls a library through a seam, a library returns typed values. Domain libraries never prompt, never format terminal output and never decide authentication; those choices are made at the composition root, in the CLI or the [MCP server](../glossary/index.xml#mcp-server).</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-000#prod-arch"/>
+    <p>Four decisions hold the tree together. The repository is one Cargo workspace with every crate under `crates/`. Each ability of the product lives in a library, and the command line, the terminal interface and the MCP server are thin surfaces over it. JSON Type Definition schemas are the single source of truth for every machine contract. And the commit discipline is the installed git-practices family, read at the start of every session.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-000#WORKSPACE-LAYOUT"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-000#SURFACE-DISCIPLINE-IS-THE-OMNICHANNEL-FLOW"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-000#JTD-SSOT"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-000#GIT-PRACTICES-FAMILY"/>
+  </the-crates>
+  <the-install-path title="The path of an install">
+    <p>1. Discover the workspace root and read the [manifests](../glossary/index.xml#manifest), the lock file, the user configuration, the registries, mirrors, overrides and local package sources.</p>
+    <p>2. Compare the manifests with the lock file; if nothing changed, skip resolution.</p>
+    <p>3. Otherwise qualify every requested coordinate and build the solver's view of available versions. Solve the whole graph, holding every pin the change does not touch.</p>
+    <p>4. Fetch every selected identity: a store hit is reused, a miss walks the allowed sources and inserts the verified tree into the store.</p>
+    <p>5. Build the plan, validate the [managed blocks](../glossary/index.xml#managed-block) of the instruction files, and ask for confirmation.</p>
+    <p>6. Materialise the graph into the dependency tree by diff, regenerate the boot files, prune stale slots.</p>
+    <p>7. Record the graph, the provenance and the fingerprints in the lock file.</p>
+    <p>8. Render the human, quiet or JSON report.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-011#TWO-PHASES-SPLIT"/>
+  </the-install-path>
+  <the-seams title="The seams">
+    <p>`GitBackend` isolates git: the production implementation shells out to the system git, so SSH agents and credential helpers behave as they do everywhere else. `Registry` enumerates, resolves and fetches across local and git-backed sources; `MultiRegistryResolver` owns the ordered walk, mirrors, overrides, authentication and the offline posture. `DepProvider` is the solver's view of the world and `DepSolver` turns roots into a graph; the default cell is resolvo, with a backtracking SAT cell and a naive cell selectable. `InstallSource` separates the transaction from the construction of cells. `RepoCreator` isolates the hosts' repository creation for publishing. Each seam has more than one implementation, and tests run the seam, not the production cell.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#SOLVER-TWO-IMPLS"/>
+  </the-seams>
+  <wire-and-authored title="Wire formats and authored formats">
+    <p>Two kinds of text cross the product's boundary. Machine formats, the JSON reports, the lock file's records, the release manifests, are described by JSON Typedef schemas and their types are generated; a handwritten parser of our own format is a defect the build counts. Authored formats, the manifest and the specifications, are parsed by handwritten code on purpose, because a person writes them and the errors must speak the person's language.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-000#jtd"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-044#M-FORMAT-REGISTRY"/>
+    <p>The schema language has no 64-bit integer, so any integer wider than 32 bits rides the wire as a decimal string.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-044#M-WIDE-INTEGERS-AS-STRINGS"/>
+  </wire-and-authored>
+  <reading-order title="Where to read next">
+    <p>The specifications are the authority: `PROP-000` for the foundational decisions, `PROP-009` for the loading model, `PROP-002` and `PROP-010` for registries and the store, `PROP-054` for the [lifecycle](../glossary/index.xml#lifecycle) and the extension machine, `PROP-045` for the document model, `PROP-057` and `PROP-058` for documentation packages, the site and how this manual is maintained. The traceability page of this manual explains how code cites them and how to ask the map which code implements which rule. The developer guide in the repository covers building, testing and the self-check panel.</p>
+  </reading-order>
+</spec>

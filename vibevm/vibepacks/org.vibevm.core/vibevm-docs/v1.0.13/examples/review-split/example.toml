@@ -1,0 +1,11 @@
+# Step 4 of the tutorial before its install: the source document added
+# under `source/` (the page's own fence, in `tree/`) and the `#source`
+# line added to the contract, exactly where the page says to add it.
+schema = 1
+
+[fixture]
+from = "review-contract-installed"
+cwd = "work/review-lab"
+
+[[fixture.step]]
+edit = { path = "work/review-lab/vibevm/vibepacks/org.acme/review/v0.1.0/vibevm/vibespecs/contract/REVIEW.md", from = "fact with a status.\n\n## One idea per change", to = "fact with a status.\n\n#source spec://org.acme/review/source/details\n\n## One idea per change" }

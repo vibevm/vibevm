@@ -1,0 +1,10 @@
+# The XML-authored package installed: every document copied, the same
+# hashes as when they were converted, the same lane.
+schema = 1
+
+[fixture]
+from = "review-xml"
+cwd = "work/review-lab"
+
+[[fixture.step]]
+run = "vibe install org.acme/review --assume-yes"

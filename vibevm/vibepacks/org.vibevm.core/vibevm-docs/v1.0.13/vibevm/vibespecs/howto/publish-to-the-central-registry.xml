@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">Publish a package to the central registry</title>
+  <status stage="doc" state="work" audience="user,author"/>
+  <p>Every VibeVM project can install packages from two public places: the organisation `vibespecs` on GitHub and the organisation of the same name on GitVerse. Only their administrators can add a package there, so to publish yours, you ask them. This page shows how to ask, and what can keep a package out.</p>
+  <prompt id="publish-to-the-central-registry">Check that the in-tree package org.acme/review-notes of this project, the slot vibevm/vibepacks/org.acme/review-notes/v0.1.0, is ready for the central registry, then write the message that asks to add it, for the Add package topic of the VibeVM chat. The platform is GitHub; my username there is octocat. Send nothing.
+    <needs>the vibevm skill installed for your agent; no network</needs>
+    <outcome>the agent names anything the package still lacks, such as an empty description, and shows a short message with the package's group and name, the platform and your username, ready to paste into Telegram</outcome>
+    <assert>vibe validate</assert>
+  </prompt>
+  <what-happens title="What happens">
+    <p>The agent reads the package's [manifest](../glossary/index.xml#manifest) and checks what a stranger who installs it will see: the group and the name, the version, the license and a one-line description. It runs `vibe validate` to make sure the project around the package is sound. Then it writes a message of three lines: the package's group and name, the platform, and your username there. The agent sends nothing. You paste the message into the topic yourself, because the request is yours, and so is the account.</p>
+  </what-happens>
+  <by-hand title="By hand">
+    <p>1. Open the Add package topic of the VibeVM chat in Telegram: [t.me/vibevm_chat/9](https://t.me/vibevm_chat/9).</p>
+    <p>2. Name the package: its group and its name, such as `org.acme/review-notes`.</p>
+    <p>3. Name the platform where the package should live: GitHub or GitVerse. If you name none, it is GitHub.</p>
+    <p>4. Give your username on that platform, as the package's maintainer.</p>
+    <p>Once that account can write to the package's repository, you publish its versions yourself, as [Publish a package](publish-a-package.xml) shows.</p>
+  </by-hand>
+  <the-central-registry title="The central registry">
+    <p>A [registry](../glossary/index.xml#registry) in VibeVM is a hosting organisation where every package is its own git repository. The central one is the pair that every machine trusts by default: `https://github.com/vibespecs` and `https://gitverse.ru/vibespecs`. The first time vibe runs, it writes both into the list of registries it keeps for the whole machine, so every project installs from them without setup.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#DEFAULT-TRUSTED-REGISTRIES"/>
+  </the-central-registry>
+  <names title="Names that can be refused">
+    <p>The names of a package, its group and its own name, can be covered by someone's copyright, or be barred from publication for another reason. Such a package can be refused, or removed after it was published.</p>
+  </names>
+  <administration title="What the administration may do">
+    <p>The administration of the central registry reserves the right to refuse any package, to delete any package from it, and to take other administrative actions with any package. These actions must not contradict the law. Which law applies is described on [Applicable law](../legal/applicable-law.xml).</p>
+  </administration>
+  <edge-cases title="Edge cases and rules">
+    <p>If you need a place you control, or a private one, publish to a registry of your own, as [Publish a package](publish-a-package.xml) shows. Nobody has to approve a package there.</p>
+  </edge-cases>
+</spec>

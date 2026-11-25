@@ -1,0 +1,9 @@
+# An Obsidian vault as its owner keeps it, before vibe has touched it: the
+# `.obsidian` folder, a few loose notes, the shared working rules under
+# `Skills/`, one project's two pages, and a checklist. Hand-written in the
+# fixture's own tree, because a folder of somebody's notes is the one state
+# no command of the product can produce.
+schema = 1
+
+[fixture]
+from = "empty"

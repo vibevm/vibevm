@@ -1,0 +1,129 @@
+#!/usr/bin/env python3
+"""Print the path of the current project's plan tree page; --open shows it.
+
+Run inside any checkout of a project that installs the planning package
+(flow:org.vibevm.world/multi-user-planning). The plan is found through the
+package's own resolver, by repository identity, so every checkout of the same
+repository gets the same tree. The page is re-rendered first; rendering writes
+only when the plan changed. The page lives inside the steward context
+(<context>/view/index.html) and is a disposable projection of the plan.
+
+This launcher runs on Python 3.8 or newer. The renderer it starts needs 3.11 or
+newer; the launcher finds one on PATH or says that none is installed.
+"""
+
+from __future__ import annotations
+
+import argparse
+import glob
+import json
+import os
+import shutil
+import subprocess
+import sys
+import webbrowser
+from pathlib import Path
+from typing import Optional, Tuple
+
+PACKAGE_GLOB = "vibevm/vibedeps/org.vibevm.world.multi-user-planning/*/vibevm/vibespecs/skills"
+RENDERER = "steward-tree/scripts/render_tree.py"
+RESOLVER = "steward-common/scripts/resolve_context.py"
+MINIMUM = (3, 11)
+
+
+def fail(message: str) -> int:
+    print(f"plan-tree: {message}", file=sys.stderr)
+    return 1
+
+
+def repository_root(start: Path) -> Optional[Path]:
+    try:
+        done = subprocess.run(
+            ["git", "-C", str(start), "rev-parse", "--show-toplevel"],
+            capture_output=True, text=True,
+        )
+    except FileNotFoundError:
+        return None
+    return Path(done.stdout.strip()) if done.returncode == 0 else None
+
+
+def version_key(skills: str) -> Tuple[int, ...]:
+    version = Path(skills).parents[2].name
+    return tuple(int(part) if part.isdigit() else 0 for part in version.split("."))
+
+
+def installed_skills(root: Path) -> Optional[Path]:
+    found = sorted(glob.glob(str(root / PACKAGE_GLOB)), key=version_key)
+    return Path(found[-1]) if found else None
+
+
+def renderer_python() -> Optional[str]:
+    """An interpreter new enough for the renderer: this one, else one on PATH."""
+    if sys.version_info >= MINIMUM:
+        return sys.executable
+    for minor in range(20, MINIMUM[1] - 1, -1):
+        found = shutil.which(f"python3.{minor}")
+        if found:
+            return found
+    return None
+
+
+def open_in_browser(page: Path) -> None:
+    if sys.platform == "darwin":
+        subprocess.Popen(["open", str(page)])
+    elif os.name == "nt":
+        os.startfile(str(page))  # type: ignore[attr-defined]
+    elif shutil.which("xdg-open"):
+        subprocess.Popen(["xdg-open", str(page)], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    else:
+        webbrowser.open(page.as_uri())
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser(prog="plan-tree", description=__doc__.splitlines()[0])
+    parser.add_argument("--open", action="store_true", help="open the page in the default browser")
+    parser.add_argument("--repo", type=Path, default=Path.cwd(), help="checkout to use; default: current directory")
+    parser.add_argument("--lang", choices=["ru", "en"], help="page language; default: the plan's own setting")
+    args = parser.parse_args()
+
+    root = repository_root(args.repo)
+    if root is None:
+        return fail(f"{args.repo} is not inside a Git checkout, or git is not on PATH")
+    skills = installed_skills(root)
+    if skills is None:
+        return fail(f"{root} does not install the planning package (nothing at {PACKAGE_GLOB})")
+    if not (skills / RESOLVER).is_file() or not (skills / RENDERER).is_file():
+        installed = skills.parents[2].name
+        return fail(
+            f"the planning package installed in {root} is {installed}, which cannot resolve a plan "
+            "by repository; update this checkout to 1.0.12 or newer"
+        )
+    python = renderer_python()
+    if python is None:
+        found = ".".join(str(part) for part in sys.version_info[:3])
+        return fail(f"the tree renderer needs Python 3.11 or newer; this machine offers {found}")
+
+    command = [python, "-B", str(skills / RENDERER), "--resolve"]
+    if args.lang:
+        command += ["--lang", args.lang]
+    done = subprocess.run(command, cwd=str(root), capture_output=True, text=True)
+    try:
+        report = json.loads(done.stdout)
+    except json.JSONDecodeError:
+        return fail((done.stderr or done.stdout).strip() or f"renderer exited {done.returncode}")
+    index = report.get("index")
+    if not index:
+        reason = report.get("message") or report.get("code") or report
+        return fail(f"no tree for this checkout: {reason}")
+    if not report.get("ok"):
+        print("plan-tree: the plan failed validation; the page shows why", file=sys.stderr)
+
+    page = Path(index)
+    print(page)
+    if args.open:
+        open_in_browser(page)
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

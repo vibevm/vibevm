@@ -1,0 +1,52 @@
+# Examples whose golden is not captured from a debug build of the product,
+# with the event that will capture each one (X-026, PROP-057
+# ##PIPE-EXAMPLE-RUNNER).
+#
+# The list exists so that an uncaptured example is DECLARED rather than
+# left on a page as an empty `<expect></expect>` — which the dialect reads
+# as «this command prints nothing», an assertion nobody made. A declared
+# skip says what is missing and what will supply it; an empty golden says
+# something false.
+schema = 1
+
+[[deferred]]
+page = "start/install-vibe.xml"
+id = "windows-install"
+captured = "release"
+reason = "the installer's output comes from a published release distribution, never from a debug build; captured at publication"
+
+[[deferred]]
+page = "howto/publish-a-package.xml"
+id = "publish-dry-run"
+captured = "blocked"
+reason = "`vibe registry publish --dry-run` needs a publish token and reads a Windows drive letter as a host (B-133)"
+
+[[deferred]]
+page = "howto/publish-a-package.xml"
+id = "publish"
+captured = "blocked"
+reason = "`vibe registry publish --dry-run` needs a publish token and reads a Windows drive letter as a host (B-133)"
+
+[[deferred]]
+page = "howto/read-documentation-locally.xml"
+id = "cache-add-docs"
+captured = "blocked"
+reason = "warming a `doc` package into the store needs the store side of the documentation kind, which lands later in this phase"
+
+[[deferred]]
+page = "howto/read-documentation-locally.xml"
+id = "doc-serve"
+captured = "blocked"
+reason = "`vibe doc serve` is the local reader, which this phase opens after the pipeline"
+
+[[deferred]]
+page = "lifecycle/scrape.xml"
+id = "scrape-plan"
+captured = "blocked"
+reason = "`vibe scrape contract check` blocks the plan on this machine with `health-no-applicable-required-check` and `health-preparation-failed` (the `cargo` binary carries 14 hard-link names, so the health panel refuses to treat it as exclusively owned); a scrape plan cannot be shown until the health panel can run"
+
+[[deferred]]
+page = "lifecycle/scrape.xml"
+id = "scrape-output"
+captured = "blocked"
+reason = "the same two health blockers stop the scrape before it produces an output tree"

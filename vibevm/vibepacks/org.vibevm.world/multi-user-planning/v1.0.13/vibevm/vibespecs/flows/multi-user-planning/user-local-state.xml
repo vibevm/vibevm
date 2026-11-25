@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">User-local stewardship state and capability profiles</title>
+  <status stage="spec" state="done"/>
+  <home title="1. State home">
+    <p><STATE-HOME fact="true" status="spec/done">The state root, the
+**steward home**, is `&lt;settings dir&gt;/steward/`, where the settings
+directory is `$VIBE_SETTINGS` when that variable is set and non-empty and
+`~/.vibe` otherwise. It belongs to one person and may be shared by that
+person's successive central agents. It is not committed, packaged, mirrored or
+treated as another contributor's authority.</STATE-HOME></p>
+    <p><HOME-OVERRIDE fact="true" status="spec/done">Every packaged script
+that locates the steward home resolves it through the one shared helper
+`skills/steward-common/scripts/steward_home.py` and accepts `--home` as an
+explicit override: `resolve_context.py`, and `render_goal.py` and
+`render_tree.py` when run with `--resolve`. `bind_context.py` takes the home
+from its `--context` directory, which must lie in that home's `contexts/`
+directory. No other environment variable selects the home.</HOME-OVERRIDE></p>
+    <fence lang="text">&lt;settings dir&gt;/steward/
+  config.toml
+  contexts/
+    &lt;opaque-context-id&gt;/
+      binding.toml
+      settings.toml
+      plan.toml
+      GOAL.md
+      GOAL-CLAUDE.txt
+      custody.toml
+      view/
+      sessions/
+      handoffs/
+      records/</fence>
+    <p><OPTIONAL-CONTINUITY-RECORDS fact="true" status="spec/done">The binding,
+settings, complete plan and repository tree are sufficient for ordinary
+continuation. `sessions/`, `handoffs/` and `records/` are optional diagnostic or
+explicit-formal-workflow material; a timeout, crash, compaction, new chat or
+model/account change, quota exhaustion or provider overload does not require
+creating or receiving any of them. Optional recovery evidence can use existing
+record/evidence surfaces without changing schema 1.</OPTIONAL-CONTINUITY-RECORDS></p>
+    <p><PROVIDER-IDENTITY-IS-NOT-CONTEXT fact="true" status="spec/done">A provider
+account is not a stewardship identity or binding key. An owner-initiated account
+change on the same OS user and exact checkout resumes the existing context;
+changing OS user or machine does not authorize reading another user's private
+state. Never store credentials or secrets in plans, goals, packets or recovery
+reports. Availability and retry observations belong in local evidence, not in
+shared project policy.</PROVIDER-IDENTITY-IS-NOT-CONTEXT></p>
+    <p><OPAQUE-CONTEXT-ID fact="true" status="spec/done">`opaque-context-id` is a
+random UUID rendered as lowercase ASCII. It is an identity only; never parse
+meaning from it. The context directory is named by its id, and a binding whose
+`context_id` differs from that name is invalid and reported. Discovery scans
+`contexts/*/binding.toml`, so no mutable global context index is required.</OPAQUE-CONTEXT-ID></p>
+    <p><HOME-IS-THE-ONLY-PLANNING-TRUTH fact="true" status="spec/done">Nothing
+outside the steward home is a planning source of truth for a context. Generated
+files elsewhere, exported pages and dashboards are copies; a second plan for the
+same project outside the context's `plan.toml` is not allowed.</HOME-IS-THE-ONLY-PLANNING-TRUTH></p>
+    <p><VIEW-IS-DISPOSABLE fact="true" status="spec/done">`view/` holds the
+derived tree view of the context's plan (`index.html`, `plan-tree.json`). It may
+be deleted at any time, is never read back as state, and is regenerated from
+`plan.toml` on demand.</VIEW-IS-DISPOSABLE></p>
+    <p><HOME-IS-PORTABLE fact="true" status="spec/done">The whole steward home
+may be copied to another of the same person's machines at any time and works
+there without repair: context resolution uses repository identity and never
+reads recorded paths. Concurrent writers on two machines are not coordinated;
+the person keeps one machine writing at a time.</HOME-IS-PORTABLE></p>
+  </home>
+  <config title="2. Global defaults">
+    <p><CREATE-DEFAULTS fact="true" status="spec/done">An owner-facing central
+session that finds no `config.toml` creates it before campaign work with the
+safe defaults below. Package installation itself never writes user state.</CREATE-DEFAULTS></p>
+    <fence lang="toml">schema = 1
+interaction_mode = "collab"
+planning_profile = "standard"</fence>
+    <p><CONFIG-STRICT fact="true" status="spec/done">The file is strict
+human-authored TOML. Unknown top-level keys are rejected and surfaced; they are
+not silently ignored. It is operator configuration, so JTD is intentionally out
+of scope.</CONFIG-STRICT></p>
+  </config>
+  <binding title="3. Context binding">
+    <p><BINDING-TUPLE fact="true" status="spec/done">A schema-1 binding (the
+previous format, still read) binds an exact tuple: canonical repository root,
+canonical worktree root, Git common directory, and branch ref (or detached
+commit). It matches only that exact tuple, so moving or copying the checkout
+loses the match until the binding is converted to schema 2.</BINDING-TUPLE></p>
+    <fence lang="toml">schema = 1
+context_id = "3d7a79bf-5f27-4b88-9eaa-c8323df5cb03"
+project_name = "example"
+repository_root = "C:/work/example"
+worktree_root = "C:/work/example"
+git_common_dir = "C:/work/example/.git"
+revision_selector = "refs/heads/main"</fence>
+    <p><REPOSITORY-IDENTITY fact="true" status="spec/done">A project is
+identified by its repository, not by a path: `repository_id` is the
+lexicographically smallest root commit id reachable from `HEAD`
+(`git rev-list --max-parents=0 HEAD`). Every clone and worktree of one
+repository yields the same id on every machine. A shallow clone has no
+usable identity, because its boundary commits look like roots, and it is
+refused until it is unshallowed.</REPOSITORY-IDENTITY></p>
+    <p><BINDING-SCHEMA-2 fact="true" status="spec/done">A schema-2 binding
+names the repository by `repository_id`. `default = true` marks the context used
+when several contexts share that repository and none serves the current branch;
+at most one context per `repository_id` holds it. `revisions` optionally lists
+the branch selectors (`main` or `refs/heads/main`) this context serves; empty
+means any. Several checkouts and roles of one project therefore share one
+context and one plan.</BINDING-SCHEMA-2></p>
+    <fence lang="toml">schema = 2
+context_id = "3d7a79bf-5f27-4b88-9eaa-c8323df5cb03"
+project_name = "example"
+repository_id = "0123456789abcdef0123456789abcdef01234567"
+default = true
+revisions = []
+
+[[seen]]
+worktree_root = "C:/work/example"</fence>
+    <p><SEEN-IS-ADVISORY fact="true" status="spec/done">`[[seen]]` entries
+record where the context was used. They are hints for a human, never identity;
+they may be stale or absent, and resolution never reads them.</SEEN-IS-ADVISORY></p>
+    <p><CONTEXT-RESOLUTION fact="true" status="spec/done">Resolution order is:
+(1) a context id named by the owner; (2) the schema-2 contexts whose
+`repository_id` equals the current repository's: exactly one wins; among several,
+the one whose `revisions` contains the current branch wins, else the one with
+`default = true`; otherwise resolution refuses and lists the candidates;
+(3) a schema-1 binding whose exact path tuple matches; (4) otherwise "no
+context". Resolution never guesses, never settles a tie by timestamp and never
+creates or repairs a context; creating a context and writing a binding are
+separate explicit actions. Once resolved, any owner-facing central agent may
+continue from that context under the current owner instruction; a previous
+holder/session claim is not authority.</CONTEXT-RESOLUTION></p>
+    <p><RESOLVER-TOOLS fact="true" status="spec/done">The reference resolver is
+`skills/steward-common/scripts/resolve_context.py`: read-only, JSON output,
+exit 0 found, 1 none, 2 ambiguous, 3 error. `bind_context.py` in the same
+directory writes a schema-2 binding for an existing context only on explicit
+request: it converts schema 1 by keeping `context_id` and `project_name`,
+computing `repository_id` and moving the old path tuple into one `[[seen]]`
+entry, and it refuses a second `default = true` for one repository unless told
+`--take-default`, which moves the default.</RESOLVER-TOOLS></p>
+  </binding>
+  <settings title="4. Settings and live switching">
+    <p><SETTING-PRECEDENCE fact="true" status="spec/done">Effective settings use
+this precedence: current owner instruction > current-context `settings.toml` >
+global `config.toml` > safe defaults. An owner instruction such as “switch the
+planning mode to ultra” updates the current context file immediately and applies
+within the same session; no `vibe` command or restart is required.</SETTING-PRECEDENCE></p>
+    <fence lang="toml">schema = 1
+interaction_mode = "auto"
+planning_profile = "ultra"
+goal_node = "COMPILER-MODERNIZATION"
+updated_at = "2026-08-29T11:00:00Z"
+updated_by = "owner-chat"</fence>
+    <p><SETTINGS-ORTHOGONAL fact="true" status="spec/done">`interaction_mode`
+(`auto | collab`) controls how much the central coordinator narrates and asks.
+`planning_profile` (`ultra | standard`) controls planning scaffolding.
+`goal_node` selects the stable campaign/root node whose goal is projected; it
+is required whenever selection is not unique. The axes are independent.
+Historic input aliases `normal` and `medium` normalize to `standard`; stored
+values are canonical.</SETTINGS-ORTHOGONAL></p>
+  </settings>
+  <profiles title="5. Planning profiles">
+    <table>
+      <tr><td>Obligation</td><td>`ultra`</td><td>`standard`</td></tr>
+      <tr><td><PROFILE-FLOOR fact="true" status="spec/done">Quality, scope and evidence</PROFILE-FLOOR></td><td><PROFILE-FLOOR-ULTRA fact="true" status="spec/done">Identical mandatory floor</PROFILE-FLOOR-ULTRA></td><td><PROFILE-FLOOR-STANDARD fact="true" status="spec/done">Identical mandatory floor</PROFILE-FLOOR-STANDARD></td></tr>
+      <tr><td><PROFILE-ATOM fact="true" status="spec/done">Atom size</PROFILE-ATOM></td><td><PROFILE-ATOM-ULTRA fact="true" status="spec/done">May span a coherent high-context cell when acceptance stays reviewable</PROFILE-ATOM-ULTRA></td><td><PROFILE-ATOM-STANDARD fact="true" status="spec/done">Prefer narrow independently gated atoms</PROFILE-ATOM-STANDARD></td></tr>
+      <tr><td><PROFILE-EXPANSION fact="true" status="spec/done">Plan expansion</PROFILE-EXPANSION></td><td><PROFILE-EXPANSION-ULTRA fact="true" status="spec/done">May retain more hierarchy in reasoning; still persists the full route and current frontier</PROFILE-EXPANSION-ULTRA></td><td><PROFILE-EXPANSION-STANDARD fact="true" status="spec/done">Persist explicit substeps, dependencies and per-node acceptance before execution</PROFILE-EXPANSION-STANDARD></td></tr>
+      <tr><td><PROFILE-BACKSCAN fact="true" status="spec/done">Backscan cadence</PROFILE-BACKSCAN></td><td><PROFILE-BACKSCAN-ULTRA fact="true" status="spec/done">Milestones, handoffs, architecture changes and closure</PROFILE-BACKSCAN-ULTRA></td><td><PROFILE-BACKSCAN-STANDARD fact="true" status="spec/done">Those boundaries plus every completed parent node</PROFILE-BACKSCAN-STANDARD></td></tr>
+      <tr><td><PROFILE-REVIEW fact="true" status="spec/done">Review</PROFILE-REVIEW></td><td><PROFILE-REVIEW-ULTRA fact="true" status="spec/done">Independent review selected by risk and verifiability</PROFILE-REVIEW-ULTRA></td><td><PROFILE-REVIEW-STANDARD fact="true" status="spec/done">Independent review preferred for broad judgment or public boundaries</PROFILE-REVIEW-STANDARD></td></tr>
+      <tr><td><PROFILE-FAILURE fact="true" status="spec/done">Failure response</PROFILE-FAILURE></td><td><PROFILE-FAILURE-ULTRA fact="true" status="spec/done">May replan a wider region at once</PROFILE-FAILURE-ULTRA></td><td><PROFILE-FAILURE-STANDARD fact="true" status="spec/done">Stop the current atom, record evidence, refine the next small region</PROFILE-FAILURE-STANDARD></td></tr>
+    </table>
+    <p><PROFILE-CANNOT-WAIVE fact="true" status="spec/done">No profile may waive
+owner authority, destructive-action fences, lossless requirement coverage,
+central review, exact gates or fact promotion. When the owner explicitly
+requests a formal handoff, no profile may waive its receipt.</PROFILE-CANNOT-WAIVE></p>
+  </profiles>
+  <sessions title="6. Session identity">
+    <p><SESSION-ID fact="true" status="spec/done">A central agent may choose a
+fresh opaque `session_id` and write a uniquely named record under `sessions/`
+for diagnostics. The optional record names harness, model as observed metadata,
+effective profile, start time and observed custody epoch. Neither the id nor the
+record is required to resume or continue, and neither grants authority. Model
+identity informs forensics; it never selects the profile automatically.</SESSION-ID></p>
+    <p><NO-SECRETS fact="true" status="spec/done">Local records may carry
+absolute paths but never tokens, API keys, Authorization values, raw sensitive
+provider bodies or copied environment dumps. Record a secret source name or
+token-file path only when operationally necessary.</NO-SECRETS></p>
+    <p><GENERATED-HAS-NO-PATHS fact="true" status="spec/done">Generated
+files (`GOAL.md`, `GOAL-CLAUDE.txt`, the tree view) embed no absolute path, so a
+copied steward home carries no stale machine path in them.</GENERATED-HAS-NO-PATHS></p>
+  </sessions>
+</spec>

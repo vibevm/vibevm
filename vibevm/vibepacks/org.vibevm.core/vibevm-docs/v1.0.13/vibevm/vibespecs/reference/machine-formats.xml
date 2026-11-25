@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">Machine formats and JSON reports</title>
+  <status stage="doc" state="work" audience="user,author,agent"/>
+  <p>Every command can answer in JSON for scripts and agents. This page lists the documents, their schemas and the envelope fields that every document carries.</p>
+  <example id="list-json" fixture="hello-vibe">
+    <run>vibe list --json --path hello-vibe</run>
+    <expect>{
+  "ok": true,
+  "command": "list",
+  "project": "&lt;TMP&gt;/work/hello-vibe",
+  "count": 1,
+  "packages": [
+    {
+      "kind": "flow",
+      "name": "wal",
+      "version": "1.0.0",
+      "bridge": false,
+      "authors": [
+        "Oleg Chirukhin"
+      ],
+      "source_url": "file:///&lt;TMP&gt;/registry/org.vibevm.world/wal/v1.0.0",
+      "content_hash": "sha256:58eccc204df7e63e78e8d15f9416b6fd528e786b74d9e0e5e2fcb859716ea0d0",
+      "boot_snippet": null,
+      "files_written": []
+    }
+  ]
+}</expect>
+  </example>
+  <the-rule title="One rule for every format">
+    <p>Anything a foreign parser reads, a report a script parses, a file another language writes, a [manifest](../glossary/index.xml#manifest) a browser fetches, is described by a schema and registered in one inventory. The Rust types and the TypeScript types are generated from the schema, never written by hand, so the two sides cannot drift. An unregistered format is not merely discouraged: it cannot be expressed in the type system that writes it.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-000#jtd"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-044#M-FORMAT-REGISTRY"/>
+    <p>The schemas are JSON Typedef documents under `schemas/` in the source tree. The [registry](../glossary/index.xml#registry) is `formats/REGISTRY.toml`. For each format it records the epoch, the schema, whether the format can be rebuilt from other state, and how many parsers read it. It also names a corpus of golden documents that a build compares against.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-044#POLICY-IS-COMPUTED"/>
+  </the-rule>
+  <the-envelope title="The envelope">
+    <p>A `--json` document is one JSON object per command, or a stream of objects for commands that report in stages, such as an install. Every object carries `ok`, the `command` that produced it, and the report fields the schema names; when the caller identified itself with `--invoked-by`, the object carries `invoked_by`, and under `--unattended` it carries `unattended: true`.</p>
+  </the-envelope>
+  <the-documents title="The documents">
+    <table>
+      <tr><td>Command</td><td>Document</td><td>Schema</td></tr>
+      <tr><td>`vibe init --json`</td><td>the scaffold report</td><td>`init_report.jtd.json`</td></tr>
+      <tr><td>`vibe install --json`</td><td>the plan, then the report</td><td>`install_plan.jtd.json`, `install_report.jtd.json`</td></tr>
+      <tr><td>`vibe update --json`</td><td>the update report</td><td>`update_report.jtd.json`</td></tr>
+      <tr><td>`vibe uninstall --json`</td><td>the removal report</td><td>`uninstall_report.jtd.json`</td></tr>
+      <tr><td>`vibe reinstall --json`</td><td>the regeneration report</td><td>`reinstall_report.jtd.json`</td></tr>
+      <tr><td>`vibe list --json`</td><td>the installed packages</td><td>`list_report.jtd.json`</td></tr>
+      <tr><td>`vibe registry publish --json`, `vibe registry sync --json`</td><td>the publish and sync reports</td><td>`registry_publish_report.jtd.json`, `registry_sync_report.jtd.json`</td></tr>
+      <tr><td>`vibe extensions --json`, `vibe extensions analyze --json`</td><td>the extension registry and the lane analysis</td><td>`extensions_report.jtd.json`, `extensions_analyze.jtd.json`</td></tr>
+      <tr><td>the lifecycle verbs with `--json`</td><td>the plan, the report, the state and the parked tasks</td><td>`lifecycle_plan.jtd.json`, `lifecycle_report.jtd.json`, `lifecycle_state.jtd.json`, `lifecycle_tasks.jtd.json`</td></tr>
+      <tr><td>`vibe deploy`, `vibe deployments --json`</td><td>the deploy intent, the receipts, the inverse plan and the checkpoints</td><td>`deploy_intent.jtd.json`, `deploy_receipt.jtd.json`</td></tr>
+      <tr><td>`vibe requirements --json`</td><td>the requirements report</td><td>`requirements_report.jtd.json`</td></tr>
+      <tr><td>`vibe tree --json`</td><td>the package tree</td><td>a JSON Schema document, `package-tree.schema.v1.json`</td></tr>
+      <tr><td>`vibe doc manifest --json`, `vibe doc todo --format json`, `vibe doc surface --record`</td><td>the page manifest of a documentation package, the maintenance queue, the surface snapshot of a version and the diff of two</td><td>`doc_manifest.jtd.json`, `doc_todo.jtd.json`, `doc_surface.jtd.json`, `doc_surface_diff.jtd.json`</td></tr>
+    </table>
+    <p>The fields of every schema in the table, generated from the schema files in the order above:</p>
+    <derived kind="jtd-schema" ref="schemas/init_report.jtd.json"/>
+    <derived kind="jtd-schema" ref="schemas/install_plan.jtd.json"/>
+    <derived kind="jtd-schema" ref="schemas/install_report.jtd.json"/>
+    <derived kind="jtd-schema" ref="schemas/update_report.jtd.json"/>
+    <derived kind="jtd-schema" ref="schemas/uninstall_report.jtd.json"/>
+    <derived kind="jtd-schema" ref="schemas/reinstall_report.jtd.json"/>
+    <derived kind="jtd-schema" ref="schemas/list_report.jtd.json"/>
+    <derived kind="jtd-schema" ref="schemas/registry_publish_report.jtd.json"/>
+    <derived kind="jtd-schema" ref="schemas/registry_sync_report.jtd.json"/>
+    <derived kind="jtd-schema" ref="schemas/extensions_report.jtd.json"/>
+    <derived kind="jtd-schema" ref="schemas/extensions_analyze.jtd.json"/>
+    <derived kind="jtd-schema" ref="schemas/lifecycle_plan.jtd.json"/>
+    <derived kind="jtd-schema" ref="schemas/lifecycle_report.jtd.json"/>
+    <derived kind="jtd-schema" ref="schemas/lifecycle_state.jtd.json"/>
+    <derived kind="jtd-schema" ref="schemas/lifecycle_tasks.jtd.json"/>
+    <derived kind="jtd-schema" ref="schemas/deploy_intent.jtd.json"/>
+    <derived kind="jtd-schema" ref="schemas/deploy_receipt.jtd.json"/>
+    <derived kind="jtd-schema" ref="schemas/requirements_report.jtd.json"/>
+    <derived kind="jtd-schema" ref="schemas/doc_manifest.jtd.json"/>
+    <derived kind="jtd-schema" ref="schemas/doc_todo.jtd.json"/>
+    <derived kind="jtd-schema" ref="schemas/doc_surface.jtd.json"/>
+    <p>The documents of the [index](../glossary/index.xml#index-registry) server, the [scrape](../glossary/index.xml#scrape) contract and plan, the compiler trace and the native ABI have schemas of their own in the same folder; the registry lists all of them.</p>
+  </the-documents>
+  <edge-cases title="Edge cases and rules">
+    <p>A document that no schema describes is a defect, not a feature; the campaign that wrote this manual filed the ones it found in the product's backlog, and the examples on these pages mark such documents as unchecked rather than passed.</p>
+    <p>Formats carry an epoch; while the product is not yet public, an incompatible change of a format is free and unmigrated, and the registry says so. A published format changes only with a break note and, where needed, a migration.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-044#FMT-MANIFEST"/>
+    <p>Raw parsing with shell tools counts as a parser: the registry assumes someone pipes a report into a JSON tool, and treats the format accordingly.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-044#RISK-RAW-PARSERS"/>
+  </edge-cases>
+</spec>

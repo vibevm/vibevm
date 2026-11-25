@@ -1,0 +1,9 @@
+# `hello-vibe` with an instruction parked in the agentic relay, so the
+# page that drains the relay has something to drain.
+schema = 1
+
+[fixture]
+from = "hello-vibe"
+
+[[fixture.step]]
+run = "vibe agentic explain --path hello-vibe"

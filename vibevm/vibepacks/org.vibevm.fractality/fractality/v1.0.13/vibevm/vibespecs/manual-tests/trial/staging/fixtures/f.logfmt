@@ -1,0 +1,1 @@
+level=info msg="shutdown requested" signal=SIGTERM

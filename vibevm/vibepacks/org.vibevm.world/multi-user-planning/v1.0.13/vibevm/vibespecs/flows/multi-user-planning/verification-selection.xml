@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">Select verification by the behavior affected</title>
+  <status stage="spec" state="done"/>
+  <selection title="1. Choose proof before paying for a build">
+    <p><MINIMUM-SUFFICIENT-PROOF fact="true" status="spec/done">The ordinary
+atom default is the smallest set of checks that proves its affected behavior,
+ordinary negative cases, invariants and named dependent interfaces. Select by
+the actual change and contract consumers, not by the total size of the project.
+Two changed classes do not imply rebuilding or running every test in their
+packages. Preserve applicable schema, code-generation, security and other
+independent oracles; narrow execution, not the obligations being proved.</MINIMUM-SUFFICIENT-PROOF></p>
+    <p><SELECT-BEFORE-DISPATCH fact="true" status="spec/done">Before dispatch,
+identify affected claims, their producing code and contract consumers, then name
+the build/test target and exact test or small module family that can prove them.
+Inspect source and existing commands first; a planned test is a recipe to
+implement, not a command already available. Refresh this selection against the
+real diff before acceptance, including any newly affected consumer. Do not guess
+executable commands or test filters from a task id or a proposed test name.</SELECT-BEFORE-DISPATCH></p>
+    <p><SELECTION-NOTE fact="true" status="spec/done">Retain a short selection
+note in the existing packet or evidence: claim; changed subject and named
+consumer; target, filter, flags, fixtures and consequential environment;
+expected selected cases; rough build/run cost; and the condition that would
+invalidate the evidence or require wider scope. A few lines are enough; unknown
+cost is recorded as unknown, not measured by first running the full panel. This
+adds no required plan field, file, queue or harness scheduler.</SELECTION-NOTE></p>
+    <p><COMMAND-REFINEMENT fact="true" status="spec/done">When an existing
+packet or plan names a broader command than this policy requires, the
+coordinator may replace it with narrower commands that demonstrably cover the
+same affected claims. Record the old scope, replacement and claim-to-proof
+mapping in ordinary evidence; preserve task ids, acceptance obligations and
+campaign-specific fields. This authorized procedure correction does not require
+another owner permission. It does not silently cancel an explicit request for a
+full panel or the designated comprehensive final campaign gate.</COMMAND-REFINEMENT></p>
+  </selection>
+  <targets title="2. Narrow the compilation target as well as the test filter">
+    <p><TARGET-FIRST fact="true" status="spec/done">For Cargo, select the
+package and target before the runtime filter: `--lib` for library unit tests,
+`--test NAME` for a named integration-test binary, `--bin NAME` for a named
+binary target, and `--doc` only when affected documentation examples require it.
+Then select the exact test, with the test harness's `--exact` when appropriate,
+or a justified small module family. Include every required case in the chosen
+proof. A filter alone can still compile unrelated targets, so it is not by
+itself a sufficient scope selection. Apply the equivalent target-first rule to
+other build systems. A selected monolithic target can still compile many tests;
+do not claim that a runtime filter avoids that cost. If measured target structure
+prevents economical verification, record the bounded build/test organization
+problem for the coordinator instead of silently widening the run or undertaking
+an unrelated test reorganization.</TARGET-FIRST></p>
+    <p><DISCOVERY-COST fact="true" status="spec/done">Use code search and
+available build metadata to discover target and test names before executing a
+test runner. If listing is necessary, list only the selected target; Cargo
+`--list` still incurs compilation for the targets selected. A global test list,
+unfiltered `cargo test -p PACKAGE`, workspace tests or `--all-targets` is not an
+ordinary discovery or fallback command. The same commands are allowed only when
+their actual breadth has been justified by the scope ladder below.</DISCOVERY-COST></p>
+    <p><NONVACUOUS-SELECTION fact="true" status="spec/done">Verify that the
+expected cases actually ran and asserted the intended behavior. A successful
+exit with zero selected tests is not a behavioral-test pass; neither are
+compile-only evidence, setup failure or a wrapper that loses the child exit
+status. A compile check proves its own compilation claim, not test behavior. If the expected case is
+missing, correct the target/filter or supply the missing targeted test. Do not
+respond by running everything merely to obtain a green result.</NONVACUOUS-SELECTION></p>
+    <p><BUILD-ARTIFACT-REUSE fact="true" status="spec/done">Reuse compatible
+incremental build and dependency artifacts, including the existing Cargo target
+directory when toolchain, configuration and concurrent access permit. Do not
+run `cargo clean`, create a cold target directory or commission duplicate builds
+by default. Isolation required for correctness has an explicit reason and
+bounded scope. Include compilation cost in selecting the proof. A reusable
+build artifact saves compilation; it is not evidence that a test passed.</BUILD-ARTIFACT-REUSE></p>
+    <p><NONPRODUCT-CHANGES fact="true" status="spec/done">A documentation,
+comment or planning-only change normally needs its affected format, reference,
+schema or documentation checks, not product Rust suites. Executable examples,
+generated inputs or normative contract changes can affect product behavior;
+identify that concrete effect and select its tests instead of relying solely on
+the file extension.</NONPRODUCT-CHANGES></p>
+  </targets>
+  <scope title="3. Widen only to resolve a specific missing proof">
+    <facts ordered="true">
+      <SCOPE-CASES fact="true" status="spec/done">Start with exact affected
+  cases or a small named family, including required negative and invariant
+  cases.</SCOPE-CASES>
+      <SCOPE-CONSUMERS fact="true" status="spec/done">Add named integration
+  consumers where an interface, schema or generated artifact changed; identify
+  the contract each consumer test proves.</SCOPE-CONSUMERS>
+      <SCOPE-COMPONENT fact="true" status="spec/done">Run the affected
+  component suite when its shared behavior or unresolved coverage makes the
+  smaller proof insufficient. Explain what this wider run will establish.</SCOPE-COMPONENT>
+      <SCOPE-PRODUCT fact="true" status="spec/done">A whole-product panel is
+  justified by an explicit full-panel request, the designated comprehensive
+  final campaign gate, or demonstrated crosscutting impact for which no adequate
+  narrower proof exists. Name the impacted product and the coverage gap; do not
+  expand a leaf-package check to an unrelated host product.</SCOPE-PRODUCT>
+    </facts>
+    <p><NOT-SCOPE-TRIGGERS fact="true" status="spec/done">Completing an atom,
+making a commit, a worker/model/session change, a milestone label, pushing or
+publishing, touching a public surface, or changing several crates does not by
+itself trigger a full panel. Review the actual effect and any genuinely owed
+gate. The final comprehensive campaign gate remains required; local atom checks
+alone do not satisfy that gate.</NOT-SCOPE-TRIGGERS></p>
+    <p><WORKER-SCOPE-BOUNDARY fact="true" status="spec/done">A worker stays
+within its named verification perimeter. Missing context, a failed command or
+uncertain coverage is reported with the missing claim and smallest proposed
+next proof; it is not permission to self-escalate to a component or workspace
+suite. The coordinator may choose the next bounded scope under existing owner
+authority. Routine selection creates no new owner permission ritual.</WORKER-SCOPE-BOUNDARY></p>
+  </scope>
+  <evidence title="4. Reuse valid steps and resume the unfinished panel">
+    <p><STEP-SUBJECT fact="true" status="spec/done">A reusable verdict names
+its actual relevant input closure: source and generated inputs, dependencies,
+fixtures, schemas, configuration, command and flags, toolchain, build target and
+consequential environment. Reuse only while that subject matches and the same
+claims and cases were actually covered. A whole-repository HEAD change alone
+does not invalidate unrelated proof; an unchanged HEAD alone cannot establish
+validity. If the closure is unknown, rerun that affected step, not automatically
+every check.</STEP-SUBJECT></p>
+    <p><PANEL-RESUMPTION fact="true" status="spec/done">When a declared
+fail-fast panel stops, preserve its complete required step/case denominator and
+inspect surviving results before rerunning. On the current acceptance subject,
+replay failed, interrupted or invalidated steps and the unrun tail; reuse earlier
+passing steps only when their relevant input closures remain valid. Reuse must
+preserve every required case within each step, not just a green step label. If
+validity cannot be established, replay the necessary steps; replay the entire
+panel only when that entire scope is owed and no prior step remains provably
+valid.</PANEL-RESUMPTION></p>
+    <p><AGGREGATE-CLAIM fact="true" status="spec/done">Evidence assembled from
+compatible per-step runs may prove the complete declared gate on the acceptance
+subject. Report it as an aggregate, with each required step/case mapped to its
+result, omissions explicitly unresolved, and inherited evidence identified. Do
+not say the full script passed in one invocation if it did not. If the gate
+actually depends on one uninterrupted order or shared state, that dependency is
+part of its subject and must be reproduced; do not splice incompatible runs.</AGGREGATE-CLAIM></p>
+    <p><NO-PREREQUISITE-DELAY fact="true" status="spec/done">Shared evidence
+may serve several atoms when the complete proof applies to each. Do not defer a
+prerequisite check until after the dependent action it guards, collapse away
+distinct claims, or use artifact-cache hits as test verdicts. A new failure or
+changed subject invalidates the affected proof and reopens that work.</NO-PREREQUISITE-DELAY></p>
+  </evidence>
+</spec>

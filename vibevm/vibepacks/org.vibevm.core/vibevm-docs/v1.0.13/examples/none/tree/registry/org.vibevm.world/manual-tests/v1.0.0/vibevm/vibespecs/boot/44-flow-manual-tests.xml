@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">Flow: Manual Tests</title>
+  <status stage="impl" state="done"/>
+  <p><THE-PROJECT-KEEPS-A-SECOND-TEST-TIER fact="true" status="impl/done">This project keeps a **second test tier**: human-run markdown
+walkthroughs that prove the integration surfaces the automated suite
+cannot reach.</THE-PROJECT-KEEPS-A-SECOND-TEST-TIER></p>
+  <p><THE-AUTOMATED-TIER-PROVES-THE-LOGIC-THE-MANUAL-TIER-PROVES-THE-WORLD fact="true" status="impl/done">The automated tier proves the logic; the manual tier
+proves the world.</THE-AUTOMATED-TIER-PROVES-THE-LOGIC-THE-MANUAL-TIER-PROVES-THE-WORLD></p>
+  <p><THE-MANUAL-TIER-COMPLEMENTS-AND-NEVER-REPLACES fact="true" status="impl/done">It complements the automated suite — it never
+replaces it.</THE-MANUAL-TIER-COMPLEMENTS-AND-NEVER-REPLACES></p>
+  <when title="When to propose writing one">
+    <p><propose-a-manual-test-lead fact="true" status="impl/done">Propose a manual test — do not wait to be asked — whenever:</propose-a-manual-test-lead></p>
+    <facts ordered="false">
+      <TRIGGER-A-NEW-INTEGRATION-SURFACE-LANDS fact="true" status="impl/done">**A new integration surface lands.** Real authentication, the
+  per-user state directory on a real filesystem, a lockfile as a
+  downstream consumer sees it, network-facing I/O — anything the
+  automated tier fakes now has a real-world form that nothing proves.</TRIGGER-A-NEW-INTEGRATION-SURFACE-LANDS>
+      <TRIGGER-A-MILESTONE-APPROACHES fact="true" status="impl/done">**A milestone approaches.** Before tagging, every run the index
+  marks required for the shipped features must have been executed.</TRIGGER-A-MILESTONE-APPROACHES>
+      <TRIGGER-A-USER-REPORTS-AN-INTEGRATION-BUG fact="true" status="impl/done">**A user reports an integration bug.** Its reproduction steps
+  become a manual test, so the next session can replay them exactly.</TRIGGER-A-USER-REPORTS-AN-INTEGRATION-BUG>
+    </facts>
+    <p><sibling-document-pointers fact="true" status="impl/done">The format, authoring rules, and copy-ready skeleton live under
+@spec://org.vibevm.world/manual-tests/flows/manual-tests/MANUAL-TESTS-PROTOCOL#root.</sibling-document-pointers></p>
+  </when>
+  <roles title="Agent pre-runs, human signs off">
+    <p><the-whole-point-is-human-eyes-on-real-output fact="true" status="spec/done">The whole point of the tier is human eyes on real output.</the-whole-point-is-human-eyes-on-real-output></p>
+    <p><AN-AGENT-MAY-PRE-RUN-AND-FLAG-DIVERGENCES fact="true" status="impl/done">An agent
+may **pre-run** a manual test end to end and flag any step whose
+result diverges from its "Expected" paragraph — that is useful
+triage.</AN-AGENT-MAY-PRE-RUN-AND-FLAG-DIVERGENCES></p>
+    <p><THE-SIGN-OFF-IS-A-HUMANS fact="true" status="impl/done">But the sign-off is a human's: only a person can look at the
+tool's output and say "yes, that is what I meant".</THE-SIGN-OFF-IS-A-HUMANS></p>
+    <p><REPORT-THE-PRE-RUN-NEVER-RECORD-THE-PASS fact="true" status="impl/done">Report the
+pre-run; never record the pass.</REPORT-THE-PRE-RUN-NEVER-RECORD-THE-PASS></p>
+  </roles>
+  <never title="Never">
+    <facts ordered="false">
+      <NEVER-LET-A-MANUAL-TEST-TOUCH-REAL-USER-STATE fact="true" status="impl/done">**Never let a manual test touch real user state.** Every run
+  isolates its project into a scratch directory and redirects the
+  tool's per-user cache into that scratch. A test that mutates the
+  real per-user state is a bug in the test.</NEVER-LET-A-MANUAL-TEST-TOUCH-REAL-USER-STATE>
+      <NEVER-WRITE-A-STEP-WITHOUT-AN-EXPECTED-PARAGRAPH fact="true" status="impl/done">**Never write a step without an "Expected" paragraph.** A command
+  with no stated outcome cannot pass or fail; it is not a test step.</NEVER-WRITE-A-STEP-WITHOUT-AN-EXPECTED-PARAGRAPH>
+      <NEVER-TAG-A-MILESTONE-WITH-REQUIRED-RUNS-UNEXECUTED fact="true" status="impl/done">**Never tag a milestone with the index's required runs
+  unexecuted.** Green automated suite plus unrun manual tests is not
+  a shippable milestone.</NEVER-TAG-A-MILESTONE-WITH-REQUIRED-RUNS-UNEXECUTED>
+      <NEVER-DELETE-A-FAILING-MANUAL-TEST-TO-MAKE-THE-PANEL-GREEN fact="true" status="impl/done">**Never delete a failing manual test to make the panel green.** A
+  test that caught something is working; file what it caught and fix
+  the product, not the test.</NEVER-DELETE-A-FAILING-MANUAL-TEST-TO-MAKE-THE-PANEL-GREEN>
+    </facts>
+  </never>
+</spec>

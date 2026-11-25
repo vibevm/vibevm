@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">Write a flow package</title>
+  <status stage="doc" state="work" audience="author"/>
+  <p>A flow tells an agent how a team works: how to commit, what to check before pushing, how to keep notes between sessions. This page writes one from scratch, including the short text the agent reads at every session start.</p>
+  <prompt id="write-a-flow">Create a flow package org.acme/review-notes in the current VibeVM project, as an in-tree package under vibevm/vibepacks/. It should teach an agent to leave a short REVIEW.md note at the root of the project after every change it makes, with the date and what changed. Write the boot snippet, the protocol document and the manifest, then run vibe check on the package.
+    <needs>the vibevm skill installed for your agent; a project with `vibe.toml` at the root</needs>
+    <outcome>`vibevm/vibepacks/org.acme/review-notes/v0.1.0/vibe.toml` declares a `flow` package with a boot snippet; the snippet is under two hundred words and names the protocol by address; the protocol document has anchored sections; `vibe check --path vibevm/vibepacks/org.acme/review-notes/v0.1.0` reports no errors</outcome>
+    <assert>vibe check --path vibevm/vibepacks/org.acme/review-notes/v0.1.0 --quiet</assert>
+    <assert>test -f vibevm/vibepacks/org.acme/review-notes/v0.1.0/vibevm/vibespecs/boot/review-notes.xml</assert>
+  </prompt>
+  <what-happens title="What happens">
+    <p>The agent runs `vibe init package org.acme/review-notes`, which adds a package slot to the project at `vibevm/vibepacks/org.acme/review-notes/v0.1.0/`: a [manifest](../glossary/index.xml#manifest) with a `[package]` table, a README and a placeholder snippet. The project's own [registry](../glossary/index.xml#registry) sees the slot, so the flow can be installed and tried in place before it is published. It then writes three things. The [boot snippet](../glossary/index.xml#boot-snippet) is a short instruction the agent of a consuming project reads at every session start. The protocol is the full set of rules under `vibevm/vibespecs/flows/review-notes/`, with anchored sections the snippet cites. The manifest's `[boot_snippet]` table points at the snippet with the category `flow`. Finally it runs `vibe check` on the package, which validates the manifest and the layout like it would for any project.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-024#PKG-PROJECT-LAW"/>
+  </what-happens>
+  <by-hand title="By hand">
+    <p>1. Create the package slot:</p>
+    <example id="init-package" fixture="project">
+      <run>vibe init package org.acme/review-notes</run>
+      <expect>Creating package `org.acme/review-notes` in `&lt;TMP&gt;/work`
+  ✓ created  vibevm/vibepacks/org.acme/review-notes/v0.1.0/vibe.toml
+  ✓ created  vibevm/vibepacks/org.acme/review-notes/v0.1.0/vibevm/vibespecs/boot/10-tool-review-notes.md
+  ✓ created  vibevm/vibepacks/org.acme/review-notes/v0.1.0/README.md
+  • kept     vibevm/vibespecs/boot/INDEX.md (regenerated)
+  • kept     CLAUDE.md (regenerated)
+  • kept     AGENTS.md (regenerated)
+  • kept     GEMINI.md (regenerated)
+
+Done. Project `org.acme/review-notes`: 3 files created, 4 kept.
+
+Next:
+  • edit vibevm/vibespecs/boot/00-core.md and vibevm/vibespecs/common as your project takes shape
+  • install packages with `vibe install &lt;kind&gt;:&lt;name&gt;` (e.g. flow:wal)</expect>
+    </example>
+    <p>2. Edit the manifest the scaffold wrote: set `kind = "flow"`, fill in the description, and point `[boot_snippet]` at your snippet. As generated:</p>
+    <example id="manifest" fixture="flow-slot">
+      <run>cat vibevm/vibepacks/org.acme/review-notes/v0.1.0/vibe.toml</run>
+      <expect>[package]
+group = "org.acme"
+name = "review-notes"
+kind = "tool"
+version = "0.1.0"
+epoch = 1
+authors = ["vibevm docs fixtures"]
+license = "UPL-1.0"
+description = ""
+format = "normal"
+
+[boot_snippet]
+source = "vibevm/vibespecs/boot/10-tool-review-notes.md"
+category = "tool"
+link = "dynamic"</expect>
+    </example>
+    <p>3. Inside the slot, write the snippet at `vibevm/vibespecs/boot/review-notes.xml`. Keep it short: what to do, and the address of the rule that says why. It is read by every agent, in every session, of every project that installs your flow.</p>
+    <p>4. Write the protocol under `vibevm/vibespecs/flows/review-notes/`: one anchored section per rule, one idea per section, a status marker on each.</p>
+    <p>5. Check and publish:</p>
+    <example id="check" fixture="flow-slot">
+      <run>vibe check --path vibevm/vibepacks/org.acme/review-notes/v0.1.0</run>
+      <expect>vibe check: clean — every check passed against `&lt;TMP&gt;/work/vibevm/vibepacks/org.acme/review-notes/v0.1.0`</expect>
+    </example>
+  </by-hand>
+  <the-snippet title="The snippet is the expensive part">
+    <p>A snippet is paid for on every session start by every consumer. Write it as an instruction, not an explanation: name the rule, the address, the command. Put the reasoning in the protocol, where an agent reads it once when it needs to. And never assume another package is installed: a snippet that says «as the WAL protocol requires» in a project without that protocol sends the agent looking for a rule that is not there. If your flow builds on another, declare the concept it relies on and let vibe warn when the concept is absent.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-048#THE-LAYER-LAW"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-049#SNIPPET-GENRE-RULE"/>
+    <p>The consumer decides how your snippet is linked, compiled into the priority lane or listed in `INDEX.md`; you may suggest a default in `[boot_snippet]`, and the consumer's choice wins.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#SUGGESTED-DEFAULT"/>
+  </the-snippet>
+  <subskills title="Subskills: content that arrives when it is needed">
+    <p>A package may split its content into [subskills](../glossary/index.xml#subskill), the smallest units an agent can activate: each looks like a tiny package with its own manifest and files. What differs per subskill is its `delivery`, the primary axis: `eager` puts the content on disk at install, `lazy-push` and `lazy-pull` hold it back until an activation rule matches. A subskill activates when any one of its channels matches, once. For the lazy modes a `description` is required, because it is the whole trigger, and `vibe check` refuses a lazy subskill without one.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#SUBSKILL-DEFINITION"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#DELIVERY-PRIMARY-AXIS"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#ACTIVATION-ANY-MATCH"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#DESCRIPTION-REQUIRED"/>
+  </subskills>
+  <layout title="What goes where">
+    <p>Paths are relative to the package root, the slot `vibevm/vibepacks/org.acme/review-notes/v0.1.0/`.</p>
+    <table>
+      <tr><td>Path</td><td>Purpose</td></tr>
+      <tr><td>`vibe.toml`</td><td>the manifest: `[package]`, `[boot_snippet]`, optional `[[skill]]`, `[requires]`</td></tr>
+      <tr><td>`README.md`</td><td>what the flow is, shown on the registry and the site</td></tr>
+      <tr><td>`vibevm/vibespecs/boot/&lt;name&gt;.xml`</td><td>the boot snippet</td></tr>
+      <tr><td>`vibevm/vibespecs/flows/&lt;name&gt;/`</td><td>the protocol and its supporting documents</td></tr>
+      <tr><td>`vibevm/vibespecs/skills/&lt;skill&gt;/SKILL.md`</td><td>skills the flow offers to agents, declared in `[[skill]]`</td></tr>
+      <tr><td>`LICENSE.md`</td><td>the licence; permissive licences only in the public registry</td></tr>
+    </table>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-024#SPEC-SUBTREE"/>
+    <p>Everything under the package root except build output is the package: that is what is fingerprinted, copied into consumers and shown by the site.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-024#SHIPPABLE-TREE-DEF"/>
+    <p>A package is `simple` by default: its files are carried whole and read because they are present. `format = "normal"` opts into a split between `contract/`, small and cheap to load like a header, and `source/`, the heavy body pulled only when a directive asks for it; a normal package that nobody uses does not enter the build at all.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#FORMAT-SIMPLE"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#FORMAT-NORMAL"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#DIR-CONTRACT"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#DIR-SOURCE"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#USE-TREE-SHAKING"/>
+  </layout>
+  <edge-cases title="Edge cases and rules">
+    <p>Cross-references inside the package are addresses, `spec://org.acme/review-notes/flows/review-notes/PROTOCOL#anchor`, never relative file paths; they survive being copied into any consumer.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-052#ADDRESSES-SURVIVE-THE-MOVE"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-052#THE-LAYOUT"/>
+    <p>While you develop a package inside the same repository, edit its source and run `vibe install`: the change reaches the dependency tree without a flag, an update or a forced reinstall.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-011#AUTOMATIC-NO-FLAG"/>
+    <p>Versions never move: to change a published snippet, bump the version and publish again. A consumer sees the change at its next update, not before.</p>
+    <p>A flow may require other packages; a consumer installing yours gets them too, and their snippets enter the consumer's lane after yours.</p>
+  </edge-cases>
+</spec>

@@ -1,0 +1,20 @@
+[package]
+name = "typescript-ai-native-conform-frontend"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+authors.workspace = true
+license-file.workspace = true
+publish.workspace = true
+repository.workspace = true
+homepage.workspace = true
+description = "The ts-tsc conform frontend: batch-warms via the ts-extract Compiler-API extractor and feeds the language-neutral engine"
+
+[dependencies]
+conform-core.workspace = true
+typescript-ai-native-extract-bridge.workspace = true
+anyhow.workspace = true
+sha2.workspace = true
+
+[dev-dependencies]
+tempfile.workspace = true

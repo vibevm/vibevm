@@ -1,0 +1,10 @@
+# The split package installed: the contract with its source compiled in
+# behind it, the whole in `STATIC.xml`.
+schema = 1
+
+[fixture]
+from = "review-split"
+cwd = "work/review-lab"
+
+[[fixture.step]]
+run = "vibe install org.acme/review --assume-yes"

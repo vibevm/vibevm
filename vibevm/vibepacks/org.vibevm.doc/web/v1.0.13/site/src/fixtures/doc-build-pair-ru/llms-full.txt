@@ -1,0 +1,46 @@
+# Пара
+
+> Два экземпляра страниц, один из них намеренно расходится.
+
+A community documentation of com.example/subject, published by com.example.docs, in ru.
+An adaptation of com.example.docs/pair (an official translation).
+Read it at /doc/com.example.docs/pair-ru/0.1.0/. Rendered 2026-09-12.
+
+Что покрывает: две страницы — зеркало источника, во второй намеренное расхождение.
+Для кого: для того, кто меняет проверку переводов.
+Что предполагает известным: ничего.
+Чего не покрывает: всё остальное.
+
+---
+
+<!-- guide/two.xml -->
+Source: /doc/com.example.docs/pair-ru/0.1.0/guide/two/
+Address: spec://com.example.docs/pair-ru@0.1.0/guide/two
+
+# Вторая {#root}
+
+@status:doc/work @audience:user
+
+[p01] @fact:LEAD-TWO Вторая страница пары, у которой средний блок — список. @status:doc/work
+
+[p02] Первый пункт. Второй пункт.
+
+[p03] @fact:TAIL-TWO И закрывающий абзац после него. @status:doc/work
+
+---
+
+<!-- guide/one.xml -->
+Source: /doc/com.example.docs/pair-ru/0.1.0/guide/one/
+Address: spec://com.example.docs/pair-ru@0.1.0/guide/one
+
+# Первая {#root}
+
+@status:doc/work @audience:user
+
+[p01] @fact:LEAD-ONE Первая страница пары, которую перевод зеркалит блок в блок. @status:doc/work
+
+[p02] Example `version` is copied from the source page at projection time.
+
+## Зачем {#why}
+
+[p03] @fact:WHY-ONE Потому что зеркало имеет смысл проверять на двух страницах. @status:doc/work

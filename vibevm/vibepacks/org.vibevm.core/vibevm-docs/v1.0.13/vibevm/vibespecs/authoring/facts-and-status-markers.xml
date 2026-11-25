@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">Facts and their status markers</title>
+  <status stage="doc" state="work" audience="author"/>
+  <p>A spec is a list of promises, and each promise has a state: proposed, being built, done, abandoned. vibe reads that state from a small marker written next to the promise, in Markdown or in the XML form, and one command tells you when a marker is malformed or in the wrong place. This page is the grammar of those markers.</p>
+  <example id="facts-check" fixture="package-spec">
+    <run>vibe facts check</run>
+    <expect>progress check: clean (2 files, 0 warning(s))</expect>
+  </example>
+  <the-marker title="The marker">
+    <p>A marker is one XML-shaped element, `&lt;status stage="…" state="…"/&gt;`, embedded in Markdown or native in the dialect. A point marker is self-closing; an unclosed one is not well-formed and is an error. The shorthand `@status:spec/done` means the same as the element, and `@status:impl` alone means `impl/work`, with one exception: `@status:unknown` means `unknown/hold`. The older spellings without `status:` are still read. Every vocabulary is closed: a value outside the tables is an error, with the nearest legal value as a hint.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#STATUS-ELEMENT"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#POINT-SELF-CLOSING"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#SHORTHAND-FORMS"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#SHORTHAND-BARE"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#VOCAB-CLOSED"/>
+  </the-marker>
+  <anchors title="Anchors">
+    <p>A marked unit must have an address. In Markdown the [anchor](../glossary/index.xml#anchor) is `@fact:ID` as the first token of a paragraph or a list item. The id starts with a letter and continues with letters, digits, underscore and hyphen, and it shares one address space with the heading anchors, so a duplicate across the two forms is an error. A marker on a unit without an anchor is an error. The scanner ignores fenced code, inline code and addresses, so a marker quoted inside them is text, not a marker.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#FACT-ANCHOR-SYNTAX"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#FACT-ID-GRAMMAR"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#ANCHORED-WHEN-MARKED"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#FENCE-AWARE"/>
+  </anchors>
+  <placement title="Where a marker goes">
+    <p>There are four places. A document marker stands in the preamble, or right after the first heading when the document opens with one. A section marker stands alone on the line after its heading; that is the only legal standalone position in a body. A paragraph marker sits inside the paragraph's own text, as its first or its last token. Every list item is a unit of its own, at every nesting level, and its marker sits inside the item's text. A marker standing alone between two paragraphs is an error; there is no nearest-paragraph guess. A unit carries at most one status marker and any number of action markers.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#PLACE-DOCUMENT"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#PLACE-SECTION"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#PLACE-PARAGRAPH"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#PLACE-LIST-ITEM"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#NO-ORPHAN-MARKER"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#MULTI-MARKERS"/>
+  </placement>
+  <rollup title="How a status rolls up and down">
+    <p>A node's marker covers the descendants that carry none. An unmarked node's computed status is the worst of its children, and `unknown` wins the bottom.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#ROLLUP-DOWNWARD"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#ROLLUP-UPWARD"/>
+  </rollup>
+  <actions title="Actions, stages and audiences">
+    <p>Beside the status a marker may carry an action, what should happen next, and `actionstage` narrows it: `action="remove" actionstage="doc"` means the documentation of this is to be removed while `stage` still describes the unit itself. A `doc` action with an `audience` is an obligation of the documentation: a page written for that audience must cite the [fact](../glossary/index.xml#fact), and `vibe doc check --coverage` checks that one does.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#ACTIONSTAGE-NARROWS"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#AUDIENCE-DOC-USE"/>
+  </actions>
+  <requires title="What closes a fact">
+    <p>A fact may say what closes it: `@requires:implementation,verification` right before its final status in Markdown, or a `requires` attribute in the XML form. The kinds are a closed list, `specification`, `implementation`, `verification`, `documentation`, `decision`, `research`, `plan`, `disposition` and `external`. They name closure artifacts, not genres: a research note may require an implementation.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#REQUIRES-GRAMMAR"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#REQUIRED-ARTIFACT-KINDS"/>
+  </requires>
+  <the-tool title="The tool">
+    <p>`vibe facts check` is the lint, and `--exhaustive` demands a marker on every paragraph; `vibe progress check` is a transitional alias that prints the new spelling. The observed files are named by include globs in `facts.toml` at the package root: globs that say what is observed, never a list of exclusions.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#BOUNDARY-CLI"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#CONFIG-FILE"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#INCLUDE-STYLE"/>
+  </the-tool>
+  <edge-cases title="Edge cases and rules">
+    <p>A document written before the qualified spelling keeps parsing: the legacy `@spec/done` and `##ID` forms mean what the new ones mean. Converting a file between Markdown and XML keeps every marker, because the marker is part of the model, not of the syntax.</p>
+  </edge-cases>
+</spec>

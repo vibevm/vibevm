@@ -1,0 +1,33 @@
+.tab-pills {
+  display: inline-flex;
+  gap: 0.25rem;
+  padding: 0.2rem;
+  background: var(--bg-sink);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-pill);
+  margin: 0 0 1rem;
+}
+
+.tab-pills__pill {
+  padding: 0.28rem 0.8rem;
+  border: none;
+  border-radius: var(--radius-pill);
+  background: none;
+  color: var(--text-2);
+  font-family: var(--font-sans);
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition:
+    background var(--speed) ease,
+    color var(--speed) ease;
+}
+
+.tab-pills__pill:hover {
+  color: var(--text);
+}
+
+.tab-pills__pill--current {
+  background: var(--bg-raise);
+  color: var(--text);
+  box-shadow: var(--shadow-card);
+}

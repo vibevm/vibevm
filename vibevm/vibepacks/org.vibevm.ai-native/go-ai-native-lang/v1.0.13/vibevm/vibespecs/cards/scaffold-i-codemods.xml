@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">CARD: scaffold-i-codemods — Scaffolded Edit Operations / Codemods (Go)</title>
+  <status stage="spec" state="done"/>
+  <p><status-line fact="true" status="impl/done">**Discipline v0.2 · BETA · T2 · Go · [E-hyp] — validate before relying on it**</status-line></p>
+  <band-one-identity title="Band 1 — Identity &amp; Recognition">
+    <p><CLASSIFICATION fact="true" status="impl/done">Classification: layer=H (weak-reader) + A (language-shape); mechanism=scaffold I.</CLASSIFICATION></p>
+    <p><INTENT fact="true" status="impl/done">Intent: Offer a capability-demanding multi-file change as ONE parameterized, checked operation — converting an edit a weak agent cannot safely coordinate into a parameter-filling task. Go's tooling sits mid-way between Rust's (immature) and TypeScript's (rich): `gofmt -r` ships pattern rewrites in the toolchain itself; `go/ast` + `go/format` make structural codemods a stdlib exercise; `golang.org/x/tools/go/analysis` offers the framework tier.</INTENT></p>
+    <p><ALSO-KNOWN-AS fact="true" status="spec/done">Also Known As: codemod; AST rewrite; `gofmt -r`; refactoring script; scripted migration; analysis-with-fix.</ALSO-KNOWN-AS></p>
+    <p><APPLICABILITY-RECOGNITION fact="true" status="impl/done">Applicability / Recognition: Apply when — a common change touches many files atomically (add a cell, register a variant, rename across a seam); the edit's size is itself the failure driver (R2C-006); the weakest swarm tier cannot coordinate it by hand. *Detector seed:* a recurring change-type that reliably requires touching &gt;1 file in lockstep → recognition fires.</APPLICABILITY-RECOGNITION></p>
+  </band-one-identity>
+  <band-two-justification title="Band 2 — Justification &amp; Tradeoffs">
+    <p><MOTIVATION fact="true" status="spec/done">Motivation: A weak agent asked to "add a planner variant" must create the cell package, the conformance assertion, the directive tags, the registry arm, and the Example stub — five artefacts in lockstep. `go-ai-native codemod add-cell --cell &lt;cell&gt; --spec-uri &lt;uri&gt;` collapses the scaffolding half into two parameters: it writes `doc.go` with its `//spec:scope` directive, the cell source with its `New` constructor, and a smoke test carrying an executed `Example` — atomically, post-checked by the new package's own `go test`, rolled back on failure. The seam-conformance assertion and the registry arm stay the author's. This mirrors how constrained decoding lifts weak models (DR1-015): collapse the hard task into a constrained, parameterized one.</MOTIVATION></p>
+    <p><STRUCTURE-AND-PARTICIPANTS fact="true" status="impl/done">Structure &amp; Participants: *Codemod* (`gofmt -r` for pattern rewrites; a `go/ast`+`go/format` program or the shipped CLI verb for structural ones) · *Parameters* (the small named inputs) · *Atomic application* (all-or-nothing) · *Post-check* (`go build` + per-package `go test` green).</STRUCTURE-AND-PARTICIPANTS></p>
+    <p><COLLABORATIONS fact="true" status="impl/done">Collaborations: Implements bulk application of Classes A/B/G in raids; emits Class F diagnostics on failure; the Class D oracle wraps it when it changes behavior.</COLLABORATIONS></p>
+    <p><GOALS-AND-NON-GOALS fact="true" status="impl/done">Goals / Non-Goals: *Goals:* convert capability-demanding multi-file edits into parameterized operations for the weak swarm. *Non-Goals:* NOT a general refactoring IDE; NOT for one-off changes; NOT semantic transforms without a Class-D wrap.</GOALS-AND-NON-GOALS></p>
+    <p><CONSEQUENCES fact="true" status="spec/done">Consequences: (+) the weakest tier can perform edits otherwise beyond it; (+) atomicity kills desync and phantom diffs; (+) `gofmt -r` gives the simplest rewrites for free, and `go/format` output is canonical by construction (no formatting drift). (−) codemods are code to maintain and test; (−) **[E-hyp] risk:** parameterizing a codemod may itself exceed the weakest models — the very build/use boundary in question.</CONSEQUENCES></p>
+    <p><ALTERNATIVES fact="true" status="spec/done">Alternatives: hand-editing (fails at scale for weak agents); a generator (Class A) when the artifact is derivable rather than transformed. Codemods are for TRANSFORMING existing code.</ALTERNATIVES></p>
+    <p><RISKS-AND-ASSUMPTIONS fact="true" status="spec/done">Risks &amp; Assumptions: **assumes weak agents can correctly parameterize the operation** — UNVALIDATED; this is the prime pilot question. If false, restrict the weakest tier to fixed-parameter invocations only. Go's tooling maturity removes the build-side risk for simple rewrites (`gofmt -r` is toolchain-native); complex semantic codemods remain authored one-offs. *Sunset:* if language/tooling makes the change trivial, the codemod retires.</RISKS-AND-ASSUMPTIONS></p>
+    <p><EVIDENCE-AND-TRANSFER-STRENGTH fact="true" status="spec/done">Evidence &amp; Transfer-strength: first-principles from R3-013 (ownership graph bounds throughput) + R2C-006 (edit size drives failure) + DR1-015 (constraints lift weak models). Class: theory. Tag: **[E-hyp]**.</EVIDENCE-AND-TRANSFER-STRENGTH></p>
+  </band-two-justification>
+  <band-three-operation title="Band 3 — Operation">
+    <fence lang="card-ops">trigger: WHEN a recurring change-type reliably requires &gt;1 file edited in lockstep THEN apply
+mode: raid            # bulk application; also offered as an on-demand command
+routine:
+  1. Identify the recurring multi-file change and its minimal parameters.
+  2. Prefer `gofmt -r 'old -&gt; new'` where the change is a pure expression rewrite; else implement a go/ast + go/format codemod (or use the shipped `go-ai-native codemod add-cell`).
+  3. Add a post-check: result builds (`go build ./...`) and the touched packages' tests pass.
+  4. Wrap behavior-changing codemods in a Class-D oracle.
+  5. For the weakest tier, expose ONLY fixed-parameter invocations until the pilot validates free parameterization.
+checker: the codemod's own post-check (go build + go test) ; conform `multi-file-change-has-codemod` (advisory, WISH until pilot-validated)
+raid_role: layer=any; order=wraps-with:differential-oracle; batch=package
+budget: active_rules=1; first_signal=codemod post-check (&lt;60s/package)</fence>
+  </band-three-operation>
+</spec>

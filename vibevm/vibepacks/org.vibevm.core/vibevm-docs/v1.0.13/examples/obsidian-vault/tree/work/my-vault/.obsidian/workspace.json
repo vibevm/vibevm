@@ -1,0 +1,23 @@
+{
+  "main": {
+    "id": "a1b2c3d4e5f60718",
+    "type": "split",
+    "direction": "vertical",
+    "children": [
+      {
+        "id": "b2c3d4e5f6071829",
+        "type": "leaf",
+        "state": {
+          "type": "markdown",
+          "state": { "file": "Inbox.md", "mode": "source" }
+        }
+      }
+    ]
+  },
+  "active": "b2c3d4e5f6071829",
+  "lastOpenFiles": [
+    "Inbox.md",
+    "Daily/2026-09-20.md",
+    "Projects/calculator/spec.md"
+  ]
+}

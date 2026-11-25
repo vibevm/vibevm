@@ -1,0 +1,10 @@
+# The XML project with the tutorial's package slot scaffolded, as
+# `vibe init package` leaves it: manifest, README and a placeholder note.
+schema = 1
+
+[fixture]
+from = "xml-lab"
+cwd = "work/review-lab"
+
+[[fixture.step]]
+run = "vibe init package org.acme/review --kind flow --format normal"

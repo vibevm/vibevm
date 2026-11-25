@@ -1,0 +1,8 @@
+# The dirty fixture's specmap policy — the TS orphan gate's red half:
+# internal.ts and UNCHECKED are deliberately untagged.
+namespace = "fixture"
+scan_roots = ["src"]
+spec_roots = ["spec"]
+root_spec_docs = []
+exempt = []
+dispositioned = []

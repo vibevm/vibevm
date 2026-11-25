@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">MT-01 — minimal project installs and launches a GLM worker</title>
+  <status stage="test" state="work" comment="agent pre-run may report evidence; human sign-off remains open"/>
+  <purpose title="Purpose">
+    <p><PURPOSE fact="true" status="test/work">Prove on a fresh minimal project that the
+    package materialises its boot contract, deploys receipt-owned launchers into
+    an isolated `$VIBE_SETTINGS/opt/bin` (production default:
+    `~/.vibe/opt/bin`), and can use one of those exact bytes for a
+    bounded real GLM worker task. The test never copies or prints a credential
+    and consumes at most one fresh run plus one same-cwd correction.</PURPOSE></p>
+  </purpose>
+
+  <prerequisites title="Prerequisites">
+    <facts ordered="false">
+      <CURRENT-VIBE fact="true" status="test/work">A `vibe.exe` built from the tree that
+      contains `package:static-file` and `deploy:vibe-opt-launcher`.</CURRENT-VIBE>
+      <LOCAL-REGISTRY fact="true" status="test/work">A local registry root containing
+      `org.vibevm.world/zai-glm-claude/1.0.0`.</LOCAL-REGISTRY>
+      <LIVE-TOKEN-SOURCE fact="true" status="test/work">For the live half only, the normal
+      z.ai token source exists. The test checks existence and passes its path to
+      the launcher; it never reads, hashes, copies or reports the value.</LIVE-TOKEN-SOURCE>
+    </facts>
+  </prerequisites>
+
+  <step-package title="Step 1 — isolated package/install/deploy smoke">
+    <fence lang="powershell">&amp; .\tests\e2e\run.ps1 `
+  -VibeExe C:\path\to\current\vibe.exe `
+  -RegistryRoot C:\path\to\vibevm\vibevm\vibepacks</fence>
+    <p><EXPECTED-PACKAGE fact="true" status="test/work">Expected: exit 0 and
+    `PACKAGE_E2E_OK`. The preserved evidence root contains a minimal project,
+    exact installed package slot, generated boot with each required marker once,
+    isolated deployment records, and byte-identical `claudez.ps1`/`.cmd` under
+    the fake settings root's `opt/bin`. The operator home and token source are
+    unchanged.</EXPECTED-PACKAGE></p>
+  </step-package>
+
+  <step-live title="Step 2 — one bounded live GLM task">
+    <fence lang="powershell">&amp; .\tests\e2e\run.ps1 `
+  -VibeExe C:\path\to\current\vibe.exe `
+  -RegistryRoot C:\path\to\vibevm\vibevm\vibepacks `
+  -Live</fence>
+    <p><EXPECTED-LIVE fact="true" status="test/work">Expected: the package smoke remains
+    green, the launcher returns the real child exit, structured terminal JSON
+    carries a nonempty child `session_id` and only GLM `modelUsage` keys, the
+    worker's explicit model answer equals one of those keys, and output ends with
+    `LIVE_GLM_E2E_OK passes=1` plus an evidence-root path. `proof.json` contains
+    the run nonce and `GLM_E2E_OK`; the durable worker report contains the same
+    nonce. A normal-success artifact defect may use exactly one same-cwd repair
+    and then prints `passes=2`. A 429, quota wall, gateway failure or stall is
+    reported as transport unavailable and is not retried.</EXPECTED-LIVE></p>
+  </step-live>
+
+  <inspection title="Human inspection">
+    <p><HUMAN-SIGNOFF fact="true" status="test/work">Inspect the generated boot, deployed
+    launcher paths, proof/report and bounded transport summary. Confirm that the
+    workflow is understandable from either the Claude-parent or Codex-parent
+    clause and that no token value appears. Only a human records final sign-off;
+    an agent reports its pre-run without changing this test to done.</HUMAN-SIGNOFF></p>
+  </inspection>
+
+  <pass title="Pass criteria">
+    <p><PASS fact="true" status="test/work">Package check is clean; the non-live smoke
+    passes; the live task completes within the two-pass ceiling; all evidence is
+    preserved; user-home and secret boundaries hold; and human inspection signs
+    off the installed workflow.</PASS></p>
+  </pass>
+</spec>

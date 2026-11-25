@@ -1,0 +1,109 @@
+/* The head of a package page. The banner is a picture the package
+   shipped or nothing at all: the negative margin below lifts the icon
+   over the band's lower edge, so without a band there is nothing to lift
+   over and the row starts where the page does. */
+
+.package-header {
+  margin: 0 0 2rem;
+}
+
+.package-header__banner {
+  display: block;
+  width: 100%;
+  aspect-ratio: 3 / 1;
+  object-fit: cover;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--line);
+}
+
+.package-header__row {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-top: -2rem;
+  padding: 0 1rem;
+}
+
+/* No band, so no overlap and no room held open for one. */
+.package-header--unbannered .package-header__row {
+  margin-top: 0;
+  padding: 0;
+}
+
+.package-header--unbannered .package-header__body {
+  padding-top: 0;
+}
+
+.package-header__icon,
+.package-header__placeholder {
+  flex: none;
+  width: 72px;
+  height: 72px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--line-strong);
+  background: var(--bg-raise);
+}
+
+.package-header__placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  color: var(--accent);
+}
+
+/* The same share of the tile a card's mark takes, so one package wears
+   the same mark at two sizes and a reader arriving from a shelf reads
+   the head of the page as the card they clicked. */
+.package-header__placeholder .kind-glyph {
+  --kind-glyph-size: 58%;
+}
+
+.package-header__body {
+  min-width: 0;
+  padding-top: 2rem;
+}
+
+.package-header__title {
+  margin: 0 0 0.2rem;
+  font-family: var(--font-display);
+  font-size: 1.9rem;
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: -0.012em;
+  color: var(--text);
+}
+
+.package-header__publisher {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 0 0 0.4rem;
+  font-size: 0.85rem;
+  color: var(--text-2);
+}
+
+.package-header__coordinate {
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  color: var(--text-3);
+}
+
+.package-header__description {
+  margin: 0 0 0.7rem;
+  font-size: 0.95rem;
+  color: var(--text-2);
+}
+
+.package-header__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+@media (max-width: 700px) {
+  .package-header__row {
+    padding: 0;
+  }
+}

@@ -1,0 +1,140 @@
+/* The landing's ground: four planes and four drafting marks behind the
+   whole page, from the hero to the map.
+   ---------------------------------------------------------------------
+   The planes are the family's four masses at the faintness of the glow
+   the page already carries: terracotta for the project, plain ink for
+   the deterministic thing, cobalt for the machine, gold for the
+   specification. Each is one token mixed into nothing — never a literal
+   (PROP-057 `##STACK-DESIGN-FLOOR`) — at five to seven per cent, which is
+   below the fourteen the audited `--selection` ground mixes, so every
+   text role measured over that ground is still within its margin here.
+
+   They are absolute against `.landing-page` and not fixed: a fixed plane
+   is a backdrop the page slides over, and these are placed against the
+   content — one behind the constellation, one under the install panel,
+   two behind the map. The two upper ones are anchored to the top, the
+   two lower ones to the bottom, because the map stands just above the
+   footer at every width and the hero just under the header, while what
+   lies between them is as tall as the language makes it.
+
+   Clipped to the page: a plane that reached past the right edge would
+   otherwise widen the document, and the frame around the whole thing is
+   what keeps `overflow` off the body's conscience. */
+
+.landing-field {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  overflow: clip;
+  pointer-events: none;
+}
+
+.landing-field__plane {
+  position: absolute;
+  display: block;
+}
+
+/* A tilted plane behind the constellation, rising off the top edge. */
+.landing-field__plane--a {
+  top: 24px;
+  right: -9vw;
+  width: 46vw;
+  height: clamp(160px, 26vw, 380px);
+  background: color-mix(in srgb, var(--accent) 7%, transparent);
+  transform: rotate(-12deg);
+}
+
+/* The counterweight: one long thin bar of ink under the constellation,
+   in the hero's empty lower-right quarter — the frieze's own diagonal,
+   rising toward the cards. Only where the hero has that quarter: below a
+   desktop width the hero stacks and every part of it is text. */
+.landing-field__plane--b {
+  display: none;
+  top: 940px;
+  right: 6vw;
+  width: 34vw;
+  height: 16px;
+  background: color-mix(in srgb, var(--text) 8%, transparent);
+  transform: rotate(-32deg);
+}
+
+@media (min-width: 1024px) {
+  .landing-field__plane--b {
+    display: block;
+  }
+}
+
+/* The machine's square, behind the argument's band of the map. */
+.landing-field__plane--c {
+  bottom: 420px;
+  left: -5vw;
+  width: clamp(140px, 24vw, 340px);
+  aspect-ratio: 1;
+  background: color-mix(in srgb, var(--intent-machine) 6%, transparent);
+  transform: rotate(9deg);
+}
+
+/* The specification's disc, behind the software's band. */
+.landing-field__plane--d {
+  bottom: 880px;
+  right: -6vw;
+  width: clamp(160px, 22vw, 320px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--accent-gold) 5%, transparent);
+}
+
+/* The family's drafting crosshairs — the air the canvases of the essay
+   and the AI-Native page are drawn in — a few of them in the page's
+   margins. Only where the page has margins: on a phone every column is
+   the reading column. */
+.landing-field__cross {
+  display: none;
+  position: absolute;
+  width: 13px;
+  height: 13px;
+  opacity: 0.14;
+}
+
+.landing-field__cross::before,
+.landing-field__cross::after {
+  content: "";
+  position: absolute;
+  background: var(--text);
+}
+
+.landing-field__cross::before {
+  left: 6px;
+  top: 0;
+  width: 1px;
+  height: 13px;
+}
+
+.landing-field__cross::after {
+  top: 6px;
+  left: 0;
+  width: 13px;
+  height: 1px;
+}
+
+@media (min-width: 1200px) {
+  .landing-field__cross {
+    display: block;
+  }
+  .landing-field__cross--1 {
+    left: 3vw;
+    top: 200px;
+  }
+  .landing-field__cross--2 {
+    right: 4vw;
+    top: 760px;
+  }
+  .landing-field__cross--3 {
+    left: 2.5vw;
+    bottom: 1240px;
+  }
+  .landing-field__cross--4 {
+    right: 3vw;
+    bottom: 360px;
+  }
+}

@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">From an Obsidian folder to a big project</title>
+  <status stage="doc" state="work" audience="user"/>
+  <p>Many people keep what they teach their coding agent in one folder of Markdown notes, often an Obsidian vault. It holds rules for commits and reviews, notes on what a project must do, prompts that worked, a daily log. This page turns such a folder into a VibeVM project one step at a time, and Obsidian keeps working throughout. At the end, the part worth sharing is a package that your other projects, your other computer and your colleagues install with one command. Plan for about an hour.</p>
+  <what-you-need title="What you need">
+    <table>
+      <tr><td>What</td><td>Why</td><td>Where to get it</td></tr>
+      <tr><td>vibe</td><td>makes the folder a project and installs its package</td><td>[Install vibe](../start/install-vibe.xml)</td></tr>
+      <tr><td>a folder of Markdown notes</td><td>the thing this page puts in order</td><td>your Obsidian vault, or the sample below</td></tr>
+      <tr><td>Git and a private repository on GitHub or another host</td><td>carry the folder to your other computer and to your colleagues, in steps 5 and 6</td><td>[git-scm.com](https://git-scm.com)</td></tr>
+      <tr><td>a coding agent that has the vibevm skill</td><td>does each step for you, if you prefer</td><td>[Give your agent the vibevm skill](../agent/give-your-agent-the-skill.xml)</td></tr>
+    </table>
+    <p>The sample is the vault this page was tested on: eight notes and the settings folder Obsidian keeps for itself.</p>
+    <fence lang="text">my-vault/
+  .obsidian/
+  Daily/2026-09-20.md
+  Inbox.md
+  Projects/calculator/decisions.md
+  Projects/calculator/spec.md
+  Prompts/release-checklist.md
+  Skills/code-review.md
+  Skills/commit-messages.md
+  Skills/writing-style.md</fence>
+  </what-you-need>
+  <the-folder title="The folder most people have">
+    <p>A vault grows the way a desk drawer grows. The rules for commit messages lie beside the [specification](../glossary/index.xml#specification) of a calculator, a release checklist and last Tuesday. A line in `CLAUDE.md` tells the agent to read the rules, and for one project that is enough.</p>
+    <p>The trouble starts with the second project. The rules are useful there too, so you copy them. A week later you improve one copy, and the other stays as it was. A colleague who asks for your review checklist gets a file in a chat, and a third copy begins a life of its own. Nothing in the folder says which notes are rules for an agent and which are only notes, and no other project can depend on them.</p>
+  </the-folder>
+  <make-a-project title="Step 1: make the folder a project">
+    <p>A VibeVM project is a folder with a [manifest](../glossary/index.xml#manifest), `vibe.toml`, and a tree of its own under `vibevm/`. Making the vault a project adds these files and moves nothing: your notes and `.obsidian/` stay exactly where they were. Give your agent this request:</p>
+    <prompt id="vault-init">Turn the Obsidian vault in ./my-vault into a VibeVM project without touching my notes or the .obsidian folder: run vibe init inside it, then vibe check, and list every file it created.
+      <needs>the vibevm skill installed for your agent; no network</needs>
+      <outcome>the vault holds `vibe.toml`, `vibe.lock`, a `vibevm/` folder and three instruction files for agents, and `vibe check` reports that every check passed</outcome>
+      <assert>vibe check --path my-vault --quiet</assert>
+    </prompt>
+    <p>Or do it by hand:</p>
+    <p>1. Open a terminal in the vault and run `vibe init`. The project takes the folder's name:</p>
+    <fence lang="text">Initializing project `my-vault` in `.`
+  ✓ created  vibevm/vibespecs/boot/00-core.md
+  ✓ created  vibevm/vibespecs/boot/90-user.md
+  ✓ created  vibe.toml
+  ✓ created  vibe.lock
+  ✓ created  .vibe/.gitignore
+  ✓ created  .gitignore
+  ✓ created  vibevm/vibespecs/boot/INDEX.md
+  ✓ created  CLAUDE.md
+  ✓ created  AGENTS.md
+  ✓ created  GEMINI.md
+
+Done. Project `my-vault`: 10 files created, 0 kept.</fence>
+    <p>2. Run `vibe check`. It answers that every check passed.</p>
+    <p>`CLAUDE.md`, `AGENTS.md` and `GEMINI.md` are the files coding agents read first. Each now ends with a short block that points the agent at the [boot lane](../glossary/index.xml#boot-lane), the reading list for the start of a session.</p>
+  </make-a-project>
+  <move-the-notes title="Step 2: move the notes into vibevm/vibespecs">
+    <p>`vibevm/vibespecs/` is the tree of text you write yourself, and installing a package never edits it. Moving the notes there makes them the project's own text. Obsidian does not mind. A link such as `[[spec]]` finds a note by its name, wherever the note lies, as long as the name is unique.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#INCLUDE-RULE"/>
+    <prompt id="vault-move">In the VibeVM project ./my-vault, move Projects/calculator/*.md to vibevm/vibespecs/modules/calculator/ and Inbox.md, Daily/ and Prompts/ to vibevm/vibespecs/notes/. Then name both folders in vibevm/vibespecs/boot/90-user.md so a session reads them. Run vibe check.
+      <needs>the agent session of step 1, or a new one in `my-vault`</needs>
+      <outcome>the notes lie under `vibevm/vibespecs/`, `90-user.md` names both folders, and `vibe check` passes</outcome>
+      <assert>test -d my-vault/vibevm/vibespecs/notes</assert>
+      <assert>grep -q 'vibespecs/notes' my-vault/vibevm/vibespecs/boot/90-user.md</assert>
+      <assert>vibe check --path my-vault --quiet</assert>
+    </prompt>
+    <p>By hand:</p>
+    <p>1. Move the notes. These commands work on macOS, on Linux and in Git Bash on Windows:</p>
+    <fence lang="shell">mkdir -p vibevm/vibespecs/modules/calculator vibevm/vibespecs/notes
+mv Projects/calculator/*.md vibevm/vibespecs/modules/calculator/
+mv Inbox.md Daily Prompts vibevm/vibespecs/notes/</fence>
+    <p>2. Tell the agent where the notes are. Open `vibevm/vibespecs/boot/90-user.md`, the one file of the boot lane that is yours, and add a section at its end:</p>
+    <fence lang="markdown">## Where the notes live
+
+- `vibevm/vibespecs/modules/calculator/`: what the calculator must do, and
+  the decisions behind it. Read these before changing anything about it.
+- `vibevm/vibespecs/notes/`: the inbox, the daily notes and the release
+  checklist. Read a file here only when the task names it.</fence>
+    <p>3. Run `vibe check`. It passes.</p>
+    <p>The second step is the one people skip. A note in `vibevm/vibespecs/` is the project's own text. But the boot lane names only its own files, so no session reads the note until something points at it. `90-user.md` is that pointer, and no install ever rewrites it. The folder `notes/` needs no declaration: vibe accepts any folder under `vibevm/vibespecs/`.</p>
+  </move-the-notes>
+  <make-a-package title="Step 3: make the shared part a package">
+    <p>The rules under `Skills/` are the part your other projects want. VibeVM shares text as a [package](../glossary/index.xml#package): a folder with a manifest, a version and the files it delivers. This one stays inside the vault, in `vibevm/vibepacks/`, the folder of packages a project writes itself. vibe reads that folder as a [registry](../glossary/index.xml#registry) of the project, so the vault installs its own packages with no publishing at all.</p>
+    <p>The package's [kind](../glossary/index.xml#kind) is `flow`: a way of working, such as commit rules and review conventions. The agent reads a flow at the start of every session.</p>
+    <prompt id="vault-package">In ./my-vault create the in-tree flow package org.acme/my-skills with vibe init package --kind flow, move Skills/*.md into its vibevm/vibespecs/flows/my-skills/, give each note a {#root} anchor, rewrite its boot snippet to name the three notes by spec:// address, then install it into the vault.
+      <needs>the agent session of step 2; no network</needs>
+      <outcome>`vibe list` shows `org.acme/my-skills` at `0.1.0`, and the boot lane names the package's snippet</outcome>
+      <assert>vibe list --path my-vault --quiet</assert>
+      <assert>test -f my-vault/vibevm/vibedeps/org.acme.my-skills/0.1.0/vibevm/vibespecs/flows/my-skills/commit-messages.md</assert>
+    </prompt>
+    <p>By hand:</p>
+    <p>1. Create the package. Pass the kind now, because the command names the package's files after it:</p>
+    <fence lang="shell">vibe init package org.acme/my-skills --kind flow</fence>
+    <p>It creates the package's folder for version 0.1.0, `vibevm/vibepacks/org.acme/my-skills/v0.1.0/`, with three files in it: the manifest `vibe.toml`, a `README.md` and `vibevm/vibespecs/boot/10-flow-my-skills.md`.</p>
+    <p>2. Move the rules into the package:</p>
+    <fence lang="shell">P=vibevm/vibepacks/org.acme/my-skills/v0.1.0
+mkdir -p $P/vibevm/vibespecs/flows/my-skills
+mv Skills/*.md $P/vibevm/vibespecs/flows/my-skills/</fence>
+    <p>3. Give each rule file an [anchor](../glossary/index.xml#anchor) on its first heading: `# Code review {#root}`. Replace the Obsidian links between the three files with addresses: `[[code-review]]` becomes `spec://org.acme/my-skills/flows/my-skills/code-review#root`. An address works in every project that installs the package; a note's name works only inside the vault.</p>
+    <p>4. Replace the text of `$P/vibevm/vibespecs/boot/10-flow-my-skills.md`, the package's [boot snippet](../glossary/index.xml#boot-snippet). Every session of every project that installs the package reads it:</p>
+    <fence lang="markdown">&lt;!-- vibe:static org.acme/my-skills — boot snippet --&gt;
+
+# my-skills
+
+The working rules of this vault. Read all three documents before the first
+change of a session, and follow them over any habit of your own.
+
+- Commit messages —
+  `spec://org.acme/my-skills/flows/my-skills/commit-messages#root`:
+  Conventional Commits, imperative summary, one change per commit.
+- Code review —
+  `spec://org.acme/my-skills/flows/my-skills/code-review#root`:
+  the description first, the tests before the implementation, every
+  blocking comment marked as blocking.
+- Writing style —
+  `spec://org.acme/my-skills/flows/my-skills/writing-style#root`:
+  short sentences, no filler, active voice.
+
+Each document states its rules and the reasons for them. Nothing else here.</fence>
+    <p>5. In `$P/vibe.toml`, fill in the `description` with one line a stranger understands: `description = "The working rules of my vault: commit messages, code review, writing style"`.</p>
+    <p>6. Install the package into the vault itself:</p>
+    <fence lang="shell">vibe install org.acme/my-skills --assume-yes</fence>
+    <p>vibe copied the package into `vibevm/vibedeps/org.acme.my-skills/0.1.0/`, the tree of copies that arrive with packages, and recorded the version in the [lock file](../glossary/index.xml#lock-file). The boot lane's reading list, `vibevm/vibespecs/boot/INDEX.md`, now names the package's snippet between the project's own two files:</p>
+    <fence lang="toml">[[entry]]
+path = "vibevm/vibespecs/boot/00-core.md"
+kind = "static"
+
+[[entry]]
+path = "vibevm/vibedeps/org.acme.my-skills/0.1.0/vibevm/vibespecs/boot/10-flow-my-skills.md"
+kind = "static"
+
+[[entry]]
+path = "vibevm/vibespecs/boot/90-user.md"
+kind = "static"</fence>
+    <p>The vault is now both the author of the package and its first user. When you change a rule later, run `vibe install --assume-yes` in the vault again. vibe notices that the package comes from a folder that can change, reads it again and copies the new text:</p>
+    <fence lang="text">  → re-resolving — `org.acme/my-skills` resolves from an in-workspace file:// source (a mutable working tree); re-resolving to pick up any source edit (PROP-011 §2.6)</fence>
+    <agent-skills title="Skills for your agent">
+      <p>A package can also carry [skills](../glossary/index.xml#skill): instructions an agent loads when a task calls for them, rather than at every session start. An Obsidian vault often holds exactly such notes. Declare a skill in the package's manifest:</p>
+      <fence lang="toml">[[skill]]
+name = "vault-rules"
+path = "vibevm/vibespecs/skills/vault-rules"
+description = "Apply this vault's working rules to a commit, a review or a draft"</fence>
+      <p>Put the skill's `SKILL.md` in that folder, with its name and description in the header, the format the agents read. Install the package again, and ask vibe what the project declares:</p>
+      <fence lang="text">  → vault-rules [flow:my-skills] → agents: all — Apply this vault's working rules to a commit, a review or a draft
+1 skill(s) declared.</fence>
+      <p>`vibe skill install --scope project --yes` then writes the skill where agents look for it in this project: `.claude/skills/`, `.opencode/skills/` and `.agents/skills/`. Cursor and Claude Desktop have no loader for a project's skills, and vibe says so instead of writing anything for them.</p>
+    </agent-skills>
+  </make-a-package>
+  <this-computer title="Step 4: use the package in your other projects">
+    <p>Another project on this computer can install the package straight from the vault's folder. There are two roads: a flag for one install, and an entry in the machine's own list of registries for good.</p>
+    <prompt id="vault-share">Make the packages of ~/my-vault installable in every project on this computer: add its vibevm/vibepacks folder as the first [[registry]] in ~/.vibe/registry.toml, named my-vault, then install org.acme/my-skills into the project ~/code/other-project.
+      <needs>the vibevm skill; the vault as step 3 left it; no network</needs>
+      <outcome>`~/.vibe/registry.toml` starts with the `my-vault` entry, and `other-project` lists the package</outcome>
+      <assert>vibe list --path ~/code/other-project --quiet</assert>
+      <assert>grep -q 'org.acme.my-skills' ~/code/other-project/vibevm/vibespecs/boot/INDEX.md</assert>
+    </prompt>
+    <p>By hand, for one install, run this in the other project:</p>
+    <fence lang="shell">vibe install --registry ~/my-vault/vibevm/vibepacks org.acme/my-skills --assume-yes</fence>
+    <p>`--registry` takes the folder's path and reads nothing else, so the install touches no network. In the test run it took a tenth of a second.</p>
+    <p>By hand, for good:</p>
+    <p>1. Open `~/.vibe/registry.toml`, the list of registries vibe keeps for the whole machine, and put the vault's folder first:</p>
+    <fence lang="toml">[[registry]]
+name = "my-vault"
+url = "file:///home/me/my-vault/vibevm/vibepacks"</fence>
+    <p>2. On Windows, keep the drive letter and use forward slashes: `file:///C:/Users/me/my-vault/vibevm/vibepacks`.</p>
+    <p>3. Leave the entries below it as they are. vibe wrote the two central registries there the first time it ran.</p>
+    <p>4. In any project on this computer, run `vibe install org.acme/my-skills --assume-yes`.</p>
+    <p>Order matters, because vibe asks the registries in the order the file lists them. With the vault first, a fresh project installed the package in 1.4 seconds. With the vault last, vibe asked both central registries first, and the same install took 5.9 seconds.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#GLOBAL-REGISTRY-FILE"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#REGISTRY-WALK-ORDER"/>
+    <p>When a rule changes in the vault, run `vibe update org.acme/my-skills --assume-yes` in the other project. It reads the package again, copies the new text and records its new [fingerprint](../glossary/index.xml#fingerprint) in the lock file.</p>
+  </this-computer>
+  <another-computer title="Step 5: take it to your other computer">
+    <p>The road to your other computer is the one your code already takes: a private Git repository. The vault goes there whole, packages included, and the other computer uses its clone exactly as step 4 used the folder.</p>
+    <prompt id="vault-git">Prepare ./my-vault for my other computer: add a .gitattributes that keeps text files with LF line endings, ignore .obsidian/workspace.json, then make it a git repository on main and commit everything, including vibevm/vibedeps and vibevm/vibepacks. Do not push.
+      <needs>the agent session of step 3; Git</needs>
+      <outcome>a Git repository on `main` with one commit, and a `.gitattributes` that holds `* text=auto eol=lf`</outcome>
+      <assert>grep -q 'eol=lf' my-vault/.gitattributes</assert>
+      <assert>git -C my-vault ls-files --error-unmatch vibevm/vibepacks/org.acme/my-skills/v0.1.0/vibe.toml</assert>
+    </prompt>
+    <p>By hand:</p>
+    <p>1. In the vault's root, create `.gitattributes` with one line:</p>
+    <fence lang="text">* text=auto eol=lf</fence>
+    <p>2. Add `.obsidian/workspace.json` to `.gitignore`. Obsidian rewrites that file whenever you move a pane.</p>
+    <p>3. Make the vault a repository, commit everything, and push it to a private repository:</p>
+    <fence lang="shell">git init -b main
+git add -A
+git commit -m "chore: make the vault a VibeVM project"
+git remote add origin git@github.com:&lt;you&gt;/my-vault.git
+git push -u origin main</fence>
+    <p>4. On the other computer, clone the repository and add the clone's `vibevm/vibepacks` folder to that computer's `~/.vibe/registry.toml`, as in step 4.</p>
+    <p>The first line of this list prevents the surprise the test run met. Git for Windows converts line endings when it checks a file out, and that changes the file's bytes. vibe checks a package by the fingerprint of its bytes, so the same package got another fingerprint in the clone. One rule file was 727 bytes where it was written and 744 on the other computer. With `.gitattributes` in place, both computers see the same bytes and record the same fingerprint.</p>
+    <p>Commit `vibevm/vibedeps/` as well. The copies that packages brought are committed on purpose, so an agent that clones the repository can read everything without running anything. `vibe init` already told Git to ignore `.vibe/`, where vibe keeps this computer's own state.</p>
+  </another-computer>
+  <colleagues title="Step 6: share it with colleagues, in one repository">
+    <p>Colleagues need no repository per package. Give them access to the vault's repository; each clones it and points their own machine at their clone, as you did on your other computer. The packages stay where you write them, beside the notes that explain them.</p>
+    <prompt id="vault-colleague">I cloned my team's vault to ./team-vault. Add its vibevm/vibepacks folder as the first [[registry]] in my ~/.vibe/registry.toml, named team-vault, then install org.acme/my-skills into my project ./team-notes and show me its boot lane.
+      <needs>the vibevm skill; a clone of the vault; no network</needs>
+      <outcome>`team-notes` lists the package, and its boot lane names the package's snippet</outcome>
+      <assert>vibe list --path team-notes --quiet</assert>
+      <assert>grep -q 'org.acme.my-skills' team-notes/vibevm/vibespecs/boot/INDEX.md</assert>
+    </prompt>
+    <p>When a rule changes, you commit and push. A colleague runs `git pull` in their clone, then `vibe update org.acme/my-skills --assume-yes` in each project that uses the package.</p>
+    <p>This is how the VibeVM repository keeps its own packages. The redbook and its neighbours live in the repository's own `vibevm/vibepacks/`, thirty packages in one group alone. The projects nested inside the repository install them from there with one command, and `--offline` keeps vibe from asking the central registries anything:</p>
+    <fence lang="shell">vibe install --offline --registry &lt;repository&gt;/vibevm/vibepacks &lt;group&gt;/&lt;name&gt; --assume-yes</fence>
+  </colleagues>
+  <a-registry title="Step 7: a registry of your own, or the central one">
+    <p>A clone stops being the right tool when the people who need a package should not see the whole vault, or when you no longer know them all. Then publish the package. A registry of your own is an organisation on GitHub or another Git host, where each package gets a repository of its own and you decide who reads it. [Publish a package](../howto/publish-a-package.xml) shows how, including `vibe workspace publish`, which publishes every package of a repository in one run. To offer a package to everyone, ask for a place in the central registry, as [Publish a package to the central registry](../howto/publish-to-the-central-registry.xml) shows.</p>
+  </a-registry>
+  <what-appeared title="What appeared on disk">
+    <p>The vault, at the end of the test run, without Git's and vibe's own state:</p>
+    <fence lang="text">my-vault/
+  .gitattributes  .gitignore  .obsidian/
+  AGENTS.md  CLAUDE.md  GEMINI.md  vibe.toml  vibe.lock
+  vibevm/
+    vibespecs/
+      boot/00-core.md  boot/90-user.md  boot/INDEX.md
+      modules/calculator/decisions.md  modules/calculator/spec.md
+      notes/Inbox.md  notes/Daily/  notes/Prompts/
+    vibepacks/org.acme/my-skills/v0.1.0/
+      vibe.toml  README.md
+      vibevm/vibespecs/boot/10-flow-my-skills.md
+      vibevm/vibespecs/flows/my-skills/  (the three rules)
+      vibevm/vibespecs/skills/vault-rules/SKILL.md
+    vibedeps/org.acme.my-skills/0.1.0/  (the installed copy)</fence>
+    <p>Three trees sit under `vibevm/`. `vibespecs/` is the text you write for this project. `vibepacks/` holds the packages you write for others, this project included. `vibedeps/` holds the copies that packages brought; vibe writes it, and you never edit it.</p>
+  </what-appeared>
+  <edge-cases title="Edge cases and rules">
+    <p>`--registry` takes a folder's path, and a `url` in `registry.toml` takes a `file:///` address. Each refuses the other's form, with an error from the operating system rather than a sentence.</p>
+    <p>`vibe registry add` accepts only a Git host, so a folder goes into `registry.toml` by hand.</p>
+    <p>`vibe registry list` shows only the project's own list. An entry in `~/.vibe/registry.toml` works without appearing there.</p>
+    <p>Create the vault project outside any other project. `vibe init` inside another project nests a second project in the first, with no warning.</p>
+    <p>`vibe skill install --scope user` writes into the agents' folders in your home directory, for every project at once. This page uses `--scope project`, which writes only into the vault.</p>
+  </edge-cases>
+</spec>

@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">Provenance: how the GLM worker contract was learned</title>
+  <status stage="spec" state="done"/>
+  <p><PURPOSE fact="true" status="spec/done">This record preserves the observations and
+  contradictions from which the installed protocol was distilled. It is
+  self-contained history, not a requirement to possess the original repository.
+  Normative behavior lives in `ZAI-GLM-CLAUDE-PROTOCOL`.</PURPOSE></p>
+
+  <sources title="1. Source families">
+    <facts ordered="false">
+      <SOURCE-LAUNCHER-CAMPAIGN fact="true" status="spec/done">The global package-
+      actualization/refactoring campaign and its `SUBAGENT-LAUNCHERS` record
+      supplied the worker lifecycle, cwd identity, file packets, observation,
+      report and cleanup incidents.</SOURCE-LAUNCHER-CAMPAIGN>
+      <SOURCE-LIFECYCLE-CAMPAIGN fact="true" status="spec/done">The lifecycle/extensions
+      campaign's ChatGPT operating contract supplied later corrections: normal
+      tool permissions, visible unstaged handoff, early reports, task-shaped
+      turn budgets, plain long-run output, quota domains, exact-process recovery
+      and parent acceptance.</SOURCE-LIFECYCLE-CAMPAIGN>
+      <SOURCE-FRACTALITY fact="true" status="spec/done">The fractality ignition campaign,
+      delegation calculus and GLM-5.2/Turbo playbooks supplied capability
+      routing, packet construction and historical model calibration.</SOURCE-FRACTALITY>
+      <SOURCE-LIVE-LAUNCHERS fact="true" status="spec/done">The installed `claudez.ps1`
+      and disabled sibling launcher supplied the real provider environment,
+      pass-through, state separation, model requests, timeout and token-file
+      behavior.</SOURCE-LIVE-LAUNCHERS>
+      <SOURCE-OWNER-BOOT fact="true" status="spec/done">The owner boot ledger supplied the
+      current launcher/model mapping, secret discipline, quality floor and the
+      rule that task volume cannot justify a weaker design.</SOURCE-OWNER-BOOT>
+    </facts>
+  </sources>
+
+  <resolved title="2. Contradictions resolved">
+    <facts ordered="true">
+      <RESOLVE-MODEL-NAME fact="true" status="spec/done">Older prose names GLM-5.2 while
+      the live launcher requests `glm-5.3[1m]`. The protocol separates configured
+      request from terminally observed identity and keeps calibration versioned.</RESOLVE-MODEL-NAME>
+      <RESOLVE-EFFORT fact="true" status="spec/done">Older prose says effort is “max by
+      construction”; the executable only requests a default 32k thinking budget
+      and permits override. The package makes the request exact and refuses to
+      claim effective effort without metadata.</RESOLVE-EFFORT>
+      <RESOLVE-LANES fact="true" status="spec/done">Two installed scripts do not imply two
+      usable lanes. Owner authorization, credentials, entitlement and live health
+      are independent; the historical sibling was disabled and separately
+      observed unavailable.</RESOLVE-LANES>
+      <RESOLVE-OUTPUT fact="true" status="spec/done">Early launch practice streamed every
+      JSON event through the parent. Large runs proved that ordinary output plus
+      a durable report preserves evidence with far less context; JSON remains a
+      short-probe or file-side option.</RESOLVE-OUTPUT>
+      <RESOLVE-LIVENESS fact="true" status="spec/done">File size and mtime were once used as
+      liveness. Thinking telemetry and unrelated writes falsified both. The
+      current protocol combines exact process state, last non-telemetry event,
+      visible artifacts and report progress.</RESOLVE-LIVENESS>
+      <RESOLVE-DONE fact="true" status="spec/done">A grep hit for `TASK-DONE` can match the
+      packet itself and a real process can terminate without that token. Terminal
+      transport and deliverable existence are separate observations.</RESOLVE-DONE>
+      <RESOLVE-REPORT-TIME fact="true" status="spec/done">A report written only at the end
+      was repeatedly lost to turn caps, quota walls and stalled final turns. The
+      current contract creates its skeleton after the first meaningful slice and
+      records every unfinished gate as `PENDING`.</RESOLVE-REPORT-TIME>
+      <RESOLVE-GIT fact="true" status="spec/done">The old blanket “workers never run Git”
+      rule hid useful history. The actual boundary is mutating/hidden Git state:
+      read-only log/show/blame/status/diff are evidence; add/commit/stash/reset/
+      checkout/worktree/push remain forbidden.</RESOLVE-GIT>
+      <RESOLVE-PERMISSIONS fact="true" status="spec/done">A narrow tool allow-list was once
+      treated as safety. It instead blocked legitimate reasoning and tests. The
+      current default gives normal tools and protects the reviewable handoff;
+      restricted tools are an explicit experiment only.</RESOLVE-PERMISSIONS>
+      <RESOLVE-TURNS fact="true" status="spec/done">A fixed 40-turn budget and a “second
+      follow-up means failure” rule did not survive broad cold work. Budgets are
+      task-shaped; same-cwd continuation is preferred when retained context makes
+      the bounded repair cheaper.</RESOLVE-TURNS>
+      <RESOLVE-REVIEW fact="true" status="spec/done">“Review is never delegated” and useful
+      independent model review describe different authority. Advisory review may
+      be commissioned; the parent cannot delegate its accepting verdict.</RESOLVE-REVIEW>
+      <RESOLVE-PROFILE fact="true" status="spec/done">Web/tool restrictions observed in a
+      fractality profile do not transfer to direct claudez. Restrictions remain
+      attached to the launcher/profile that actually enforces them.</RESOLVE-PROFILE>
+      <RESOLVE-QUOTA fact="true" status="spec/done">Concurrent workers on one credential
+      share its quota window. A sibling credential may have a separate window but
+      can independently lack entitlement. Each lane is probed; neither testimony
+      transfers.</RESOLVE-QUOTA>
+    </facts>
+  </resolved>
+
+  <incidents title="3. Incidents retained as laws">
+    <facts ordered="false">
+      <INCIDENT-REPORT-LOSS fact="true" status="spec/done">Useful code survived a turn-limit
+      failure that occurred before the report. This produced the early-skeleton
+      and incremental-evidence rule.</INCIDENT-REPORT-LOSS>
+      <INCIDENT-SHARED-429 fact="true" status="spec/done">Two concurrent broad runs received
+      the same reset instant. This proved account-wide quota sharing rather than
+      per-process allowance.</INCIDENT-SHARED-429>
+      <INCIDENT-INITIAL-STALL fact="true" status="spec/done">A fresh run created session
+      state but emitted no assistant/tool event and changed no product file for a
+      bounded window. The exact process was stopped and the task rerouted; no
+      transport failure was mislabelled a code verdict.</INCIDENT-INITIAL-STALL>
+      <INCIDENT-FINAL-STALL fact="true" status="spec/done">A completed diff and green narrow
+      test survived a stalled final reasoning turn. Exact-PID stop plus same-cwd
+      continuation preserved the work and finished the correction.</INCIDENT-FINAL-STALL>
+      <INCIDENT-ZERO-TEST fact="true" status="spec/done">A filtered Cargo command exited 0
+      while selecting zero tests. Acceptance now records counts and uses a
+      positive control where selection could be empty.</INCIDENT-ZERO-TEST>
+      <INCIDENT-PIPE-EXIT fact="true" status="spec/done">Broad commands piped through
+      grep/head/tail reported the pipeline member's exit rather than the gate's.
+      The current contract captures the child status directly.</INCIDENT-PIPE-EXIT>
+      <INCIDENT-CWD-RETARGET fact="true" status="spec/done">Persistent `cd` and orphaned
+      worktree directories retargeted later commands or ancestor Git discovery.
+      Scoped cwd and cleanup-after-process-death are now mandatory.</INCIDENT-CWD-RETARGET>
+      <INCIDENT-GREEN-NOT-ACCEPTED fact="true" status="spec/done">Several polished, green
+      GLM deliveries still contained containment, identity or vacuous-oracle
+      defects. This is why the package preserves parent review rather than a
+      model-specific trust shortcut.</INCIDENT-GREEN-NOT-ACCEPTED>
+      <INCIDENT-PACKAGE-E2E fact="true" status="impl/done">The first installed-package
+      E2E on 2026-09-04 used the receipt-deployed PowerShell launcher in a fresh
+      minimal project. A separate child ended successfully with a nonempty
+      session id, terminal `modelUsage` named only `glm-5.3[1m]`, and the
+      worker's own exact model report matched that key while producing the
+      nonce-bound `GLM_E2E_OK` artifact. One pass was sufficient.</INCIDENT-PACKAGE-E2E>
+    </facts>
+  </incidents>
+
+  <not-package-law title="4. Deliberately excluded overlays">
+    <p><EXCLUDED fact="true" status="spec/done">Repository-specific Cargo slot counts,
+    wrapper scripts, line limits, cache/archive directories, branch naming,
+    mirror cadence, campaign phase letters, provider billing assumptions,
+    launcher enable/disable choices and central-model reserve thresholds remain
+    host or campaign policy. They may be supplied in a packet but are not
+    universal z.ai GLM launcher law.</EXCLUDED></p>
+  </not-package-law>
+</spec>

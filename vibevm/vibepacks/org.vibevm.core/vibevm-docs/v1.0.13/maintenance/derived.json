@@ -1,0 +1,313 @@
+{
+  "schema": 1,
+  "derived": {
+    "architecture/how-this-manual-is-maintained.xml#cli-help:vibe doc todo --help": {
+      "sha256": "fb6c41eb540c59231c438e72e74c6be76668d80327c55a8cc3e03178d057950c",
+      "bytes": 5290
+    },
+    "reference/commands.xml#cli-help:vibe --help": {
+      "sha256": "c6f4d69d206a6641096d1e948b68fe9ad7346e40225062e21761f0c6ce75c101",
+      "bytes": 15374
+    },
+    "reference/commands.xml#cli-help:vibe agentic --help": {
+      "sha256": "a131562359be5517fe7983d4b439f1e54ef98025b07bc229dba0c119a3e2f2ae",
+      "bytes": 4141
+    },
+    "reference/commands.xml#cli-help:vibe aiui --help": {
+      "sha256": "c32d9e8e5276fac92c1a22cebfa1a2b011813b243f42902b0518ee0c8f03f663",
+      "bytes": 5851
+    },
+    "reference/commands.xml#cli-help:vibe bin --help": {
+      "sha256": "9b8cd767670f8ad0fdbf80101e4cbd368ea69993981576f219c6c7bc94f3b616",
+      "bytes": 4297
+    },
+    "reference/commands.xml#cli-help:vibe build --help": {
+      "sha256": "ff16bda91666e14db19321bc2c0c2ea86efe39f765d93a2167b4169d0b74620d",
+      "bytes": 5292
+    },
+    "reference/commands.xml#cli-help:vibe cache --help": {
+      "sha256": "4cf473063ec084d6c47446b2897ac57e3b8ee0b29ba85a5f159fdbd4990b4b76",
+      "bytes": 5663
+    },
+    "reference/commands.xml#cli-help:vibe check --help": {
+      "sha256": "f7293fd8f374dc0a164b37f4df2ad1432684b93b34689bdab7b2b33eb034ce6a",
+      "bytes": 4028
+    },
+    "reference/commands.xml#cli-help:vibe clean --help": {
+      "sha256": "3a16e9c686678c1c9c85dc57ac4b5a241ecce1354178cff6a5724e32903f2f80",
+      "bytes": 4794
+    },
+    "reference/commands.xml#cli-help:vibe command --help": {
+      "sha256": "6de0a26cd0ce2f588edeadc0e357b0b9bbe29e6790b8dd47582e9da8c951e342",
+      "bytes": 3885
+    },
+    "reference/commands.xml#cli-help:vibe create --help": {
+      "sha256": "99adfedca88332b872cf5432c67a4136b59f297ecfc24c6c97a4c37aa195b973",
+      "bytes": 5285
+    },
+    "reference/commands.xml#cli-help:vibe deploy --help": {
+      "sha256": "1c90cb4e7034623cef7281b5dbbc992589c8028528232f678d1a6d036c925b89",
+      "bytes": 5924
+    },
+    "reference/commands.xml#cli-help:vibe deployments --help": {
+      "sha256": "cc68f3e37d72fb1025e4cd22eca2f036740c2c337e9ffa63996caa01ebc9c1b8",
+      "bytes": 3681
+    },
+    "reference/commands.xml#cli-help:vibe doc --help": {
+      "sha256": "d2426d846294fbebfd40732c8dc43f2757b7449e9d4578caca9feadd0765f344",
+      "bytes": 6377
+    },
+    "reference/commands.xml#cli-help:vibe explain --help": {
+      "sha256": "36c6f11d383946434add150e4c8a50ded214a08e6ef932420889ba3f41d96036",
+      "bytes": 4740
+    },
+    "reference/commands.xml#cli-help:vibe extensions --help": {
+      "sha256": "f1887230d9edcd3ace42c82273a7c439b85f4db84c3410a17fd4a43c07cd64ab",
+      "bytes": 4045
+    },
+    "reference/commands.xml#cli-help:vibe facts --help": {
+      "sha256": "6f19fd28139a2f7a17b05860fa5187a24741bdcc107b1d3288ef14628cac783b",
+      "bytes": 4270
+    },
+    "reference/commands.xml#cli-help:vibe frame --help": {
+      "sha256": "dcdeb48ee1c0651c4e6085d4ff5cf5e7c074943b0544f6e151d7bca16e365c33",
+      "bytes": 4058
+    },
+    "reference/commands.xml#cli-help:vibe friends --help": {
+      "sha256": "68c68f9910e79f61392c8604947d283fcb61742b68637b7bcad07090a35e7821",
+      "bytes": 3956
+    },
+    "reference/commands.xml#cli-help:vibe generate --help": {
+      "sha256": "da3939ea477563ed9390ca3ae25b067f69e4c7b40552fff2dedd24c96fa88eeb",
+      "bytes": 5298
+    },
+    "reference/commands.xml#cli-help:vibe init --help": {
+      "sha256": "fb20d99fc2c4129f7995a74894613c101ac8146b209e7e6beacc1f1f1baa6d64",
+      "bytes": 5753
+    },
+    "reference/commands.xml#cli-help:vibe install --help": {
+      "sha256": "ad77e5e8d473133f3ebdea32e4b180b22e2199257c26986559805c70d2bf9e6b",
+      "bytes": 10911
+    },
+    "reference/commands.xml#cli-help:vibe list --help": {
+      "sha256": "a58a051b4d79dea18b8b12c80e3f19a96b73ec3f3a1ef86f80127d1f15ca96e7",
+      "bytes": 3794
+    },
+    "reference/commands.xml#cli-help:vibe mcp --help": {
+      "sha256": "64faf09002050d6fd42f0ad6473f5241c1e138b0f97be9e8796869411e4745ff",
+      "bytes": 5248
+    },
+    "reference/commands.xml#cli-help:vibe outdated --help": {
+      "sha256": "ffded077e2d3724652c31ceec6d70b6cd09516612d30a5065a281a0c9cd2f9ce",
+      "bytes": 4423
+    },
+    "reference/commands.xml#cli-help:vibe package --help": {
+      "sha256": "0df6c940ce6d5caf35d58f3504b9473d56f652aceab19cedcea86b7a63aae836",
+      "bytes": 5292
+    },
+    "reference/commands.xml#cli-help:vibe prefs --help": {
+      "sha256": "354bd8d119f4899cce44c0e5a9efb409b6ffac76374a9c84012ebb5699f4a4eb",
+      "bytes": 4755
+    },
+    "reference/commands.xml#cli-help:vibe progress --help": {
+      "sha256": "9a4073ed70a4a40ce100b9dbf32693d403ebdaa02e561b08fe7f87dae51fc598",
+      "bytes": 5522
+    },
+    "reference/commands.xml#cli-help:vibe query --help": {
+      "sha256": "ea6116d297a2cc4e1971fa95baa956d61d49259f6dd18172f49513eab5d210c2",
+      "bytes": 5012
+    },
+    "reference/commands.xml#cli-help:vibe refactor --help": {
+      "sha256": "e3bb9660d002e0c5042b9728ed81aee80a91fc8b4738c6ae51e76563c96f7120",
+      "bytes": 3953
+    },
+    "reference/commands.xml#cli-help:vibe registry --help": {
+      "sha256": "35022c91bc005f8dd2eac675a691faab1bd89c653fb06f940a1bd7c131c71257",
+      "bytes": 6435
+    },
+    "reference/commands.xml#cli-help:vibe reinstall --help": {
+      "sha256": "ae78fc5f2bb801bc27b6651674083b640a3c327d426eb0715b7d22795421c992",
+      "bytes": 4880
+    },
+    "reference/commands.xml#cli-help:vibe requirements --help": {
+      "sha256": "9468c2eabcb6908f3180752e26ad2ae2745a3a30fd244ce372a6409e5853057c",
+      "bytes": 4864
+    },
+    "reference/commands.xml#cli-help:vibe run --help": {
+      "sha256": "224e3007bd872a83e24c83badd03a1be2783c39cc428b7d051272064c1afee62",
+      "bytes": 3840
+    },
+    "reference/commands.xml#cli-help:vibe scrape --help": {
+      "sha256": "908ad691f1d62c47dcd9fcf93f42c1bc3f3c0acbbff51fe2101ce3cee95077ff",
+      "bytes": 4461
+    },
+    "reference/commands.xml#cli-help:vibe search --help": {
+      "sha256": "9f761cc50268c45dc3e04597411ae0037e26019514d408c59fa12e5b0b34020a",
+      "bytes": 6255
+    },
+    "reference/commands.xml#cli-help:vibe select --help": {
+      "sha256": "b760362a22d7121aee9b4daecf9714491cccc8e956a32b00c0f2ff4948d53a64",
+      "bytes": 5038
+    },
+    "reference/commands.xml#cli-help:vibe self --help": {
+      "sha256": "4e16a816c05273f1be54dbf9ffc0598071d192edf7205262b24f45d619335290",
+      "bytes": 5489
+    },
+    "reference/commands.xml#cli-help:vibe show --help": {
+      "sha256": "2608d2bdd53859bfba905dc2e93cd1e83425d5e23aba799688d6ecdf5ff332bc",
+      "bytes": 4481
+    },
+    "reference/commands.xml#cli-help:vibe skill --help": {
+      "sha256": "f8d8eadb372c97e031afc52cbb407c984192f53da3c05c83f4cd883d33395d47",
+      "bytes": 4430
+    },
+    "reference/commands.xml#cli-help:vibe specmap --help": {
+      "sha256": "8b7654a979a21cca5f5b0da0178ddcd2fb697e0214e345ba5fb0ed7c5cbe400f",
+      "bytes": 4207
+    },
+    "reference/commands.xml#cli-help:vibe term --help": {
+      "sha256": "dce1b8bfd214382e7acafd449fedf94e103806e5f14032f665f9abb21eb01424",
+      "bytes": 4083
+    },
+    "reference/commands.xml#cli-help:vibe test --help": {
+      "sha256": "c80f1d4a81858c06860848ea3a6c241e5b9a811ec51af8b1f94a42d8a37c837e",
+      "bytes": 5286
+    },
+    "reference/commands.xml#cli-help:vibe tools --help": {
+      "sha256": "3c6697f3b324b3e1e739231f892cf225cf2d7efe33109bc86b6e92454568d472",
+      "bytes": 3775
+    },
+    "reference/commands.xml#cli-help:vibe trace --help": {
+      "sha256": "823c2b140b2cf725b12dc07f1199fe4459ee995e48164e34b7767520a3020783",
+      "bytes": 3900
+    },
+    "reference/commands.xml#cli-help:vibe tree --help": {
+      "sha256": "1da682daed9aa52b6eebaca4848173eec40cbaa8c26135deb7d971efd91b7811",
+      "bytes": 4597
+    },
+    "reference/commands.xml#cli-help:vibe undeploy --help": {
+      "sha256": "e297350bf968581e2d81006c95a59e5aadbc48a18efd57f3133ca645c947cb01",
+      "bytes": 3907
+    },
+    "reference/commands.xml#cli-help:vibe uninstall --help": {
+      "sha256": "383d5e1d53bb841116eb35897a28ead1b00f8cf4f4746ace6d123233cc0336ed",
+      "bytes": 3918
+    },
+    "reference/commands.xml#cli-help:vibe update --help": {
+      "sha256": "292b13ff130df95539cab80efc61fa30799604946ebf0fd578d7a15b8dae84f5",
+      "bytes": 5871
+    },
+    "reference/commands.xml#cli-help:vibe validate --help": {
+      "sha256": "704333cee5422a64f532731d1a46e51a733347dea475d45171886ae0ab05ecfc",
+      "bytes": 5302
+    },
+    "reference/commands.xml#cli-help:vibe vars --help": {
+      "sha256": "50f2f1d2b45ffdce1d7442e523c7acdc500401e67129c6b1cd654507c4e7421d",
+      "bytes": 3964
+    },
+    "reference/commands.xml#cli-help:vibe verify --help": {
+      "sha256": "1952deca1d0b8158fdb828739e1abf2e8ee4d2135d17dd47d03708848e8b24f8",
+      "bytes": 5288
+    },
+    "reference/commands.xml#cli-help:vibe version --help": {
+      "sha256": "883eba58a5040af7eedf868bf754ec90d274be286b0f6eecf9b95b83165bcead",
+      "bytes": 3520
+    },
+    "reference/commands.xml#cli-help:vibe why --help": {
+      "sha256": "00b5392063891fb667d9f0343cb8835892564693d6fc7683fe7c7c7d9a3ee28c",
+      "bytes": 3892
+    },
+    "reference/commands.xml#cli-help:vibe workspace --help": {
+      "sha256": "b776149b22fa8a37d68cb9cbb02a1a9cef702960d06e342c99da5922dcf2dbde",
+      "bytes": 4609
+    },
+    "reference/machine-formats.xml#jtd-schema:schemas/deploy_intent.jtd.json": {
+      "sha256": "32b0980d086fa1f818db9c7c8a3aee16241fb548d7b371b4b692f974e18f8930",
+      "bytes": 2483
+    },
+    "reference/machine-formats.xml#jtd-schema:schemas/deploy_receipt.jtd.json": {
+      "sha256": "dca566aa5cec5beb1152fdcbcab48744a1eca8003f976879902c353e6a152c64",
+      "bytes": 4193
+    },
+    "reference/machine-formats.xml#jtd-schema:schemas/doc_manifest.jtd.json": {
+      "sha256": "be47f19dd2294818048f2ca3779d4e5a11468fe2f8add66ad08d80c6efeb4cf6",
+      "bytes": 14364
+    },
+    "reference/machine-formats.xml#jtd-schema:schemas/doc_surface.jtd.json": {
+      "sha256": "4070a2e8d810f2a7d7d5792f18e69795e12614498dbb75d153be3a76459ccb14",
+      "bytes": 3653
+    },
+    "reference/machine-formats.xml#jtd-schema:schemas/doc_todo.jtd.json": {
+      "sha256": "d92f9fff9737fef584d9263ca17d9eba9b131f2aa18547e5ce303d2eca0d306a",
+      "bytes": 3698
+    },
+    "reference/machine-formats.xml#jtd-schema:schemas/extensions_analyze.jtd.json": {
+      "sha256": "2f19cfe780dccfcbf39529ff375ec285cb7dd44d2c048f69e1f2d0b3fde1eba1",
+      "bytes": 4941
+    },
+    "reference/machine-formats.xml#jtd-schema:schemas/extensions_report.jtd.json": {
+      "sha256": "773c18551cedca50e4ea520dad263bde37336dd8688b9ecec86a92a6b3aba611",
+      "bytes": 3123
+    },
+    "reference/machine-formats.xml#jtd-schema:schemas/init_report.jtd.json": {
+      "sha256": "7557ab91be11c8b39f39afc8bf1c1bb190e713f0f7588ed42b85146a66439f49",
+      "bytes": 991
+    },
+    "reference/machine-formats.xml#jtd-schema:schemas/install_plan.jtd.json": {
+      "sha256": "f379ea7213b8ba39fa0d13ebce5d6352d3b18556eabc755ee416b327faa15d27",
+      "bytes": 1202
+    },
+    "reference/machine-formats.xml#jtd-schema:schemas/install_report.jtd.json": {
+      "sha256": "799de752058bcacd4846e734be292be0d02e31a53dc5599d4219084ecb5906d9",
+      "bytes": 3944
+    },
+    "reference/machine-formats.xml#jtd-schema:schemas/lifecycle_plan.jtd.json": {
+      "sha256": "3d58cfeac9243c2f9fe3f84587502562526f6cd8a1ebad6de2b8eeadbc96574d",
+      "bytes": 1019
+    },
+    "reference/machine-formats.xml#jtd-schema:schemas/lifecycle_report.jtd.json": {
+      "sha256": "c4d2836ee365694c470c6e71a18e043a7bc9f3bcb6e4a90063ea42e11ebc1f71",
+      "bytes": 4475
+    },
+    "reference/machine-formats.xml#jtd-schema:schemas/lifecycle_state.jtd.json": {
+      "sha256": "279c958c3718e3767d699cc82c7de64d7e4488f80498d605885b0ecc7f945c5b",
+      "bytes": 6315
+    },
+    "reference/machine-formats.xml#jtd-schema:schemas/lifecycle_tasks.jtd.json": {
+      "sha256": "fed479e6e7bf14cd2348b38e45c602a3fa173a373c29345505a06a0f1f31831c",
+      "bytes": 2970
+    },
+    "reference/machine-formats.xml#jtd-schema:schemas/list_report.jtd.json": {
+      "sha256": "95e8647a699f14b90b07709688e04ea039bb10a96abb547eda30fb2bedc01241",
+      "bytes": 1700
+    },
+    "reference/machine-formats.xml#jtd-schema:schemas/registry_publish_report.jtd.json": {
+      "sha256": "a49954f3c932efe22c208395719d8bf01d399d59eb82cc67f388d3b56a4505b5",
+      "bytes": 1138
+    },
+    "reference/machine-formats.xml#jtd-schema:schemas/registry_sync_report.jtd.json": {
+      "sha256": "5717116fc1f05526af5a0dc54657d9c4abc2d4638d6070e257cb6c9770044fc6",
+      "bytes": 1134
+    },
+    "reference/machine-formats.xml#jtd-schema:schemas/reinstall_report.jtd.json": {
+      "sha256": "a0ecd5040cb2fe27b79d90dfe762d3eea82e3eaca43b1c247d91ec1d88fe4566",
+      "bytes": 2971
+    },
+    "reference/machine-formats.xml#jtd-schema:schemas/requirements_report.jtd.json": {
+      "sha256": "8a2268e6c1b935fe1088a4ea0d0eb1536f34db5408c7129ffdb7897b4ac8014f",
+      "bytes": 10803
+    },
+    "reference/machine-formats.xml#jtd-schema:schemas/uninstall_report.jtd.json": {
+      "sha256": "4f212325ce654bd65cb0ec816e6c5e0c3c30d8c3e293eeb9bb68bb4dacd0de9f",
+      "bytes": 720
+    },
+    "reference/machine-formats.xml#jtd-schema:schemas/update_report.jtd.json": {
+      "sha256": "adb7091af742146f87d964cbd248d439a00c53e677618faa7fb457232aa03d80",
+      "bytes": 3136
+    },
+    "reference/manifest.xml#manifest-field:org.vibevm.core/vibevm-docs": {
+      "sha256": "90cbad9c378a33d135c42d396ee61cf27a59bdf8ad7d49836332b94a9165bcb4",
+      "bytes": 6700
+    }
+  }
+}

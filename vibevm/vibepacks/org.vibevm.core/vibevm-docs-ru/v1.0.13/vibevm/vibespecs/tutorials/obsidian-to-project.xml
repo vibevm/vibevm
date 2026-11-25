@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">От папки в Obsidian до большого проекта</title>
+  <status stage="doc" state="work" audience="user"/>
+  <p>Многие держат всё, чему учат своего агента-кодера, в одной папке с заметками в Markdown, чаще всего в волте (*vault*) Obsidian — так Obsidian называет папку, которую открывает целиком. Там лежат правила для коммитов и ревью, заметки о том, что должен делать проект, удачные промпты, дневник. Эта страница шаг за шагом превращает такую папку в проект VibeVM, и Obsidian всё это время продолжает работать. В конце то, чем стоит делиться, становится пакетом, который ваши другие проекты, ваш второй компьютер и ваши коллеги ставят одной командой. На всё уйдёт около часа.</p>
+  <what-you-need title="Что понадобится">
+    <table>
+      <tr><td>Что</td><td>Зачем</td><td>Где взять</td></tr>
+      <tr><td>vibe</td><td>делает папку проектом и ставит её пакет</td><td>[Установить vibe](../start/install-vibe.xml)</td></tr>
+      <tr><td>папка заметок в Markdown</td><td>то, что эта страница приводит в порядок</td><td>ваш волт Obsidian или образец ниже</td></tr>
+      <tr><td>Git и закрытый репозиторий на GitHub или другом хостинге</td><td>переносят папку на второй компьютер и к коллегам, в шагах 5 и 6</td><td>[git-scm.com](https://git-scm.com)</td></tr>
+      <tr><td>агент-кодер с навыком vibevm</td><td>сделает каждый шаг за вас, если хотите</td><td>[Дать агенту навык vibevm](../agent/give-your-agent-the-skill.xml)</td></tr>
+    </table>
+    <p>Образец — тот самый волт, на котором проверяли эту страницу: восемь заметок и папка настроек, которую Obsidian держит для себя.</p>
+    <fence lang="text">my-vault/
+  .obsidian/
+  Daily/2026-09-20.md
+  Inbox.md
+  Projects/calculator/decisions.md
+  Projects/calculator/spec.md
+  Prompts/release-checklist.md
+  Skills/code-review.md
+  Skills/commit-messages.md
+  Skills/writing-style.md</fence>
+  </what-you-need>
+  <the-folder title="Папка, которая есть почти у всех">
+    <p>Волт растёт, как ящик письменного стола. Правила для сообщений коммитов лежат рядом со [спецификацией](../glossary/index.xml#specification) калькулятора, чек-листом релиза и прошлым вторником. Строчка в `CLAUDE.md` велит агенту читать правила, и для одного проекта этого хватает.</p>
+    <p>Беда начинается со вторым проектом. Правила пригодились бы и там, и вы их копируете. Через неделю вы улучшаете одну копию, а другая остаётся прежней. Коллега просит ваш чек-лист ревью и получает файл в чате, и третья копия начинает собственную жизнь. Ничто в папке не говорит, какие заметки — правила для агента, а какие — просто заметки, и никакой другой проект не может от них зависеть.</p>
+  </the-folder>
+  <make-a-project title="Шаг 1: сделать папку проектом">
+    <p>Проект VibeVM — это папка с [манифестом](../glossary/index.xml#manifest) `vibe.toml` и собственным деревом в `vibevm/`. Когда волт становится проектом, эти файлы добавляются, и ничего не сдвигается: заметки и `.obsidian/` остаются ровно там, где были. Дайте агенту такую просьбу:</p>
+    <prompt id="vault-init">Сделай волт Obsidian в ./my-vault проектом VibeVM, не трогая мои заметки и папку .obsidian: запусти в нём vibe init, затем vibe check и перечисли все созданные файлы.
+      <needs>навык vibevm, установленный у вашего агента; сеть не нужна</needs>
+      <outcome>в волте появились `vibe.toml`, `vibe.lock`, папка `vibevm/` и три файла инструкций для агентов, а `vibe check` сообщает, что все проверки пройдены</outcome>
+      <assert>vibe check --path my-vault --quiet</assert>
+    </prompt>
+    <p>Или руками:</p>
+    <p>1. Откройте терминал в волте и запустите `vibe init`. Проект получает имя папки:</p>
+    <fence lang="text">Initializing project `my-vault` in `.`
+  ✓ created  vibevm/vibespecs/boot/00-core.md
+  ✓ created  vibevm/vibespecs/boot/90-user.md
+  ✓ created  vibe.toml
+  ✓ created  vibe.lock
+  ✓ created  .vibe/.gitignore
+  ✓ created  .gitignore
+  ✓ created  vibevm/vibespecs/boot/INDEX.md
+  ✓ created  CLAUDE.md
+  ✓ created  AGENTS.md
+  ✓ created  GEMINI.md
+
+Done. Project `my-vault`: 10 files created, 0 kept.</fence>
+    <p>2. Запустите `vibe check`. Он ответит, что все проверки пройдены.</p>
+    <p>`CLAUDE.md`, `AGENTS.md` и `GEMINI.md` агенты-кодеры читают первыми. Теперь каждый из них кончается коротким блоком, который отправляет агента к [стартовой полосе](../glossary/index.xml#boot-lane) (*boot lane*) — списку чтения на начало сессии.</p>
+  </make-a-project>
+  <move-the-notes title="Шаг 2: переложить заметки в vibevm/vibespecs">
+    <p>`vibevm/vibespecs/` — дерево текста, который вы пишете сами, и установка пакета его никогда не правит. Заметки, переложенные туда, становятся собственным текстом проекта. Obsidian не против. Ссылка вида `[[spec]]` находит заметку по имени, где бы та ни лежала, лишь бы имя было единственным.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#INCLUDE-RULE"/>
+    <prompt id="vault-move">В проекте VibeVM ./my-vault перенеси Projects/calculator/*.md в vibevm/vibespecs/modules/calculator/, а Inbox.md, Daily/ и Prompts/ — в vibevm/vibespecs/notes/. Затем назови обе папки в vibevm/vibespecs/boot/90-user.md, чтобы сессия их читала. Запусти vibe check.
+      <needs>сессия агента из шага 1 или новая в `my-vault`</needs>
+      <outcome>заметки лежат в `vibevm/vibespecs/`, `90-user.md` называет обе папки, и `vibe check` проходит</outcome>
+      <assert>test -d my-vault/vibevm/vibespecs/notes</assert>
+      <assert>grep -q 'vibespecs/notes' my-vault/vibevm/vibespecs/boot/90-user.md</assert>
+      <assert>vibe check --path my-vault --quiet</assert>
+    </prompt>
+    <p>Руками:</p>
+    <p>1. Переложите заметки. Эти команды работают на macOS, в Linux и в Git Bash на Windows:</p>
+    <fence lang="shell">mkdir -p vibevm/vibespecs/modules/calculator vibevm/vibespecs/notes
+mv Projects/calculator/*.md vibevm/vibespecs/modules/calculator/
+mv Inbox.md Daily Prompts vibevm/vibespecs/notes/</fence>
+    <p>2. Скажите агенту, где теперь заметки. Откройте `vibevm/vibespecs/boot/90-user.md` — единственный файл стартовой полосы, который принадлежит вам, — и допишите в конец раздел:</p>
+    <fence lang="markdown">## Где лежат заметки
+
+- `vibevm/vibespecs/modules/calculator/`: что должен делать калькулятор
+  и почему он устроен так. Читай это, прежде чем в нём что-то менять.
+- `vibevm/vibespecs/notes/`: входящие, дневник и чек-лист релиза.
+  Файл отсюда читай, только если задача его называет.</fence>
+    <p>3. Запустите `vibe check`. Он проходит.</p>
+    <p>Второй пункт обычно пропускают. Заметка в `vibevm/vibespecs/` — собственный текст проекта. Но стартовая полоса называет только свои файлы, поэтому ни одна сессия не прочитает заметку, пока на неё что-нибудь не укажет. Этот указатель — `90-user.md`, и ни одна установка его не переписывает. Папку `notes/` объявлять не нужно: vibe принимает любую папку внутри `vibevm/vibespecs/`.</p>
+  </move-the-notes>
+  <make-a-package title="Шаг 3: вынести общую часть в пакет">
+    <p>Правила из `Skills/` — та часть, которая нужна другим проектам. VibeVM делится текстом через [пакет](../glossary/index.xml#package): папку с манифестом, версией и файлами, которые пакет приносит. Этот пакет остаётся внутри волта, в `vibevm/vibepacks/`, — папке пакетов, которые проект пишет сам. vibe читает эту папку как [реестр](../glossary/index.xml#registry) проекта, поэтому волт ставит собственные пакеты вообще без публикации.</p>
+    <p>[Вид](../glossary/index.xml#kind) (*kind*) пакета — `flow`: способ работать, например правила коммитов и порядок ревью. Флоу агент читает в начале каждой сессии.</p>
+    <prompt id="vault-package">В ./my-vault создай пакет-флоу org.acme/my-skills в дереве проекта командой vibe init package --kind flow, перенеси Skills/*.md в его vibevm/vibespecs/flows/my-skills/, дай каждой заметке якорь {#root}, перепиши его стартовый фрагмент так, чтобы он называл три заметки адресами spec://, и установи пакет в хранилище.
+      <needs>сессия агента из шага 2; сеть не нужна</needs>
+      <outcome>`vibe list` показывает `org.acme/my-skills` версии `0.1.0`, а стартовая полоса называет фрагмент пакета</outcome>
+      <assert>vibe list --path my-vault --quiet</assert>
+      <assert>test -f my-vault/vibevm/vibedeps/org.acme.my-skills/0.1.0/vibevm/vibespecs/flows/my-skills/commit-messages.md</assert>
+    </prompt>
+    <p>Руками:</p>
+    <p>1. Создайте пакет. Вид укажите сразу: по нему команда называет файлы пакета.</p>
+    <fence lang="shell">vibe init package org.acme/my-skills --kind flow</fence>
+    <p>Команда создаёт папку пакета для версии 0.1.0, `vibevm/vibepacks/org.acme/my-skills/v0.1.0/`, и три файла в ней: манифест `vibe.toml`, `README.md` и `vibevm/vibespecs/boot/10-flow-my-skills.md`.</p>
+    <p>2. Перенесите правила в пакет:</p>
+    <fence lang="shell">P=vibevm/vibepacks/org.acme/my-skills/v0.1.0
+mkdir -p $P/vibevm/vibespecs/flows/my-skills
+mv Skills/*.md $P/vibevm/vibespecs/flows/my-skills/</fence>
+    <p>3. Дайте каждому файлу правил [якорь](../glossary/index.xml#anchor) (*anchor*) на первом заголовке: `# Code review {#root}`. Замените ссылки Obsidian между тремя файлами адресами: `[[code-review]]` превращается в `spec://org.acme/my-skills/flows/my-skills/code-review#root`. Адрес работает в любом проекте, который поставил пакет, а имя заметки — только внутри хранилища.</p>
+    <p>4. Замените текст `$P/vibevm/vibespecs/boot/10-flow-my-skills.md` — [стартового фрагмента](../glossary/index.xml#boot-snippet) (*boot snippet*) пакета. Его читает каждая сессия каждого проекта, который поставил пакет:</p>
+    <fence lang="markdown">&lt;!-- vibe:static org.acme/my-skills — boot snippet --&gt;
+
+# my-skills
+
+Рабочие правила этого волта. Прочитай все три документа до первой
+правки в сессии и следуй им, а не своим привычкам.
+
+- Сообщения коммитов —
+  `spec://org.acme/my-skills/flows/my-skills/commit-messages#root`:
+  Conventional Commits, повелительное наклонение, одно изменение на коммит.
+- Ревью —
+  `spec://org.acme/my-skills/flows/my-skills/code-review#root`:
+  сначала описание, тесты раньше реализации, блокирующее замечание
+  помечено как блокирующее.
+- Стиль текста —
+  `spec://org.acme/my-skills/flows/my-skills/writing-style#root`:
+  короткие предложения, без воды, действительный залог.
+
+Каждый документ называет свои правила и причины. Больше здесь ничего нет.</fence>
+    <p>5. В `$P/vibe.toml` заполните `description` одной строкой, понятной постороннему: `description = "The working rules of my vault: commit messages, code review, writing style"`.</p>
+    <p>6. Установите пакет в сам волт:</p>
+    <fence lang="shell">vibe install org.acme/my-skills --assume-yes</fence>
+    <p>vibe скопировал пакет в `vibevm/vibedeps/org.acme.my-skills/0.1.0/` — дерево копий, которые приходят с пакетами, — и записал версию в [лок-файл](../glossary/index.xml#lock-file). Список чтения стартовой полосы, `vibevm/vibespecs/boot/INDEX.md`, теперь называет фрагмент пакета между двумя собственными файлами проекта:</p>
+    <fence lang="toml">[[entry]]
+path = "vibevm/vibespecs/boot/00-core.md"
+kind = "static"
+
+[[entry]]
+path = "vibevm/vibedeps/org.acme.my-skills/0.1.0/vibevm/vibespecs/boot/10-flow-my-skills.md"
+kind = "static"
+
+[[entry]]
+path = "vibevm/vibespecs/boot/90-user.md"
+kind = "static"</fence>
+    <p>Теперь волт и автор пакета, и его первый пользователь. Когда потом поменяете правило, снова запустите в волте `vibe install --assume-yes`. vibe заметит, что пакет приходит из папки, которая может меняться, прочитает её заново и скопирует новый текст:</p>
+    <fence lang="text">  → re-resolving — `org.acme/my-skills` resolves from an in-workspace file:// source (a mutable working tree); re-resolving to pick up any source edit (PROP-011 §2.6)</fence>
+    <agent-skills title="Навыки для агента">
+      <p>Пакет может нести и [навыки](../glossary/index.xml#skill) (*skills*): инструкции, которые агент подгружает, когда их требует задача, а не в начале каждой сессии. В волте Obsidian часто лежат именно такие заметки. Объявите навык в манифесте пакета:</p>
+      <fence lang="toml">[[skill]]
+name = "vault-rules"
+path = "vibevm/vibespecs/skills/vault-rules"
+description = "Apply this vault's working rules to a commit, a review or a draft"</fence>
+      <p>Положите в эту папку `SKILL.md` навыка с именем и описанием в заголовке — в том виде, который читают агенты. Снова установите пакет и спросите vibe, что объявляет проект:</p>
+      <fence lang="text">  → vault-rules [flow:my-skills] → agents: all — Apply this vault's working rules to a commit, a review or a draft
+1 skill(s) declared.</fence>
+      <p>Затем `vibe skill install --scope project --yes` записывает навык туда, где его ищут агенты в этом проекте: в `.claude/skills/`, `.opencode/skills/` и `.agents/skills/`. У Cursor и Claude Desktop нет загрузчика навыков проекта, и vibe так и говорит, ничего для них не записывая.</p>
+    </agent-skills>
+  </make-a-package>
+  <this-computer title="Шаг 4: пакет в других проектах">
+    <p>Другой проект на этом компьютере может ставить пакет прямо из папки волта. Дорог две: флаг на одну установку и запись в собственном списке реестров машины — насовсем.</p>
+    <prompt id="vault-share">Сделай пакеты из ~/my-vault доступными всем проектам на этом компьютере: добавь его папку vibevm/vibepacks первым [[registry]] с именем my-vault в ~/.vibe/registry.toml, затем установи org.acme/my-skills в проект ~/code/other-project.
+      <needs>навык vibevm; волт в том виде, в каком его оставил шаг 3; сеть не нужна</needs>
+      <outcome>`~/.vibe/registry.toml` начинается с записи `my-vault`, а `other-project` показывает пакет</outcome>
+      <assert>vibe list --path ~/code/other-project --quiet</assert>
+      <assert>grep -q 'org.acme.my-skills' ~/code/other-project/vibevm/vibespecs/boot/INDEX.md</assert>
+    </prompt>
+    <p>Руками, на одну установку, запустите в другом проекте:</p>
+    <fence lang="shell">vibe install --registry ~/my-vault/vibevm/vibepacks org.acme/my-skills --assume-yes</fence>
+    <p>`--registry` принимает путь к папке и больше ничего не читает, поэтому установка обходится без сети. В проверочном прогоне она заняла десятую долю секунды.</p>
+    <p>Руками, насовсем:</p>
+    <p>1. Откройте `~/.vibe/registry.toml` — список реестров, который vibe ведёт для всей машины, — и поставьте папку волта первой:</p>
+    <fence lang="toml">[[registry]]
+name = "my-vault"
+url = "file:///home/me/my-vault/vibevm/vibepacks"</fence>
+    <p>2. На Windows оставьте букву диска и пишите прямые слеши: `file:///C:/Users/me/my-vault/vibevm/vibepacks`.</p>
+    <p>3. Записи ниже не трогайте. Два центральных реестра vibe записал туда при первом запуске.</p>
+    <p>4. В любом проекте на этом компьютере запустите `vibe install org.acme/my-skills --assume-yes`.</p>
+    <p>Порядок важен: vibe опрашивает реестры в том порядке, в каком они перечислены в файле. Когда волт стоял первым, свежий проект поставил пакет за 1,4 секунды. Когда последним, vibe сначала спросил оба центральных реестра, и та же установка заняла 5,9 секунды.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#GLOBAL-REGISTRY-FILE"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#REGISTRY-WALK-ORDER"/>
+    <p>Когда правило в волте меняется, запустите в другом проекте `vibe update org.acme/my-skills --assume-yes`. Он заново прочитает пакет, скопирует новый текст и запишет в лок-файл его новый [отпечаток](../glossary/index.xml#fingerprint) (*fingerprint*).</p>
+  </this-computer>
+  <another-computer title="Шаг 5: на другой компьютер">
+    <p>Дорога на второй компьютер та же, по которой уже ходит ваш код: закрытый Git-репозиторий. Волт уходит туда целиком, вместе с пакетами, а второй компьютер работает со своим клоном так же, как шаг 4 работал с папкой.</p>
+    <prompt id="vault-git">Подготовь ./my-vault к переносу на мой второй компьютер: добавь .gitattributes, который держит у текстовых файлов окончания строк LF, добавь .obsidian/workspace.json в игнор, затем сделай его git-репозиторием на ветке main и закоммить всё, включая vibevm/vibedeps и vibevm/vibepacks. Не пушь.
+      <needs>сессия агента из шага 3; Git</needs>
+      <outcome>Git-репозиторий на ветке `main` с одним коммитом и `.gitattributes`, в котором стоит `* text=auto eol=lf`</outcome>
+      <assert>grep -q 'eol=lf' my-vault/.gitattributes</assert>
+      <assert>git -C my-vault ls-files --error-unmatch vibevm/vibepacks/org.acme/my-skills/v0.1.0/vibe.toml</assert>
+    </prompt>
+    <p>Руками:</p>
+    <p>1. В корне волта создайте `.gitattributes` с одной строкой:</p>
+    <fence lang="text">* text=auto eol=lf</fence>
+    <p>2. Добавьте `.obsidian/workspace.json` в `.gitignore`. Obsidian переписывает этот файл всякий раз, когда вы двигаете панель.</p>
+    <p>3. Сделайте волт репозиторием, закоммитьте всё и отправьте в закрытый репозиторий:</p>
+    <fence lang="shell">git init -b main
+git add -A
+git commit -m "chore: make the vault a VibeVM project"
+git remote add origin git@github.com:&lt;you&gt;/my-vault.git
+git push -u origin main</fence>
+    <p>4. На втором компьютере склонируйте репозиторий и добавьте папку клона `vibevm/vibepacks` в `~/.vibe/registry.toml` этого компьютера, как в шаге 4.</p>
+    <p>Первый пункт этого списка спасает от сюрприза, который встретил проверочный прогон. Git для Windows при выгрузке файла меняет окончания строк, а с ними и байты файла. vibe проверяет пакет по отпечатку его байтов, поэтому у того же пакета в клоне оказался другой отпечаток. Один файл правил весил 727 байт там, где его написали, и 744 на втором компьютере. С `.gitattributes` оба компьютера видят одни и те же байты и записывают один и тот же отпечаток.</p>
+    <p>`vibevm/vibedeps/` тоже коммитьте. Копии, которые принесли пакеты, коммитят нарочно: агент, склонировавший репозиторий, может прочитать всё, ничего не запуская. `.vibe/`, где vibe держит состояние этого компьютера, `vibe init` уже добавил в игнор Git.</p>
+  </another-computer>
+  <colleagues title="Шаг 6: коллегам, в одном репозитории">
+    <p>Коллегам не нужен отдельный репозиторий на каждый пакет. Дайте им доступ к репозиторию волта: каждый клонирует его и направляет свою машину на свой клон, как вы сделали на втором компьютере. Пакеты остаются там, где вы их пишете, рядом с заметками, которые их объясняют.</p>
+    <prompt id="vault-colleague">Я склонировал волт нашей команды в ./team-vault. Добавь его папку vibevm/vibepacks первым [[registry]] с именем team-vault в мой ~/.vibe/registry.toml, затем установи org.acme/my-skills в мой проект ./team-notes и покажи его стартовую полосу.
+      <needs>навык vibevm; клон волта; сеть не нужна</needs>
+      <outcome>`team-notes` показывает пакет, а его стартовая полоса называет фрагмент пакета</outcome>
+      <assert>vibe list --path team-notes --quiet</assert>
+      <assert>grep -q 'org.acme.my-skills' team-notes/vibevm/vibespecs/boot/INDEX.md</assert>
+    </prompt>
+    <p>Когда правило меняется, вы коммитите и пушите. Коллега делает `git pull` в своём клоне, а затем `vibe update org.acme/my-skills --assume-yes` в каждом проекте, где стоит пакет.</p>
+    <p>Так репозиторий VibeVM хранит собственные пакеты. Redbook и его соседи живут в его же `vibevm/vibepacks/`, тридцать пакетов в одной только группе. Проекты, вложенные в репозиторий, ставят их оттуда одной командой, а `--offline` не даёт vibe ни о чём спрашивать центральные реестры:</p>
+    <fence lang="shell">vibe install --offline --registry &lt;repository&gt;/vibevm/vibepacks &lt;group&gt;/&lt;name&gt; --assume-yes</fence>
+  </colleagues>
+  <a-registry title="Шаг 7: свой реестр или центральный">
+    <p>Клон перестаёт подходить, когда тем, кому нужен пакет, не стоит видеть весь волт или когда вы знаете уже не всех, кому он нужен. Тогда пакет публикуют. Собственный реестр — организация на GitHub или другом Git-хостинге, где у каждого пакета свой репозиторий и где вы решаете, кто его читает. Как это сделать, показывает страница [Опубликовать пакет](../howto/publish-a-package.xml), в том числе `vibe workspace publish`, который публикует все пакеты репозитория за один прогон. Чтобы предложить пакет всем, попросите место в центральном реестре, как показывает страница [Опубликовать пакет в центральном реестре](../howto/publish-to-the-central-registry.xml).</p>
+  </a-registry>
+  <what-appeared title="Что появилось на диске">
+    <p>Волт в конце проверочного прогона, без служебного состояния Git и vibe:</p>
+    <fence lang="text">my-vault/
+  .gitattributes  .gitignore  .obsidian/
+  AGENTS.md  CLAUDE.md  GEMINI.md  vibe.toml  vibe.lock
+  vibevm/
+    vibespecs/
+      boot/00-core.md  boot/90-user.md  boot/INDEX.md
+      modules/calculator/decisions.md  modules/calculator/spec.md
+      notes/Inbox.md  notes/Daily/  notes/Prompts/
+    vibepacks/org.acme/my-skills/v0.1.0/
+      vibe.toml  README.md
+      vibevm/vibespecs/boot/10-flow-my-skills.md
+      vibevm/vibespecs/flows/my-skills/  (три правила)
+      vibevm/vibespecs/skills/vault-rules/SKILL.md
+    vibedeps/org.acme.my-skills/0.1.0/  (установленная копия)</fence>
+    <p>Внутри `vibevm/` три дерева. `vibespecs/` — текст, который вы пишете для этого проекта. `vibepacks/` — пакеты, которые вы пишете для других, и этот проект тоже в их числе. `vibedeps/` — копии, которые принесли пакеты; их пишет vibe, а вы никогда не правите.</p>
+  </what-appeared>
+  <edge-cases title="Особые случаи и правила">
+    <p>`--registry` принимает путь к папке, а `url` в `registry.toml` — адрес `file:///`. Каждый отвергает форму другого, причём с ошибкой операционной системы, а не с понятной фразой.</p>
+    <p>`vibe registry add` принимает только Git-хостинг, поэтому папку вписывают в `registry.toml` руками.</p>
+    <p>`vibe registry list` показывает только собственный список проекта. Запись в `~/.vibe/registry.toml` работает, но там не появляется.</p>
+    <p>Создавайте проект волта вне других проектов. `vibe init` внутри чужого проекта молча вкладывает второй проект в первый.</p>
+    <p>`vibe skill install --scope user` пишет в папки агентов в вашем домашнем каталоге, сразу для всех проектов. Эта страница пользуется `--scope project`, который пишет только в волт.</p>
+  </edge-cases>
+</spec>

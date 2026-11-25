@@ -1,0 +1,9 @@
+# The project with one in-tree package slot scaffolded, as
+# `vibe init package` leaves it.
+schema = 1
+
+[fixture]
+from = "project"
+
+[[fixture.step]]
+run = "vibe init package org.acme/review-notes"

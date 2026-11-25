@@ -1,0 +1,15 @@
+# The project of the Markdown-and-XML tutorial: `vibe init review-lab`,
+# then `spec_format = "xml"` in its manifest. The page's later examples
+# run inside the project folder, so that is the working directory.
+schema = 1
+
+[fixture]
+from = "empty"
+cwd = "work/review-lab"
+
+[[fixture.step]]
+run = "vibe init review-lab"
+cwd = "work"
+
+[[fixture.step]]
+edit = { path = "work/review-lab/vibe.toml", from = "[project]\n", to = "[project]\nspec_format = \"xml\"\n" }

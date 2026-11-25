@@ -1,0 +1,374 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">Reference-source inventory (clean-room register)</title>
+  <p>_The single committed record of every external source this project studies.
+Clones and downloads live under the host `/refs/` tree, which is gitignored
+wholesale — nothing third-party is ever committed. The host clean-room
+directive (2026-07-07, extended to this workspace 2026-07-09) binds every
+row: sources are **inspiration-only**; the working method is study → a
+decisions-only study note under `notes/` → implementation from the note.
+No line porting, no file-by-file adaptation, no borrowed expression.
+License and commit pin are recorded **before** any study deeper than
+LICENSE + README (IGNITION plan, Phase 0 s6)._</p>
+  <section title="Rules">
+    <list ordered="true">
+      <item>A source may be read only after its row carries a license verdict.</item>
+      <item>Study notes record *what the source achieves and which decisions we
+   take*, never its text or code shapes.</item>
+      <item>Implementation sessions open the study note, not the source.</item>
+      <item>A row's `class` is `inspiration-only` unless the owner explicitly
+   clears something stronger.</item>
+      <item>Methods described in papers are implementable freely (methods are not
+   copyrightable); their *reference code* stays inspiration-only.</item>
+    </list>
+  </section>
+  <section title="Sources">
+    <table>
+      <tr>
+        <td>id</td>
+        <td>source</td>
+        <td>local path (host /refs/)</td>
+        <td>pin</td>
+        <td>license</td>
+        <td>class</td>
+        <td>study note</td>
+        <td>status</td>
+      </tr>
+      <tr>
+        <td>S1</td>
+        <td>github.com/steipete/agent-scripts — `skills/codex-first/SKILL.md` (delegation-first rules)</td>
+        <td>src/agent-scripts/</td>
+        <td>`d6ed98c` (2026-07-09)</td>
+        <td>**MIT** (Peter Steinberger)</td>
+        <td>inspiration-only</td>
+        <td>notes/codex-first-study.xml ✅</td>
+        <td>**studied; note on file; clean**</td>
+      </tr>
+      <tr>
+        <td>S2</td>
+        <td>github.com/barkain/claude-code-workflow-orchestration (initiative/orchestration prototype; owner: early prototype, do not imitate the implementation)</td>
+        <td>src/claude-code-workflow-orchestration/</td>
+        <td>`175311b` (2026-06-20)</td>
+        <td>**MIT** (Nadav Barkai)</td>
+        <td>inspiration-only</td>
+        <td>notes/barkain-study.xml ✅</td>
+        <td>**studied 2026-07-10 (Campaign 2 open); note on file; clean**</td>
+      </tr>
+      <tr>
+        <td>S3</td>
+        <td>github.com/alexzhang13/rlm (RLM reference implementation, Python)</td>
+        <td>src/rlm/</td>
+        <td>`72d6940` (2026-06-25)</td>
+        <td>**MIT** (Alex Zhang)</td>
+        <td>inspiration-only</td>
+        <td>notes/rlm-study.xml (T1) ✅</td>
+        <td>**studied 2026-07-11 (RLM research Ф4 T1); note on file; clean**</td>
+      </tr>
+      <tr>
+        <td>S4</td>
+        <td>arXiv 2512.24601 — Recursive Language Models (paper, open access)</td>
+        <td>papers/2512.24601.pdf (v1) + papers/2512.24601v3.pdf (**v3**, 2026-05-11)</td>
+        <td>v3 fetched 2026-07-10</td>
+        <td>arXiv (variant recorded: v3)</td>
+        <td>method: free to implement; text: cite, never copy</td>
+        <td>notes/rlm-study.xml (T1)</td>
+        <td>v1+v3 downloaded; T1 study — RLM research Ф4</td>
+      </tr>
+      <tr>
+        <td>S5</td>
+        <td>z.ai GLM coding-plan + Claude Code integration docs (base URL, model ids, env vars, quotas, pricing)</td>
+        <td>src/zai-docs/</td>
+        <td>snapshot 2026-07-09</td>
+        <td>vendor docs — facts only, no text reuse</td>
+        <td>facts source</td>
+        <td>folded into plan §5 / D6 / D12 ✅</td>
+        <td>**facts extracted (Ф0.s3)**</td>
+      </tr>
+      <tr>
+        <td>S6</td>
+        <td>Anthropic Claude Code docs — headless mode, settings/env, hooks (paved-road surface)</td>
+        <td>src/cc-docs/</td>
+        <td>snapshot 2026-07-09</td>
+        <td>vendor docs — facts only, no text reuse</td>
+        <td>facts source</td>
+        <td>folded into plan §5 / D6 / D18 ✅</td>
+        <td>**facts extracted (Ф0.s3)**</td>
+      </tr>
+      <tr>
+        <td>S7</td>
+        <td>Landscape scan: claude-code-router, claude_swarm, claude-squad</td>
+        <td>src/landscape/ (shallow)</td>
+        <td>snapshot 2026-07-09</td>
+        <td>per repo</td>
+        <td>positioning only — never studied for implementation</td>
+        <td>notes/landscape.xml ✅</td>
+        <td>**scanned (Ф0.s7)**</td>
+      </tr>
+      <tr>
+        <td>S8</td>
+        <td>Entire.io — Checkpoints (agent execution checkpointing: scope + history control, rewind/audit)</td>
+        <td>src/entire-checkpoints/ (future)</td>
+        <td>future campaign</td>
+        <td>future</td>
+        <td>inspiration-only</td>
+        <td>notes/checkpoints-study.md (future campaign)</td>
+        <td>named, not intaken — DEF-12: owner ruling 2026-07-09, too young to adopt now</td>
+      </tr>
+      <tr>
+        <td>S9</td>
+        <td>Amazon S3 ranged-read &amp; presign semantics + RFC 7233 (byte ranges, suffix ranges, ETag/If-Match, presigned URLs, part-aligned parallel GETs)</td>
+        <td>public standards/docs — no clone needed</td>
+        <td>n/a</td>
+        <td>public API semantics / IETF standard</td>
+        <td>facts source — API *shapes* adopted, no code involved</td>
+        <td>folded into plan D19</td>
+        <td>adopted 2026-07-09 (owner directive, fifth message)</td>
+      </tr>
+      <tr>
+        <td>S10</td>
+        <td>github.com/sentient-agi/ROMA (recursive plan/execute meta-agent; the Atomizer need-gate)</td>
+        <td>src/roma/</td>
+        <td>`a6e3bb4` (2026-07-10, depth-1)</td>
+        <td>**Apache-2.0** (API-verified 2026-07-10)</td>
+        <td>inspiration-only</td>
+        <td>notes/roma-study.xml (T2)</td>
+        <td>selected R2 (rlm-source-selection.xml)</td>
+      </tr>
+      <tr>
+        <td>S11</td>
+        <td>github.com/avbiswas/fast-rlm (symbol-returning sub-agents; depth/call/$/token budgets)</td>
+        <td>src/fast-rlm/</td>
+        <td>`f25f310` (2026-07-10, depth-1)</td>
+        <td>**MIT** (API-verified 2026-07-10)</td>
+        <td>inspiration-only</td>
+        <td>notes/fast-rlm-study.xml (T2)</td>
+        <td>selected R3</td>
+      </tr>
+      <tr>
+        <td>S12</td>
+        <td>github.com/zhudotexe/redel + arXiv 2408.02248 (recursive delegation toolkit, EMNLP 2024 demo)</td>
+        <td>src/redel/</td>
+        <td>`79eb988` (2026-07-10, depth-1)</td>
+        <td>**MIT + Commons Clause** (LICENSE-verified 2026-07-10; study-only — irrelevant to us, no code adopted from any source)</td>
+        <td>inspiration-only</td>
+        <td>notes/redel-study.xml (T2)</td>
+        <td>selected R4</td>
+      </tr>
+      <tr>
+        <td>S13</td>
+        <td>github.com/grishahq/recursive-llm (minimal RLM, enforced max_depth)</td>
+        <td>src/recursive-llm/</td>
+        <td>`cc7a826` (2026-07-10, depth-1)</td>
+        <td>**MIT** (API-verified 2026-07-10)</td>
+        <td>inspiration-only</td>
+        <td>notes/recursive-llm-study.xml (T2)</td>
+        <td>selected R5</td>
+      </tr>
+      <tr>
+        <td>S14</td>
+        <td>arXiv 2506.16411 — When Does Divide and Conquer Work for Long Context LLM? (ICLR 2026)</td>
+        <td>papers/2506.16411.pdf</td>
+        <td>v2 2026-02-28</td>
+        <td>arXiv — method free to implement, text cite-only</td>
+        <td>method source</td>
+        <td>notes/dnc-noise-study.xml (T2)</td>
+        <td>selected P2</td>
+      </tr>
+      <tr>
+        <td>S15</td>
+        <td>arXiv 2510.11967 — Context-Folding (ByteDance/CMU); official repo sunnweiwei/FoldAgent NOT intaken (license unverified)</td>
+        <td>papers/2510.11967.pdf</td>
+        <td>—</td>
+        <td>arXiv — method free, cite-only</td>
+        <td>method source</td>
+        <td>notes/context-folding-study.xml (T2)</td>
+        <td>selected P3</td>
+      </tr>
+      <tr>
+        <td>S16</td>
+        <td>arXiv 2603.15653 — SRLM (Apple; recursion-vs-REPL ablation critique)</td>
+        <td>papers/2603.15653.pdf</td>
+        <td>—</td>
+        <td>arXiv — method free, cite-only</td>
+        <td>method source</td>
+        <td>notes/srlm-study.xml (T2)</td>
+        <td>selected P4</td>
+      </tr>
+      <tr>
+        <td>S17</td>
+        <td>arXiv 2605.06639 — Recursive Agent Optimization (learned delegation policy)</td>
+        <td>papers/2605.06639.pdf</td>
+        <td>—</td>
+        <td>arXiv — method free, cite-only</td>
+        <td>method source</td>
+        <td>notes/rao-study.xml (T2)</td>
+        <td>selected P5</td>
+      </tr>
+      <tr>
+        <td>S18</td>
+        <td>alexzhang13.github.io/blog/2025/rlm/ (anchor project's blog face)</td>
+        <td>articles/zhang-rlm-blog.html</td>
+        <td>snapshot at Ф3</td>
+        <td>web article — cite-only, no text reuse</td>
+        <td>facts source</td>
+        <td>notes/rlm-study.xml (T1, shared with S3/S4 per D-R7)</td>
+        <td>selected A1</td>
+      </tr>
+      <tr>
+        <td>S19</td>
+        <td>primeintellect.ai/blog/rlm (ecosystem state mid-2026)</td>
+        <td>articles/primeintellect-rlm.html</td>
+        <td>snapshot at Ф3</td>
+        <td>web article — cite-only</td>
+        <td>facts source</td>
+        <td>notes/rlm-articles-t3.xml (grouped T3)</td>
+        <td>selected A2</td>
+      </tr>
+      <tr>
+        <td>S20</td>
+        <td>cognition.com/blog/dont-build-multi-agents + /multi-agents-working (the counterpoint arc)</td>
+        <td>articles/cognition-dont-build-multi-agents.html, articles/cognition-multi-agents-working.html</td>
+        <td>snapshot at Ф3</td>
+        <td>web articles — cite-only</td>
+        <td>facts source</td>
+        <td>notes/rlm-articles-t3.xml</td>
+        <td>selected A3</td>
+      </tr>
+      <tr>
+        <td>S21</td>
+        <td>anthropic.com/engineering/multi-agent-research-system (production orchestrator-worker)</td>
+        <td>articles/anthropic-multi-agent-research.html</td>
+        <td>snapshot at Ф3</td>
+        <td>web article — cite-only</td>
+        <td>facts source</td>
+        <td>notes/rlm-articles-t3.xml</td>
+        <td>selected A4</td>
+      </tr>
+      <tr>
+        <td>S22</td>
+        <td>avilum.github.io/minrlm practical guide + benchmark (repo avilum/minrlm MIT, 72★)</td>
+        <td>articles/minrlm-guide.html</td>
+        <td>snapshot at Ф3</td>
+        <td>web article cite-only; repo MIT</td>
+        <td>facts source</td>
+        <td>notes/rlm-articles-t3.xml</td>
+        <td>selected A5</td>
+      </tr>
+      <tr>
+        <td>S23</td>
+        <td>arXiv 2405.17402 — THREAD: Thinking Deeper with Recursive Spawning (NAACL 2025)</td>
+        <td>papers/2405.17402.pdf</td>
+        <td>—</td>
+        <td>arXiv — method free, cite-only</td>
+        <td>method source</td>
+        <td>notes/rlm-runners-up-t3.xml (grouped T3)</td>
+        <td>runner-up (filtered-return contract)</td>
+      </tr>
+      <tr>
+        <td>S24</td>
+        <td>arXiv 2603.02615 — Think, But Don't Overthink (RLM reproduction; counterpoint numbers)</td>
+        <td>papers/2603.02615.pdf</td>
+        <td>—</td>
+        <td>arXiv — method free, cite-only</td>
+        <td>method source</td>
+        <td>notes/rlm-runners-up-t3.xml</td>
+        <td>runner-up (T3 paragraph mandatory)</td>
+      </tr>
+      <tr>
+        <td>S25</td>
+        <td>github.com/brainqub3/claude_code_RLM (RLM scaffold on Claude Code)</td>
+        <td>— (web README level only, no clone)</td>
+        <td>n/a</td>
+        <td>**MIT** (API-verified 2026-07-10)</td>
+        <td>inspiration-only</td>
+        <td>notes/rlm-runners-up-t3.xml</td>
+        <td>runner-up</td>
+      </tr>
+      <tr>
+        <td>S26</td>
+        <td>github.com/tinyhumansai/tinyagents (Rust RLM harness; run-tree/cost-rollup telemetry)</td>
+        <td>— (web README level only, no clone)</td>
+        <td>n/a</td>
+        <td>**GPL-3.0** (API-verified 2026-07-10; study-only, code never adopted)</td>
+        <td>inspiration-only</td>
+        <td>notes/rlm-runners-up-t3.xml</td>
+        <td>runner-up</td>
+      </tr>
+      <tr>
+        <td>S27</td>
+        <td>Sakana Fugu — arXiv 2606.21228 (tech report, read at v2) + sakana.ai/fugu,/fugu-release,/fugu-beta + github.com/SakanaAI/fugu (official)</td>
+        <td>papers/2606.21228.pdf; articles/sakana-fugu*.html</td>
+        <td>PDFs+snapshots 2026-07-11</td>
+        <td>arXiv method-free/cite-only; pages cite-only; **official repo: NO license** → web README-level only, never cloned</td>
+        <td>method/facts source</td>
+        <td>notes/fugu-study.xml (T1) ✅</td>
+        <td>**studied 2026-07-11 (Fugu research Ф4)**</td>
+      </tr>
+      <tr>
+        <td>S28</td>
+        <td>arXiv 2512.04695 — TRINITY (ICLR 2026, read at v3) + sakana.ai/trinity</td>
+        <td>papers/2512.04695.pdf; articles/sakana-trinity.html</td>
+        <td>2026-07-11</td>
+        <td>arXiv — method free, cite-only</td>
+        <td>method source</td>
+        <td>notes/trinity-study.xml (T2) ✅</td>
+        <td>studied 2026-07-11</td>
+      </tr>
+      <tr>
+        <td>S29</td>
+        <td>arXiv 2512.04388 — Learning to Orchestrate / the Conductor (ICLR 2026, read at v5) + sakana.ai/learning-to-orchestrate</td>
+        <td>papers/2512.04388.pdf; articles/sakana-learning-to-orchestrate.html</td>
+        <td>2026-07-11</td>
+        <td>arXiv — method free, cite-only</td>
+        <td>method source</td>
+        <td>notes/conductor-study.xml (T2) ✅</td>
+        <td>studied 2026-07-11</td>
+      </tr>
+      <tr>
+        <td>S30</td>
+        <td>github.com/trotsky1997/OpenFugu (open Fugu reimplementation; reverse-engineered mechanics, evidence-graded)</td>
+        <td>src/openfugu/</td>
+        <td>`7ad7ccf` (2026-07-11, depth-1)</td>
+        <td>**Apache-2.0** (API-verified 2026-07-11)</td>
+        <td>inspiration-only</td>
+        <td>notes/openfugu-study.xml (T2) ✅</td>
+        <td>studied 2026-07-11 (GLM survey + boss spot-checks)</td>
+      </tr>
+    </table>
+  </section>
+  <section title="Log">
+    <list ordered="false">
+      <item>2026-07-11 — RLM research Ф4 COMPLETE: every adopted source
+  studied, 11 notes on file (T1 `rlm-study.xml`; T2 `roma-`,
+  `fast-rlm-`, `redel-`, `recursive-llm-`, `dnc-noise-`,
+  `context-folding-`, `srlm-`, `rao-study.xml`; T3 grouped
+  `rlm-runners-up-t3.xml`, `rlm-articles-t3.xml`). S4 read at v3;
+  S3 status flipped to studied. Clean-room held: repo surveys ran
+  on sandboxed copies via GLM under live observation; the boss
+  spot-checked load-bearing claims verbatim (recursive-llm, redel,
+  fast-rlm — all held; ROMA structure-level) and authored every
+  note; no code shapes carried.</item>
+      <item>2026-07-10 (late) — RLM research Ф2: S10–S26 registered from the
+  three-wave selection (`notes/rlm-source-selection.xml`); every row
+  carries its license verdict BEFORE study per rule 1. S4 note: the
+  local PDF is v1; the paper is at **v3 (2026-05-11)** — re-fetch at
+  Ф3 and record the version. S15 note: FoldAgent repo deliberately
+  not intaken (license unverified); the paper carries the idea.</item>
+      <item>2026-07-09 — inventory created at ignition; all rows pending intake
+  (IGNITION Phase 0 s6/s7 fills pins, licenses, and the S1 study note).</item>
+      <item>2026-07-10 — Campaign 2 open: S2 deep-studied → `barkain-study.xml`
+  (BD1–BD6 keeps + named non-adoptions). Survey delegated to the big
+  slot over a sandboxed copy; boss spot-checked the load-bearing claims
+  against the source. Clean-room posture held (concept-level note, no
+  text/code carried).</item>
+      <item>2026-07-09 — Ф0 intake: S1–S4 cloned/downloaded at pinned commits,
+  **all three repos MIT** (clean-room posture holds regardless — no
+  code ported). S1 codex-first fully studied → `codex-first-study.xml`
+  (decisions DC1–DC6 + the mandated improvements). S5/S6 facts
+  extracted (see the plan's Ф0 findings). S7 landscape scanned →
+  `landscape.xml`. S2/S3/S4 deep study deliberately deferred to
+  Campaigns 2/3 per the plan; licenses are cleared so those campaigns
+  may open without a legal gate.</item>
+    </list>
+  </section>
+</spec>

@@ -1,0 +1,47 @@
+/* The folded list of rules under the end of a page. It is the tail of
+   the reading column, so it wears the column's own left rule and the
+   monospace the addresses are in. */
+
+.cited-rules {
+  margin: 2.5rem 0 0;
+  padding-top: 1.2rem;
+  border-top: 1px solid var(--line);
+}
+
+.cited-rules__summary {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-3);
+  cursor: pointer;
+}
+
+.cited-rules__summary:hover {
+  color: var(--accent);
+}
+
+.cited-rules__count {
+  font-variant-numeric: tabular-nums;
+}
+
+.cited-rules__list {
+  margin: 0.7rem 0 0;
+  padding: 0;
+  list-style: none;
+  border-left: 1px solid var(--line);
+}
+
+.cited-rules__list a {
+  display: block;
+  padding: 0.18rem 0 0.18rem 0.7rem;
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  color: var(--text-2);
+  overflow-wrap: anywhere;
+  transition: color var(--speed) ease;
+}
+
+.cited-rules__list a:hover {
+  color: var(--accent);
+}

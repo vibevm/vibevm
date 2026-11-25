@@ -1,0 +1,8 @@
+# The dirty fixture's specmap policy — the registry package is
+# deliberately untagged so the orphan ratchet has something to block.
+namespace = "demo"
+scan_roots = ["internal"]
+spec_roots = ["spec"]
+root_spec_docs = []
+exempt = []
+dispositioned = []

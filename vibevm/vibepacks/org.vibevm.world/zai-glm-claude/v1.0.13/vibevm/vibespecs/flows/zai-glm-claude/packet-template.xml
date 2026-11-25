@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">GLM worker packet template</title>
+  <status stage="spec" state="done"/>
+  <p><TEMPLATE-PURPOSE fact="true" status="spec/done">Copy this template into the worker's
+  dedicated cwd and replace every bracketed field. Delete irrelevant optional
+  clauses explicitly; never leave a placeholder for the worker to interpret.</TEMPLATE-PURPOSE></p>
+  <fence lang="markdown"># PACKET-&lt;task-id&gt; — &lt;one bounded outcome&gt;
+
+## Role and authority
+
+You are an execution worker, not the architect, owner, integrator or accepting
+reviewer. The parent owns architecture, acceptance, staging, commits and final
+gates. Your PASS is advisory. On a correction, re-read the correction first and
+repair the named failure rather than defending the prior verdict.
+
+## Task
+
+&lt;exact behavior to implement or question to answer&gt;
+
+## Required inputs
+
+- &lt;exact file or absolute path&gt;
+- &lt;supplied claim to confirm or refute with evidence&gt;
+
+If an ambiguity changes public grammar, architecture, security, destructive
+effects or scope, stop and record the exact blocker. Do not invent a design.
+
+## Write perimeter
+
+- &lt;exact path or closed directory&gt;
+- WORKER-REPORT-&lt;task-id&gt;.md
+
+Leave product work as ordinary unstaged files in this cwd. Preserve existing
+changes. A necessary nonintersecting expansion is allowed only when disclosed
+in the report. Do not add/commit/push/merge/rebase, mutate the index, stash,
+reset/restore/checkout, create another worktree, hide the only deliverable in a
+patch/cache/external service, or spawn another worker unless explicitly asked.
+
+## Acceptance
+
+1. &lt;observable success criterion&gt;
+2. &lt;failure or negative criterion&gt;
+3. &lt;compatibility/idempotence criterion&gt;
+
+Name a RED/counterexample for every branch whose false-green risk matters. An
+empty result is not evidence until a positive control proves the instrument can
+fire.
+
+## Constraints
+
+- Use normal task tools, including read/search, shell, read-only Git history,
+  formatters, generators and the exact tests below.
+- Preserve the gate child's real exit. Do not pipe a gate into tail/head/grep
+  and then report the final pipeline member's status.
+- Do not read, print, copy, hash or report credential values. A credential
+  source path may be named when necessary.
+- Do not weaken or delete an oracle to make it green.
+- Keep all changed files within the project's file-size and style limits.
+- Treat runner failure as transport state and preserve durable work/report.
+
+## Allowed self-verification
+
+```text
+&lt;exact commands; no broader substitutes&gt;
+```
+
+## Durable report
+
+Create this skeleton after the first meaningful slice, mark unfinished evidence
+PENDING, and update it before long gates. Target 140 lines; cap at 150 unless an
+explicit evidence matrix requires more.
+
+```markdown
+# WORKER-REPORT — &lt;task-id&gt;
+## Verdict
+PASS | FAIL | BLOCKED (advisory only)
+## Changed files
+- exact path — why
+## Acceptance evidence
+- criterion → result with exact location/output
+## Red proofs
+- guard → mutation/counterexample and restored result
+## Commands
+- command → real exit and decisive counts
+## Decisions and why
+- every choice within granted latitude, or none
+## Perimeter expansions / external effects
+- every extra path/effect, or none
+## Leftovers
+- exact remaining work, or none
+```
+
+## subagent-quiet-clause
+
+Screen prose is disposable. Output only required progress heartbeats, maintain
+the durable report, and finish with TASK-DONE or TASK-BLOCKED.</fence>
+  <p><POINTER-PROMPT fact="true" status="spec/done">The launch prompt is short and names
+  the packet rather than repeating it:</POINTER-PROMPT></p>
+  <fence lang="text">Read PACKET-&lt;task-id&gt;.md in this cwd first and follow it exactly.
+Keep product work as a visible unstaged diff, do not mutate Git, write the
+durable report before long gates, and finish only with TASK-DONE or TASK-BLOCKED.</fence>
+</spec>

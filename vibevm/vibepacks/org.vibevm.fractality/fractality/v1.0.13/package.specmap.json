@@ -1,0 +1,3779 @@
+{
+  "code_items": [
+    {
+      "crate_name": "fractality-cli",
+      "file": "crates/fractality-cli/src/main.rs",
+      "item_kind": "command",
+      "line": 114,
+      "symbol": "fractality advise",
+      "end_line": 128,
+      "fingerprint": "tok1:24bfc0c839f388591c058f0cb5b748a09e2db1b596810456854ff3cec5f8e9f4"
+    },
+    {
+      "crate_name": "fractality-cli",
+      "file": "crates/fractality-cli/src/main.rs",
+      "item_kind": "command",
+      "line": 185,
+      "symbol": "fractality answer",
+      "end_line": 196,
+      "fingerprint": "tok1:e6cf9e6021f9d5f958f37663e9658a9723b16c40753e7dee76fcc38215ea8931"
+    },
+    {
+      "crate_name": "fractality-cli",
+      "file": "crates/fractality-cli/src/main.rs",
+      "item_kind": "command",
+      "line": 176,
+      "symbol": "fractality decisions",
+      "end_line": 184,
+      "fingerprint": "tok1:f7e1b1553d9e7ea2e48f9b40cf61079a2145d522a37b53a9be2db06b6fdb208a"
+    },
+    {
+      "crate_name": "fractality-cli",
+      "file": "crates/fractality-cli/src/main.rs",
+      "item_kind": "command",
+      "line": 169,
+      "symbol": "fractality escalations",
+      "end_line": 175,
+      "fingerprint": "tok1:dbfb5eb97570534a4748b42021c83ee9206050ff4e598b403f7e28d9b0f1be5b"
+    },
+    {
+      "crate_name": "fractality-cli",
+      "file": "crates/fractality-cli/src/main.rs",
+      "item_kind": "command",
+      "line": 285,
+      "symbol": "fractality fetch",
+      "end_line": 296,
+      "fingerprint": "tok1:b5c9f0fba50fd05453d51c40a427b27fba4e6466e05ca767839574cdef93ec68"
+    },
+    {
+      "crate_name": "fractality-cli",
+      "file": "crates/fractality-cli/src/main.rs",
+      "item_kind": "command",
+      "line": 225,
+      "symbol": "fractality gate",
+      "end_line": 264,
+      "fingerprint": "tok1:960cd040303f3912c6aeca80cd53e46aa5daefff6abce6ab8dbbd4b8d318f78b"
+    },
+    {
+      "crate_name": "fractality-cli",
+      "file": "crates/fractality-cli/src/main.rs",
+      "item_kind": "command",
+      "line": 297,
+      "symbol": "fractality harness",
+      "end_line": 302,
+      "fingerprint": "tok1:a677670e25907f64ad3e88aa371a0fb20aefa9a875c0cce9ae40a0b2fcd1c68f"
+    },
+    {
+      "crate_name": "fractality-cli",
+      "file": "crates/fractality-cli/src/main.rs",
+      "item_kind": "command",
+      "line": 303,
+      "symbol": "fractality hook",
+      "end_line": 311,
+      "fingerprint": "tok1:e6ff20c8b93ffc8e3166d1b99d30d904daf5afac9de21345e3088d3de8d61195"
+    },
+    {
+      "crate_name": "fractality-cli",
+      "file": "crates/fractality-cli/src/main.rs",
+      "item_kind": "command",
+      "line": 154,
+      "symbol": "fractality kill",
+      "end_line": 162,
+      "fingerprint": "tok1:7f55e37a4191c71eab82e292562eeabf228184bbb74811dd220af2e113618852"
+    },
+    {
+      "crate_name": "fractality-cli",
+      "file": "crates/fractality-cli/src/main.rs",
+      "item_kind": "command",
+      "line": 60,
+      "symbol": "fractality mc",
+      "end_line": 64,
+      "fingerprint": "tok1:da646561c3958e0f3e3edae60b9bbfda589936650e51ae06f2a14656f46d71ef"
+    },
+    {
+      "crate_name": "fractality-cli",
+      "file": "crates/fractality-cli/src/main.rs",
+      "item_kind": "command",
+      "line": 316,
+      "symbol": "fractality mcp-broker",
+      "end_line": 319,
+      "fingerprint": "tok1:fb899cc218a6bf3abf77940aec2ea0015df4d768ce570c2d8cb74e661e2ae9ce"
+    },
+    {
+      "crate_name": "fractality-cli",
+      "file": "crates/fractality-cli/src/main.rs",
+      "item_kind": "command",
+      "line": 65,
+      "symbol": "fractality ps",
+      "end_line": 80,
+      "fingerprint": "tok1:fd955035884104fad4451f09e609309bee972d162df5245f13380018a9315987"
+    },
+    {
+      "crate_name": "fractality-cli",
+      "file": "crates/fractality-cli/src/main.rs",
+      "item_kind": "command",
+      "line": 163,
+      "symbol": "fractality questions",
+      "end_line": 168,
+      "fingerprint": "tok1:bf8207e977410e103ff5475e90d3cdf7c9b9879d0a01dca1404905b2049229e7"
+    },
+    {
+      "crate_name": "fractality-cli",
+      "file": "crates/fractality-cli/src/main.rs",
+      "item_kind": "command",
+      "line": 265,
+      "symbol": "fractality route",
+      "end_line": 284,
+      "fingerprint": "tok1:940316fb82e03c4b2ec3ba8a70f3bf2a4f753b2828b2acf54e3a3142647cccd5"
+    },
+    {
+      "crate_name": "fractality-cli",
+      "file": "crates/fractality-cli/src/main.rs",
+      "item_kind": "command",
+      "line": 88,
+      "symbol": "fractality run",
+      "end_line": 98,
+      "fingerprint": "tok1:bd3ef12d86d400d55c7012689e8465a9bc029ac6f3efc2fbdb64207816b70e5a"
+    },
+    {
+      "crate_name": "fractality-cli",
+      "file": "crates/fractality-cli/src/main.rs",
+      "item_kind": "command",
+      "line": 210,
+      "symbol": "fractality scoreboard",
+      "end_line": 224,
+      "fingerprint": "tok1:d302d9303a0aa8e0a44e3770969b6e8fca039003a82fca2921c536367495ec8f"
+    },
+    {
+      "crate_name": "fractality-cli",
+      "file": "crates/fractality-cli/src/main.rs",
+      "item_kind": "command",
+      "line": 204,
+      "symbol": "fractality session",
+      "end_line": 209,
+      "fingerprint": "tok1:a2a7a07bcd6dab6ab709b82f46651dea7e47fb57659651939474285bb49dc8cf"
+    },
+    {
+      "crate_name": "fractality-cli",
+      "file": "crates/fractality-cli/src/main.rs",
+      "item_kind": "command",
+      "line": 81,
+      "symbol": "fractality show",
+      "end_line": 87,
+      "fingerprint": "tok1:0d692d64580e8461d033a78502ad93cb5cdbe5d8706fe99890cc2904887c7b26"
+    },
+    {
+      "crate_name": "fractality-cli",
+      "file": "crates/fractality-cli/src/main.rs",
+      "item_kind": "command",
+      "line": 99,
+      "symbol": "fractality spawn",
+      "end_line": 113,
+      "fingerprint": "tok1:47618cb4c117923cf2de7a1de41629dcea2cb76973d501454a8f7ebcfad5de59"
+    },
+    {
+      "crate_name": "fractality-cli",
+      "file": "crates/fractality-cli/src/main.rs",
+      "item_kind": "command",
+      "line": 197,
+      "symbol": "fractality stats",
+      "end_line": 203,
+      "fingerprint": "tok1:6a9859a1bf00a2e5baea098a7429878b91815796efe170d2a1d0d7f583840080"
+    },
+    {
+      "crate_name": "fractality-cli",
+      "file": "crates/fractality-cli/src/main.rs",
+      "item_kind": "command",
+      "line": 312,
+      "symbol": "fractality statusline",
+      "end_line": 315,
+      "fingerprint": "tok1:83f96f38292724fae9a5df6748db8c77f8b19f26aec8d5b59d1cce2b75169e45"
+    },
+    {
+      "crate_name": "fractality-cli",
+      "file": "crates/fractality-cli/src/main.rs",
+      "item_kind": "command",
+      "line": 146,
+      "symbol": "fractality tree",
+      "end_line": 153,
+      "fingerprint": "tok1:b9b207fa89f6e708c719f64bc089cc814e5d8465f0e317561e32511234d79e2b"
+    },
+    {
+      "crate_name": "fractality-cli",
+      "file": "crates/fractality-cli/src/main.rs",
+      "item_kind": "command",
+      "line": 129,
+      "symbol": "fractality wait",
+      "end_line": 145,
+      "fingerprint": "tok1:315b277ff99423ddc6c5a534e1f5b8b7aae48082800d329ba6e70823b09caf0b"
+    },
+    {
+      "crate_name": "fractality-backend-claude-code",
+      "file": "crates/fractality-backend-claude-code/src/lib.rs",
+      "item_kind": "mod",
+      "line": 25,
+      "symbol": "fractality_backend_claude_code",
+      "end_line": 25,
+      "fingerprint": "tok1:79fb52650ec92aa6eac581b0b0e4aaafb872dc2db2f2909d4d905cf3c7339347"
+    },
+    {
+      "crate_name": "fractality-backend-claude-code",
+      "file": "crates/fractality-backend-claude-code/src/env.rs",
+      "item_kind": "mod",
+      "line": 8,
+      "symbol": "fractality_backend_claude_code::env",
+      "end_line": 8,
+      "fingerprint": "tok1:6c256fbb9f18a953b3ffe3c052c6b35f870728750b31696708509a9f89ab4f61"
+    },
+    {
+      "crate_name": "fractality-backend-claude-code",
+      "file": "crates/fractality-backend-claude-code/src/envbuild.rs",
+      "item_kind": "mod",
+      "line": 22,
+      "symbol": "fractality_backend_claude_code::envbuild",
+      "end_line": 22,
+      "fingerprint": "tok1:6c256fbb9f18a953b3ffe3c052c6b35f870728750b31696708509a9f89ab4f61"
+    },
+    {
+      "crate_name": "fractality-backend-claude-code",
+      "file": "crates/fractality-backend-claude-code/src/invocation.rs",
+      "item_kind": "mod",
+      "line": 18,
+      "symbol": "fractality_backend_claude_code::invocation",
+      "end_line": 18,
+      "fingerprint": "tok1:79fb52650ec92aa6eac581b0b0e4aaafb872dc2db2f2909d4d905cf3c7339347"
+    },
+    {
+      "crate_name": "fractality-backend-claude-code",
+      "file": "crates/fractality-backend-claude-code/src/stream.rs",
+      "item_kind": "mod",
+      "line": 26,
+      "symbol": "fractality_backend_claude_code::stream",
+      "end_line": 26,
+      "fingerprint": "tok1:79fb52650ec92aa6eac581b0b0e4aaafb872dc2db2f2909d4d905cf3c7339347"
+    },
+    {
+      "crate_name": "fractality-cli",
+      "file": "crates/fractality-cli/src/main.rs",
+      "item_kind": "mod",
+      "line": 37,
+      "symbol": "fractality_cli",
+      "end_line": 37,
+      "fingerprint": "tok1:79fb52650ec92aa6eac581b0b0e4aaafb872dc2db2f2909d4d905cf3c7339347"
+    },
+    {
+      "crate_name": "fractality-cli",
+      "file": "crates/fractality-cli/src/advise.rs",
+      "item_kind": "mod",
+      "line": 25,
+      "symbol": "fractality_cli::advise",
+      "end_line": 25,
+      "fingerprint": "tok1:79fb52650ec92aa6eac581b0b0e4aaafb872dc2db2f2909d4d905cf3c7339347"
+    },
+    {
+      "crate_name": "fractality-cli",
+      "file": "crates/fractality-cli/src/boss.rs",
+      "item_kind": "mod",
+      "line": 12,
+      "symbol": "fractality_cli::boss",
+      "end_line": 12,
+      "fingerprint": "tok1:79fb52650ec92aa6eac581b0b0e4aaafb872dc2db2f2909d4d905cf3c7339347"
+    },
+    {
+      "crate_name": "fractality-cli",
+      "file": "crates/fractality-cli/src/broker.rs",
+      "item_kind": "mod",
+      "line": 22,
+      "symbol": "fractality_cli::broker",
+      "end_line": 22,
+      "fingerprint": "tok1:79fb52650ec92aa6eac581b0b0e4aaafb872dc2db2f2909d4d905cf3c7339347"
+    },
+    {
+      "crate_name": "fractality-cli",
+      "file": "crates/fractality-cli/src/fetch.rs",
+      "item_kind": "mod",
+      "line": 7,
+      "symbol": "fractality_cli::fetch",
+      "end_line": 7,
+      "fingerprint": "tok1:79fb52650ec92aa6eac581b0b0e4aaafb872dc2db2f2909d4d905cf3c7339347"
+    },
+    {
+      "crate_name": "fractality-cli",
+      "file": "crates/fractality-cli/src/gate_cmd.rs",
+      "item_kind": "mod",
+      "line": 23,
+      "symbol": "fractality_cli::gate_cmd",
+      "end_line": 23,
+      "fingerprint": "tok1:6b07aa8a8f1fb8ec0cd1b1d2109d46397551cd33d19f9fd679d948ac4e3b8b02"
+    },
+    {
+      "crate_name": "fractality-cli",
+      "file": "crates/fractality-cli/src/harness.rs",
+      "item_kind": "mod",
+      "line": 21,
+      "symbol": "fractality_cli::harness",
+      "end_line": 21,
+      "fingerprint": "tok1:68f9b5a47f9b53834fce5cf6a136f55c5172beaaadfb5402e7865d9111c7e908"
+    },
+    {
+      "crate_name": "fractality-cli",
+      "file": "crates/fractality-cli/src/hook.rs",
+      "item_kind": "mod",
+      "line": 23,
+      "symbol": "fractality_cli::hook",
+      "end_line": 23,
+      "fingerprint": "tok1:68f9b5a47f9b53834fce5cf6a136f55c5172beaaadfb5402e7865d9111c7e908"
+    },
+    {
+      "crate_name": "fractality-cli",
+      "file": "crates/fractality-cli/src/mc_cmd.rs",
+      "item_kind": "mod",
+      "line": 11,
+      "symbol": "fractality_cli::mc_cmd",
+      "end_line": 11,
+      "fingerprint": "tok1:79fb52650ec92aa6eac581b0b0e4aaafb872dc2db2f2909d4d905cf3c7339347"
+    },
+    {
+      "crate_name": "fractality-cli",
+      "file": "crates/fractality-cli/src/out.rs",
+      "item_kind": "mod",
+      "line": 9,
+      "symbol": "fractality_cli::out",
+      "end_line": 9,
+      "fingerprint": "tok1:79fb52650ec92aa6eac581b0b0e4aaafb872dc2db2f2909d4d905cf3c7339347"
+    },
+    {
+      "crate_name": "fractality-cli",
+      "file": "crates/fractality-cli/src/route_cmd.rs",
+      "item_kind": "mod",
+      "line": 10,
+      "symbol": "fractality_cli::route_cmd",
+      "end_line": 10,
+      "fingerprint": "tok1:68f9b5a47f9b53834fce5cf6a136f55c5172beaaadfb5402e7865d9111c7e908"
+    },
+    {
+      "crate_name": "fractality-cli",
+      "file": "crates/fractality-cli/src/scoreboard.rs",
+      "item_kind": "mod",
+      "line": 11,
+      "symbol": "fractality_cli::scoreboard",
+      "end_line": 11,
+      "fingerprint": "tok1:68f9b5a47f9b53834fce5cf6a136f55c5172beaaadfb5402e7865d9111c7e908"
+    },
+    {
+      "crate_name": "fractality-cli",
+      "file": "crates/fractality-cli/src/session.rs",
+      "item_kind": "mod",
+      "line": 16,
+      "symbol": "fractality_cli::session",
+      "end_line": 16,
+      "fingerprint": "tok1:79fb52650ec92aa6eac581b0b0e4aaafb872dc2db2f2909d4d905cf3c7339347"
+    },
+    {
+      "crate_name": "fractality-cli",
+      "file": "crates/fractality-cli/src/statusline.rs",
+      "item_kind": "mod",
+      "line": 13,
+      "symbol": "fractality_cli::statusline",
+      "end_line": 13,
+      "fingerprint": "tok1:68f9b5a47f9b53834fce5cf6a136f55c5172beaaadfb5402e7865d9111c7e908"
+    },
+    {
+      "crate_name": "fractality-cli",
+      "file": "crates/fractality-cli/src/swarm.rs",
+      "item_kind": "mod",
+      "line": 10,
+      "symbol": "fractality_cli::swarm",
+      "end_line": 10,
+      "fingerprint": "tok1:79fb52650ec92aa6eac581b0b0e4aaafb872dc2db2f2909d4d905cf3c7339347"
+    },
+    {
+      "crate_name": "fractality-core",
+      "file": "crates/fractality-core/src/api.rs",
+      "item_kind": "mod",
+      "line": 24,
+      "symbol": "fractality_core::api",
+      "end_line": 24,
+      "fingerprint": "tok1:79fb52650ec92aa6eac581b0b0e4aaafb872dc2db2f2909d4d905cf3c7339347"
+    },
+    {
+      "crate_name": "fractality-core",
+      "file": "crates/fractality-core/src/credibility.rs",
+      "item_kind": "mod",
+      "line": 21,
+      "symbol": "fractality_core::credibility",
+      "end_line": 21,
+      "fingerprint": "tok1:79fb52650ec92aa6eac581b0b0e4aaafb872dc2db2f2909d4d905cf3c7339347"
+    },
+    {
+      "crate_name": "fractality-core",
+      "file": "crates/fractality-core/src/error.rs",
+      "item_kind": "mod",
+      "line": 9,
+      "symbol": "fractality_core::error",
+      "end_line": 9,
+      "fingerprint": "tok1:79fb52650ec92aa6eac581b0b0e4aaafb872dc2db2f2909d4d905cf3c7339347"
+    },
+    {
+      "crate_name": "fractality-core",
+      "file": "crates/fractality-core/src/error.rs",
+      "item_kind": "enum",
+      "line": 11,
+      "symbol": "fractality_core::error::CoreError",
+      "end_line": 106,
+      "fingerprint": "tok1:358bcfe2950c74e55cf568cbb5ac9e14f7447d486aafca3d38a930af7778c3e4"
+    },
+    {
+      "crate_name": "fractality-core",
+      "file": "crates/fractality-core/src/fileref.rs",
+      "item_kind": "mod",
+      "line": 20,
+      "symbol": "fractality_core::fileref",
+      "end_line": 20,
+      "fingerprint": "tok1:6c256fbb9f18a953b3ffe3c052c6b35f870728750b31696708509a9f89ab4f61"
+    },
+    {
+      "crate_name": "fractality-core",
+      "file": "crates/fractality-core/src/ids.rs",
+      "item_kind": "mod",
+      "line": 11,
+      "symbol": "fractality_core::ids",
+      "end_line": 11,
+      "fingerprint": "tok1:6b07aa8a8f1fb8ec0cd1b1d2109d46397551cd33d19f9fd679d948ac4e3b8b02"
+    },
+    {
+      "crate_name": "fractality-core",
+      "file": "crates/fractality-core/src/journal.rs",
+      "item_kind": "mod",
+      "line": 19,
+      "symbol": "fractality_core::journal",
+      "end_line": 19,
+      "fingerprint": "tok1:79fb52650ec92aa6eac581b0b0e4aaafb872dc2db2f2909d4d905cf3c7339347"
+    },
+    {
+      "crate_name": "fractality-core",
+      "file": "crates/fractality-core/src/journal_fold.rs",
+      "item_kind": "mod",
+      "line": 19,
+      "symbol": "fractality_core::journal_fold",
+      "end_line": 19,
+      "fingerprint": "tok1:79fb52650ec92aa6eac581b0b0e4aaafb872dc2db2f2909d4d905cf3c7339347"
+    },
+    {
+      "crate_name": "fractality-core",
+      "file": "crates/fractality-core/src/needgate.rs",
+      "item_kind": "mod",
+      "line": 18,
+      "symbol": "fractality_core::needgate",
+      "end_line": 18,
+      "fingerprint": "tok1:6b07aa8a8f1fb8ec0cd1b1d2109d46397551cd33d19f9fd679d948ac4e3b8b02"
+    },
+    {
+      "crate_name": "fractality-core",
+      "file": "crates/fractality-core/src/node.rs",
+      "item_kind": "mod",
+      "line": 22,
+      "symbol": "fractality_core::node",
+      "end_line": 22,
+      "fingerprint": "tok1:6c256fbb9f18a953b3ffe3c052c6b35f870728750b31696708509a9f89ab4f61"
+    },
+    {
+      "crate_name": "fractality-core",
+      "file": "crates/fractality-core/src/packet.rs",
+      "item_kind": "mod",
+      "line": 19,
+      "symbol": "fractality_core::packet",
+      "end_line": 19,
+      "fingerprint": "tok1:6b07aa8a8f1fb8ec0cd1b1d2109d46397551cd33d19f9fd679d948ac4e3b8b02"
+    },
+    {
+      "crate_name": "fractality-core",
+      "file": "crates/fractality-core/src/profile.rs",
+      "item_kind": "mod",
+      "line": 17,
+      "symbol": "fractality_core::profile",
+      "end_line": 17,
+      "fingerprint": "tok1:79fb52650ec92aa6eac581b0b0e4aaafb872dc2db2f2909d4d905cf3c7339347"
+    },
+    {
+      "crate_name": "fractality-core",
+      "file": "crates/fractality-core/src/routing.rs",
+      "item_kind": "mod",
+      "line": 20,
+      "symbol": "fractality_core::routing",
+      "end_line": 20,
+      "fingerprint": "tok1:6b07aa8a8f1fb8ec0cd1b1d2109d46397551cd33d19f9fd679d948ac4e3b8b02"
+    },
+    {
+      "crate_name": "fractality-core",
+      "file": "crates/fractality-core/src/run.rs",
+      "item_kind": "mod",
+      "line": 15,
+      "symbol": "fractality_core::run",
+      "end_line": 15,
+      "fingerprint": "tok1:6b07aa8a8f1fb8ec0cd1b1d2109d46397551cd33d19f9fd679d948ac4e3b8b02"
+    },
+    {
+      "crate_name": "fractality-core",
+      "file": "crates/fractality-core/src/session.rs",
+      "item_kind": "mod",
+      "line": 19,
+      "symbol": "fractality_core::session",
+      "end_line": 19,
+      "fingerprint": "tok1:6b07aa8a8f1fb8ec0cd1b1d2109d46397551cd33d19f9fd679d948ac4e3b8b02"
+    },
+    {
+      "crate_name": "fractality-core",
+      "file": "crates/fractality-core/src/time.rs",
+      "item_kind": "mod",
+      "line": 10,
+      "symbol": "fractality_core::time",
+      "end_line": 10,
+      "fingerprint": "tok1:6b07aa8a8f1fb8ec0cd1b1d2109d46397551cd33d19f9fd679d948ac4e3b8b02"
+    },
+    {
+      "crate_name": "fractality-core",
+      "file": "crates/fractality-core/src/worker.rs",
+      "item_kind": "mod",
+      "line": 22,
+      "symbol": "fractality_core::worker",
+      "end_line": 22,
+      "fingerprint": "tok1:79fb52650ec92aa6eac581b0b0e4aaafb872dc2db2f2909d4d905cf3c7339347"
+    },
+    {
+      "crate_name": "fractality-initiative",
+      "file": "crates/fractality-initiative/src/nudge.rs",
+      "item_kind": "mod",
+      "line": 10,
+      "symbol": "fractality_initiative::nudge",
+      "end_line": 10,
+      "fingerprint": "tok1:68f9b5a47f9b53834fce5cf6a136f55c5172beaaadfb5402e7865d9111c7e908"
+    },
+    {
+      "crate_name": "fractality-initiative",
+      "file": "crates/fractality-initiative/src/route.rs",
+      "item_kind": "mod",
+      "line": 20,
+      "symbol": "fractality_initiative::route",
+      "end_line": 20,
+      "fingerprint": "tok1:5146b0bb24b002018942e2875ee4f3d18bfb4959b3dad4f3d23a638a40e5f015"
+    },
+    {
+      "crate_name": "fractality-initiative",
+      "file": "crates/fractality-initiative/src/scoreboard.rs",
+      "item_kind": "mod",
+      "line": 13,
+      "symbol": "fractality_initiative::scoreboard",
+      "end_line": 13,
+      "fingerprint": "tok1:68f9b5a47f9b53834fce5cf6a136f55c5172beaaadfb5402e7865d9111c7e908"
+    },
+    {
+      "crate_name": "fractality-mc-client",
+      "file": "crates/fractality-mc-client/src/lib.rs",
+      "item_kind": "mod",
+      "line": 26,
+      "symbol": "fractality_mc_client",
+      "end_line": 26,
+      "fingerprint": "tok1:79fb52650ec92aa6eac581b0b0e4aaafb872dc2db2f2909d4d905cf3c7339347"
+    },
+    {
+      "crate_name": "fractality-mc-client",
+      "file": "crates/fractality-mc-client/src/lib.rs",
+      "item_kind": "enum",
+      "line": 28,
+      "symbol": "fractality_mc_client::ClientError",
+      "end_line": 72,
+      "fingerprint": "tok1:53375ae7ab4c1588b926e3014f6f60bc425de8c07e876d3ee0abb3899524ad03"
+    },
+    {
+      "crate_name": "fractality-mc-client",
+      "file": "crates/fractality-mc-client/src/decisions.rs",
+      "item_kind": "mod",
+      "line": 8,
+      "symbol": "fractality_mc_client::decisions",
+      "end_line": 8,
+      "fingerprint": "tok1:79fb52650ec92aa6eac581b0b0e4aaafb872dc2db2f2909d4d905cf3c7339347"
+    },
+    {
+      "crate_name": "fractality-mc-client",
+      "file": "crates/fractality-mc-client/src/home.rs",
+      "item_kind": "mod",
+      "line": 10,
+      "symbol": "fractality_mc_client::home",
+      "end_line": 10,
+      "fingerprint": "tok1:79fb52650ec92aa6eac581b0b0e4aaafb872dc2db2f2909d4d905cf3c7339347"
+    },
+    {
+      "crate_name": "fractality-mc-client",
+      "file": "crates/fractality-mc-client/src/lib.rs",
+      "item_kind": "fn",
+      "line": 521,
+      "symbol": "fractality_mc_client::inherit_guard::Guard::restore_inherit",
+      "end_line": 531,
+      "fingerprint": "tok1:197fd7566260a22283ed62b073d3872f1daf6d4ddd52dbe4aec9ca0109d12868"
+    },
+    {
+      "crate_name": "fractality-mc-client",
+      "file": "crates/fractality-mc-client/src/lib.rs",
+      "item_kind": "fn",
+      "line": 492,
+      "symbol": "fractality_mc_client::inherit_guard::Guard::strip_std_handles",
+      "end_line": 519,
+      "fingerprint": "tok1:140d73db94f58259286488b2df1a79e854ad623360a10360e7e2eacd11a40835"
+    },
+    {
+      "crate_name": "fractality-mc-client",
+      "file": "crates/fractality-mc-client/src/lock.rs",
+      "item_kind": "mod",
+      "line": 12,
+      "symbol": "fractality_mc_client::lock",
+      "end_line": 12,
+      "fingerprint": "tok1:79fb52650ec92aa6eac581b0b0e4aaafb872dc2db2f2909d4d905cf3c7339347"
+    },
+    {
+      "crate_name": "fractality-mc-client",
+      "file": "crates/fractality-mc-client/src/pod_leg.rs",
+      "item_kind": "mod",
+      "line": 15,
+      "symbol": "fractality_mc_client::pod_leg",
+      "end_line": 15,
+      "fingerprint": "tok1:79fb52650ec92aa6eac581b0b0e4aaafb872dc2db2f2909d4d905cf3c7339347"
+    },
+    {
+      "crate_name": "fractality-mission-control",
+      "file": "crates/fractality-mission-control/src/lib.rs",
+      "item_kind": "mod",
+      "line": 39,
+      "symbol": "fractality_mission_control",
+      "end_line": 39,
+      "fingerprint": "tok1:79fb52650ec92aa6eac581b0b0e4aaafb872dc2db2f2909d4d905cf3c7339347"
+    },
+    {
+      "crate_name": "fractality-mission-control",
+      "file": "crates/fractality-mission-control/src/main.rs",
+      "item_kind": "mod",
+      "line": 6,
+      "symbol": "fractality_mission_control",
+      "end_line": 6,
+      "fingerprint": "tok1:79fb52650ec92aa6eac581b0b0e4aaafb872dc2db2f2909d4d905cf3c7339347"
+    },
+    {
+      "crate_name": "fractality-mission-control",
+      "file": "crates/fractality-mission-control/src/lib.rs",
+      "item_kind": "enum",
+      "line": 69,
+      "symbol": "fractality_mission_control::ServerError",
+      "end_line": 101,
+      "fingerprint": "tok1:c1b76bea6a2033d30e2be4d0b9c5c1ad993f7212e8011259dd987e43c339eac6"
+    },
+    {
+      "crate_name": "fractality-mission-control",
+      "file": "crates/fractality-mission-control/src/admission.rs",
+      "item_kind": "mod",
+      "line": 24,
+      "symbol": "fractality_mission_control::admission",
+      "end_line": 24,
+      "fingerprint": "tok1:79fb52650ec92aa6eac581b0b0e4aaafb872dc2db2f2909d4d905cf3c7339347"
+    },
+    {
+      "crate_name": "fractality-mission-control",
+      "file": "crates/fractality-mission-control/src/http.rs",
+      "item_kind": "mod",
+      "line": 25,
+      "symbol": "fractality_mission_control::http",
+      "end_line": 25,
+      "fingerprint": "tok1:79fb52650ec92aa6eac581b0b0e4aaafb872dc2db2f2909d4d905cf3c7339347"
+    },
+    {
+      "crate_name": "fractality-mission-control",
+      "file": "crates/fractality-mission-control/src/http_decisions.rs",
+      "item_kind": "mod",
+      "line": 15,
+      "symbol": "fractality_mission_control::http_decisions",
+      "end_line": 15,
+      "fingerprint": "tok1:79fb52650ec92aa6eac581b0b0e4aaafb872dc2db2f2909d4d905cf3c7339347"
+    },
+    {
+      "crate_name": "fractality-mission-control",
+      "file": "crates/fractality-mission-control/src/http_escalate.rs",
+      "item_kind": "mod",
+      "line": 18,
+      "symbol": "fractality_mission_control::http_escalate",
+      "end_line": 18,
+      "fingerprint": "tok1:79fb52650ec92aa6eac581b0b0e4aaafb872dc2db2f2909d4d905cf3c7339347"
+    },
+    {
+      "crate_name": "fractality-mission-control",
+      "file": "crates/fractality-mission-control/src/http_pods.rs",
+      "item_kind": "mod",
+      "line": 29,
+      "symbol": "fractality_mission_control::http_pods",
+      "end_line": 29,
+      "fingerprint": "tok1:79fb52650ec92aa6eac581b0b0e4aaafb872dc2db2f2909d4d905cf3c7339347"
+    },
+    {
+      "crate_name": "fractality-mission-control",
+      "file": "crates/fractality-mission-control/src/http_questions.rs",
+      "item_kind": "mod",
+      "line": 17,
+      "symbol": "fractality_mission_control::http_questions",
+      "end_line": 17,
+      "fingerprint": "tok1:79fb52650ec92aa6eac581b0b0e4aaafb872dc2db2f2909d4d905cf3c7339347"
+    },
+    {
+      "crate_name": "fractality-mission-control",
+      "file": "crates/fractality-mission-control/src/http_sessions.rs",
+      "item_kind": "mod",
+      "line": 22,
+      "symbol": "fractality_mission_control::http_sessions",
+      "end_line": 22,
+      "fingerprint": "tok1:68f9b5a47f9b53834fce5cf6a136f55c5172beaaadfb5402e7865d9111c7e908"
+    },
+    {
+      "crate_name": "fractality-mission-control",
+      "file": "crates/fractality-mission-control/src/identity.rs",
+      "item_kind": "mod",
+      "line": 10,
+      "symbol": "fractality_mission_control::identity",
+      "end_line": 10,
+      "fingerprint": "tok1:6c256fbb9f18a953b3ffe3c052c6b35f870728750b31696708509a9f89ab4f61"
+    },
+    {
+      "crate_name": "fractality-mission-control",
+      "file": "crates/fractality-mission-control/src/journal_store.rs",
+      "item_kind": "mod",
+      "line": 22,
+      "symbol": "fractality_mission_control::journal_store",
+      "end_line": 22,
+      "fingerprint": "tok1:79fb52650ec92aa6eac581b0b0e4aaafb872dc2db2f2909d4d905cf3c7339347"
+    },
+    {
+      "crate_name": "fractality-mission-control",
+      "file": "crates/fractality-mission-control/src/kill.rs",
+      "item_kind": "mod",
+      "line": 20,
+      "symbol": "fractality_mission_control::kill",
+      "end_line": 20,
+      "fingerprint": "tok1:79fb52650ec92aa6eac581b0b0e4aaafb872dc2db2f2909d4d905cf3c7339347"
+    },
+    {
+      "crate_name": "fractality-mission-control",
+      "file": "crates/fractality-mission-control/src/metrics.rs",
+      "item_kind": "mod",
+      "line": 12,
+      "symbol": "fractality_mission_control::metrics",
+      "end_line": 12,
+      "fingerprint": "tok1:79fb52650ec92aa6eac581b0b0e4aaafb872dc2db2f2909d4d905cf3c7339347"
+    },
+    {
+      "crate_name": "fractality-mission-control",
+      "file": "crates/fractality-mission-control/src/registry.rs",
+      "item_kind": "mod",
+      "line": 28,
+      "symbol": "fractality_mission_control::registry",
+      "end_line": 28,
+      "fingerprint": "tok1:79fb52650ec92aa6eac581b0b0e4aaafb872dc2db2f2909d4d905cf3c7339347"
+    },
+    {
+      "crate_name": "fractality-mission-control",
+      "file": "crates/fractality-mission-control/src/scopes.rs",
+      "item_kind": "mod",
+      "line": 17,
+      "symbol": "fractality_mission_control::scopes",
+      "end_line": 17,
+      "fingerprint": "tok1:6c256fbb9f18a953b3ffe3c052c6b35f870728750b31696708509a9f89ab4f61"
+    },
+    {
+      "crate_name": "fractality-mission-control",
+      "file": "crates/fractality-mission-control/src/sessions.rs",
+      "item_kind": "mod",
+      "line": 22,
+      "symbol": "fractality_mission_control::sessions",
+      "end_line": 22,
+      "fingerprint": "tok1:79fb52650ec92aa6eac581b0b0e4aaafb872dc2db2f2909d4d905cf3c7339347"
+    },
+    {
+      "crate_name": "fractality-mission-control",
+      "file": "crates/fractality-mission-control/src/sessions.rs",
+      "item_kind": "enum",
+      "line": 24,
+      "symbol": "fractality_mission_control::sessions::SessionError",
+      "end_line": 37,
+      "fingerprint": "tok1:a2a1b6140f073d5ede032c746889509e40ac6129df72aa114c86f1ee81e6f2c3"
+    },
+    {
+      "crate_name": "fractality-mission-control",
+      "file": "crates/fractality-mission-control/src/state.rs",
+      "item_kind": "mod",
+      "line": 22,
+      "symbol": "fractality_mission_control::state",
+      "end_line": 22,
+      "fingerprint": "tok1:79fb52650ec92aa6eac581b0b0e4aaafb872dc2db2f2909d4d905cf3c7339347"
+    },
+    {
+      "crate_name": "fractality-mission-control",
+      "file": "crates/fractality-mission-control/src/state.rs",
+      "item_kind": "enum",
+      "line": 66,
+      "symbol": "fractality_mission_control::state::RecordError",
+      "end_line": 88,
+      "fingerprint": "tok1:9b324b83623f3cae0780ae9c27f021737c8f3810bc7abef170183f79302077ce"
+    },
+    {
+      "crate_name": "fractality-mission-control",
+      "file": "crates/fractality-mission-control/src/workspace.rs",
+      "item_kind": "mod",
+      "line": 14,
+      "symbol": "fractality_mission_control::workspace",
+      "end_line": 14,
+      "fingerprint": "tok1:79fb52650ec92aa6eac581b0b0e4aaafb872dc2db2f2909d4d905cf3c7339347"
+    },
+    {
+      "crate_name": "fractality-pod",
+      "file": "crates/fractality-pod/src/main.rs",
+      "item_kind": "mod",
+      "line": 35,
+      "symbol": "fractality_pod",
+      "end_line": 35,
+      "fingerprint": "tok1:79fb52650ec92aa6eac581b0b0e4aaafb872dc2db2f2909d4d905cf3c7339347"
+    },
+    {
+      "crate_name": "fractality-pod",
+      "file": "crates/fractality-pod/src/collect.rs",
+      "item_kind": "mod",
+      "line": 20,
+      "symbol": "fractality_pod::collect",
+      "end_line": 20,
+      "fingerprint": "tok1:79fb52650ec92aa6eac581b0b0e4aaafb872dc2db2f2909d4d905cf3c7339347"
+    },
+    {
+      "crate_name": "fractality-pod",
+      "file": "crates/fractality-pod/src/pump.rs",
+      "item_kind": "mod",
+      "line": 12,
+      "symbol": "fractality_pod::pump",
+      "end_line": 12,
+      "fingerprint": "tok1:79fb52650ec92aa6eac581b0b0e4aaafb872dc2db2f2909d4d905cf3c7339347"
+    },
+    {
+      "crate_name": "fractality-pod",
+      "file": "crates/fractality-pod/src/resolve.rs",
+      "item_kind": "mod",
+      "line": 14,
+      "symbol": "fractality_pod::resolve",
+      "end_line": 14,
+      "fingerprint": "tok1:79fb52650ec92aa6eac581b0b0e4aaafb872dc2db2f2909d4d905cf3c7339347"
+    },
+    {
+      "crate_name": "fractality-pod",
+      "file": "crates/fractality-pod/src/supervise.rs",
+      "item_kind": "mod",
+      "line": 20,
+      "symbol": "fractality_pod::supervise",
+      "end_line": 20,
+      "fingerprint": "tok1:6c256fbb9f18a953b3ffe3c052c6b35f870728750b31696708509a9f89ab4f61"
+    },
+    {
+      "crate_name": "fractality-pod",
+      "file": "crates/fractality-pod/src/worker_env.rs",
+      "item_kind": "mod",
+      "line": 4,
+      "symbol": "fractality_pod::worker_env",
+      "end_line": 4,
+      "fingerprint": "tok1:6c256fbb9f18a953b3ffe3c052c6b35f870728750b31696708509a9f89ab4f61"
+    }
+  ],
+  "edges": [
+    {
+      "file": "crates/fractality-backend-claude-code/src/lib.rs",
+      "from_symbol": "fractality_backend_claude_code",
+      "line": 25,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.fractality/fractality/PROP-001#architecture",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-backend-claude-code/src/env.rs",
+      "from_symbol": "fractality_backend_claude_code::env",
+      "line": 8,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.fractality/fractality/PROP-001#invariants",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-backend-claude-code/src/envbuild.rs",
+      "from_symbol": "fractality_backend_claude_code::envbuild",
+      "line": 22,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.fractality/fractality/PROP-001#invariants",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-backend-claude-code/src/invocation.rs",
+      "from_symbol": "fractality_backend_claude_code::invocation",
+      "line": 18,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.fractality/fractality/PROP-001#architecture",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-backend-claude-code/src/stream.rs",
+      "from_symbol": "fractality_backend_claude_code::stream",
+      "line": 26,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.fractality/fractality/PROP-001#architecture",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-cli/src/main.rs",
+      "from_symbol": "fractality_cli",
+      "line": 37,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.fractality/fractality/PROP-001#architecture",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-cli/src/advise.rs",
+      "from_symbol": "fractality_cli::advise",
+      "line": 25,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.fractality/fractality/PROP-001#architecture",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-cli/src/boss.rs",
+      "from_symbol": "fractality_cli::boss",
+      "line": 12,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.fractality/fractality/PROP-001#architecture",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-cli/src/broker.rs",
+      "from_symbol": "fractality_cli::broker",
+      "line": 22,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.fractality/fractality/PROP-001#architecture",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-cli/src/fetch.rs",
+      "from_symbol": "fractality_cli::fetch",
+      "line": 7,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.fractality/fractality/PROP-001#architecture",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-cli/src/gate_cmd.rs",
+      "from_symbol": "fractality_cli::gate_cmd",
+      "line": 23,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.fractality/fractality/PROP-001#model",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-cli/src/harness.rs",
+      "from_symbol": "fractality_cli::harness",
+      "line": 21,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.fractality/fractality/PROP-001#sessions",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-cli/src/hook.rs",
+      "from_symbol": "fractality_cli::hook",
+      "line": 23,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.fractality/fractality/PROP-001#sessions",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-cli/src/mc_cmd.rs",
+      "from_symbol": "fractality_cli::mc_cmd",
+      "line": 11,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.fractality/fractality/PROP-001#architecture",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-cli/src/out.rs",
+      "from_symbol": "fractality_cli::out",
+      "line": 9,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.fractality/fractality/PROP-001#architecture",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-cli/src/route_cmd.rs",
+      "from_symbol": "fractality_cli::route_cmd",
+      "line": 10,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.fractality/fractality/PROP-001#sessions",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-cli/src/scoreboard.rs",
+      "from_symbol": "fractality_cli::scoreboard",
+      "line": 11,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.fractality/fractality/PROP-001#sessions",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-cli/src/session.rs",
+      "from_symbol": "fractality_cli::session",
+      "line": 16,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.fractality/fractality/PROP-001#architecture",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-cli/src/statusline.rs",
+      "from_symbol": "fractality_cli::statusline",
+      "line": 13,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.fractality/fractality/PROP-001#sessions",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-cli/src/swarm.rs",
+      "from_symbol": "fractality_cli::swarm",
+      "line": 10,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.fractality/fractality/PROP-001#architecture",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-core/src/api.rs",
+      "from_symbol": "fractality_core::api",
+      "line": 24,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.fractality/fractality/PROP-001#architecture",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-core/src/credibility.rs",
+      "from_symbol": "fractality_core::credibility",
+      "line": 21,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.fractality/fractality/PROP-001#architecture",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-core/src/error.rs",
+      "from_symbol": "fractality_core::error",
+      "line": 9,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.fractality/fractality/PROP-001#architecture",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-core/src/error.rs",
+      "from_symbol": "fractality_core::error::CoreError",
+      "line": 13,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.fractality/fractality/PROP-001#model",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-core/src/fileref.rs",
+      "from_symbol": "fractality_core::fileref",
+      "line": 20,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.fractality/fractality/PROP-001#invariants",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-core/src/ids.rs",
+      "from_symbol": "fractality_core::ids",
+      "line": 11,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.fractality/fractality/PROP-001#model",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-core/src/journal.rs",
+      "from_symbol": "fractality_core::journal",
+      "line": 19,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.fractality/fractality/PROP-001#architecture",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-core/src/journal_fold.rs",
+      "from_symbol": "fractality_core::journal_fold",
+      "line": 19,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.fractality/fractality/PROP-001#architecture",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-core/src/needgate.rs",
+      "from_symbol": "fractality_core::needgate",
+      "line": 18,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.fractality/fractality/PROP-001#model",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-core/src/node.rs",
+      "from_symbol": "fractality_core::node",
+      "line": 22,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.fractality/fractality/PROP-001#invariants",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-core/src/packet.rs",
+      "from_symbol": "fractality_core::packet",
+      "line": 19,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.fractality/fractality/PROP-001#model",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-core/src/profile.rs",
+      "from_symbol": "fractality_core::profile",
+      "line": 17,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.fractality/fractality/PROP-001#architecture",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-core/src/routing.rs",
+      "from_symbol": "fractality_core::routing",
+      "line": 20,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.fractality/fractality/PROP-001#model",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-core/src/run.rs",
+      "from_symbol": "fractality_core::run",
+      "line": 15,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.fractality/fractality/PROP-001#model",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-core/src/session.rs",
+      "from_symbol": "fractality_core::session",
+      "line": 19,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.fractality/fractality/PROP-001#model",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-core/src/time.rs",
+      "from_symbol": "fractality_core::time",
+      "line": 10,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.fractality/fractality/PROP-001#model",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-core/src/worker.rs",
+      "from_symbol": "fractality_core::worker",
+      "line": 22,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.fractality/fractality/PROP-001#architecture",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-initiative/src/nudge.rs",
+      "from_symbol": "fractality_initiative::nudge",
+      "line": 10,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.fractality/fractality/PROP-001#sessions",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-initiative/src/route.rs",
+      "from_symbol": "fractality_initiative::route",
+      "line": 20,
+      "provenance": "authored",
+      "uri": "spec://delegation-rules/DECISION-MATRIX#verdict",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-initiative/src/scoreboard.rs",
+      "from_symbol": "fractality_initiative::scoreboard",
+      "line": 13,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.fractality/fractality/PROP-001#sessions",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-mc-client/src/lib.rs",
+      "from_symbol": "fractality_mc_client",
+      "line": 26,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.fractality/fractality/PROP-001#architecture",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-mc-client/src/lib.rs",
+      "from_symbol": "fractality_mc_client::ClientError",
+      "line": 40,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.fractality/fractality/PROP-001#architecture",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-mc-client/src/decisions.rs",
+      "from_symbol": "fractality_mc_client::decisions",
+      "line": 8,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.fractality/fractality/PROP-001#architecture",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-mc-client/src/home.rs",
+      "from_symbol": "fractality_mc_client::home",
+      "line": 10,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.fractality/fractality/PROP-001#architecture",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-mc-client/src/lib.rs",
+      "from_symbol": "fractality_mc_client::inherit_guard::Guard::restore_inherit",
+      "line": 523,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.fractality/fractality/PROP-001#architecture",
+      "verb": "deviates",
+      "reason": "the restore half of the F17 guard: one SetHandleInformation call re-arming the flag strip_std_handles removed"
+    },
+    {
+      "file": "crates/fractality-mc-client/src/lib.rs",
+      "from_symbol": "fractality_mc_client::inherit_guard::Guard::strip_std_handles",
+      "line": 495,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.fractality/fractality/PROP-001#architecture",
+      "verb": "deviates",
+      "reason": "three kernel32 calls at one recorded OS seam (F17): stripping HANDLE_FLAG_INHERIT from our own std handles around a detached spawn; an audit crate for this would be pure ceremony"
+    },
+    {
+      "file": "crates/fractality-mc-client/src/lock.rs",
+      "from_symbol": "fractality_mc_client::lock",
+      "line": 12,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.fractality/fractality/PROP-001#architecture",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-mc-client/src/pod_leg.rs",
+      "from_symbol": "fractality_mc_client::pod_leg",
+      "line": 15,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.fractality/fractality/PROP-001#architecture",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-mission-control/src/lib.rs",
+      "from_symbol": "fractality_mission_control",
+      "line": 39,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.fractality/fractality/PROP-001#architecture",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-mission-control/src/main.rs",
+      "from_symbol": "fractality_mission_control",
+      "line": 6,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.fractality/fractality/PROP-001#architecture",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-mission-control/src/lib.rs",
+      "from_symbol": "fractality_mission_control::ServerError",
+      "line": 79,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.fractality/fractality/PROP-001#architecture",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-mission-control/src/admission.rs",
+      "from_symbol": "fractality_mission_control::admission",
+      "line": 24,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.fractality/fractality/PROP-001#architecture",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-mission-control/src/http.rs",
+      "from_symbol": "fractality_mission_control::http",
+      "line": 25,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.fractality/fractality/PROP-001#architecture",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-mission-control/src/http_decisions.rs",
+      "from_symbol": "fractality_mission_control::http_decisions",
+      "line": 15,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.fractality/fractality/PROP-001#architecture",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-mission-control/src/http_escalate.rs",
+      "from_symbol": "fractality_mission_control::http_escalate",
+      "line": 18,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.fractality/fractality/PROP-001#architecture",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-mission-control/src/http_pods.rs",
+      "from_symbol": "fractality_mission_control::http_pods",
+      "line": 29,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.fractality/fractality/PROP-001#architecture",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-mission-control/src/http_questions.rs",
+      "from_symbol": "fractality_mission_control::http_questions",
+      "line": 17,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.fractality/fractality/PROP-001#architecture",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-mission-control/src/http_sessions.rs",
+      "from_symbol": "fractality_mission_control::http_sessions",
+      "line": 22,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.fractality/fractality/PROP-001#sessions",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-mission-control/src/identity.rs",
+      "from_symbol": "fractality_mission_control::identity",
+      "line": 10,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.fractality/fractality/PROP-001#invariants",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-mission-control/src/journal_store.rs",
+      "from_symbol": "fractality_mission_control::journal_store",
+      "line": 22,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.fractality/fractality/PROP-001#architecture",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-mission-control/src/kill.rs",
+      "from_symbol": "fractality_mission_control::kill",
+      "line": 20,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.fractality/fractality/PROP-001#architecture",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-mission-control/src/metrics.rs",
+      "from_symbol": "fractality_mission_control::metrics",
+      "line": 12,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.fractality/fractality/PROP-001#architecture",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-mission-control/src/registry.rs",
+      "from_symbol": "fractality_mission_control::registry",
+      "line": 28,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.fractality/fractality/PROP-001#architecture",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-mission-control/src/scopes.rs",
+      "from_symbol": "fractality_mission_control::scopes",
+      "line": 17,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.fractality/fractality/PROP-001#invariants",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-mission-control/src/sessions.rs",
+      "from_symbol": "fractality_mission_control::sessions",
+      "line": 22,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.fractality/fractality/PROP-001#architecture",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-mission-control/src/sessions.rs",
+      "from_symbol": "fractality_mission_control::sessions::SessionError",
+      "line": 26,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.fractality/fractality/PROP-001#architecture",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-mission-control/src/state.rs",
+      "from_symbol": "fractality_mission_control::state",
+      "line": 22,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.fractality/fractality/PROP-001#architecture",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-mission-control/src/state.rs",
+      "from_symbol": "fractality_mission_control::state::RecordError",
+      "line": 68,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.fractality/fractality/PROP-001#architecture",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-mission-control/src/workspace.rs",
+      "from_symbol": "fractality_mission_control::workspace",
+      "line": 14,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.fractality/fractality/PROP-001#architecture",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-pod/src/main.rs",
+      "from_symbol": "fractality_pod",
+      "line": 35,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.fractality/fractality/PROP-001#architecture",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-pod/src/collect.rs",
+      "from_symbol": "fractality_pod::collect",
+      "line": 20,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.fractality/fractality/PROP-001#architecture",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-pod/src/pump.rs",
+      "from_symbol": "fractality_pod::pump",
+      "line": 12,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.fractality/fractality/PROP-001#architecture",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-pod/src/resolve.rs",
+      "from_symbol": "fractality_pod::resolve",
+      "line": 14,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.fractality/fractality/PROP-001#architecture",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-pod/src/supervise.rs",
+      "from_symbol": "fractality_pod::supervise",
+      "line": 20,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.fractality/fractality/PROP-001#invariants",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-pod/src/worker_env.rs",
+      "from_symbol": "fractality_pod::worker_env",
+      "line": 4,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.fractality/fractality/PROP-001#invariants",
+      "verb": "implements"
+    }
+  ],
+  "schema": 3,
+  "spec_units": [
+    {
+      "anchor": "root",
+      "content_hash": "sha256:c254eddec1c7ff9890ad95d77f1d5887f1596727ddbe399d3766a1d47b75cf62",
+      "doc_path": "PROP-001",
+      "file": "vibevm/vibespecs/PROP-001-foundation.xml",
+      "heading": "PROP-001 — fractality: foundation",
+      "line": 3,
+      "uri": "spec://org.vibevm.fractality/fractality/PROP-001#root"
+    },
+    {
+      "anchor": "vision",
+      "content_hash": "sha256:986f36fb328229e5e96a3c95a84dbc06c6209e4a26feb606dfd69f1d159c4b0a",
+      "doc_path": "PROP-001",
+      "file": "vibevm/vibespecs/PROP-001-foundation.xml",
+      "heading": "1. Vision",
+      "line": 8,
+      "uri": "spec://org.vibevm.fractality/fractality/PROP-001#vision"
+    },
+    {
+      "anchor": "model",
+      "content_hash": "sha256:29e5cbf5afba3cb2393367bf1a2783f0728a5ef864dcf61452930afb5a997701",
+      "doc_path": "PROP-001",
+      "file": "vibevm/vibespecs/PROP-001-foundation.xml",
+      "heading": "2. System model and glossary",
+      "line": 73,
+      "uri": "spec://org.vibevm.fractality/fractality/PROP-001#model"
+    },
+    {
+      "anchor": "architecture",
+      "content_hash": "sha256:d542bffcb8d8a5bdf3035bf6fcc6bfb362dbec1032b1a422ae9cff44e081a4a0",
+      "doc_path": "PROP-001",
+      "file": "vibevm/vibespecs/PROP-001-foundation.xml",
+      "heading": "3. Architecture",
+      "line": 108,
+      "uri": "spec://org.vibevm.fractality/fractality/PROP-001#architecture"
+    },
+    {
+      "anchor": "sessions",
+      "content_hash": "sha256:139f21a7306c73f1559bef791ccd3ed1c02fd2bbc835d5fa40a5d8bd7a0e39c9",
+      "doc_path": "PROP-001",
+      "file": "vibevm/vibespecs/PROP-001-foundation.xml",
+      "heading": "3b. Boss sessions",
+      "line": 132,
+      "uri": "spec://org.vibevm.fractality/fractality/PROP-001#sessions"
+    },
+    {
+      "anchor": "invariants",
+      "content_hash": "sha256:cab9eb0e6159a06c3f2f5f767d7a4fb153cef55f209c6f7504795f72f17e223a",
+      "doc_path": "PROP-001",
+      "file": "vibevm/vibespecs/PROP-001-foundation.xml",
+      "heading": "4. Invariants",
+      "line": 150,
+      "uri": "spec://org.vibevm.fractality/fractality/PROP-001#invariants"
+    },
+    {
+      "anchor": "tos",
+      "content_hash": "sha256:d3010ed139fe30a2e3ea5575885301062b1927f5a7eb1eac156f4f869f69881a",
+      "doc_path": "PROP-001",
+      "file": "vibevm/vibespecs/PROP-001-foundation.xml",
+      "heading": "5. Usage & terms-of-service posture",
+      "line": 200,
+      "uri": "spec://org.vibevm.fractality/fractality/PROP-001#tos"
+    },
+    {
+      "anchor": "host",
+      "content_hash": "sha256:31500cd7b724a1f63926709981365207ef83cb06d823fa356484d422b73d140a",
+      "doc_path": "PROP-001",
+      "file": "vibevm/vibespecs/PROP-001-foundation.xml",
+      "heading": "6. Relationship to the host repository",
+      "line": 215,
+      "uri": "spec://org.vibevm.fractality/fractality/PROP-001#host"
+    },
+    {
+      "anchor": "horizons",
+      "content_hash": "sha256:ff66b09dfa9f24611f67acd0e9af5bc9e44fc4a0be30df13acce30af709f7895",
+      "doc_path": "PROP-001",
+      "file": "vibevm/vibespecs/PROP-001-foundation.xml",
+      "heading": "7. Evolution horizons (designed-for, not built)",
+      "line": 224,
+      "uri": "spec://org.vibevm.fractality/fractality/PROP-001#horizons"
+    },
+    {
+      "anchor": "root",
+      "content_hash": "sha256:44300dc37e90130e7d45929d9f7d099182efe147983c40b49998cb3b3b9b5fe5",
+      "doc_path": "VISION-RECURSIVE-FABRIC",
+      "file": "vibevm/vibespecs/VISION-RECURSIVE-FABRIC.xml",
+      "heading": "VISION — the recursive fabric",
+      "line": 3,
+      "uri": "spec://org.vibevm.fractality/fractality/VISION-RECURSIVE-FABRIC#root"
+    },
+    {
+      "anchor": "mandate",
+      "content_hash": "sha256:3b3a70485270ced2f640e21356667871ae098934da2d8c420b2a12bfd76f0f3d",
+      "doc_path": "VISION-RECURSIVE-FABRIC",
+      "file": "vibevm/vibespecs/VISION-RECURSIVE-FABRIC.xml",
+      "heading": "0. The mandate (owner, 2026-07-10, verbatim)",
+      "line": 12,
+      "uri": "spec://org.vibevm.fractality/fractality/VISION-RECURSIVE-FABRIC#mandate"
+    },
+    {
+      "anchor": "mandate-addendum",
+      "content_hash": "sha256:0a1e712a9a9f29621b8944130bc7156e71cead300b6b291e5e18b5e85226fc8b",
+      "doc_path": "VISION-RECURSIVE-FABRIC",
+      "file": "vibevm/vibespecs/VISION-RECURSIVE-FABRIC.xml",
+      "heading": "Addendum — attachable terminals (owner, 2026-07-10, later the same session, verbatim)",
+      "line": 42,
+      "uri": "spec://org.vibevm.fractality/fractality/VISION-RECURSIVE-FABRIC#mandate-addendum"
+    },
+    {
+      "anchor": "pillars",
+      "content_hash": "sha256:03d4625636e608cd1301420c2fd3b6c89140ecf21ca3b6dddf2f948df1d497c2",
+      "doc_path": "VISION-RECURSIVE-FABRIC",
+      "file": "vibevm/vibespecs/VISION-RECURSIVE-FABRIC.xml",
+      "heading": "1. The pillars",
+      "line": 57,
+      "uri": "spec://org.vibevm.fractality/fractality/VISION-RECURSIVE-FABRIC#pillars"
+    },
+    {
+      "anchor": "v1-promotion",
+      "content_hash": "sha256:09796f50eaa97c0201231cc39274b17eb415f7ec7fd3941692e0a7dcb2aa8d93",
+      "doc_path": "VISION-RECURSIVE-FABRIC",
+      "file": "vibevm/vibespecs/VISION-RECURSIVE-FABRIC.xml",
+      "heading": "V1 — any agent can become a boss",
+      "line": 58,
+      "uri": "spec://org.vibevm.fractality/fractality/VISION-RECURSIVE-FABRIC#v1-promotion"
+    },
+    {
+      "anchor": "v2-rlm",
+      "content_hash": "sha256:b1cbbf5e8c9d45b915df45c4a5953bc1e19370fa017e47ee986e1ede25ffb7b6",
+      "doc_path": "VISION-RECURSIVE-FABRIC",
+      "file": "vibevm/vibespecs/VISION-RECURSIVE-FABRIC.xml",
+      "heading": "V2 — the RLM procedure, whole",
+      "line": 82,
+      "uri": "spec://org.vibevm.fractality/fractality/VISION-RECURSIVE-FABRIC#v2-rlm"
+    },
+    {
+      "anchor": "v3-escalation",
+      "content_hash": "sha256:747e6fbf83dfde8ea0b3a2ff5334e5036ba6dc14c6450dce4d8c5feeaf83241d",
+      "doc_path": "VISION-RECURSIVE-FABRIC",
+      "file": "vibevm/vibespecs/VISION-RECURSIVE-FABRIC.xml",
+      "heading": "V3 — escalation up the hierarchy",
+      "line": 97,
+      "uri": "spec://org.vibevm.fractality/fractality/VISION-RECURSIVE-FABRIC#v3-escalation"
+    },
+    {
+      "anchor": "v4-advisor",
+      "content_hash": "sha256:ce8f68304af2d32ad3a9582d71f0195e5aad2335cfe0a3159f006620b6cddb97",
+      "doc_path": "VISION-RECURSIVE-FABRIC",
+      "file": "vibevm/vibespecs/VISION-RECURSIVE-FABRIC.xml",
+      "heading": "V4 — advisor instead of escalation",
+      "line": 109,
+      "uri": "spec://org.vibevm.fractality/fractality/VISION-RECURSIVE-FABRIC#v4-advisor"
+    },
+    {
+      "anchor": "v5-terminals",
+      "content_hash": "sha256:bbd5ccfc9436fb3a0f71789c3ed77147d9d2ab1119226bc1651ea1a5662b7572",
+      "doc_path": "VISION-RECURSIVE-FABRIC",
+      "file": "vibevm/vibespecs/VISION-RECURSIVE-FABRIC.xml",
+      "heading": "V5 — attachable headless terminals (the runtime upgrade)",
+      "line": 128,
+      "uri": "spec://org.vibevm.fractality/fractality/VISION-RECURSIVE-FABRIC#v5-terminals"
+    },
+    {
+      "anchor": "schematics",
+      "content_hash": "sha256:17d595b8f26a8c61c1dc19b77d9e4198686e2db0d846d753a2e776a13c079ccc",
+      "doc_path": "VISION-RECURSIVE-FABRIC",
+      "file": "vibevm/vibespecs/VISION-RECURSIVE-FABRIC.xml",
+      "heading": "2. The two reference schematics",
+      "line": 163,
+      "uri": "spec://org.vibevm.fractality/fractality/VISION-RECURSIVE-FABRIC#schematics"
+    },
+    {
+      "anchor": "specifics",
+      "content_hash": "sha256:8e2e960205e8762465dee37aa91145e4d5a64d08558e79697272581c79c86e24",
+      "doc_path": "VISION-RECURSIVE-FABRIC",
+      "file": "vibevm/vibespecs/VISION-RECURSIVE-FABRIC.xml",
+      "heading": "3. Fractality specifics the vision must respect",
+      "line": 212,
+      "uri": "spec://org.vibevm.fractality/fractality/VISION-RECURSIVE-FABRIC#specifics"
+    },
+    {
+      "anchor": "near-term",
+      "content_hash": "sha256:29f977e56ac076cbb7142b705ea7a0e3d47921b87a9239cf9f77320b7ad92171",
+      "doc_path": "VISION-RECURSIVE-FABRIC",
+      "file": "vibevm/vibespecs/VISION-RECURSIVE-FABRIC.xml",
+      "heading": "4. Near-term steps through this lens",
+      "line": 240,
+      "uri": "spec://org.vibevm.fractality/fractality/VISION-RECURSIVE-FABRIC#near-term"
+    },
+    {
+      "anchor": "open-questions",
+      "content_hash": "sha256:2b5368cf13b15b6dbfc28720118b5fe21b1378fc5d8874e26ee28da72abf64bb",
+      "doc_path": "VISION-RECURSIVE-FABRIC",
+      "file": "vibevm/vibespecs/VISION-RECURSIVE-FABRIC.xml",
+      "heading": "5. Open questions (for the Campaign 3 mandate)",
+      "line": 268,
+      "uri": "spec://org.vibevm.fractality/fractality/VISION-RECURSIVE-FABRIC#open-questions"
+    },
+    {
+      "anchor": "root",
+      "content_hash": "sha256:911680f88c38e764a5b2f1255b50aecbadffa7461e030151a51879b4f5d8fd27",
+      "doc_path": "boot/75-tool-fractality",
+      "file": "vibevm/vibespecs/boot/75-tool-fractality.xml",
+      "heading": "Tool: fractality",
+      "line": 3,
+      "uri": "spec://org.vibevm.fractality/fractality/boot/75-tool-fractality#root"
+    },
+    {
+      "anchor": "trigger",
+      "content_hash": "sha256:6e34f47376fffc88a8c2f3a29bbb5e5135f4f533ec90df571de2b0eb4c672cf4",
+      "doc_path": "boot/75-tool-fractality",
+      "file": "vibevm/vibespecs/boot/75-tool-fractality.xml",
+      "heading": "When a task smells delegable",
+      "line": 10,
+      "uri": "spec://org.vibevm.fractality/fractality/boot/75-tool-fractality#trigger"
+    },
+    {
+      "anchor": "scoreboard",
+      "content_hash": "sha256:11023eb7505b59f8c7fa483d330311f486204108225bfaebb0cf4a176b5df559",
+      "doc_path": "boot/75-tool-fractality",
+      "file": "vibevm/vibespecs/boot/75-tool-fractality.xml",
+      "heading": "Your scoreboard",
+      "line": 25,
+      "uri": "spec://org.vibevm.fractality/fractality/boot/75-tool-fractality#scoreboard"
+    },
+    {
+      "anchor": "commands",
+      "content_hash": "sha256:8fded1e9632ca2a82f428ee1f381db7b8b9de5c8ab8cbe2760c3f66dd902f13d",
+      "doc_path": "boot/75-tool-fractality",
+      "file": "vibevm/vibespecs/boot/75-tool-fractality.xml",
+      "heading": "One command per shape",
+      "line": 36,
+      "uri": "spec://org.vibevm.fractality/fractality/boot/75-tool-fractality#commands"
+    },
+    {
+      "anchor": "packet",
+      "content_hash": "sha256:ad1b9631f723172b8b4a256120112f515bcd73ae5ea4331ad2f01de8a5ae88f3",
+      "doc_path": "boot/75-tool-fractality",
+      "file": "vibevm/vibespecs/boot/75-tool-fractality.xml",
+      "heading": "The packet is the work order",
+      "line": 47,
+      "uri": "spec://org.vibevm.fractality/fractality/boot/75-tool-fractality#packet"
+    },
+    {
+      "anchor": "never",
+      "content_hash": "sha256:2f29a07ad3435e6f1d4c50b3545bb45338c9188abf1b72feadf178cc9b12e5f9",
+      "doc_path": "boot/75-tool-fractality",
+      "file": "vibevm/vibespecs/boot/75-tool-fractality.xml",
+      "heading": "Never",
+      "line": 56,
+      "uri": "spec://org.vibevm.fractality/fractality/boot/75-tool-fractality#never"
+    },
+    {
+      "anchor": "org-vibevm-world--git-atomic-commits--root",
+      "content_hash": "sha256:bd482d98bf2af41cd7a9f4b404bfd79ffe7b07f4768e5712693eed78826b278d",
+      "doc_path": "boot/STATIC",
+      "file": "vibevm/vibespecs/boot/STATIC.md",
+      "heading": "Flow: Atomic Commits",
+      "line": 101,
+      "uri": "spec://org.vibevm.fractality/fractality/boot/STATIC#org-vibevm-world--git-atomic-commits--root"
+    },
+    {
+      "anchor": "org-vibevm-world--git-atomic-commits--THE-PROJECT-USES-THE-ATOMIC-COMMITS-DISCIPLINE",
+      "content_hash": "sha256:4865bf73c11ed9ef434b49486b8f52aa61825ba83f27056bdb1eb8689960433e",
+      "doc_path": "boot/STATIC",
+      "file": "vibevm/vibespecs/boot/STATIC.md",
+      "heading": "This project uses the **atomic commits** discipline as its Git",
+      "line": 105,
+      "uri": "spec://org.vibevm.fractality/fractality/boot/STATIC#org-vibevm-world--git-atomic-commits--THE-PROJECT-USES-THE-ATOMIC-COMMITS-DISCIPLINE"
+    },
+    {
+      "anchor": "org-vibevm-world--git-atomic-commits--ONE-COMMIT-ONE-IDEA-AND-THE-MESSAGE-EXPLAINS-WHY",
+      "content_hash": "sha256:99cda1387d8b2b49148475a7592362d756ae83f7cdd2041c3ee10ef9fae8dab1",
+      "doc_path": "boot/STATIC",
+      "file": "vibevm/vibespecs/boot/STATIC.md",
+      "heading": "One commit carries exactly one idea, and the commit message",
+      "line": 108,
+      "uri": "spec://org.vibevm.fractality/fractality/boot/STATIC#org-vibevm-world--git-atomic-commits--ONE-COMMIT-ONE-IDEA-AND-THE-MESSAGE-EXPLAINS-WHY"
+    },
+    {
+      "anchor": "org-vibevm-world--git-atomic-commits--core-rule",
+      "content_hash": "sha256:ccdb32dd13070090b630e0bb76124815dad995f1da7609aca2e54e8acaeb94c9",
+      "doc_path": "boot/STATIC",
+      "file": "vibevm/vibespecs/boot/STATIC.md",
+      "heading": "Core rule",
+      "line": 111,
+      "uri": "spec://org.vibevm.fractality/fractality/boot/STATIC#org-vibevm-world--git-atomic-commits--core-rule"
+    },
+    {
+      "anchor": "org-vibevm-world--git-atomic-commits--ONE-COMMIT-EQUALS-ONE-LOGICAL-CHANGE",
+      "content_hash": "sha256:5a853c1e7707e213b9c1e3d5e4e57f4c7794656af69937e6177858e30cbad6ae",
+      "doc_path": "boot/STATIC",
+      "file": "vibevm/vibespecs/boot/STATIC.md",
+      "heading": "**One commit = one logical change**, not one file changed. @status:impl/done",
+      "line": 113,
+      "uri": "spec://org.vibevm.fractality/fractality/boot/STATIC#org-vibevm-world--git-atomic-commits--ONE-COMMIT-EQUALS-ONE-LOGICAL-CHANGE"
+    },
+    {
+      "anchor": "org-vibevm-world--git-atomic-commits--A-MIXED-SESSION-IS-THREE-COMMITS",
+      "content_hash": "sha256:f1c809232c24c2a8e0a21ce1c3e1226a7e61ec09eef1e8bab6afe19936be4528",
+      "doc_path": "boot/STATIC",
+      "file": "vibevm/vibespecs/boot/STATIC.md",
+      "heading": "A session that produces (a) a typo fix, (b) a refactor, and (c) a",
+      "line": 115,
+      "uri": "spec://org.vibevm.fractality/fractality/boot/STATIC#org-vibevm-world--git-atomic-commits--A-MIXED-SESSION-IS-THREE-COMMITS"
+    },
+    {
+      "anchor": "org-vibevm-world--git-atomic-commits--A-COHERENT-FIFTEEN-FILE-CHANGE-IS-ONE-COMMIT",
+      "content_hash": "sha256:61648884e288202fd15748256e006620c33c0c909c960df355fcb289d08b1826",
+      "doc_path": "boot/STATIC",
+      "file": "vibevm/vibespecs/boot/STATIC.md",
+      "heading": "A feature that touches",
+      "line": 118,
+      "uri": "spec://org.vibevm.fractality/fractality/boot/STATIC#org-vibevm-world--git-atomic-commits--A-COHERENT-FIFTEEN-FILE-CHANGE-IS-ONE-COMMIT"
+    },
+    {
+      "anchor": "org-vibevm-world--git-atomic-commits--message-format",
+      "content_hash": "sha256:7b435fb0bd340f0d4c3e828dfc16eaaaba42e67845b76895c948b83e3193f59b",
+      "doc_path": "boot/STATIC",
+      "file": "vibevm/vibespecs/boot/STATIC.md",
+      "heading": "Message format",
+      "line": 121,
+      "uri": "spec://org.vibevm.fractality/fractality/boot/STATIC#org-vibevm-world--git-atomic-commits--message-format"
+    },
+    {
+      "anchor": "org-vibevm-world--git-atomic-commits--COMMIT-MESSAGES-FOLLOW-THE-CONVENTIONAL-COMMITS-FLOW",
+      "content_hash": "sha256:8b98ece2a02c3caf02c80f0a38aaa462519c407e0ac7eb91dc2b1be79c59355f",
+      "doc_path": "boot/STATIC",
+      "file": "vibevm/vibespecs/boot/STATIC.md",
+      "heading": "Commit messages follow the **git-conventional-commits** flow — a sibling package:",
+      "line": 123,
+      "uri": "spec://org.vibevm.fractality/fractality/boot/STATIC#org-vibevm-world--git-atomic-commits--COMMIT-MESSAGES-FOLLOW-THE-CONVENTIONAL-COMMITS-FLOW"
+    },
+    {
+      "anchor": "org-vibevm-world--git-atomic-commits--CONVENTIONAL-COMMITS-IS-THE-FORMAT-THIS-FLOW-IS-THE-ATOMICITY",
+      "content_hash": "sha256:4de6b85f378551e7ccead7c1b275e8468f9bd0c12e002c245211d597c7fa65e7",
+      "doc_path": "boot/STATIC",
+      "file": "vibevm/vibespecs/boot/STATIC.md",
+      "heading": "Conventional Commits is the *format*; this flow is the *atomicity* (one commit, one idea). @status:impl/done",
+      "line": 126,
+      "uri": "spec://org.vibevm.fractality/fractality/boot/STATIC#org-vibevm-world--git-atomic-commits--CONVENTIONAL-COMMITS-IS-THE-FORMAT-THIS-FLOW-IS-THE-ATOMICITY"
+    },
+    {
+      "anchor": "org-vibevm-world--git-atomic-commits--THE-TWO-ARE-DISTINCT-AND-RUN-TOGETHER",
+      "content_hash": "sha256:e0fcb5365a9b4615c8698105df775a5b8580a5e80d16389c6e1a017bb36cbb60",
+      "doc_path": "boot/STATIC",
+      "file": "vibevm/vibespecs/boot/STATIC.md",
+      "heading": "The",
+      "line": 128,
+      "uri": "spec://org.vibevm.fractality/fractality/boot/STATIC#org-vibevm-world--git-atomic-commits--THE-TWO-ARE-DISTINCT-AND-RUN-TOGETHER"
+    },
+    {
+      "anchor": "org-vibevm-world--git-atomic-commits--session-end",
+      "content_hash": "sha256:4cfb68c133a80f45ede941e0b3c5ddbce95a6e64b4a55956cfb23cf2070e80a9",
+      "doc_path": "boot/STATIC",
+      "file": "vibevm/vibespecs/boot/STATIC.md",
+      "heading": "Session end",
+      "line": 132,
+      "uri": "spec://org.vibevm.fractality/fractality/boot/STATIC#org-vibevm-world--git-atomic-commits--session-end"
+    },
+    {
+      "anchor": "org-vibevm-world--git-atomic-commits--before-closing-a-session-lead",
+      "content_hash": "sha256:849cc88c73d9fbc920697407de4027409062649984e52df171e8de6daa930fd5",
+      "doc_path": "boot/STATIC",
+      "file": "vibevm/vibespecs/boot/STATIC.md",
+      "heading": "Before closing a session: @status:impl/done",
+      "line": 134,
+      "uri": "spec://org.vibevm.fractality/fractality/boot/STATIC#org-vibevm-world--git-atomic-commits--before-closing-a-session-lead"
+    },
+    {
+      "anchor": "org-vibevm-world--git-atomic-commits--STEP-RUN-STATUS-AND-DIFF-AND-NAME-EVERY-CHANGE",
+      "content_hash": "sha256:8fa2cb0caf881c5c72551da3820a2802cb5e3fc02e679233ead125d21a0c8e4e",
+      "doc_path": "boot/STATIC",
+      "file": "vibevm/vibespecs/boot/STATIC.md",
+      "heading": "Run `git status` and `git diff HEAD`. Name every change by intent. @status:impl/done",
+      "line": 136,
+      "uri": "spec://org.vibevm.fractality/fractality/boot/STATIC#org-vibevm-world--git-atomic-commits--STEP-RUN-STATUS-AND-DIFF-AND-NAME-EVERY-CHANGE"
+    },
+    {
+      "anchor": "org-vibevm-world--git-atomic-commits--STEP-GROUP-CHANGES-INTO-ATOMIC-COMMITS",
+      "content_hash": "sha256:80c33d5ef270ece761f6a4d33b1b5ce303a04d15ef7ae294a65a6038181ce7e2",
+      "doc_path": "boot/STATIC",
+      "file": "vibevm/vibespecs/boot/STATIC.md",
+      "heading": "Group changes into atomic commits — one commit per intent, not per",
+      "line": 137,
+      "uri": "spec://org.vibevm.fractality/fractality/boot/STATIC#org-vibevm-world--git-atomic-commits--STEP-GROUP-CHANGES-INTO-ATOMIC-COMMITS"
+    },
+    {
+      "anchor": "org-vibevm-world--git-atomic-commits--STEP-STAGE-AND-COMMIT-EACH-GROUP-SEPARATELY",
+      "content_hash": "sha256:1caf40942417990fb738d82874db898860408f7160f8972f53c4dad4f8d2eabf",
+      "doc_path": "boot/STATIC",
+      "file": "vibevm/vibespecs/boot/STATIC.md",
+      "heading": "Stage and commit each group separately with a well-formed message. @status:impl/done",
+      "line": 139,
+      "uri": "spec://org.vibevm.fractality/fractality/boot/STATIC#org-vibevm-world--git-atomic-commits--STEP-STAGE-AND-COMMIT-EACH-GROUP-SEPARATELY"
+    },
+    {
+      "anchor": "org-vibevm-world--git-atomic-commits--STEP-DO-NOT-AMEND-OR-FORCE-PUSH-PUSHED-COMMITS",
+      "content_hash": "sha256:75440a23c50f9b38ad0dd686df88c083fabdd238d36f4bd54a2400506064ff0c",
+      "doc_path": "boot/STATIC",
+      "file": "vibevm/vibespecs/boot/STATIC.md",
+      "heading": "Do not amend or force-push commits that are already pushed; create a",
+      "line": 140,
+      "uri": "spec://org.vibevm.fractality/fractality/boot/STATIC#org-vibevm-world--git-atomic-commits--STEP-DO-NOT-AMEND-OR-FORCE-PUSH-PUSHED-COMMITS"
+    },
+    {
+      "anchor": "org-vibevm-world--git-atomic-commits--splitting-procedure-pointer",
+      "content_hash": "sha256:037694f806536bd330c84956232279bf8bb67a50be9e1d589e7716865cb3f4b4",
+      "doc_path": "boot/STATIC",
+      "file": "vibevm/vibespecs/boot/STATIC.md",
+      "heading": "Procedure for splitting a messy working tree:",
+      "line": 144,
+      "uri": "spec://org.vibevm.fractality/fractality/boot/STATIC#org-vibevm-world--git-atomic-commits--splitting-procedure-pointer"
+    },
+    {
+      "anchor": "org-vibevm-world--git-atomic-commits--why-human-ai-teams",
+      "content_hash": "sha256:08700299001ecc4038a58b476f13b7c06512762aacda17be97d8e69506caee04",
+      "doc_path": "boot/STATIC",
+      "file": "vibevm/vibespecs/boot/STATIC.md",
+      "heading": "Why this matters in a human-AI team",
+      "line": 147,
+      "uri": "spec://org.vibevm.fractality/fractality/boot/STATIC#org-vibevm-world--git-atomic-commits--why-human-ai-teams"
+    },
+    {
+      "anchor": "org-vibevm-world--git-atomic-commits--WHY-DIFF-AS-VERIFICATION",
+      "content_hash": "sha256:ec12e7fae17c7c0418f056f3c9eb62f23c72d59fbe47ef86d0943940742d75c4",
+      "doc_path": "boot/STATIC",
+      "file": "vibevm/vibespecs/boot/STATIC.md",
+      "heading": "**Diff as verification.** Humans verify code by reading diffs. A",
+      "line": 149,
+      "uri": "spec://org.vibevm.fractality/fractality/boot/STATIC#org-vibevm-world--git-atomic-commits--WHY-DIFF-AS-VERIFICATION"
+    },
+    {
+      "anchor": "org-vibevm-world--git-atomic-commits--WHY-ROLLBACK-PRECISION",
+      "content_hash": "sha256:8785df16e1f7012cdcd3481393f644b99065bea38bb31d1c084896f29560bf0f",
+      "doc_path": "boot/STATIC",
+      "file": "vibevm/vibespecs/boot/STATIC.md",
+      "heading": "**Rollback precision.** `git revert <sha>` must undo the wrong",
+      "line": 151,
+      "uri": "spec://org.vibevm.fractality/fractality/boot/STATIC#org-vibevm-world--git-atomic-commits--WHY-ROLLBACK-PRECISION"
+    },
+    {
+      "anchor": "org-vibevm-world--git-atomic-commits--WHY-COMMIT-LOG-AS-DECISION-RECORD",
+      "content_hash": "sha256:4f7245b9e6c1a83a1d58f260b66cf51bdd661a29cbb1b829abd9cecb4d06869c",
+      "doc_path": "boot/STATIC",
+      "file": "vibevm/vibespecs/boot/STATIC.md",
+      "heading": "**Commit log as decision record.** The message is the only place",
+      "line": 153,
+      "uri": "spec://org.vibevm.fractality/fractality/boot/STATIC#org-vibevm-world--git-atomic-commits--WHY-COMMIT-LOG-AS-DECISION-RECORD"
+    },
+    {
+      "anchor": "org-vibevm-world--git-atomic-commits--full-protocol-pointer",
+      "content_hash": "sha256:05e81481152cf24d38a470a974bb59699b06a7863e1cb3b89fc2a630fb3c1336",
+      "doc_path": "boot/STATIC",
+      "file": "vibevm/vibespecs/boot/STATIC.md",
+      "heading": "Full rationale: @spec://org.vibevm.world/git-atomic-commits/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL#root. @status:impl/done",
+      "line": 156,
+      "uri": "spec://org.vibevm.fractality/fractality/boot/STATIC#org-vibevm-world--git-atomic-commits--full-protocol-pointer"
+    },
+    {
+      "anchor": "org-vibevm-world--git-atomic-commits--never",
+      "content_hash": "sha256:87a7d66a7894b2fccc167e6e5b019583f729e792572bf1141b2195352eeb7080",
+      "doc_path": "boot/STATIC",
+      "file": "vibevm/vibespecs/boot/STATIC.md",
+      "heading": "Never",
+      "line": 158,
+      "uri": "spec://org.vibevm.fractality/fractality/boot/STATIC#org-vibevm-world--git-atomic-commits--never"
+    },
+    {
+      "anchor": "org-vibevm-world--git-atomic-commits--NEVER-MIX-REFACTOR-FEATURE-DOCS-AND-BUGFIX",
+      "content_hash": "sha256:8c39b4bd9b8060096f74b69fbce0a517359dea53e4b05358fbace73323f60b8a",
+      "doc_path": "boot/STATIC",
+      "file": "vibevm/vibespecs/boot/STATIC.md",
+      "heading": "Never mix refactor + feature + docs + bugfix in one commit. @status:impl/done",
+      "line": 160,
+      "uri": "spec://org.vibevm.fractality/fractality/boot/STATIC#org-vibevm-world--git-atomic-commits--NEVER-MIX-REFACTOR-FEATURE-DOCS-AND-BUGFIX"
+    },
+    {
+      "anchor": "org-vibevm-world--git-atomic-commits--NEVER-WRITE-A-SUBJECT-THAT-SUMMARISES-WHAT-CHANGED",
+      "content_hash": "sha256:f2ad8aae367ed492145c950ba0e6b63f2bb7ecc06c2aff6b3e420a310ee99716",
+      "doc_path": "boot/STATIC",
+      "file": "vibevm/vibespecs/boot/STATIC.md",
+      "heading": "Never write a subject that summarises *what* changed — the diff does",
+      "line": 161,
+      "uri": "spec://org.vibevm.fractality/fractality/boot/STATIC#org-vibevm-world--git-atomic-commits--NEVER-WRITE-A-SUBJECT-THAT-SUMMARISES-WHAT-CHANGED"
+    },
+    {
+      "anchor": "org-vibevm-world--git-atomic-commits--NEVER-AMEND-A-PUSHED-COMMIT-WITHOUT-HUMAN-APPROVAL",
+      "content_hash": "sha256:edf775eb74094d234d1fadbb149d490ac242f3b2be24dfd382ebaf98d3e7c9ac",
+      "doc_path": "boot/STATIC",
+      "file": "vibevm/vibespecs/boot/STATIC.md",
+      "heading": "Never `git commit --amend` on a pushed commit without explicit human",
+      "line": 163,
+      "uri": "spec://org.vibevm.fractality/fractality/boot/STATIC#org-vibevm-world--git-atomic-commits--NEVER-AMEND-A-PUSHED-COMMIT-WITHOUT-HUMAN-APPROVAL"
+    },
+    {
+      "anchor": "org-vibevm-world--git-attribution-policy--root",
+      "content_hash": "sha256:359e59a380c14845d43d12d9b4b78276789adacfd1834896ba5dee9a79a339dd",
+      "doc_path": "boot/STATIC",
+      "file": "vibevm/vibespecs/boot/STATIC.md",
+      "heading": "Flow: Attribution Policy",
+      "line": 170,
+      "uri": "spec://org.vibevm.fractality/fractality/boot/STATIC#org-vibevm-world--git-attribution-policy--root"
+    },
+    {
+      "anchor": "org-vibevm-world--git-attribution-policy--THE-REPOSITORY-IS-HUMAN-AUTHORED-ON-EVERY-SURFACE",
+      "content_hash": "sha256:2d5d0cbe2e71f5e86582d145fbb82a7473b37568a58aa9bc99528422ce7b82cd",
+      "doc_path": "boot/STATIC",
+      "file": "vibevm/vibespecs/boot/STATIC.md",
+      "heading": "This project keeps its repository **human-authored on every",
+      "line": 174,
+      "uri": "spec://org.vibevm.fractality/fractality/boot/STATIC#org-vibevm-world--git-attribution-policy--THE-REPOSITORY-IS-HUMAN-AUTHORED-ON-EVERY-SURFACE"
+    },
+    {
+      "anchor": "org-vibevm-world--git-attribution-policy--THE-ALTERNATIVE-IS-ADOPTED-BY-EDITING-THIS-SNIPPET",
+      "content_hash": "sha256:c1b104bfe4584e6a48f40aadad49cefdfe47f77d616b42a86edb4b99a027b915",
+      "doc_path": "boot/STATIC",
+      "file": "vibevm/vibespecs/boot/STATIC.md",
+      "heading": "This is the project's chosen default posture; the",
+      "line": 177,
+      "uri": "spec://org.vibevm.fractality/fractality/boot/STATIC#org-vibevm-world--git-attribution-policy--THE-ALTERNATIVE-IS-ADOPTED-BY-EDITING-THIS-SNIPPET"
+    },
+    {
+      "anchor": "org-vibevm-world--git-attribution-policy--rule",
+      "content_hash": "sha256:0527f30ef3702ccb02239f6b9328146dc7ced7b5017c4f6e929da13136c25093",
+      "doc_path": "boot/STATIC",
+      "file": "vibevm/vibespecs/boot/STATIC.md",
+      "heading": "The rule",
+      "line": 182,
+      "uri": "spec://org.vibevm.fractality/fractality/boot/STATIC#org-vibevm-world--git-attribution-policy--rule"
+    },
+    {
+      "anchor": "org-vibevm-world--git-attribution-policy--NEVER-ATTRIBUTE-AUTHORSHIP-TO-ANY-SUCH-SYSTEM",
+      "content_hash": "sha256:31b388450bbfd739c32aef98cba90b358be64fec4327dc3a8e54a76a68bf78b9",
+      "doc_path": "boot/STATIC",
+      "file": "vibevm/vibespecs/boot/STATIC.md",
+      "heading": "Never attribute authorship of any part of this repository to an",
+      "line": 184,
+      "uri": "spec://org.vibevm.fractality/fractality/boot/STATIC#org-vibevm-world--git-attribution-policy--NEVER-ATTRIBUTE-AUTHORSHIP-TO-ANY-SUCH-SYSTEM"
+    },
+    {
+      "anchor": "org-vibevm-world--git-attribution-policy--THE-RULE-APPLIES-REGARDLESS-OF-PROVIDER-OR-LOCATION",
+      "content_hash": "sha256:40ccccbf2cd935124f8b30fbd00839ad098d2aac7da54039b0c90ba771db6e82",
+      "doc_path": "boot/STATIC",
+      "file": "vibevm/vibespecs/boot/STATIC.md",
+      "heading": "This applies to every such system regardless of provider,",
+      "line": 191,
+      "uri": "spec://org.vibevm.fractality/fractality/boot/STATIC#org-vibevm-world--git-attribution-policy--THE-RULE-APPLIES-REGARDLESS-OF-PROVIDER-OR-LOCATION"
+    },
+    {
+      "anchor": "org-vibevm-world--git-attribution-policy--why",
+      "content_hash": "sha256:91cd5df254e41221f0b160f26be9759e36b9da2ad42ff8d27584cd735378570f",
+      "doc_path": "boot/STATIC",
+      "file": "vibevm/vibespecs/boot/STATIC.md",
+      "heading": "Why — the honest reason",
+      "line": 194,
+      "uri": "spec://org.vibevm.fractality/fractality/boot/STATIC#org-vibevm-world--git-attribution-policy--why"
+    },
+    {
+      "anchor": "org-vibevm-world--git-attribution-policy--some-jurisdictions-regulate-machine-authorship",
+      "content_hash": "sha256:3b28689a68b09ca42407df80bded59f0f9dc0fcb23e3838485908dc0291c6b0f",
+      "doc_path": "boot/STATIC",
+      "file": "vibevm/vibespecs/boot/STATIC.md",
+      "heading": "Some jurisdictions regulate or may come to regulate machine",
+      "line": 196,
+      "uri": "spec://org.vibevm.fractality/fractality/boot/STATIC#org-vibevm-world--git-attribution-policy--some-jurisdictions-regulate-machine-authorship"
+    },
+    {
+      "anchor": "org-vibevm-world--git-attribution-policy--the-owner-removes-the-hook-proactively",
+      "content_hash": "sha256:2ee0ab72b249ad0549ae5c5b6d9774c81f12d8fe9fd6874d97508511ef9f7203",
+      "doc_path": "boot/STATIC",
+      "file": "vibevm/vibespecs/boot/STATIC.md",
+      "heading": "This project is not currently subject to",
+      "line": 199,
+      "uri": "spec://org.vibevm.fractality/fractality/boot/STATIC#org-vibevm-world--git-attribution-policy--the-owner-removes-the-hook-proactively"
+    },
+    {
+      "anchor": "org-vibevm-world--git-attribution-policy--THE-SURFACE-PRESENTED-IS-A-HUMAN-WROTE-THIS-CODE",
+      "content_hash": "sha256:f59ab794064bb06e1eee01f815dcf6ffc282c544a4e5e2a1551d8409adc1ba69",
+      "doc_path": "boot/STATIC",
+      "file": "vibevm/vibespecs/boot/STATIC.md",
+      "heading": "The surface this repository presents is: a human",
+      "line": 204,
+      "uri": "spec://org.vibevm.fractality/fractality/boot/STATIC#org-vibevm-world--git-attribution-policy--THE-SURFACE-PRESENTED-IS-A-HUMAN-WROTE-THIS-CODE"
+    },
+    {
+      "anchor": "org-vibevm-world--git-attribution-policy--a-publication-posture-not-a-deception",
+      "content_hash": "sha256:15a7fd4c9c4ba5ce6d8b300c4a3bf812da12975b4905903ff081ffe900c0bea0",
+      "doc_path": "boot/STATIC",
+      "file": "vibevm/vibespecs/boot/STATIC.md",
+      "heading": "This is a *publication posture chosen by the repository's owner*,",
+      "line": 207,
+      "uri": "spec://org.vibevm.fractality/fractality/boot/STATIC#org-vibevm-world--git-attribution-policy--a-publication-posture-not-a-deception"
+    },
+    {
+      "anchor": "org-vibevm-world--git-attribution-policy--scope",
+      "content_hash": "sha256:7997036ed9dc692e124727672729a3f0a1862d845dac31cd217310b9317cf1c1",
+      "doc_path": "boot/STATIC",
+      "file": "vibevm/vibespecs/boot/STATIC.md",
+      "heading": "Scope",
+      "line": 212,
+      "uri": "spec://org.vibevm.fractality/fractality/boot/STATIC#org-vibevm-world--git-attribution-policy--scope"
+    },
+    {
+      "anchor": "org-vibevm-world--git-attribution-policy--SCOPE-THE-ONLY-PLACES-THE-TOPIC-IS-DISCUSSED",
+      "content_hash": "sha256:352ea398e1c08c14cc4a5ebc654601b54e3fc4dca0283471f8cceafd35daa0f1",
+      "doc_path": "boot/STATIC",
+      "file": "vibevm/vibespecs/boot/STATIC.md",
+      "heading": "This snippet and `spec/flows/attribution-policy/` are the **only**",
+      "line": 214,
+      "uri": "spec://org.vibevm.fractality/fractality/boot/STATIC#org-vibevm-world--git-attribution-policy--SCOPE-THE-ONLY-PLACES-THE-TOPIC-IS-DISCUSSED"
+    },
+    {
+      "anchor": "org-vibevm-world--git-attribution-policy--SCOPE-PRODUCT-IS-CARVED-OUT",
+      "content_hash": "sha256:167e5eb424722fb4c8f7c4a7a2fec0931b8cd5cc7e1e5a258aeb7afa06e713c5",
+      "doc_path": "boot/STATIC",
+      "file": "vibevm/vibespecs/boot/STATIC.md",
+      "heading": "**Product scope is carved out.** If the product itself has AI",
+      "line": 218,
+      "uri": "spec://org.vibevm.fractality/fractality/boot/STATIC#org-vibevm-world--git-attribution-policy--SCOPE-PRODUCT-IS-CARVED-OUT"
+    },
+    {
+      "anchor": "org-vibevm-world--git-attribution-policy--SCOPE-WORKFLOW-DOCUMENTS-REMAIN-LEGAL",
+      "content_hash": "sha256:171ffe8d059e5c1591d56ddf4760aa9f9337153962325fd644ef44b6eda1ef5b",
+      "doc_path": "boot/STATIC",
+      "file": "vibevm/vibespecs/boot/STATIC.md",
+      "heading": "**Technical AI-workflow documents remain legal and unchanged** —",
+      "line": 221,
+      "uri": "spec://org.vibevm.fractality/fractality/boot/STATIC#org-vibevm-world--git-attribution-policy--SCOPE-WORKFLOW-DOCUMENTS-REMAIN-LEGAL"
+    },
+    {
+      "anchor": "org-vibevm-world--git-attribution-policy--never",
+      "content_hash": "sha256:c45f9c4bf6200f85a4bc4bc520258427d5a0f29853b675ae9b6490ca28cbd720",
+      "doc_path": "boot/STATIC",
+      "file": "vibevm/vibespecs/boot/STATIC.md",
+      "heading": "Never",
+      "line": 226,
+      "uri": "spec://org.vibevm.fractality/fractality/boot/STATIC#org-vibevm-world--git-attribution-policy--never"
+    },
+    {
+      "anchor": "org-vibevm-world--git-attribution-policy--NEVER-ADD-A-TRAILER-NAMING-A-MODEL",
+      "content_hash": "sha256:43556681ad5aa72ceb238deeb58a520a013a68b800f2a1035996c4bbbb6fd041",
+      "doc_path": "boot/STATIC",
+      "file": "vibevm/vibespecs/boot/STATIC.md",
+      "heading": "Never add a trailer or signature naming a model or an AI product",
+      "line": 228,
+      "uri": "spec://org.vibevm.fractality/fractality/boot/STATIC#org-vibevm-world--git-attribution-policy--NEVER-ADD-A-TRAILER-NAMING-A-MODEL"
+    },
+    {
+      "anchor": "org-vibevm-world--git-attribution-policy--NEVER-MENTION-TOOL-NAMES-IN-COMMITS-BRANCHES-OR-COMMENTS",
+      "content_hash": "sha256:663eb283944fcf31859a8575290ffbecd85724cf6b30074bccf3584105ede81c",
+      "doc_path": "boot/STATIC",
+      "file": "vibevm/vibespecs/boot/STATIC.md",
+      "heading": "Never mention model, agent, or AI-tool names in commit messages,",
+      "line": 230,
+      "uri": "spec://org.vibevm.fractality/fractality/boot/STATIC#org-vibevm-world--git-attribution-policy--NEVER-MENTION-TOOL-NAMES-IN-COMMITS-BRANCHES-OR-COMMENTS"
+    },
+    {
+      "anchor": "org-vibevm-world--git-attribution-policy--NEVER-STATE-OR-IMPLY-MACHINE-AUTHORSHIP",
+      "content_hash": "sha256:6fca8b8657550187c7ce6c0ab1c35c74043cc62cc9408c05a770478ffbac008e",
+      "doc_path": "boot/STATIC",
+      "file": "vibevm/vibespecs/boot/STATIC.md",
+      "heading": "Never state or imply machine authorship in any repository",
+      "line": 232,
+      "uri": "spec://org.vibevm.fractality/fractality/boot/STATIC#org-vibevm-world--git-attribution-policy--NEVER-STATE-OR-IMPLY-MACHINE-AUTHORSHIP"
+    },
+    {
+      "anchor": "org-vibevm-world--git-attribution-policy--NEVER-RESTATE-THIS-POLICY-ANYWHERE-ELSE",
+      "content_hash": "sha256:0c0e9ee203f27929bc9bcf89c92a922b0f1e0a4d40d25e0e9aeaa5833b5a9a41",
+      "doc_path": "boot/STATIC",
+      "file": "vibevm/vibespecs/boot/STATIC.md",
+      "heading": "Never weaken, widen, or restate this policy anywhere else in the",
+      "line": 234,
+      "uri": "spec://org.vibevm.fractality/fractality/boot/STATIC#org-vibevm-world--git-attribution-policy--NEVER-RESTATE-THIS-POLICY-ANYWHERE-ELSE"
+    },
+    {
+      "anchor": "org-vibevm-world--git-attribution-policy--sibling-document-pointers",
+      "content_hash": "sha256:7753d7db8ee371a51257f6f8ef3987d067906b309fc020ef66ec6a9f249a57b3",
+      "doc_path": "boot/STATIC",
+      "file": "vibevm/vibespecs/boot/STATIC.md",
+      "heading": "Full policy and rationale:",
+      "line": 238,
+      "uri": "spec://org.vibevm.fractality/fractality/boot/STATIC#org-vibevm-world--git-attribution-policy--sibling-document-pointers"
+    },
+    {
+      "anchor": "org-vibevm-world--git-autonomy--root",
+      "content_hash": "sha256:29995404eb56b722398963e44f1fc710b2dde447266bf0269a4704e44ed0832d",
+      "doc_path": "boot/STATIC",
+      "file": "vibevm/vibespecs/boot/STATIC.md",
+      "heading": "Flow: Commit autonomy",
+      "line": 247,
+      "uri": "spec://org.vibevm.fractality/fractality/boot/STATIC#org-vibevm-world--git-autonomy--root"
+    },
+    {
+      "anchor": "org-vibevm-world--git-autonomy--THE-DEFAULT-POSTURE-ON-THE-COMMIT-AND-PUSH-SURFACE",
+      "content_hash": "sha256:0484e998141f6f04e40cb0838cdb6c79c4dfd4c172d7a2ba88ba5f619a99ed1e",
+      "doc_path": "boot/STATIC",
+      "file": "vibevm/vibespecs/boot/STATIC.md",
+      "heading": "The default posture for how much an agent decides on its own versus stops to ask, on the",
+      "line": 251,
+      "uri": "spec://org.vibevm.fractality/fractality/boot/STATIC#org-vibevm-world--git-autonomy--THE-DEFAULT-POSTURE-ON-THE-COMMIT-AND-PUSH-SURFACE"
+    },
+    {
+      "anchor": "org-vibevm-world--git-autonomy--routine",
+      "content_hash": "sha256:2a3915ff6f99dae0c06da02debaf95dc2a70b39d6cbe8ffe23de623897ee79c3",
+      "doc_path": "boot/STATIC",
+      "file": "vibevm/vibespecs/boot/STATIC.md",
+      "heading": "Routine — proceed without asking",
+      "line": 254,
+      "uri": "spec://org.vibevm.fractality/fractality/boot/STATIC#org-vibevm-world--git-autonomy--routine"
+    },
+    {
+      "anchor": "org-vibevm-world--git-autonomy--ROUTINE-LARGE-CHANGES-PROCEED-WITHOUT-A-HANDSHAKE",
+      "content_hash": "sha256:0cd9d98206c0e829a4942e0fb2e6fdfe04615a0ab8e83c455400eddc7924c32b",
+      "doc_path": "boot/STATIC",
+      "file": "vibevm/vibespecs/boot/STATIC.md",
+      "heading": "Routine large changes proceed and are committed/pushed **without** a confirmation handshake: @status:impl/done",
+      "line": 256,
+      "uri": "spec://org.vibevm.fractality/fractality/boot/STATIC#org-vibevm-world--git-autonomy--ROUTINE-LARGE-CHANGES-PROCEED-WITHOUT-A-HANDSHAKE"
+    },
+    {
+      "anchor": "org-vibevm-world--git-autonomy--ROUTINE-IMPLEMENTING-A-PLANNED-MILESTONE",
+      "content_hash": "sha256:155eb0f07a9625c95f6e6ff93138333d14a01d5be4abad079519377c98e71310",
+      "doc_path": "boot/STATIC",
+      "file": "vibevm/vibespecs/boot/STATIC.md",
+      "heading": "implementing a planned milestone, @status:impl/done",
+      "line": 258,
+      "uri": "spec://org.vibevm.fractality/fractality/boot/STATIC#org-vibevm-world--git-autonomy--ROUTINE-IMPLEMENTING-A-PLANNED-MILESTONE"
+    },
+    {
+      "anchor": "org-vibevm-world--git-autonomy--ROUTINE-FINISHING-A-FEATURE-SLICE",
+      "content_hash": "sha256:a1634c313226255ba434491f60781f12feab991859387c7f97c07288ceb1cd5e",
+      "doc_path": "boot/STATIC",
+      "file": "vibevm/vibespecs/boot/STATIC.md",
+      "heading": "finishing a feature slice, @status:impl/done",
+      "line": 259,
+      "uri": "spec://org.vibevm.fractality/fractality/boot/STATIC#org-vibevm-world--git-autonomy--ROUTINE-FINISHING-A-FEATURE-SLICE"
+    },
+    {
+      "anchor": "org-vibevm-world--git-autonomy--ROUTINE-TOUCHING-MANY-FILES-FOR-ONE-REASON",
+      "content_hash": "sha256:d58234e9744d26f229589df987cdc6603c30b7414f3bde23b947862192490fd8",
+      "doc_path": "boot/STATIC",
+      "file": "vibevm/vibespecs/boot/STATIC.md",
+      "heading": "touching many files for one",
+      "line": 260,
+      "uri": "spec://org.vibevm.fractality/fractality/boot/STATIC#org-vibevm-world--git-autonomy--ROUTINE-TOUCHING-MANY-FILES-FOR-ONE-REASON"
+    },
+    {
+      "anchor": "org-vibevm-world--git-autonomy--the-approval-was-given-upstream",
+      "content_hash": "sha256:133d691286169bf73a8e0a3e43bc518c0df86493d8052e8b5db117f7fc89abd1",
+      "doc_path": "boot/STATIC",
+      "file": "vibevm/vibespecs/boot/STATIC.md",
+      "heading": "The approval was given upstream, when the work was authorised; a mid-work",
+      "line": 263,
+      "uri": "spec://org.vibevm.fractality/fractality/boot/STATIC#org-vibevm-world--git-autonomy--the-approval-was-given-upstream"
+    },
+    {
+      "anchor": "org-vibevm-world--git-autonomy--red-lines",
+      "content_hash": "sha256:7df66a0527233fae4f057340db9eddfa49826a0033a635bf27e1cd55846e1d5e",
+      "doc_path": "boot/STATIC",
+      "file": "vibevm/vibespecs/boot/STATIC.md",
+      "heading": "Non-routine — stop and ask first",
+      "line": 266,
+      "uri": "spec://org.vibevm.fractality/fractality/boot/STATIC#org-vibevm-world--git-autonomy--red-lines"
+    },
+    {
+      "anchor": "org-vibevm-world--git-autonomy--ASK-FIRST-FOR-ANYTHING-WHOSE-REVERSAL-COSTS-WORK",
+      "content_hash": "sha256:21e457ab9fcd65f262aa0dc7e8a3491c268931b19af61d0bcb70aa538d1d099c",
+      "doc_path": "boot/STATIC",
+      "file": "vibevm/vibespecs/boot/STATIC.md",
+      "heading": "Ask first for anything whose reversal costs work: @status:impl/done",
+      "line": 268,
+      "uri": "spec://org.vibevm.fractality/fractality/boot/STATIC#org-vibevm-world--git-autonomy--ASK-FIRST-FOR-ANYTHING-WHOSE-REVERSAL-COSTS-WORK"
+    },
+    {
+      "anchor": "org-vibevm-world--git-autonomy--RED-LINE-REWRITING-PUBLISHED-HISTORY",
+      "content_hash": "sha256:355abbf57bb2f2280a235f7f3e0abb63e9d175f54d98dea4334e769e871a2301",
+      "doc_path": "boot/STATIC",
+      "file": "vibevm/vibespecs/boot/STATIC.md",
+      "heading": "rewriting published history (rebase of pushed commits, `git commit --amend` on pushed work); @status:impl/done",
+      "line": 270,
+      "uri": "spec://org.vibevm.fractality/fractality/boot/STATIC#org-vibevm-world--git-autonomy--RED-LINE-REWRITING-PUBLISHED-HISTORY"
+    },
+    {
+      "anchor": "org-vibevm-world--git-autonomy--RED-LINE-FORCE-PUSH",
+      "content_hash": "sha256:4864ccca3c10e5bdbbb9e83cb24956ae3abb4e1434ccaf80d0ebbe266c38b5c5",
+      "doc_path": "boot/STATIC",
+      "file": "vibevm/vibespecs/boot/STATIC.md",
+      "heading": "`git push --force` / `--force-with-lease`; @status:impl/done",
+      "line": 271,
+      "uri": "spec://org.vibevm.fractality/fractality/boot/STATIC#org-vibevm-world--git-autonomy--RED-LINE-FORCE-PUSH"
+    },
+    {
+      "anchor": "org-vibevm-world--git-autonomy--RED-LINE-LARGE-BINARY-BLOBS",
+      "content_hash": "sha256:a153f6d19b5a7c744e11f7e82f71c22384b99c4abcdb24f70422bbdfdbf5eacb",
+      "doc_path": "boot/STATIC",
+      "file": "vibevm/vibespecs/boot/STATIC.md",
+      "heading": "bringing in large binary blobs; @status:impl/done",
+      "line": 272,
+      "uri": "spec://org.vibevm.fractality/fractality/boot/STATIC#org-vibevm-world--git-autonomy--RED-LINE-LARGE-BINARY-BLOBS"
+    },
+    {
+      "anchor": "org-vibevm-world--git-autonomy--RED-LINE-CI-SIGNING-OR-SECRETS",
+      "content_hash": "sha256:d35e8fded87166bb3c1c879d2fb91af3ea5ae60eb2a09b19420476139d8b8638",
+      "doc_path": "boot/STATIC",
+      "file": "vibevm/vibespecs/boot/STATIC.md",
+      "heading": "changing CI, signing, or secrets configuration; @status:impl/done",
+      "line": 273,
+      "uri": "spec://org.vibevm.fractality/fractality/boot/STATIC#org-vibevm-world--git-autonomy--RED-LINE-CI-SIGNING-OR-SECRETS"
+    },
+    {
+      "anchor": "org-vibevm-world--git-autonomy--RED-LINE-ANYTHING-WHOSE-REVERSAL-WOULD-COST-WORK",
+      "content_hash": "sha256:23c8b67af259c6ac607469b4bf3f48ad58c13606943c29b1e4c2d794a80b257f",
+      "doc_path": "boot/STATIC",
+      "file": "vibevm/vibespecs/boot/STATIC.md",
+      "heading": "**any operation whose reversal would cost work.** @status:impl/done",
+      "line": 274,
+      "uri": "spec://org.vibevm.fractality/fractality/boot/STATIC#org-vibevm-world--git-autonomy--RED-LINE-ANYTHING-WHOSE-REVERSAL-WOULD-COST-WORK"
+    },
+    {
+      "anchor": "org-vibevm-world--git-autonomy--WHEN-UNCERTAIN-ASK",
+      "content_hash": "sha256:bc13ab8e6de6dd292fe315eaf5fbdbeb20ede19246b060a02137109ca5895e3e",
+      "doc_path": "boot/STATIC",
+      "file": "vibevm/vibespecs/boot/STATIC.md",
+      "heading": "**When uncertain, ask.** @status:impl/done",
+      "line": 276,
+      "uri": "spec://org.vibevm.fractality/fractality/boot/STATIC#org-vibevm-world--git-autonomy--WHEN-UNCERTAIN-ASK"
+    },
+    {
+      "anchor": "org-vibevm-world--git-autonomy--sibling-document-pointers",
+      "content_hash": "sha256:1c4782b2747c2dc3a32cd5bcc6409515114cd4282d91e072c16dde19ffe91316",
+      "doc_path": "boot/STATIC",
+      "file": "vibevm/vibespecs/boot/STATIC.md",
+      "heading": "Full protocol: @spec://org.vibevm.world/git-autonomy/flows/autonomy/AUTONOMY-PROTOCOL#root. @status:impl/done",
+      "line": 278,
+      "uri": "spec://org.vibevm.fractality/fractality/boot/STATIC#org-vibevm-world--git-autonomy--sibling-document-pointers"
+    },
+    {
+      "anchor": "org-vibevm-world--git-conventional-commits--root",
+      "content_hash": "sha256:4dc9cba677df5a5ce032a8f099d9277d008d3483315f53d80ed2a9b53342381c",
+      "doc_path": "boot/STATIC",
+      "file": "vibevm/vibespecs/boot/STATIC.md",
+      "heading": "Flow: Conventional Commits",
+      "line": 284,
+      "uri": "spec://org.vibevm.fractality/fractality/boot/STATIC#org-vibevm-world--git-conventional-commits--root"
+    },
+    {
+      "anchor": "org-vibevm-world--git-conventional-commits--EVERY-COMMIT-MESSAGE-FOLLOWS-CONVENTIONAL-COMMITS",
+      "content_hash": "sha256:52090276e88047e9d7144eac940c42542a5ed7284f2548551f01cba719ca50b7",
+      "doc_path": "boot/STATIC",
+      "file": "vibevm/vibespecs/boot/STATIC.md",
+      "heading": "Every commit message follows the [Conventional Commits](https://www.conventionalcommits.org/)",
+      "line": 288,
+      "uri": "spec://org.vibevm.fractality/fractality/boot/STATIC#org-vibevm-world--git-conventional-commits--EVERY-COMMIT-MESSAGE-FOLLOWS-CONVENTIONAL-COMMITS"
+    },
+    {
+      "anchor": "org-vibevm-world--git-conventional-commits--header",
+      "content_hash": "sha256:e004767d823f0b34cf1396b98d1c957da6fe41f6743b12a86a69c24fa8278ca7",
+      "doc_path": "boot/STATIC",
+      "file": "vibevm/vibespecs/boot/STATIC.md",
+      "heading": "Header",
+      "line": 291,
+      "uri": "spec://org.vibevm.fractality/fractality/boot/STATIC#org-vibevm-world--git-conventional-commits--header"
+    },
+    {
+      "anchor": "org-vibevm-world--git-conventional-commits--HEADER-SUBJECT-LENGTH-MOOD-AND-CASE",
+      "content_hash": "sha256:e43691d51ebb2f930c0967f70761adad8e4ef7820b3a5c37f3b50d02cb8f9ec6",
+      "doc_path": "boot/STATIC",
+      "file": "vibevm/vibespecs/boot/STATIC.md",
+      "heading": "Subject **≤ 60 characters** (hard limit 72), imperative mood, lowercase after the prefix. @status:impl/done",
+      "line": 297,
+      "uri": "spec://org.vibevm.fractality/fractality/boot/STATIC#org-vibevm-world--git-conventional-commits--HEADER-SUBJECT-LENGTH-MOOD-AND-CASE"
+    },
+    {
+      "anchor": "org-vibevm-world--git-conventional-commits--HEADER-THE-ALLOWED-TYPE-SET",
+      "content_hash": "sha256:fd462aa521a5c8a2993c4c88dda85cb14f1eac2f0b426da90eb94d999cdc808b",
+      "doc_path": "boot/STATIC",
+      "file": "vibevm/vibespecs/boot/STATIC.md",
+      "heading": "`type` is one of `feat` `fix` `chore` `docs` `build` `test` `refactor` `perf` `style`",
+      "line": 298,
+      "uri": "spec://org.vibevm.fractality/fractality/boot/STATIC#org-vibevm-world--git-conventional-commits--HEADER-THE-ALLOWED-TYPE-SET"
+    },
+    {
+      "anchor": "org-vibevm-world--git-conventional-commits--HEADER-SCOPE-IS-THE-NARROWEST-ACCURATE-SUBSYSTEM",
+      "content_hash": "sha256:1b8244352e755c61f179765f5f5d20397f58d4a7883b06d71aa7ab65144787ad",
+      "doc_path": "boot/STATIC",
+      "file": "vibevm/vibespecs/boot/STATIC.md",
+      "heading": "`scope` names the **narrowest accurate** subsystem (a crate, package, module, or area). @status:impl/done",
+      "line": 300,
+      "uri": "spec://org.vibevm.fractality/fractality/boot/STATIC#org-vibevm-world--git-conventional-commits--HEADER-SCOPE-IS-THE-NARROWEST-ACCURATE-SUBSYSTEM"
+    },
+    {
+      "anchor": "org-vibevm-world--git-conventional-commits--body",
+      "content_hash": "sha256:6cc2a377b0a83bd991a85d4ce4e4df01ad5dd9531ba58904de1e5e3e508c88ab",
+      "doc_path": "boot/STATIC",
+      "file": "vibevm/vibespecs/boot/STATIC.md",
+      "heading": "Body",
+      "line": 302,
+      "uri": "spec://org.vibevm.fractality/fractality/boot/STATIC#org-vibevm-world--git-conventional-commits--body"
+    },
+    {
+      "anchor": "org-vibevm-world--git-conventional-commits--BODY-A-BLANK-LINE-THEN-A-FREE-FORM-WHY",
+      "content_hash": "sha256:61b08f631343f789e07ac86b40b409888d9c3d142af47f1a89aa4882b6f8b87b",
+      "doc_path": "boot/STATIC",
+      "file": "vibevm/vibespecs/boot/STATIC.md",
+      "heading": "A blank line after the subject, then a free-form body that answers *why*, not *what* — the",
+      "line": 304,
+      "uri": "spec://org.vibevm.fractality/fractality/boot/STATIC#org-vibevm-world--git-conventional-commits--BODY-A-BLANK-LINE-THEN-A-FREE-FORM-WHY"
+    },
+    {
+      "anchor": "org-vibevm-world--git-conventional-commits--CITE-SPEC-URIS-WHERE-RELEVANT",
+      "content_hash": "sha256:73c5872975c312dba9f0fa29efdd54da227f1cd6695c813b777ba6b12f62cb68",
+      "doc_path": "boot/STATIC",
+      "file": "vibevm/vibespecs/boot/STATIC.md",
+      "heading": "Cite `spec://…` URIs where relevant. @status:impl/done",
+      "line": 307,
+      "uri": "spec://org.vibevm.fractality/fractality/boot/STATIC#org-vibevm-world--git-conventional-commits--CITE-SPEC-URIS-WHERE-RELEVANT"
+    },
+    {
+      "anchor": "org-vibevm-world--git-conventional-commits--sibling-document-pointers",
+      "content_hash": "sha256:4b632f1da588d4c82b868b7ad157d472dd8003e01a2bd5dca488aca56e88b60a",
+      "doc_path": "boot/STATIC",
+      "file": "vibevm/vibespecs/boot/STATIC.md",
+      "heading": "Full format — the",
+      "line": 309,
+      "uri": "spec://org.vibevm.fractality/fractality/boot/STATIC#org-vibevm-world--git-conventional-commits--sibling-document-pointers"
+    },
+    {
+      "anchor": "org-vibevm-world--git-conventional-commits--never",
+      "content_hash": "sha256:55e06c8886b7286fbab38fd0134a62f5afb042cd514becee74db26c854af9968",
+      "doc_path": "boot/STATIC",
+      "file": "vibevm/vibespecs/boot/STATIC.md",
+      "heading": "Never",
+      "line": 313,
+      "uri": "spec://org.vibevm.fractality/fractality/boot/STATIC#org-vibevm-world--git-conventional-commits--never"
+    },
+    {
+      "anchor": "org-vibevm-world--git-conventional-commits--NEVER-SUMMARISE-WHAT-CHANGED",
+      "content_hash": "sha256:19602948a01654f7c77997b714069ea4a3e85ff7c23bf790ca21dcfca0bfb9da",
+      "doc_path": "boot/STATIC",
+      "file": "vibevm/vibespecs/boot/STATIC.md",
+      "heading": "Never write a subject that summarises *what* changed — write *why*. @status:impl/done",
+      "line": 315,
+      "uri": "spec://org.vibevm.fractality/fractality/boot/STATIC#org-vibevm-world--git-conventional-commits--NEVER-SUMMARISE-WHAT-CHANGED"
+    },
+    {
+      "anchor": "org-vibevm-world--git-conventional-commits--NEVER-CAPITALISE-OR-OMIT-THE-TYPE",
+      "content_hash": "sha256:1476b0d9b45f341eeb61cbd8fa8db6135f2b4162598ac8b6dc8dfc19e15b53b8",
+      "doc_path": "boot/STATIC",
+      "file": "vibevm/vibespecs/boot/STATIC.md",
+      "heading": "Never capitalise the first word after the `type(scope):` prefix, and never omit the type. @status:impl/done",
+      "line": 316,
+      "uri": "spec://org.vibevm.fractality/fractality/boot/STATIC#org-vibevm-world--git-conventional-commits--NEVER-CAPITALISE-OR-OMIT-THE-TYPE"
+    },
+    {
+      "anchor": "org-vibevm-world--git-conventional-commits--format-is-not-atomicity",
+      "content_hash": "sha256:e7237fd1a9a7abcdfd78da0d0e8059525a2a922c1fa8e612df78ec43b29e3a19",
+      "doc_path": "boot/STATIC",
+      "file": "vibevm/vibespecs/boot/STATIC.md",
+      "heading": "Note — format is not atomicity",
+      "line": 318,
+      "uri": "spec://org.vibevm.fractality/fractality/boot/STATIC#org-vibevm-world--git-conventional-commits--format-is-not-atomicity"
+    },
+    {
+      "anchor": "org-vibevm-world--git-conventional-commits--FORMAT-DOES-NOT-ENFORCE-ATOMICITY",
+      "content_hash": "sha256:0bd3536711887cf32fc9e825d8cacdb12f970ed594a2be1af063c9f5ee5b5c80",
+      "doc_path": "boot/STATIC",
+      "file": "vibevm/vibespecs/boot/STATIC.md",
+      "heading": "Conventional Commits is the message **format**; it does not by itself enforce **atomicity**",
+      "line": 320,
+      "uri": "spec://org.vibevm.fractality/fractality/boot/STATIC#org-vibevm-world--git-conventional-commits--FORMAT-DOES-NOT-ENFORCE-ATOMICITY"
+    },
+    {
+      "anchor": "org-vibevm-world--git-conventional-commits--A-VALID-MESSAGE-CAN-STILL-VIOLATE-THE-ATOMIC-RULE",
+      "content_hash": "sha256:f329d608108a8a09bfd99c8c4dd82df876279a3ef20331ae69f47e2ddc7a3ad3",
+      "doc_path": "boot/STATIC",
+      "file": "vibevm/vibespecs/boot/STATIC.md",
+      "heading": "A `feat: add foo, bar, and baz` message is valid Conventional",
+      "line": 323,
+      "uri": "spec://org.vibevm.fractality/fractality/boot/STATIC#org-vibevm-world--git-conventional-commits--A-VALID-MESSAGE-CAN-STILL-VIOLATE-THE-ATOMIC-RULE"
+    },
+    {
+      "anchor": "org-vibevm-world--git-conventional-commits--ATOMICITY-IS-THE-SEPARATE-FLOW-AND-THE-TWO-RUN-TOGETHER",
+      "content_hash": "sha256:0434d956e9a6bbdda6e576954ec4b4bf4de4f2ecaeb2dd6b76cdfa28b35016e6",
+      "doc_path": "boot/STATIC",
+      "file": "vibevm/vibespecs/boot/STATIC.md",
+      "heading": "Atomicity is the separate `git-atomic-commits` flow;",
+      "line": 326,
+      "uri": "spec://org.vibevm.fractality/fractality/boot/STATIC#org-vibevm-world--git-conventional-commits--ATOMICITY-IS-THE-SEPARATE-FLOW-AND-THE-TWO-RUN-TOGETHER"
+    },
+    {
+      "anchor": "root",
+      "content_hash": "sha256:35f3d89d5c40f59e8930a63414ab4e36549d2d29040f29fd59262474c6f9b58c",
+      "doc_path": "plans/FRACTALITY-ADVISOR-PLAN-v0.1",
+      "file": "vibevm/vibespecs/plans/FRACTALITY-ADVISOR-PLAN-v0.1.xml",
+      "heading": "FRACTALITY-ADVISOR-PLAN v0.1 — Stage C: the advisor channel (D-C3-7)",
+      "line": 3,
+      "uri": "spec://org.vibevm.fractality/fractality/plans/FRACTALITY-ADVISOR-PLAN-v0.1#root"
+    },
+    {
+      "anchor": "root",
+      "content_hash": "sha256:c6537548e91ead709cba3661a3cc083d175ec63ec860159aec7496687b17911a",
+      "doc_path": "plans/FRACTALITY-FUGU-RESEARCH-PLAN-v0.1",
+      "file": "vibevm/vibespecs/plans/FRACTALITY-FUGU-RESEARCH-PLAN-v0.1.xml",
+      "heading": "FRACTALITY-FUGU-RESEARCH-PLAN v0.1 — Campaign 3 · Stage A2: the Sakana Fugu research",
+      "line": 3,
+      "uri": "spec://org.vibevm.fractality/fractality/plans/FRACTALITY-FUGU-RESEARCH-PLAN-v0.1#root"
+    },
+    {
+      "anchor": "mandate",
+      "content_hash": "sha256:ada7ed11d8aae16d75937dc1cca5a47a4d506022edbb53ef566a0efad2f7d372",
+      "doc_path": "plans/FRACTALITY-FUGU-RESEARCH-PLAN-v0.1",
+      "file": "vibevm/vibespecs/plans/FRACTALITY-FUGU-RESEARCH-PLAN-v0.1.xml",
+      "heading": "1. The mandate (owner, 2026-07-11, verbatim)",
+      "line": 18,
+      "uri": "spec://org.vibevm.fractality/fractality/plans/FRACTALITY-FUGU-RESEARCH-PLAN-v0.1#mandate"
+    },
+    {
+      "anchor": "goal",
+      "content_hash": "sha256:cdd7269ec50ca6dd30358ca70991c1356fb7486c856e1b73e7a86ac2d3271782",
+      "doc_path": "plans/FRACTALITY-FUGU-RESEARCH-PLAN-v0.1",
+      "file": "vibevm/vibespecs/plans/FRACTALITY-FUGU-RESEARCH-PLAN-v0.1.xml",
+      "heading": "2. Goal and deliverables",
+      "line": 33,
+      "uri": "spec://org.vibevm.fractality/fractality/plans/FRACTALITY-FUGU-RESEARCH-PLAN-v0.1#goal"
+    },
+    {
+      "anchor": "deviations",
+      "content_hash": "sha256:2185f4024cd6d5ac6180885e3ef9fa662adb720b695afc3579c8ff89936271f9",
+      "doc_path": "plans/FRACTALITY-FUGU-RESEARCH-PLAN-v0.1",
+      "file": "vibevm/vibespecs/plans/FRACTALITY-FUGU-RESEARCH-PLAN-v0.1.xml",
+      "heading": "3. Deviations from the Stage A method",
+      "line": 49,
+      "uri": "spec://org.vibevm.fractality/fractality/plans/FRACTALITY-FUGU-RESEARCH-PLAN-v0.1#deviations"
+    },
+    {
+      "anchor": "waves",
+      "content_hash": "sha256:76685aeb16699cbb442988fbd0492b3a0b343a5209c1dfd197dc62d6f4780ff2",
+      "doc_path": "plans/FRACTALITY-FUGU-RESEARCH-PLAN-v0.1",
+      "file": "vibevm/vibespecs/plans/FRACTALITY-FUGU-RESEARCH-PLAN-v0.1.xml",
+      "heading": "4. The waves (frozen)",
+      "line": 63,
+      "uri": "spec://org.vibevm.fractality/fractality/plans/FRACTALITY-FUGU-RESEARCH-PLAN-v0.1#waves"
+    },
+    {
+      "anchor": "phases",
+      "content_hash": "sha256:51b78097f0245cf46dcc7213a52c57d056b9c064bc4ec392de10bbc86d9fa09a",
+      "doc_path": "plans/FRACTALITY-FUGU-RESEARCH-PLAN-v0.1",
+      "file": "vibevm/vibespecs/plans/FRACTALITY-FUGU-RESEARCH-PLAN-v0.1.xml",
+      "heading": "5. Phases",
+      "line": 97,
+      "uri": "spec://org.vibevm.fractality/fractality/plans/FRACTALITY-FUGU-RESEARCH-PLAN-v0.1#phases"
+    },
+    {
+      "anchor": "predictions",
+      "content_hash": "sha256:7f98c79a3e285d1795d11e314a38fb499bfbcc516a3feb05e40951d017e24269",
+      "doc_path": "plans/FRACTALITY-FUGU-RESEARCH-PLAN-v0.1",
+      "file": "vibevm/vibespecs/plans/FRACTALITY-FUGU-RESEARCH-PLAN-v0.1.xml",
+      "heading": "6. Predictions",
+      "line": 111,
+      "uri": "spec://org.vibevm.fractality/fractality/plans/FRACTALITY-FUGU-RESEARCH-PLAN-v0.1#predictions"
+    },
+    {
+      "anchor": "review-points",
+      "content_hash": "sha256:3f9c292272ea221fa37db88e51fa9ffd9b7449f607d6a5f61839c0d5247f5728",
+      "doc_path": "plans/FRACTALITY-FUGU-RESEARCH-PLAN-v0.1",
+      "file": "vibevm/vibespecs/plans/FRACTALITY-FUGU-RESEARCH-PLAN-v0.1.xml",
+      "heading": "7. Review points",
+      "line": 129,
+      "uri": "spec://org.vibevm.fractality/fractality/plans/FRACTALITY-FUGU-RESEARCH-PLAN-v0.1#review-points"
+    },
+    {
+      "anchor": "ledger",
+      "content_hash": "sha256:120ca9e096b547cc8108b5ddb34a8d09cc12a3fbdbbfd9e0404f310ee9e55bf0",
+      "doc_path": "plans/FRACTALITY-FUGU-RESEARCH-PLAN-v0.1",
+      "file": "vibevm/vibespecs/plans/FRACTALITY-FUGU-RESEARCH-PLAN-v0.1.xml",
+      "heading": "8. Ledger",
+      "line": 134,
+      "uri": "spec://org.vibevm.fractality/fractality/plans/FRACTALITY-FUGU-RESEARCH-PLAN-v0.1#ledger"
+    },
+    {
+      "anchor": "log",
+      "content_hash": "sha256:60972e4df9fd3bfa1e3a4e018dd9440decc99be1b2a3b66eaf626dfb66794d7e",
+      "doc_path": "plans/FRACTALITY-FUGU-RESEARCH-PLAN-v0.1",
+      "file": "vibevm/vibespecs/plans/FRACTALITY-FUGU-RESEARCH-PLAN-v0.1.xml",
+      "heading": "9. Log",
+      "line": 180,
+      "uri": "spec://org.vibevm.fractality/fractality/plans/FRACTALITY-FUGU-RESEARCH-PLAN-v0.1#log"
+    },
+    {
+      "anchor": "root",
+      "content_hash": "sha256:554689558ba3345799d8c5a174f0f4c4362637554ff72cf8a7a6bf0649e199fb",
+      "doc_path": "plans/FRACTALITY-RLM-PLAN-v0.1",
+      "file": "vibevm/vibespecs/plans/FRACTALITY-RLM-PLAN-v0.1.xml",
+      "heading": "FRACTALITY-RLM-PLAN v0.1 — Campaign 3 · Stage B: the descent core (DRAFT)",
+      "line": 3,
+      "uri": "spec://org.vibevm.fractality/fractality/plans/FRACTALITY-RLM-PLAN-v0.1#root"
+    },
+    {
+      "anchor": "mandate",
+      "content_hash": "sha256:a5c4fb90925ab839f6bbf00316a5314f0a823bdd1ad3637f1048c19624ca7d2a",
+      "doc_path": "plans/FRACTALITY-RLM-PLAN-v0.1",
+      "file": "vibevm/vibespecs/plans/FRACTALITY-RLM-PLAN-v0.1.xml",
+      "heading": "1. The mandate",
+      "line": 15,
+      "uri": "spec://org.vibevm.fractality/fractality/plans/FRACTALITY-RLM-PLAN-v0.1#mandate"
+    },
+    {
+      "anchor": "goal",
+      "content_hash": "sha256:b1732ce9928ebaa5c4f41af2333501dc2cefc8392ebc1a8e148b7c665dc36885",
+      "doc_path": "plans/FRACTALITY-RLM-PLAN-v0.1",
+      "file": "vibevm/vibespecs/plans/FRACTALITY-RLM-PLAN-v0.1.xml",
+      "heading": "2. Goal",
+      "line": 44,
+      "uri": "spec://org.vibevm.fractality/fractality/plans/FRACTALITY-RLM-PLAN-v0.1#goal"
+    },
+    {
+      "anchor": "scope",
+      "content_hash": "sha256:bf210e4769dab3fca343e8c303168f03a8c9dee8f74d79cb09609d332be38a43",
+      "doc_path": "plans/FRACTALITY-RLM-PLAN-v0.1",
+      "file": "vibevm/vibespecs/plans/FRACTALITY-RLM-PLAN-v0.1.xml",
+      "heading": "3. Scope options for the mandate (pick one)",
+      "line": 53,
+      "uri": "spec://org.vibevm.fractality/fractality/plans/FRACTALITY-RLM-PLAN-v0.1#scope"
+    },
+    {
+      "anchor": "decisions",
+      "content_hash": "sha256:ec89862b7722340f851ff039ba55eb493466566f58eaa3d7f788f4f46266cc0d",
+      "doc_path": "plans/FRACTALITY-RLM-PLAN-v0.1",
+      "file": "vibevm/vibespecs/plans/FRACTALITY-RLM-PLAN-v0.1.xml",
+      "heading": "4. Decisions (seeded from synthesis; finalized at commissioning)",
+      "line": 69,
+      "uri": "spec://org.vibevm.fractality/fractality/plans/FRACTALITY-RLM-PLAN-v0.1#decisions"
+    },
+    {
+      "anchor": "facts",
+      "content_hash": "sha256:872b7c5115c4f62280ab1c90889188b9fe211121219baf9e8c4e6ce2d5626799",
+      "doc_path": "plans/FRACTALITY-RLM-PLAN-v0.1",
+      "file": "vibevm/vibespecs/plans/FRACTALITY-RLM-PLAN-v0.1.xml",
+      "heading": "5. Current-state facts (verified at draft time)",
+      "line": 142,
+      "uri": "spec://org.vibevm.fractality/fractality/plans/FRACTALITY-RLM-PLAN-v0.1#facts"
+    },
+    {
+      "anchor": "phases",
+      "content_hash": "sha256:e24192a7534a59c80a1b83258843f2f153eb4771364bd3cb2a72e6b98c1b1a13",
+      "doc_path": "plans/FRACTALITY-RLM-PLAN-v0.1",
+      "file": "vibevm/vibespecs/plans/FRACTALITY-RLM-PLAN-v0.1.xml",
+      "heading": "6. Phases (shape; final counts at commissioning)",
+      "line": 154,
+      "uri": "spec://org.vibevm.fractality/fractality/plans/FRACTALITY-RLM-PLAN-v0.1#phases"
+    },
+    {
+      "anchor": "predictions",
+      "content_hash": "sha256:bbbd42ede1826baf198012fca8fd63d710da8d4db8d8dfce86cc4bdefd8ea918",
+      "doc_path": "plans/FRACTALITY-RLM-PLAN-v0.1",
+      "file": "vibevm/vibespecs/plans/FRACTALITY-RLM-PLAN-v0.1.xml",
+      "heading": "7. Prediction candidates (frozen at commissioning)",
+      "line": 176,
+      "uri": "spec://org.vibevm.fractality/fractality/plans/FRACTALITY-RLM-PLAN-v0.1#predictions"
+    },
+    {
+      "anchor": "review-points",
+      "content_hash": "sha256:1ed4e1c24afbce743163e354a5bf90884f8ce9932a0a9bd1d90e3f7d8ec8a94c",
+      "doc_path": "plans/FRACTALITY-RLM-PLAN-v0.1",
+      "file": "vibevm/vibespecs/plans/FRACTALITY-RLM-PLAN-v0.1.xml",
+      "heading": "8. Review points",
+      "line": 203,
+      "uri": "spec://org.vibevm.fractality/fractality/plans/FRACTALITY-RLM-PLAN-v0.1#review-points"
+    },
+    {
+      "anchor": "ledger",
+      "content_hash": "sha256:73513c174894b2da4fadef9d522915be9d346ea22d6a092610eace21f6786897",
+      "doc_path": "plans/FRACTALITY-RLM-PLAN-v0.1",
+      "file": "vibevm/vibespecs/plans/FRACTALITY-RLM-PLAN-v0.1.xml",
+      "heading": "9. Ledger",
+      "line": 224,
+      "uri": "spec://org.vibevm.fractality/fractality/plans/FRACTALITY-RLM-PLAN-v0.1#ledger"
+    },
+    {
+      "anchor": "executor-guide",
+      "content_hash": "sha256:76434806218e03556a95394b0ae48fc8a2673081deefa9386e336af92d8450b7",
+      "doc_path": "plans/FRACTALITY-RLM-PLAN-v0.1",
+      "file": "vibevm/vibespecs/plans/FRACTALITY-RLM-PLAN-v0.1.xml",
+      "heading": "10. Executor's guide — read this before any code",
+      "line": 426,
+      "uri": "spec://org.vibevm.fractality/fractality/plans/FRACTALITY-RLM-PLAN-v0.1#executor-guide"
+    },
+    {
+      "anchor": "eg-reading",
+      "content_hash": "sha256:3745aa88817f52b6eff6539c170d4ee2dee66dd9e7d364a95a9da1531f5ab9c6",
+      "doc_path": "plans/FRACTALITY-RLM-PLAN-v0.1",
+      "file": "vibevm/vibespecs/plans/FRACTALITY-RLM-PLAN-v0.1.xml",
+      "heading": "10.1 Reading order for the executing session",
+      "line": 433,
+      "uri": "spec://org.vibevm.fractality/fractality/plans/FRACTALITY-RLM-PLAN-v0.1#eg-reading"
+    },
+    {
+      "anchor": "eg-glossary",
+      "content_hash": "sha256:af8d95234560015ba036fe7fb2def9306ba8b751bbab155ab712a6a6fa44fba8",
+      "doc_path": "plans/FRACTALITY-RLM-PLAN-v0.1",
+      "file": "vibevm/vibespecs/plans/FRACTALITY-RLM-PLAN-v0.1.xml",
+      "heading": "10.2 Glossary — our words, exact meanings",
+      "line": 448,
+      "uri": "spec://org.vibevm.fractality/fractality/plans/FRACTALITY-RLM-PLAN-v0.1#eg-glossary"
+    },
+    {
+      "anchor": "eg-needgate",
+      "content_hash": "sha256:c5039e5c4ec6fa83ee5fcb849b33ef6c21bb5de8f939989b6481b031be9a5e48",
+      "doc_path": "plans/FRACTALITY-RLM-PLAN-v0.1",
+      "file": "vibevm/vibespecs/plans/FRACTALITY-RLM-PLAN-v0.1.xml",
+      "heading": "10.3 The need-gate decision procedure (v1, fixed order)",
+      "line": 501,
+      "uri": "spec://org.vibevm.fractality/fractality/plans/FRACTALITY-RLM-PLAN-v0.1#eg-needgate"
+    },
+    {
+      "anchor": "eg-cleanroom",
+      "content_hash": "sha256:785c1b622179a5790205cdee4bcb7ee451c61897364a16647fb8c7afe9c0cd1c",
+      "doc_path": "plans/FRACTALITY-RLM-PLAN-v0.1",
+      "file": "vibevm/vibespecs/plans/FRACTALITY-RLM-PLAN-v0.1.xml",
+      "heading": "10.4 Clean-room rules for executors — legally load-bearing",
+      "line": 528,
+      "uri": "spec://org.vibevm.fractality/fractality/plans/FRACTALITY-RLM-PLAN-v0.1#eg-cleanroom"
+    },
+    {
+      "anchor": "eg-minimalism",
+      "content_hash": "sha256:397d16a8a67e8f942e6215706eb2572b7465767953f8a5d82f21742e6452491c",
+      "doc_path": "plans/FRACTALITY-RLM-PLAN-v0.1",
+      "file": "vibevm/vibespecs/plans/FRACTALITY-RLM-PLAN-v0.1.xml",
+      "heading": "10.5 v1 minimalism — things you must NOT build",
+      "line": 543,
+      "uri": "spec://org.vibevm.fractality/fractality/plans/FRACTALITY-RLM-PLAN-v0.1#eg-minimalism"
+    },
+    {
+      "anchor": "eg-crates",
+      "content_hash": "sha256:49c5c8f55c9419c0d62ece07c3bceda57623428859837bb171d0a82cc1c08fdf",
+      "doc_path": "plans/FRACTALITY-RLM-PLAN-v0.1",
+      "file": "vibevm/vibespecs/plans/FRACTALITY-RLM-PLAN-v0.1.xml",
+      "heading": "10.6 Where code lands",
+      "line": 553,
+      "uri": "spec://org.vibevm.fractality/fractality/plans/FRACTALITY-RLM-PLAN-v0.1#eg-crates"
+    },
+    {
+      "anchor": "eg-process",
+      "content_hash": "sha256:e0414dd27483c68e6efc9532dc0cbd43934910f455e8d1ec378f6b692bcf156c",
+      "doc_path": "plans/FRACTALITY-RLM-PLAN-v0.1",
+      "file": "vibevm/vibespecs/plans/FRACTALITY-RLM-PLAN-v0.1.xml",
+      "heading": "10.7 Process laws, restated for you",
+      "line": 563,
+      "uri": "spec://org.vibevm.fractality/fractality/plans/FRACTALITY-RLM-PLAN-v0.1#eg-process"
+    },
+    {
+      "anchor": "eg-unsure",
+      "content_hash": "sha256:e6f4ed06978f46f6fd914ea72b9e6788f28aa4db23388774685ac8bb97847d88",
+      "doc_path": "plans/FRACTALITY-RLM-PLAN-v0.1",
+      "file": "vibevm/vibespecs/plans/FRACTALITY-RLM-PLAN-v0.1.xml",
+      "heading": "10.8 When you are unsure",
+      "line": 592,
+      "uri": "spec://org.vibevm.fractality/fractality/plans/FRACTALITY-RLM-PLAN-v0.1#eg-unsure"
+    },
+    {
+      "anchor": "root",
+      "content_hash": "sha256:78d6394b482177a42ff2d2139b65e2921f50d8d8e0e83016c22c739019f8b911",
+      "doc_path": "plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1",
+      "file": "vibevm/vibespecs/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1.xml",
+      "heading": "FRACTALITY-RLM-RESEARCH-PLAN v0.1 — Campaign 3 · Stage A: the RLM research",
+      "line": 3,
+      "uri": "spec://org.vibevm.fractality/fractality/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1#root"
+    },
+    {
+      "anchor": "mandate",
+      "content_hash": "sha256:aade4351f7431e3708274b59a44da03185fc9768eadf713fb92cd6bd0a49083d",
+      "doc_path": "plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1",
+      "file": "vibevm/vibespecs/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1.xml",
+      "heading": "1. The mandate (owner, 2026-07-10, verbatim)",
+      "line": 14,
+      "uri": "spec://org.vibevm.fractality/fractality/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1#mandate"
+    },
+    {
+      "anchor": "goal",
+      "content_hash": "sha256:83cdd430ad45819229a2663de8068186877445c3f96f6b7d2c42abb1766ff16c",
+      "doc_path": "plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1",
+      "file": "vibevm/vibespecs/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1.xml",
+      "heading": "2. Goal and non-goals",
+      "line": 45,
+      "uri": "spec://org.vibevm.fractality/fractality/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1#goal"
+    },
+    {
+      "anchor": "facts",
+      "content_hash": "sha256:95fcff22729ec039826a24626e893adfb0d3027343c9ab4e6f212629d7ffc459",
+      "doc_path": "plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1",
+      "file": "vibevm/vibespecs/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1.xml",
+      "heading": "3. Current-state facts (verified 2026-07-10; do not re-discover)",
+      "line": 60,
+      "uri": "spec://org.vibevm.fractality/fractality/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1#facts"
+    },
+    {
+      "anchor": "decisions",
+      "content_hash": "sha256:1648a781d611baccadeb05918f03829a548ad5b324cd3a05e95bbe50994b4f47",
+      "doc_path": "plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1",
+      "file": "vibevm/vibespecs/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1.xml",
+      "heading": "4. Decisions",
+      "line": 102,
+      "uri": "spec://org.vibevm.fractality/fractality/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1#decisions"
+    },
+    {
+      "anchor": "d-r1",
+      "content_hash": "sha256:a9021d11ae6f62b97d6b5bb1902a9a7b92742ab1697476332535d42af808bb2d",
+      "doc_path": "plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1",
+      "file": "vibevm/vibespecs/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1.xml",
+      "heading": "D-R1 — a new staged plan; Stage B is the exit deliverable",
+      "line": 103,
+      "uri": "spec://org.vibevm.fractality/fractality/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1#d-r1"
+    },
+    {
+      "anchor": "d-r2",
+      "content_hash": "sha256:64d08d1913d72c73cc71a38851449de83d224901f875820b4c2c1193ed9db7c2",
+      "doc_path": "plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1",
+      "file": "vibevm/vibespecs/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1.xml",
+      "heading": "D-R2 — three waves, first two independent",
+      "line": 116,
+      "uri": "spec://org.vibevm.fractality/fractality/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1#d-r2"
+    },
+    {
+      "anchor": "d-r3",
+      "content_hash": "sha256:791a55b37132e543a72e2d38f726d9e4560d48342c4dbe12c9ab19c242df1b47",
+      "doc_path": "plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1",
+      "file": "vibevm/vibespecs/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1.xml",
+      "heading": "D-R3 — what \"most important\" means (selection criteria)",
+      "line": 127,
+      "uri": "spec://org.vibevm.fractality/fractality/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1#d-r3"
+    },
+    {
+      "anchor": "d-r4",
+      "content_hash": "sha256:444a2816d972839d47e5a06cc14c1b41f618eb73d13578a928b0a9eb705066e5",
+      "doc_path": "plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1",
+      "file": "vibevm/vibespecs/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1.xml",
+      "heading": "D-R4 — the intake pipeline (clean-room, verbatim law)",
+      "line": 149,
+      "uri": "spec://org.vibevm.fractality/fractality/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1#d-r4"
+    },
+    {
+      "anchor": "d-r5",
+      "content_hash": "sha256:fb430bc6bea6526e75346623e69acb495bb27cff714c3d63f846572ac39d0f47",
+      "doc_path": "plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1",
+      "file": "vibevm/vibespecs/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1.xml",
+      "heading": "D-R5 — tiered study depth + delegation posture",
+      "line": 165,
+      "uri": "spec://org.vibevm.fractality/fractality/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1#d-r5"
+    },
+    {
+      "anchor": "d-r6",
+      "content_hash": "sha256:144dc2c1be9d1f7dfa87db401660f6ecc59dec02b376725e8ea2346b917f2c28",
+      "doc_path": "plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1",
+      "file": "vibevm/vibespecs/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1.xml",
+      "heading": "D-R6 — note and synthesis formats",
+      "line": 181,
+      "uri": "spec://org.vibevm.fractality/fractality/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1#d-r6"
+    },
+    {
+      "anchor": "d-r7",
+      "content_hash": "sha256:e173fbe51ea55994202092700f5542a5794c87f0014dfa64e35b445910540b80",
+      "doc_path": "plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1",
+      "file": "vibevm/vibespecs/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1.xml",
+      "heading": "D-R7 — one project, one note",
+      "line": 195,
+      "uri": "spec://org.vibevm.fractality/fractality/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1#d-r7"
+    },
+    {
+      "anchor": "waves",
+      "content_hash": "sha256:e416aa0a494a9dd9278a35cc04799c4f720defcafef41e090b577d49901d717f",
+      "doc_path": "plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1",
+      "file": "vibevm/vibespecs/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1.xml",
+      "heading": "5. The three waves — frozen protocol",
+      "line": 204,
+      "uri": "spec://org.vibevm.fractality/fractality/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1#waves"
+    },
+    {
+      "anchor": "wave-1",
+      "content_hash": "sha256:265eb117d34d746071b7e76f1eb0afddfc1adff852c12b5e35fcf1a93eb5f82f",
+      "doc_path": "plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1",
+      "file": "vibevm/vibespecs/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1.xml",
+      "heading": "Wave 1 — deep research",
+      "line": 205,
+      "uri": "spec://org.vibevm.fractality/fractality/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1#wave-1"
+    },
+    {
+      "anchor": "wave-2",
+      "content_hash": "sha256:18fd53c7672a72b9d6815c657991ff0dc5b063e23394aa35adf18794a28afc66",
+      "doc_path": "plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1",
+      "file": "vibevm/vibespecs/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1.xml",
+      "heading": "Wave 2 — plain web search, independent",
+      "line": 230,
+      "uri": "spec://org.vibevm.fractality/fractality/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1#wave-2"
+    },
+    {
+      "anchor": "wave-3",
+      "content_hash": "sha256:43c576bf3ac5699444c08187677f19293b94e5fbaf361d269c14b81eb54cb847",
+      "doc_path": "plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1",
+      "file": "vibevm/vibespecs/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1.xml",
+      "heading": "Wave 3 — the merge",
+      "line": 251,
+      "uri": "spec://org.vibevm.fractality/fractality/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1#wave-3"
+    },
+    {
+      "anchor": "phases",
+      "content_hash": "sha256:56e1cc5f03f8f9be29640a3e5025ba56e945eda075a21db5e2e9bfd349780896",
+      "doc_path": "plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1",
+      "file": "vibevm/vibespecs/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1.xml",
+      "heading": "6. Phases and gates",
+      "line": 262,
+      "uri": "spec://org.vibevm.fractality/fractality/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1#phases"
+    },
+    {
+      "anchor": "predictions",
+      "content_hash": "sha256:9694408ba61974b8235ad0008d1e7985a5a2f4d8e75d30228dd17676858e5047",
+      "doc_path": "plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1",
+      "file": "vibevm/vibespecs/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1.xml",
+      "heading": "7. Predictions (checked at close)",
+      "line": 293,
+      "uri": "spec://org.vibevm.fractality/fractality/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1#predictions"
+    },
+    {
+      "anchor": "baseline",
+      "content_hash": "sha256:6a6843553e6cdff13a933b819c58c070d6fecd3c2ec23d274bfb12eb9e1109f9",
+      "doc_path": "plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1",
+      "file": "vibevm/vibespecs/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1.xml",
+      "heading": "8. Baseline and exit state",
+      "line": 310,
+      "uri": "spec://org.vibevm.fractality/fractality/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1#baseline"
+    },
+    {
+      "anchor": "risks",
+      "content_hash": "sha256:a19f97a121cea02eb16e44c346c175905fb8d322f3356ffeeb3403f5b9d19b3a",
+      "doc_path": "plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1",
+      "file": "vibevm/vibespecs/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1.xml",
+      "heading": "9. Risks and fallbacks",
+      "line": 324,
+      "uri": "spec://org.vibevm.fractality/fractality/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1#risks"
+    },
+    {
+      "anchor": "review-points",
+      "content_hash": "sha256:681a58e26cc680005fad3f99814592972f4d159f2ded8f4e2d8bb9d9ba2c9af0",
+      "doc_path": "plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1",
+      "file": "vibevm/vibespecs/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1.xml",
+      "heading": "10. Review points",
+      "line": 352,
+      "uri": "spec://org.vibevm.fractality/fractality/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1#review-points"
+    },
+    {
+      "anchor": "quick-start",
+      "content_hash": "sha256:de435e9c2d311e4bd7ee1011810c166323d95cd1adf9b5a7fad204becd02bbe2",
+      "doc_path": "plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1",
+      "file": "vibevm/vibespecs/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1.xml",
+      "heading": "11. Quick-start for the executing session",
+      "line": 373,
+      "uri": "spec://org.vibevm.fractality/fractality/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1#quick-start"
+    },
+    {
+      "anchor": "acceptance",
+      "content_hash": "sha256:0f03046a589333f6a74f2aa529e1f5dc6fcee73339733fa988347af935dab987",
+      "doc_path": "plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1",
+      "file": "vibevm/vibespecs/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1.xml",
+      "heading": "12. Whole-stage acceptance",
+      "line": 391,
+      "uri": "spec://org.vibevm.fractality/fractality/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1#acceptance"
+    },
+    {
+      "anchor": "ledger",
+      "content_hash": "sha256:f306b9406cb08bfe5a56ee4c621d00e4fd098c977c0af3ea2a60687f9ba48662",
+      "doc_path": "plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1",
+      "file": "vibevm/vibespecs/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1.xml",
+      "heading": "13. Execution ledger",
+      "line": 404,
+      "uri": "spec://org.vibevm.fractality/fractality/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1#ledger"
+    },
+    {
+      "anchor": "log",
+      "content_hash": "sha256:06db08dcb35dc207cf0b7c887e1aa4351a325c1313c1e16817e7df6a7852bec7",
+      "doc_path": "plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1",
+      "file": "vibevm/vibespecs/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1.xml",
+      "heading": "14. Log",
+      "line": 451,
+      "uri": "spec://org.vibevm.fractality/fractality/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1#log"
+    },
+    {
+      "anchor": "root",
+      "content_hash": "sha256:5c4c5ebf902a22a672150f7cf9395f0d627e58cab81c73b25237f08da6db71cf",
+      "doc_path": "refs/INVENTORY",
+      "file": "vibevm/vibespecs/refs/INVENTORY.xml",
+      "heading": "Reference-source inventory (clean-room register)",
+      "line": 3,
+      "uri": "spec://org.vibevm.fractality/fractality/refs/INVENTORY#root"
+    },
+    {
+      "anchor": "root",
+      "content_hash": "sha256:498e47ac2ca0104eb8d01c9cf78d15850b890e27745d3dfce9fb626e7820132d",
+      "doc_path": "refs/notes/FUGU-FRACTALITY-MAPPING",
+      "file": "vibevm/vibespecs/refs/notes/FUGU-FRACTALITY-MAPPING.xml",
+      "heading": "FUGU ↔ FRACTALITY — the mapping analysis",
+      "line": 3,
+      "uri": "spec://org.vibevm.fractality/fractality/refs/notes/FUGU-FRACTALITY-MAPPING#root"
+    },
+    {
+      "anchor": "verdict",
+      "content_hash": "sha256:d2ffad0e3e9c08b0068d902cacd6d3a07f8bbb4dc6b024bc4f24ea1571aa7e57",
+      "doc_path": "refs/notes/FUGU-FRACTALITY-MAPPING",
+      "file": "vibevm/vibespecs/refs/notes/FUGU-FRACTALITY-MAPPING.xml",
+      "heading": "1. The verdict in one paragraph",
+      "line": 15,
+      "uri": "spec://org.vibevm.fractality/fractality/refs/notes/FUGU-FRACTALITY-MAPPING#verdict"
+    },
+    {
+      "anchor": "table",
+      "content_hash": "sha256:1dcdac1f8ced9bf79616594442b3fbe1cf207b4d181ef42cfe479ee9b20ceb4a",
+      "doc_path": "refs/notes/FUGU-FRACTALITY-MAPPING",
+      "file": "vibevm/vibespecs/refs/notes/FUGU-FRACTALITY-MAPPING.xml",
+      "heading": "2. The mapping table",
+      "line": 32,
+      "uri": "spec://org.vibevm.fractality/fractality/refs/notes/FUGU-FRACTALITY-MAPPING#table"
+    },
+    {
+      "anchor": "changes",
+      "content_hash": "sha256:0bb61962a0ef6279e21ecbabf09929feea885399a0129c117022bd17b29e9fdd",
+      "doc_path": "refs/notes/FUGU-FRACTALITY-MAPPING",
+      "file": "vibevm/vibespecs/refs/notes/FUGU-FRACTALITY-MAPPING.xml",
+      "heading": "3. Changes applied to the Stage B draft",
+      "line": 121,
+      "uri": "spec://org.vibevm.fractality/fractality/refs/notes/FUGU-FRACTALITY-MAPPING#changes"
+    },
+    {
+      "anchor": "moats",
+      "content_hash": "sha256:35a1ceaa03209d8e966938bbe708ada759e6b1705579f319ecc5928712a142b1",
+      "doc_path": "refs/notes/FUGU-FRACTALITY-MAPPING",
+      "file": "vibevm/vibespecs/refs/notes/FUGU-FRACTALITY-MAPPING.xml",
+      "heading": "4. What Fugu does not change",
+      "line": 146,
+      "uri": "spec://org.vibevm.fractality/fractality/refs/notes/FUGU-FRACTALITY-MAPPING#moats"
+    },
+    {
+      "anchor": "pf4",
+      "content_hash": "sha256:a153c0fe185f64cf6de1a66a0341ce86e004580d35b214e4d2c4ca87ae92fa9d",
+      "doc_path": "refs/notes/FUGU-FRACTALITY-MAPPING",
+      "file": "vibevm/vibespecs/refs/notes/FUGU-FRACTALITY-MAPPING.xml",
+      "heading": "5. P-F4 verdict",
+      "line": 155,
+      "uri": "spec://org.vibevm.fractality/fractality/refs/notes/FUGU-FRACTALITY-MAPPING#pf4"
+    },
+    {
+      "anchor": "root",
+      "content_hash": "sha256:79abc10dc529c751793ff2f9571c482f1148c4a52f0dbb08a058c1b138d55599",
+      "doc_path": "refs/notes/FUGU-SYNTHESIS",
+      "file": "vibevm/vibespecs/refs/notes/FUGU-SYNTHESIS.xml",
+      "heading": "FUGU-SYNTHESIS — what Sakana's orchestrator teaches the fabric",
+      "line": 3,
+      "uri": "spec://org.vibevm.fractality/fractality/refs/notes/FUGU-SYNTHESIS#root"
+    },
+    {
+      "anchor": "state",
+      "content_hash": "sha256:4dc12eac617bf98f1e17d9ca16afe1189a8d394fbadd750cb3a2f1fb4a677080",
+      "doc_path": "refs/notes/FUGU-SYNTHESIS",
+      "file": "vibevm/vibespecs/refs/notes/FUGU-SYNTHESIS.xml",
+      "heading": "1. The state of the thing in one paragraph",
+      "line": 12,
+      "uri": "spec://org.vibevm.fractality/fractality/refs/notes/FUGU-SYNTHESIS#state"
+    },
+    {
+      "anchor": "gaps",
+      "content_hash": "sha256:24c003ee40e6db4faab8b9ae326705fa8f7db2e201ef581d0f58d497f41c551a",
+      "doc_path": "refs/notes/FUGU-SYNTHESIS",
+      "file": "vibevm/vibespecs/refs/notes/FUGU-SYNTHESIS.xml",
+      "heading": "2. Two-way gaps",
+      "line": 33,
+      "uri": "spec://org.vibevm.fractality/fractality/refs/notes/FUGU-SYNTHESIS#gaps"
+    },
+    {
+      "anchor": "deltas",
+      "content_hash": "sha256:62e01a3b6914c067e40bcd4ba24155d72b8543318126b8a7bcf5b56dd28fe207",
+      "doc_path": "refs/notes/FUGU-SYNTHESIS",
+      "file": "vibevm/vibespecs/refs/notes/FUGU-SYNTHESIS.xml",
+      "heading": "3. The deltas (FD-1 … FD-16)",
+      "line": 51,
+      "uri": "spec://org.vibevm.fractality/fractality/refs/notes/FUGU-SYNTHESIS#deltas"
+    },
+    {
+      "anchor": "verdicts",
+      "content_hash": "sha256:608ab90944255f35f03e3bc8876012bf465604cc564f255adf5de40d3ea2bf30",
+      "doc_path": "refs/notes/FUGU-SYNTHESIS",
+      "file": "vibevm/vibespecs/refs/notes/FUGU-SYNTHESIS.xml",
+      "heading": "4. Prediction verdicts",
+      "line": 104,
+      "uri": "spec://org.vibevm.fractality/fractality/refs/notes/FUGU-SYNTHESIS#verdicts"
+    },
+    {
+      "anchor": "root",
+      "content_hash": "sha256:329c7847ceb482f987b1cf3f18c9788d9dc77b54f5e6c13a3cddc364d8ab9630",
+      "doc_path": "refs/notes/RLM-SYNTHESIS",
+      "file": "vibevm/vibespecs/refs/notes/RLM-SYNTHESIS.xml",
+      "heading": "RLM-SYNTHESIS — what the field knows, what fractality takes",
+      "line": 3,
+      "uri": "spec://org.vibevm.fractality/fractality/refs/notes/RLM-SYNTHESIS#root"
+    },
+    {
+      "anchor": "state",
+      "content_hash": "sha256:6c5269c209ae96d0620459f7df0e324b8e0a19b04760551460c356e0275baa54",
+      "doc_path": "refs/notes/RLM-SYNTHESIS",
+      "file": "vibevm/vibespecs/refs/notes/RLM-SYNTHESIS.xml",
+      "heading": "1. The state of the field in one paragraph",
+      "line": 15,
+      "uri": "spec://org.vibevm.fractality/fractality/refs/notes/RLM-SYNTHESIS#state"
+    },
+    {
+      "anchor": "gaps",
+      "content_hash": "sha256:6b9298fce73444001f09503ddd53fe6c4d236c8d14b861144ace8a2d87c178b8",
+      "doc_path": "refs/notes/RLM-SYNTHESIS",
+      "file": "vibevm/vibespecs/refs/notes/RLM-SYNTHESIS.xml",
+      "heading": "2. Two-way gaps",
+      "line": 39,
+      "uri": "spec://org.vibevm.fractality/fractality/refs/notes/RLM-SYNTHESIS#gaps"
+    },
+    {
+      "anchor": "deltas",
+      "content_hash": "sha256:14a8018dd32a9c1b0f4b18c77a3205f4f3e9f530eed7b684496ad4f49edb9ce0",
+      "doc_path": "refs/notes/RLM-SYNTHESIS",
+      "file": "vibevm/vibespecs/refs/notes/RLM-SYNTHESIS.xml",
+      "heading": "3. The deltas (RD-1 … RD-21)",
+      "line": 65,
+      "uri": "spec://org.vibevm.fractality/fractality/refs/notes/RLM-SYNTHESIS#deltas"
+    },
+    {
+      "anchor": "vision-answers",
+      "content_hash": "sha256:dfaa918ac50862bad08c5f5199832de83fb51b02415f668c2f67bbd1f82d4054",
+      "doc_path": "refs/notes/RLM-SYNTHESIS",
+      "file": "vibevm/vibespecs/refs/notes/RLM-SYNTHESIS.xml",
+      "heading": "4. What this settles from VISION §5",
+      "line": 179,
+      "uri": "spec://org.vibevm.fractality/fractality/refs/notes/RLM-SYNTHESIS#vision-answers"
+    },
+    {
+      "anchor": "verdicts",
+      "content_hash": "sha256:1a61b94d307b61aad0b31f01f3d98eda4bf3715d61162b5e005b2224a62a7d3b",
+      "doc_path": "refs/notes/RLM-SYNTHESIS",
+      "file": "vibevm/vibespecs/refs/notes/RLM-SYNTHESIS.xml",
+      "heading": "5. Prediction verdicts for the plan close",
+      "line": 194,
+      "uri": "spec://org.vibevm.fractality/fractality/refs/notes/RLM-SYNTHESIS#verdicts"
+    },
+    {
+      "anchor": "root",
+      "content_hash": "sha256:ecbe9065b1b9435a286b1a58dc3b5238545b0f087ed1a14ab8a059e4fafc96ec",
+      "doc_path": "refs/notes/barkain-study",
+      "file": "vibevm/vibespecs/refs/notes/barkain-study.xml",
+      "heading": "Study note — barkain workflow-orchestration (clean-room)",
+      "line": 3,
+      "uri": "spec://org.vibevm.fractality/fractality/refs/notes/barkain-study#root"
+    },
+    {
+      "anchor": "root",
+      "content_hash": "sha256:7fe8771c2bfa7d81971b87e3630c982df51dd4b81fe3349af37991d104058e8b",
+      "doc_path": "refs/notes/codex-first-study",
+      "file": "vibevm/vibespecs/refs/notes/codex-first-study.xml",
+      "heading": "Study note — codex-first (clean-room)",
+      "line": 3,
+      "uri": "spec://org.vibevm.fractality/fractality/refs/notes/codex-first-study#root"
+    },
+    {
+      "anchor": "root",
+      "content_hash": "sha256:a53cc41a16ba0e50d0f11c83802328f87fb834a76a6e308632685e9ba6888608",
+      "doc_path": "refs/notes/conductor-study",
+      "file": "vibevm/vibespecs/refs/notes/conductor-study.xml",
+      "heading": "Study note — Learning to Orchestrate (the Conductor)",
+      "line": 3,
+      "uri": "spec://org.vibevm.fractality/fractality/refs/notes/conductor-study#root"
+    },
+    {
+      "anchor": "what",
+      "content_hash": "sha256:b352a3599e0869bff095ae89a587288e1faa3b7e8d9f6ec786a36f340ba1d186",
+      "doc_path": "refs/notes/conductor-study",
+      "file": "vibevm/vibespecs/refs/notes/conductor-study.xml",
+      "heading": "What it is",
+      "line": 8,
+      "uri": "spec://org.vibevm.fractality/fractality/refs/notes/conductor-study#what"
+    },
+    {
+      "anchor": "facts",
+      "content_hash": "sha256:440474e753f1cb8ac6dea3e170731bf333e1a4f55999592d72334b7cb018d0d3",
+      "doc_path": "refs/notes/conductor-study",
+      "file": "vibevm/vibespecs/refs/notes/conductor-study.xml",
+      "heading": "Facts",
+      "line": 23,
+      "uri": "spec://org.vibevm.fractality/fractality/refs/notes/conductor-study#facts"
+    },
+    {
+      "anchor": "decisions",
+      "content_hash": "sha256:2f629b97a9340b02509eae5ebccd91315aa2b24a1d389129fcf64912ddedf8df",
+      "doc_path": "refs/notes/conductor-study",
+      "file": "vibevm/vibespecs/refs/notes/conductor-study.xml",
+      "heading": "Decisions we take",
+      "line": 38,
+      "uri": "spec://org.vibevm.fractality/fractality/refs/notes/conductor-study#decisions"
+    },
+    {
+      "anchor": "root",
+      "content_hash": "sha256:9cb243a7fc7d620ab2cc3de962432d80096ac908f1b9983835671c73d87953f2",
+      "doc_path": "refs/notes/context-folding-study",
+      "file": "vibevm/vibespecs/refs/notes/context-folding-study.xml",
+      "heading": "Study note — Scaling Long-Horizon LLM Agent via Context-Folding",
+      "line": 3,
+      "uri": "spec://org.vibevm.fractality/fractality/refs/notes/context-folding-study#root"
+    },
+    {
+      "anchor": "what",
+      "content_hash": "sha256:98fa37fa8b28012558482ec179669b206fee858b7e3157b99a77d8167bdc7c28",
+      "doc_path": "refs/notes/context-folding-study",
+      "file": "vibevm/vibespecs/refs/notes/context-folding-study.xml",
+      "heading": "What it is",
+      "line": 9,
+      "uri": "spec://org.vibevm.fractality/fractality/refs/notes/context-folding-study#what"
+    },
+    {
+      "anchor": "decisions",
+      "content_hash": "sha256:25833a06d15b8fdb836d879397e46673a778bf508caf7391b804b7978de32021",
+      "doc_path": "refs/notes/context-folding-study",
+      "file": "vibevm/vibespecs/refs/notes/context-folding-study.xml",
+      "heading": "Decisions we take",
+      "line": 35,
+      "uri": "spec://org.vibevm.fractality/fractality/refs/notes/context-folding-study#decisions"
+    },
+    {
+      "anchor": "root",
+      "content_hash": "sha256:226b64a68fa5c927b95d11c5297810562aba1e73592aa439781a45f14f82f078",
+      "doc_path": "refs/notes/dnc-noise-study",
+      "file": "vibevm/vibespecs/refs/notes/dnc-noise-study.xml",
+      "heading": "Study note — When Does Divide and Conquer Work for Long Context LLM?",
+      "line": 3,
+      "uri": "spec://org.vibevm.fractality/fractality/refs/notes/dnc-noise-study#root"
+    },
+    {
+      "anchor": "what",
+      "content_hash": "sha256:214e78b3be33bf8de1bee6920e91db9784349cd63256b96c0f103b152b4be423",
+      "doc_path": "refs/notes/dnc-noise-study",
+      "file": "vibevm/vibespecs/refs/notes/dnc-noise-study.xml",
+      "heading": "What it is",
+      "line": 8,
+      "uri": "spec://org.vibevm.fractality/fractality/refs/notes/dnc-noise-study#what"
+    },
+    {
+      "anchor": "decisions",
+      "content_hash": "sha256:944922d9f233d11160cd5c1693ed0340c1555b32a43271529b738dced5ed7cf3",
+      "doc_path": "refs/notes/dnc-noise-study",
+      "file": "vibevm/vibespecs/refs/notes/dnc-noise-study.xml",
+      "heading": "Decisions we take",
+      "line": 41,
+      "uri": "spec://org.vibevm.fractality/fractality/refs/notes/dnc-noise-study#decisions"
+    },
+    {
+      "anchor": "root",
+      "content_hash": "sha256:54c34342ba09cb3310b19492673297fa5ad662a783909a047fe900cb1da3712d",
+      "doc_path": "refs/notes/fast-rlm-study",
+      "file": "vibevm/vibespecs/refs/notes/fast-rlm-study.xml",
+      "heading": "Study note — fast-rlm (the engineering-complete RLM runtime)",
+      "line": 3,
+      "uri": "spec://org.vibevm.fractality/fractality/refs/notes/fast-rlm-study#root"
+    },
+    {
+      "anchor": "what",
+      "content_hash": "sha256:cb8c05c625c94cbdda4634b409d07c8f62df5218f586fd431f2d8e279ca475e0",
+      "doc_path": "refs/notes/fast-rlm-study",
+      "file": "vibevm/vibespecs/refs/notes/fast-rlm-study.xml",
+      "heading": "What it is",
+      "line": 12,
+      "uri": "spec://org.vibevm.fractality/fractality/refs/notes/fast-rlm-study#what"
+    },
+    {
+      "anchor": "facts",
+      "content_hash": "sha256:b26f4fa6c19a6a666d258973faef4571fcd9e2d8bc37702d6861d88ff57eeaf2",
+      "doc_path": "refs/notes/fast-rlm-study",
+      "file": "vibevm/vibespecs/refs/notes/fast-rlm-study.xml",
+      "heading": "Facts that matter to us",
+      "line": 21,
+      "uri": "spec://org.vibevm.fractality/fractality/refs/notes/fast-rlm-study#facts"
+    },
+    {
+      "anchor": "decisions",
+      "content_hash": "sha256:6c6b0ca4256abdb6abf10e9098dcf641bfe2fc34fb82a01b86837ce57bd0772c",
+      "doc_path": "refs/notes/fast-rlm-study",
+      "file": "vibevm/vibespecs/refs/notes/fast-rlm-study.xml",
+      "heading": "Decisions we take",
+      "line": 61,
+      "uri": "spec://org.vibevm.fractality/fractality/refs/notes/fast-rlm-study#decisions"
+    },
+    {
+      "anchor": "root",
+      "content_hash": "sha256:5c24a7098e25d8e41f2c2d7fef29db7b64881ac7281cd2e6b89d8bc99032bea4",
+      "doc_path": "refs/notes/fugu-study",
+      "file": "vibevm/vibespecs/refs/notes/fugu-study.xml",
+      "heading": "Study note — Sakana Fugu (the anchor project)",
+      "line": 3,
+      "uri": "spec://org.vibevm.fractality/fractality/refs/notes/fugu-study#root"
+    },
+    {
+      "anchor": "what",
+      "content_hash": "sha256:ee7fc157ab856802beea779b2ce1d02c9bd9134e842e749ddfb1ce0d5eaabcfc",
+      "doc_path": "refs/notes/fugu-study",
+      "file": "vibevm/vibespecs/refs/notes/fugu-study.xml",
+      "heading": "What it is",
+      "line": 13,
+      "uri": "spec://org.vibevm.fractality/fractality/refs/notes/fugu-study#what"
+    },
+    {
+      "anchor": "architecture",
+      "content_hash": "sha256:c1ac9d4d85e764a9e4899d876965b888000110b40e912a5bf81a19944211aee8",
+      "doc_path": "refs/notes/fugu-study",
+      "file": "vibevm/vibespecs/refs/notes/fugu-study.xml",
+      "heading": "Architecture facts",
+      "line": 28,
+      "uri": "spec://org.vibevm.fractality/fractality/refs/notes/fugu-study#architecture"
+    },
+    {
+      "anchor": "results",
+      "content_hash": "sha256:31be0f651979a4b3ed8800325d39f54b589552b0011a82be05e9844819320ae3",
+      "doc_path": "refs/notes/fugu-study",
+      "file": "vibevm/vibespecs/refs/notes/fugu-study.xml",
+      "heading": "Results facts",
+      "line": 73,
+      "uri": "spec://org.vibevm.fractality/fractality/refs/notes/fugu-study#results"
+    },
+    {
+      "anchor": "decisions",
+      "content_hash": "sha256:7798abb37f3dc9670b97d0fb16db5a1b875825b4ddb1021845cca8917ed2dbf6",
+      "doc_path": "refs/notes/fugu-study",
+      "file": "vibevm/vibespecs/refs/notes/fugu-study.xml",
+      "heading": "Decisions we take",
+      "line": 100,
+      "uri": "spec://org.vibevm.fractality/fractality/refs/notes/fugu-study#decisions"
+    },
+    {
+      "anchor": "root",
+      "content_hash": "sha256:dba0bb745fae3b566a8a03b8fe7ef77cff61404ff5b2cfed26c336494c85320d",
+      "doc_path": "refs/notes/landscape",
+      "file": "vibevm/vibespecs/refs/notes/landscape.xml",
+      "heading": "Landscape note — where fractality sits",
+      "line": 3,
+      "uri": "spec://org.vibevm.fractality/fractality/refs/notes/landscape#root"
+    },
+    {
+      "anchor": "root",
+      "content_hash": "sha256:d60b1ba3d42179582e602ee3765b84cec23c7aedab15b23c2c762afaa1921be9",
+      "doc_path": "refs/notes/openfugu-study",
+      "file": "vibevm/vibespecs/refs/notes/openfugu-study.xml",
+      "heading": "Study note — OpenFugu (open reimplementation of Fugu)",
+      "line": 3,
+      "uri": "spec://org.vibevm.fractality/fractality/refs/notes/openfugu-study#root"
+    },
+    {
+      "anchor": "facts",
+      "content_hash": "sha256:f54ad7055eca1a84d5eb73ea1028c5aa6d63f597998dffcf206e34fc3fba3bc4",
+      "doc_path": "refs/notes/openfugu-study",
+      "file": "vibevm/vibespecs/refs/notes/openfugu-study.xml",
+      "heading": "Facts the API hides",
+      "line": 11,
+      "uri": "spec://org.vibevm.fractality/fractality/refs/notes/openfugu-study#facts"
+    },
+    {
+      "anchor": "decisions",
+      "content_hash": "sha256:10fe6d0105c117a2b9419e3b730395586e4410ed92fc51cd4d538fb091067294",
+      "doc_path": "refs/notes/openfugu-study",
+      "file": "vibevm/vibespecs/refs/notes/openfugu-study.xml",
+      "heading": "Decisions we take",
+      "line": 48,
+      "uri": "spec://org.vibevm.fractality/fractality/refs/notes/openfugu-study#decisions"
+    },
+    {
+      "anchor": "root",
+      "content_hash": "sha256:fc9d834bd33e54c272a161bcce6e06ae2a02dde9c21c3d84d7059695f2942e1a",
+      "doc_path": "refs/notes/rao-study",
+      "file": "vibevm/vibespecs/refs/notes/rao-study.xml",
+      "heading": "Study note — Recursive Agent Optimization (RAO)",
+      "line": 3,
+      "uri": "spec://org.vibevm.fractality/fractality/refs/notes/rao-study#root"
+    },
+    {
+      "anchor": "what",
+      "content_hash": "sha256:46dae55d3f82264348606f466d0ddd1791186fb2b5d604ed6460e8239a250c8c",
+      "doc_path": "refs/notes/rao-study",
+      "file": "vibevm/vibespecs/refs/notes/rao-study.xml",
+      "heading": "What it is",
+      "line": 7,
+      "uri": "spec://org.vibevm.fractality/fractality/refs/notes/rao-study#what"
+    },
+    {
+      "anchor": "decisions",
+      "content_hash": "sha256:39bacec7f99780af3669990c7f7d62980471523122b9d5c581a0e06495c61fdb",
+      "doc_path": "refs/notes/rao-study",
+      "file": "vibevm/vibespecs/refs/notes/rao-study.xml",
+      "heading": "Decisions we take",
+      "line": 31,
+      "uri": "spec://org.vibevm.fractality/fractality/refs/notes/rao-study#decisions"
+    },
+    {
+      "anchor": "root",
+      "content_hash": "sha256:f717020f6fec28f1603f429b419a612ba43620e7ea9597f1dc7c21bf2eea4ed3",
+      "doc_path": "refs/notes/recursive-llm-study",
+      "file": "vibevm/vibespecs/refs/notes/recursive-llm-study.xml",
+      "heading": "Study note — grishahq/recursive-llm (minimal RLM)",
+      "line": 3,
+      "uri": "spec://org.vibevm.fractality/fractality/refs/notes/recursive-llm-study#root"
+    },
+    {
+      "anchor": "what",
+      "content_hash": "sha256:fdf275dad1be87089b707835270908d8ea4e4b78652d85c7e08b20ac7a2ff749",
+      "doc_path": "refs/notes/recursive-llm-study",
+      "file": "vibevm/vibespecs/refs/notes/recursive-llm-study.xml",
+      "heading": "What it is",
+      "line": 10,
+      "uri": "spec://org.vibevm.fractality/fractality/refs/notes/recursive-llm-study#what"
+    },
+    {
+      "anchor": "facts",
+      "content_hash": "sha256:bad5cae6dcaad1984bbd8761a279ebeb0f1db4e7783127473a64e552e66a7993",
+      "doc_path": "refs/notes/recursive-llm-study",
+      "file": "vibevm/vibespecs/refs/notes/recursive-llm-study.xml",
+      "heading": "Facts that matter to us",
+      "line": 18,
+      "uri": "spec://org.vibevm.fractality/fractality/refs/notes/recursive-llm-study#facts"
+    },
+    {
+      "anchor": "decisions",
+      "content_hash": "sha256:441368653016d2ffa05cce58dfb42bb067930bbe10bc415e56dcb1401724d8ef",
+      "doc_path": "refs/notes/recursive-llm-study",
+      "file": "vibevm/vibespecs/refs/notes/recursive-llm-study.xml",
+      "heading": "Decisions we take",
+      "line": 46,
+      "uri": "spec://org.vibevm.fractality/fractality/refs/notes/recursive-llm-study#decisions"
+    },
+    {
+      "anchor": "root",
+      "content_hash": "sha256:dd3ddb0c1b7b7a953e27548d556cdfbb8b4d5aa10a1c6560e5b6761b9fc31b07",
+      "doc_path": "refs/notes/redel-study",
+      "file": "vibevm/vibespecs/refs/notes/redel-study.xml",
+      "heading": "Study note — ReDel (recursive delegation toolkit)",
+      "line": 3,
+      "uri": "spec://org.vibevm.fractality/fractality/refs/notes/redel-study#root"
+    },
+    {
+      "anchor": "what",
+      "content_hash": "sha256:b94ecdf5919c577acbcad64685d8cc09d4e841180591be66fded9de5148d9fb4",
+      "doc_path": "refs/notes/redel-study",
+      "file": "vibevm/vibespecs/refs/notes/redel-study.xml",
+      "heading": "What it is",
+      "line": 11,
+      "uri": "spec://org.vibevm.fractality/fractality/refs/notes/redel-study#what"
+    },
+    {
+      "anchor": "facts",
+      "content_hash": "sha256:09448c817d73f028cf42afdcc9a14301d3ee3cca4446bbaa5c94cf85d5aa1b7e",
+      "doc_path": "refs/notes/redel-study",
+      "file": "vibevm/vibespecs/refs/notes/redel-study.xml",
+      "heading": "Facts that matter to us",
+      "line": 18,
+      "uri": "spec://org.vibevm.fractality/fractality/refs/notes/redel-study#facts"
+    },
+    {
+      "anchor": "decisions",
+      "content_hash": "sha256:c71caef3f52de429ea5f6921228e64d050d61c703cc6004b87e5e03d41ef528f",
+      "doc_path": "refs/notes/redel-study",
+      "file": "vibevm/vibespecs/refs/notes/redel-study.xml",
+      "heading": "Decisions we take",
+      "line": 58,
+      "uri": "spec://org.vibevm.fractality/fractality/refs/notes/redel-study#decisions"
+    },
+    {
+      "anchor": "root",
+      "content_hash": "sha256:83c085a374ddfed30116b03bca5d2de32cc281996e18ac84c1762169fc6dcc4b",
+      "doc_path": "refs/notes/rlm-articles-t3",
+      "file": "vibevm/vibespecs/refs/notes/rlm-articles-t3.xml",
+      "heading": "Study note — the five articles (grouped T3)",
+      "line": 3,
+      "uri": "spec://org.vibevm.fractality/fractality/refs/notes/rlm-articles-t3#root"
+    },
+    {
+      "anchor": "zhang-blog",
+      "content_hash": "sha256:7cbecd51536483fdf8c35e624cfb4be25e36cd4b8dd6e064b24552a02de7a0d5",
+      "doc_path": "refs/notes/rlm-articles-t3",
+      "file": "vibevm/vibespecs/refs/notes/rlm-articles-t3.xml",
+      "heading": "S18 — Zhang's RLM blog (the origin post)",
+      "line": 10,
+      "uri": "spec://org.vibevm.fractality/fractality/refs/notes/rlm-articles-t3#zhang-blog"
+    },
+    {
+      "anchor": "pi",
+      "content_hash": "sha256:a5fa2f5ecd277c4e14b9e0d1a9ea44dd574dd146d6885b4a82cb38abcacfdb04",
+      "doc_path": "refs/notes/rlm-articles-t3",
+      "file": "vibevm/vibespecs/refs/notes/rlm-articles-t3.xml",
+      "heading": "S19 — Prime Intellect: \"RLM, the paradigm of 2026\"",
+      "line": 26,
+      "uri": "spec://org.vibevm.fractality/fractality/refs/notes/rlm-articles-t3#pi"
+    },
+    {
+      "anchor": "cognition",
+      "content_hash": "sha256:30317fd19eebf946ae5d7c1879fd1d420f4f337ac3323fe0d6d32aedd5eda5ce",
+      "doc_path": "refs/notes/rlm-articles-t3",
+      "file": "vibevm/vibespecs/refs/notes/rlm-articles-t3.xml",
+      "heading": "S20 — Cognition: the counterpoint arc (2025 → 2026)",
+      "line": 48,
+      "uri": "spec://org.vibevm.fractality/fractality/refs/notes/rlm-articles-t3#cognition"
+    },
+    {
+      "anchor": "anthropic",
+      "content_hash": "sha256:a6c08227c5986099a9596c81bd14d3bc4b449dcc08b2f767542409ab98572861",
+      "doc_path": "refs/notes/rlm-articles-t3",
+      "file": "vibevm/vibespecs/refs/notes/rlm-articles-t3.xml",
+      "heading": "S21 — Anthropic: multi-agent research system",
+      "line": 82,
+      "uri": "spec://org.vibevm.fractality/fractality/refs/notes/rlm-articles-t3#anthropic"
+    },
+    {
+      "anchor": "minrlm",
+      "content_hash": "sha256:3f254217ba03ae9abd467a017ab015bac51d09cc85676eab16aad5be0b1a3e2c",
+      "doc_path": "refs/notes/rlm-articles-t3",
+      "file": "vibevm/vibespecs/refs/notes/rlm-articles-t3.xml",
+      "heading": "S22 — minRLM: practical guide + benchmark",
+      "line": 108,
+      "uri": "spec://org.vibevm.fractality/fractality/refs/notes/rlm-articles-t3#minrlm"
+    },
+    {
+      "anchor": "cross",
+      "content_hash": "sha256:84dfba1686bad9e65239865c313d7050759a8af8078ffd1896fe74bd7afe2929",
+      "doc_path": "refs/notes/rlm-articles-t3",
+      "file": "vibevm/vibespecs/refs/notes/rlm-articles-t3.xml",
+      "heading": "Cross-cutting (survey's synthesis, boss-endorsed)",
+      "line": 134,
+      "uri": "spec://org.vibevm.fractality/fractality/refs/notes/rlm-articles-t3#cross"
+    },
+    {
+      "anchor": "root",
+      "content_hash": "sha256:a1907255b280779471b6f4f1f2d8b7b082cb918f30430ec27e90c64e11ddafe6",
+      "doc_path": "refs/notes/rlm-runners-up-t3",
+      "file": "vibevm/vibespecs/refs/notes/rlm-runners-up-t3.xml",
+      "heading": "Study note — RLM runners-up (grouped T3)",
+      "line": 3,
+      "uri": "spec://org.vibevm.fractality/fractality/refs/notes/rlm-runners-up-t3#root"
+    },
+    {
+      "anchor": "thread",
+      "content_hash": "sha256:f51c6bb09e096a437a6da85a388b36c177eb3f55e07e1973f425d093b370b0cd",
+      "doc_path": "refs/notes/rlm-runners-up-t3",
+      "file": "vibevm/vibespecs/refs/notes/rlm-runners-up-t3.xml",
+      "heading": "S23 — THREAD (arXiv 2405.17402, NAACL 2025)",
+      "line": 9,
+      "uri": "spec://org.vibevm.fractality/fractality/refs/notes/rlm-runners-up-t3#thread"
+    },
+    {
+      "anchor": "overthink",
+      "content_hash": "sha256:eaad7223b07e2e71f484802dcad89797b24663a292c5f3bc95b43f93496c7cee",
+      "doc_path": "refs/notes/rlm-runners-up-t3",
+      "file": "vibevm/vibespecs/refs/notes/rlm-runners-up-t3.xml",
+      "heading": "S24 — Think, But Don't Overthink (arXiv 2603.02615)",
+      "line": 28,
+      "uri": "spec://org.vibevm.fractality/fractality/refs/notes/rlm-runners-up-t3#overthink"
+    },
+    {
+      "anchor": "cc-rlm",
+      "content_hash": "sha256:16c44a630d6f6dc4fa7f58e0f5fddc2f8f7724e36c71ae4887ff0abaf3bd706b",
+      "doc_path": "refs/notes/rlm-runners-up-t3",
+      "file": "vibevm/vibespecs/refs/notes/rlm-runners-up-t3.xml",
+      "heading": "S25 — brainqub3/claude_code_RLM (MIT, 393★)",
+      "line": 54,
+      "uri": "spec://org.vibevm.fractality/fractality/refs/notes/rlm-runners-up-t3#cc-rlm"
+    },
+    {
+      "anchor": "tinyagents",
+      "content_hash": "sha256:47e92f1f59356c0cdfac134f15c42c64d845570e38794c286df7660185678f84",
+      "doc_path": "refs/notes/rlm-runners-up-t3",
+      "file": "vibevm/vibespecs/refs/notes/rlm-runners-up-t3.xml",
+      "heading": "S26 — tinyhumansai/tinyagents (GPL-3.0, Rust, crates v1.5)",
+      "line": 71,
+      "uri": "spec://org.vibevm.fractality/fractality/refs/notes/rlm-runners-up-t3#tinyagents"
+    },
+    {
+      "anchor": "root",
+      "content_hash": "sha256:acedfba4a8a3767f1693ff8b91f32d29238d9cf73f626aee50c428c78ad80071",
+      "doc_path": "refs/notes/rlm-source-selection",
+      "file": "vibevm/vibespecs/refs/notes/rlm-source-selection.xml",
+      "heading": "RLM source selection — the Wave 3 merge verdict",
+      "line": 3,
+      "uri": "spec://org.vibevm.fractality/fractality/refs/notes/rlm-source-selection#root"
+    },
+    {
+      "anchor": "repos",
+      "content_hash": "sha256:eac29a8f93c4c91e2b21854959379faa67b18f6298de200a08e0b5557adc319a",
+      "doc_path": "refs/notes/rlm-source-selection",
+      "file": "vibevm/vibespecs/refs/notes/rlm-source-selection.xml",
+      "heading": "The 5 repositories (recursion load-bearing)",
+      "line": 15,
+      "uri": "spec://org.vibevm.fractality/fractality/refs/notes/rlm-source-selection#repos"
+    },
+    {
+      "anchor": "papers",
+      "content_hash": "sha256:992da416dbffd5e9eaa35d3869282a290ad8828a4de60bac51eafae6a5e4b5f5",
+      "doc_path": "refs/notes/rlm-source-selection",
+      "file": "vibevm/vibespecs/refs/notes/rlm-source-selection.xml",
+      "heading": "The 5 papers",
+      "line": 81,
+      "uri": "spec://org.vibevm.fractality/fractality/refs/notes/rlm-source-selection#papers"
+    },
+    {
+      "anchor": "articles",
+      "content_hash": "sha256:e08857264e9e42f185a56efc17c1845e8e49f34770385ef00a2551c6663d3926",
+      "doc_path": "refs/notes/rlm-source-selection",
+      "file": "vibevm/vibespecs/refs/notes/rlm-source-selection.xml",
+      "heading": "The 5 articles",
+      "line": 143,
+      "uri": "spec://org.vibevm.fractality/fractality/refs/notes/rlm-source-selection#articles"
+    },
+    {
+      "anchor": "overlap",
+      "content_hash": "sha256:bea1a759f16f84ecff4576590d51d3defdf4559d681daf91eeee4272d7d4aae9",
+      "doc_path": "refs/notes/rlm-source-selection",
+      "file": "vibevm/vibespecs/refs/notes/rlm-source-selection.xml",
+      "heading": "Wave-disagreement notes (for P-R2's verdict at close)",
+      "line": 190,
+      "uri": "spec://org.vibevm.fractality/fractality/refs/notes/rlm-source-selection#overlap"
+    },
+    {
+      "anchor": "intake-map",
+      "content_hash": "sha256:f3546a57bfd46bbd3a153ac6a7baccedce1a5720d3680b578283d5756acb47bb",
+      "doc_path": "refs/notes/rlm-source-selection",
+      "file": "vibevm/vibespecs/refs/notes/rlm-source-selection.xml",
+      "heading": "Intake map (Ф3)",
+      "line": 204,
+      "uri": "spec://org.vibevm.fractality/fractality/refs/notes/rlm-source-selection#intake-map"
+    },
+    {
+      "anchor": "root",
+      "content_hash": "sha256:7189aba4d8e8282e84a5ecad4d0641f603ad0431e0d8f691ca72fbf40a775b42",
+      "doc_path": "refs/notes/rlm-study",
+      "file": "vibevm/vibespecs/refs/notes/rlm-study.xml",
+      "heading": "Study note — Recursive Language Models (the anchor project)",
+      "line": 3,
+      "uri": "spec://org.vibevm.fractality/fractality/refs/notes/rlm-study#root"
+    },
+    {
+      "anchor": "what",
+      "content_hash": "sha256:993c86fab3ca95101dd8bede623085fb1e737f2bef3593810a8d77954672a49f",
+      "doc_path": "refs/notes/rlm-study",
+      "file": "vibevm/vibespecs/refs/notes/rlm-study.xml",
+      "heading": "What it is",
+      "line": 10,
+      "uri": "spec://org.vibevm.fractality/fractality/refs/notes/rlm-study#what"
+    },
+    {
+      "anchor": "facts",
+      "content_hash": "sha256:d197fd8ae2aa64f4325ee06f938acc77c1914bec248f8bd699a6005e08e2b52d",
+      "doc_path": "refs/notes/rlm-study",
+      "file": "vibevm/vibespecs/refs/notes/rlm-study.xml",
+      "heading": "Verified facts that matter to us",
+      "line": 31,
+      "uri": "spec://org.vibevm.fractality/fractality/refs/notes/rlm-study#facts"
+    },
+    {
+      "anchor": "decisions",
+      "content_hash": "sha256:6b7a3348fd569521ccafb7ffa2a2746afbb6ee0491a710105a3631d8965e1d82",
+      "doc_path": "refs/notes/rlm-study",
+      "file": "vibevm/vibespecs/refs/notes/rlm-study.xml",
+      "heading": "Decisions we take (→ synthesis deltas)",
+      "line": 90,
+      "uri": "spec://org.vibevm.fractality/fractality/refs/notes/rlm-study#decisions"
+    },
+    {
+      "anchor": "open",
+      "content_hash": "sha256:55109893fbb9a1bfad4375e4495c3338af2e5a0bad7a459cdfdb684581f8c29d",
+      "doc_path": "refs/notes/rlm-study",
+      "file": "vibevm/vibespecs/refs/notes/rlm-study.xml",
+      "heading": "Open questions carried to synthesis",
+      "line": 136,
+      "uri": "spec://org.vibevm.fractality/fractality/refs/notes/rlm-study#open"
+    },
+    {
+      "anchor": "root",
+      "content_hash": "sha256:d4231b4300ef05fd127a61820240889d9c7927afe21a436a12a2e6fdf5ba0f0d",
+      "doc_path": "refs/notes/roma-study",
+      "file": "vibevm/vibespecs/refs/notes/roma-study.xml",
+      "heading": "Study note — ROMA (Recursive Open Meta-Agents)",
+      "line": 3,
+      "uri": "spec://org.vibevm.fractality/fractality/refs/notes/roma-study#root"
+    },
+    {
+      "anchor": "what",
+      "content_hash": "sha256:62358f93da41e6e900e244d798aa5842faf6d2f19672c8bef84ccb273c963435",
+      "doc_path": "refs/notes/roma-study",
+      "file": "vibevm/vibespecs/refs/notes/roma-study.xml",
+      "heading": "What it is",
+      "line": 12,
+      "uri": "spec://org.vibevm.fractality/fractality/refs/notes/roma-study#what"
+    },
+    {
+      "anchor": "facts",
+      "content_hash": "sha256:ad6aa7d4d55161eabf09cf41c3efaf55e6ca93f1fb1f93c2cf33a5684fc60a8b",
+      "doc_path": "refs/notes/roma-study",
+      "file": "vibevm/vibespecs/refs/notes/roma-study.xml",
+      "heading": "Facts that matter to us",
+      "line": 24,
+      "uri": "spec://org.vibevm.fractality/fractality/refs/notes/roma-study#facts"
+    },
+    {
+      "anchor": "decisions",
+      "content_hash": "sha256:aaa82d106e1bcd7db69655372306a606efb2d59c0b6b8f4b737456c640e4491c",
+      "doc_path": "refs/notes/roma-study",
+      "file": "vibevm/vibespecs/refs/notes/roma-study.xml",
+      "heading": "Decisions we take",
+      "line": 67,
+      "uri": "spec://org.vibevm.fractality/fractality/refs/notes/roma-study#decisions"
+    },
+    {
+      "anchor": "root",
+      "content_hash": "sha256:d32f2f0ca0243e3dea44d1399a2ff122b68861f9a0536f059cd8c7618755e4e6",
+      "doc_path": "refs/notes/srlm-study",
+      "file": "vibevm/vibespecs/refs/notes/srlm-study.xml",
+      "heading": "Study note — SRLM: Self-Reflective Program Search for Long Context",
+      "line": 3,
+      "uri": "spec://org.vibevm.fractality/fractality/refs/notes/srlm-study#root"
+    },
+    {
+      "anchor": "what",
+      "content_hash": "sha256:2a93f8ca0a6b502a092f5be98668da709362ed15589ada158d7f9d585465f2c6",
+      "doc_path": "refs/notes/srlm-study",
+      "file": "vibevm/vibespecs/refs/notes/srlm-study.xml",
+      "heading": "What it is",
+      "line": 7,
+      "uri": "spec://org.vibevm.fractality/fractality/refs/notes/srlm-study#what"
+    },
+    {
+      "anchor": "decisions",
+      "content_hash": "sha256:32c08cde6975c6d548c01656873ca89d401c914bd84fcdd486f6d66b0baf6461",
+      "doc_path": "refs/notes/srlm-study",
+      "file": "vibevm/vibespecs/refs/notes/srlm-study.xml",
+      "heading": "Decisions we take",
+      "line": 31,
+      "uri": "spec://org.vibevm.fractality/fractality/refs/notes/srlm-study#decisions"
+    },
+    {
+      "anchor": "root",
+      "content_hash": "sha256:fb0d5780c7a8b5996bf14a109bd801021e95be538a646b78beba954ff3ba794b",
+      "doc_path": "refs/notes/trinity-study",
+      "file": "vibevm/vibespecs/refs/notes/trinity-study.xml",
+      "heading": "Study note — TRINITY: An Evolved LLM Coordinator",
+      "line": 3,
+      "uri": "spec://org.vibevm.fractality/fractality/refs/notes/trinity-study#root"
+    },
+    {
+      "anchor": "what",
+      "content_hash": "sha256:f3c14894012918f5de9a9511a5960ab68657fdc4ce0c6866cc79440448950f15",
+      "doc_path": "refs/notes/trinity-study",
+      "file": "vibevm/vibespecs/refs/notes/trinity-study.xml",
+      "heading": "What it is",
+      "line": 8,
+      "uri": "spec://org.vibevm.fractality/fractality/refs/notes/trinity-study#what"
+    },
+    {
+      "anchor": "facts",
+      "content_hash": "sha256:033da36d6b618f0f201eb8c238f9ab302097cfd802a6e5e8ea95a9413d34ab6e",
+      "doc_path": "refs/notes/trinity-study",
+      "file": "vibevm/vibespecs/refs/notes/trinity-study.xml",
+      "heading": "Facts",
+      "line": 20,
+      "uri": "spec://org.vibevm.fractality/fractality/refs/notes/trinity-study#facts"
+    },
+    {
+      "anchor": "decisions",
+      "content_hash": "sha256:f18704a5738fbbf1c030902d90ce77fbd507df6383ee3fe53415bc1bfcf3cda3",
+      "doc_path": "refs/notes/trinity-study",
+      "file": "vibevm/vibespecs/refs/notes/trinity-study.xml",
+      "heading": "Decisions we take",
+      "line": 38,
+      "uri": "spec://org.vibevm.fractality/fractality/refs/notes/trinity-study#decisions"
+    }
+  ],
+  "suspects": [],
+  "warnings": [
+    {
+      "code": "long-section",
+      "file": "vibevm/vibespecs/plans/FRACTALITY-RLM-PLAN-v0.1.xml",
+      "line": 224,
+      "message": "section `9. Ledger` spans 202 lines (threshold 120) — long sections read poorly and churn often; split into smaller leaves"
+    }
+  ]
+}

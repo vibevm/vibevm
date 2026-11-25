@@ -1,0 +1,185 @@
+/* The gear, the panel and the quick row. Fixed to the top right, UNDER
+   the sticky header, and out of the way of the reading column.
+   ---------------------------------------------------------------------
+   Under it, because the corner is not theirs. The site header ends its
+   right-hand side with the search box and the language pill, and this
+   cluster used to be fixed at the very top of the same corner with a
+   higher z-index: the moment a reader began reading, the quick row
+   appeared and covered the language pill outright and the search box's
+   shortcut along with it.
+
+   So the offset is the header's own height, published by the header's
+   stylesheet, which is loaded exactly when there is a header to stand
+   clear of. In the reader `vibe` embeds there is none, the fallback is
+   zero, and these controls sit where they always did. */
+
+.settings {
+  position: fixed;
+  top: calc(var(--site-header-h, 0px) + 0.7rem);
+  right: 1rem;
+  /* Below the header (40) and above everything in the page. The two
+     never share space now; what this settles is whose panel wins when
+     both are open, and the answer is the one the reader just opened
+     from the bar. */
+  z-index: 32;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+/* The quick row is the reading mode: it appears once the first heading
+   has gone above 40% of the window, and only then. Before that the gear
+   alone is enough, and a row of controls over an unread page is noise. */
+.settings__quick {
+  display: none;
+  gap: 0.25rem;
+}
+
+.settings--reading .settings__quick {
+  display: flex;
+}
+
+.settings__gear,
+.settings__quick-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2rem;
+  height: 2rem;
+  padding: 0 0.45rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-pill);
+  background: var(--bg-raise);
+  color: var(--text-2);
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  cursor: pointer;
+  box-shadow: var(--shadow-card);
+  transition:
+    border-color var(--speed) ease,
+    color var(--speed) ease;
+}
+
+.settings__gear:hover,
+.settings__quick-button:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.settings__quick-button[aria-pressed="false"] {
+  opacity: 0.55;
+}
+
+.settings__panel {
+  position: absolute;
+  top: 2.6rem;
+  right: 0;
+  width: min(18rem, calc(100vw - 2rem));
+  padding: 0.7rem 0.8rem;
+  background: var(--bg-raise);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-mega);
+}
+
+.settings__group {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  margin: 0 0 0.5rem;
+  padding: 0;
+  border: none;
+}
+
+.settings__group legend {
+  float: left;
+  width: 100%;
+  margin-bottom: 0.25rem;
+  padding: 0;
+  font-family: var(--font-mono);
+  font-size: 0.64rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-3);
+}
+
+.settings__button {
+  padding: 0.16rem 0.55rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-pill);
+  background: none;
+  color: var(--text-2);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  cursor: pointer;
+  transition:
+    border-color var(--speed) ease,
+    color var(--speed) ease,
+    background var(--speed) ease;
+}
+
+.settings__button:hover {
+  border-color: var(--line-strong);
+  color: var(--text);
+}
+
+.settings__button[aria-pressed="true"],
+.settings__button.is-current {
+  background: var(--accent-soft);
+  border-color: var(--accent);
+  color: var(--text);
+}
+
+.settings__value {
+  min-width: 3rem;
+  text-align: center;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--text-3);
+}
+
+.settings__reset {
+  margin: 0.2rem 0 0;
+}
+
+/* The phone's shape: the controls at the bottom, the panel opening up.
+   ---------------------------------------------------------------------
+   Standing clear of the header is enough while the window is wide, where
+   the reading column is centred and the corner above it is margin. Below
+   about nine hundred pixels the column is the whole width, so the top
+   right corner is the FIRST LINE of the text, and that is where these
+   controls were sitting — the reading settings over the first thing a
+   reader reads.
+
+   The bottom of a phone's screen is where a thumb already is and where
+   nothing is written: the reading column ends six rems above the fold,
+   and the other two fixed things down there — the agent button on the
+   right, the return-to-place pill in the middle — leave the left corner
+   to this. The panel opens upward from the gear for the same reason it
+   opened downward before: away from the edge it is anchored to.
+
+   The gear leads the row here, so the corner holds the one control that
+   is always there and the quick row grows inward from it rather than
+   moving the gear whenever a reader starts reading.
+
+   There is also no second column width to choose on a phone. */
+@media (max-width: 900px) {
+  .settings {
+    top: auto;
+    right: auto;
+    bottom: 1.4rem;
+    left: 1rem;
+    flex-direction: row-reverse;
+  }
+
+  .settings__panel {
+    top: auto;
+    right: auto;
+    bottom: 2.6rem;
+    left: 0;
+  }
+
+  .settings__group--width {
+    display: none;
+  }
+}

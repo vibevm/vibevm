@@ -1,0 +1,304 @@
+/* The manual's pages in both of their shapes. The column is the same
+   `<details>` with its summary taken away and its content forced open;
+   nothing switches elements, only how one is laid out. */
+
+.contents {
+  margin: 0 0 1.6rem;
+  font-size: 0.85rem;
+}
+
+/* The control that opens the manual, where there is no column to show it
+   in.
+   ---------------------------------------------------------------------
+   It was a faint uppercase label in the mono face at 0.7rem — the same
+   eyebrow this column puts over a folder of pages — and on a phone it is
+   the ONLY way into the rest of the manual. A reader did not see it. So
+   it is drawn as what it does: the interface's own face at reading size,
+   a box that says it can be pressed, a menu glyph before the word and a
+   mark after it that turns when the list is open. It is at least 44px
+   tall, because on a phone it is hit with a thumb rather than pointed at.
+
+   The native marker goes two ways, because the two engines hide it
+   differently and one of them ignores `list-style` on a flex `summary`. */
+.contents__summary {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  min-height: 2.75rem;
+  padding: 0.5rem 0.85rem;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-md);
+  background: var(--bg-raise);
+  color: var(--text);
+  font-family: var(--font-sans);
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  list-style: none;
+  /* Where the ≡ of the reading controls puts it: under the sticky bar
+     rather than behind it. How much the bar covers is the bar's own
+     measure, published by the stylesheet that draws it — which is loaded
+     exactly when there is a bar, so in the reader `vibe` serves there is
+     none and the fallback of nothing is the right answer. */
+  scroll-margin-top: var(--site-header-cover, 0px);
+  transition:
+    border-color var(--speed) ease,
+    color var(--speed) ease;
+}
+
+.contents__summary::-webkit-details-marker {
+  display: none;
+}
+
+/* What kind of control it is, in one character: the same ≡ the reading
+   controls use for this list, so a reader meets one sign for it. */
+.contents__summary::before {
+  content: "≡";
+  font-family: var(--font-mono);
+  font-size: 1.1em;
+  line-height: 1;
+  color: var(--accent);
+}
+
+/* And whether it is open, at the far end of the row — the `details` own
+   state, read by the stylesheet and not by a script. */
+.contents__summary::after {
+  content: "▸";
+  margin-left: auto;
+  font-size: 0.78em;
+  color: var(--text-3);
+  transition: transform var(--speed) ease;
+}
+
+.contents[open] > .contents__summary::after {
+  transform: rotate(90deg);
+}
+
+.contents__summary:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.contents__summary:hover::after {
+  color: var(--accent);
+}
+
+/* Opened, the list stands clear of the control that opened it. In the
+   column there is no control, and the rule below puts the gap back. */
+.contents__summary + .contents__nav {
+  margin-top: 0.8rem;
+}
+
+.contents__section + .contents__section,
+.contents__list + .contents__section {
+  margin-top: 1rem;
+}
+
+.contents__heading {
+  margin: 0 0 0.3rem;
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-3);
+}
+
+/* The chapter's place in the path, in the accent and in figures of one
+   width: a column of chapters is a column of numbers, and proportional
+   digits would put every title at a slightly different indent. */
+.contents__number {
+  margin-right: 0.45em;
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;
+}
+
+.contents__list {
+  margin: 0.4rem 0 0;
+  padding: 0;
+  list-style: none;
+  border-left: 1px solid var(--line);
+}
+
+.contents__link {
+  display: block;
+  padding: 0.16rem 0 0.16rem 0.7rem;
+  margin-left: -1px;
+  border-left: 2px solid transparent;
+  color: var(--text-2);
+  line-height: 1.35;
+  transition:
+    color var(--speed) ease,
+    border-color var(--speed) ease;
+}
+
+.contents__link:hover {
+  color: var(--text);
+}
+
+.contents__link--current {
+  border-left-color: var(--accent);
+  color: var(--accent);
+}
+
+/* The entry the reading controls just pointed at, for a moment.
+   ---------------------------------------------------------------------
+   In the column shape ≡ does not move the page — the list is already on
+   the screen — so something has to say where the answer is, and it is the
+   entry itself. The mark is put on by the reader and taken off again; a
+   reader who asked for stillness gets it without the fade, because the
+   base stylesheet takes every transition's duration away. */
+.contents__link--cued {
+  background: var(--accent-soft);
+  border-left-color: var(--accent);
+  transition: background var(--speed) ease;
+}
+
+/* Which of the two views is showing, decided by the root element and by
+   nothing else.
+
+   The server writes both panes and the switch over them; the reader's
+   choice arrives as `data-contents-view` on `<html>`, stamped before the
+   first stylesheet is parsed. The path is the default
+   (`##NAV-CHAPTERS-READER`), so the ABSENCE of the attribute is the path
+   — which is also what a reader with scripting off gets, and the one
+   rule below says the same thing about the pane and about the pill it
+   belongs to. Everything is scoped to `.contents__nav--path`, because a
+   documentation that declared no path renders one pane and hiding it
+   would leave the column empty. */
+.contents__nav--path > .contents__pane {
+  display: none;
+}
+
+:root:not([data-contents-view="sections"])
+  .contents__nav--path
+  > .contents__pane--path,
+:root[data-contents-view="sections"]
+  .contents__nav--path
+  > .contents__pane--sections {
+  display: block;
+}
+
+/* The switch itself: the design system's pills, in the column's size.
+   It is not the `tab-pills` component — these two buttons select a view
+   of one list rather than one panel out of several, and the pressed one
+   is decided by the stylesheet rather than by the markup — but it wears
+   the same tokens, so a reader meets one kind of switch on the page. */
+.contents__views {
+  display: inline-flex;
+  gap: 0.2rem;
+  margin: 0 0 0.9rem;
+  padding: 0.15rem;
+  background: var(--bg-sink);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-pill);
+}
+
+.contents__view {
+  padding: 0.16rem 0.6rem;
+  border: none;
+  border-radius: var(--radius-pill);
+  background: none;
+  color: var(--text-2);
+  font-family: var(--font-sans);
+  font-size: 0.72rem;
+  cursor: pointer;
+  transition:
+    background var(--speed) ease,
+    color var(--speed) ease;
+}
+
+.contents__view:hover {
+  color: var(--text);
+}
+
+:root:not([data-contents-view="sections"])
+  .contents__view[data-contents-choice="path"],
+:root[data-contents-view="sections"]
+  .contents__view[data-contents-choice="sections"] {
+  background: var(--bg-raise);
+  color: var(--text);
+  box-shadow: var(--shadow-card);
+}
+
+/* The column shape. The class is put on the page by the same behaviour
+   that decides it for the table of contents, from the window's width and
+   the reader's own column width together — the two lists stand on either
+   side of the text and appear and disappear as one thing.
+
+   Forcing a closed `<details>` open is the one rule here that is not
+   ordinary layout. `content-visibility` on the generated content box is
+   what a browser hides the body of a closed disclosure with, so putting
+   it back is how a stylesheet says «open» without a script and without
+   an `open` attribute that would leave the phone's block expanded. The
+   sibling rule beside it answers the older engines, which hid the body
+   with `display` instead. */
+.has-sidebar .contents::details-content {
+  content-visibility: visible;
+  block-size: auto;
+}
+
+.has-sidebar .contents > .contents__nav {
+  display: block;
+  margin-top: 0;
+}
+
+.has-sidebar .contents {
+  position: sticky;
+  top: 5rem;
+  max-height: calc(100vh - 7rem);
+  overflow-y: scroll;
+  margin: 0;
+  scrollbar-gutter: stable;
+  /* A permanent rail under the native control: overlay-scrollbar modes may
+     hide their thumb at rest even for `overflow: scroll`, but the column
+     must still say that it continues. The reserved gutter keeps this six-
+     pixel line out of the links. */
+  background-image: linear-gradient(
+    to left,
+    color-mix(in srgb, var(--line-strong) 38%, transparent) 0 6px,
+    transparent 6px
+  );
+  background-repeat: no-repeat;
+  background-position: right top;
+  background-size: 6px 100%;
+  /* Firefox keeps the scrollbar atomic; make its compact form use the
+     same muted-to-accent language as the rest of the navigation. */
+  scrollbar-width: thin;
+  scrollbar-color: var(--line-strong) var(--bg-sink);
+}
+
+.has-sidebar .contents:hover {
+  scrollbar-color: var(--accent) var(--bg-sink);
+}
+
+/* Chromium exposes the vertical scrollbar's pieces. A narrow rounded
+   thumb keeps the column discoverably scrollable without the bright
+   Windows track and arrow buttons cutting a stripe through the reader. */
+.has-sidebar .contents::-webkit-scrollbar {
+  width: 6px;
+}
+
+.has-sidebar .contents::-webkit-scrollbar-track {
+  background: var(--bg-sink);
+}
+
+.has-sidebar .contents::-webkit-scrollbar-thumb {
+  min-height: 40px;
+  border-radius: var(--radius-pill);
+  background: var(--line-strong);
+}
+
+.has-sidebar .contents:hover::-webkit-scrollbar-thumb {
+  background: var(--accent);
+}
+
+.has-sidebar .contents::-webkit-scrollbar-button {
+  display: none;
+  width: 0;
+  height: 0;
+}
+
+.has-sidebar .contents__summary {
+  display: none;
+}

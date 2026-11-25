@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">Tool: fractality</title>
+  <p>This project has the **fractality delegation fabric** installed: an
+expensive boss agent (you) can hand tasks to cheap worker agents —
+isolated Claude Code processes under other providers — supervised by
+pods under a mission-control daemon. Everything below assumes the
+`fractality` binary on PATH (or a stated path) and a configured
+`~/.fractality/profiles.toml`.</p>
+  <trigger title="When a task smells delegable">
+    <p>Before doing bulk, mechanical, or read-and-summarize work yourself,
+consult the delegation matrix (`flow:org.vibevm.fractality/
+delegation-rules`, boot snippet 77): **delegate when verification is
+cheaper than generation.** The matrix is executable — score the task
+and read the verdict:</p>
+    <fence lang="sh">fractality route --error-cost reversible --context compilable \
+    --verify mechanical --size M        # exit 0 delegate · 1 keep</fence>
+    <p>Typical delegable shapes: templated test
+suites, bounded refactors and sweeps, fixture/boilerplate generation,
+module drafts against exact APIs, doc extraction and first-draft
+summaries. The never-delegate set (secrets, irreversible ops,
+architecture/spec authoring, ambiguity-as-design, review of delegated
+output, tiny edits) stays with you — always.</p>
+  </trigger>
+  <scoreboard title="Your scoreboard">
+    <p>`fractality scoreboard` shows measured facts for your session and the
+fabric: delegations, outcomes, parked questions with ages, the
+monthly web-quota burn (`--line` is the one-line strip). Where the
+Claude Code integration is installed (`fractality harness install
+claude-code`), the scoreboard greets the session automatically, a
+parked worker question interrupts one stop with the exact `answer`
+command, and a threshold nudge fires when you grind work tools
+without delegating — all facts, never blocking, config in
+`&lt;home&gt;/initiative.toml`, kill switch `FRACTALITY_INITIATIVE=off`.</p>
+  </scoreboard>
+  <commands title="One command per shape">
+    <fence lang="sh">fractality run --packet task.toml         # sync: spawn, wait, one-screen summary
+id=$(fractality spawn --packet task.toml) # async: returns the run id at once
+fractality wait "$id"                     # shell-wait semantics, semantic exit codes
+fractality ps / show &lt;id&gt; / tree [&lt;id&gt;]   # observe (add --json for machines)
+fractality questions / answer &lt;id&gt; "..."  # triage parked workers (D18 ask_boss)
+fractality kill &lt;id&gt; [--tree]             # stop a run (or its whole call tree)</fence>
+    <p>A worker with `Bash` allowed and the injected `FRACTALITY_*` env can
+itself call `fractality spawn` — the call tree builds itself and
+`kill --tree` can always dismantle it.</p>
+  </commands>
+  <packet title="The packet is the work order">
+    <p>One TOML file (D7): self-contained `task.goal`, `task.acceptance`
+commands (the pod runs them and records verdicts), `workspace.mode`
+(worktree for code — the branch is the deliverable), `budget` (wall,
+turns, tokens — exceeding kills the run), `routing.profile`/`model`
+(`big` | `small` slots; the playbooks pick). Template:
+`spec/examples/hello-glm.toml`; authoring loop: the
+`fractality-delegate` skill.</p>
+  </packet>
+  <never title="Never">
+    <list ordered="false">
+      <item>Never delegate the never-delegate set (snippet 77 enumerates it).</item>
+      <item>Never skip the review loop: a worker's output is advisory until the
+  diff is read and acceptance/gates are green — verification is your
+  half of the bargain.</item>
+      <item>Never hand a worker secrets or ambient credentials — profiles carry
+  token *paths*; the clean-slate env (I1) exists so you cannot leak
+  yours.</item>
+      <item>Never leave a surprise unrecorded — field data feeds the model's
+  playbook.</item>
+    </list>
+  </never>
+</spec>

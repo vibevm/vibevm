@@ -1,0 +1,46 @@
+/* Three cards in a row, hairlines drawn by the grid's own gap. */
+
+.capability-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background: var(--line);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  overflow: hidden;
+  margin-bottom: clamp(56px, 10vh, 104px);
+}
+
+.capability {
+  background: var(--bg);
+  padding: 28px 26px 30px;
+}
+
+.capability__label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 14px;
+}
+
+.capability__heading {
+  font-family: var(--font-display);
+  font-size: 21px;
+  color: var(--text);
+  margin-bottom: 8px;
+}
+
+.capability__body {
+  margin: 0;
+  font-size: 14.5px;
+  line-height: 1.6;
+  color: var(--text-2);
+}
+
+@media (max-width: 860px) {
+  .capability-row {
+    grid-template-columns: 1fr;
+  }
+}
