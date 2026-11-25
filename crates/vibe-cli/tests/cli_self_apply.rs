@@ -1081,11 +1081,11 @@ fn a_system_pac_is_reported_as_resolved_or_as_unresolvable_here() {
     )
     .into_owned();
     assert!(
-        text.contains("proxy pac: windows (system, from site profile)"),
+        text.lines().any(|line| line.split_whitespace().take(8).eq(["proxy", "pac", "windows", "·", "system", "·", "site", "profile"])),
         "{text}"
     );
     assert!(text.contains(resolved), "{text}");
-    assert!(!text.contains("proxy revocation:"), "{text}");
+    assert!(!text.lines().any(|line| line.split_whitespace().take(2).eq(["proxy", "revocation"])), "{text}");
 }
 
 /// A Linux host whose GNOME desktop is set to "automatic proxy
@@ -1205,7 +1205,7 @@ fn the_revocation_setting_is_reported_with_the_layer_that_chose_it() {
     );
     let text = ok(&machine.run(&["self", "apply", "--show"]));
     assert!(
-        text.contains("proxy revocation: off (from site profile)"),
+        text.lines().any(|line| line.split_whitespace().take(6).eq(["proxy", "revocation", "off", "·", "site", "profile"])),
         "{text}"
     );
 
@@ -1329,7 +1329,7 @@ fn a_profile_selecting_px_reports_the_missing_companion_until_it_is_there() {
     let output = human.output().unwrap();
     let text = ok(&output);
     assert!(text.contains("px: NOT INSTALLED"), "{text}");
-    assert!(text.contains("proxy mode: px"), "{text}");
+    assert!(text.lines().any(|line| line.split_whitespace().take(3).eq(["proxy", "mode", "px"])), "{text}");
     let stderr = String::from_utf8_lossy(&output.stderr);
     assert!(stderr.contains("vibe self px install --from"), "{stderr}");
 
@@ -1573,10 +1573,10 @@ fn an_install_root_of_tilde_lands_in_this_users_home() {
         .output()
         .unwrap());
     assert!(
-        shown.contains(&format!("install root: {}", home.display())),
+        shown.lines().any(|line| line.split_whitespace().take(3).eq(["install", "root", home.display().to_string().as_str()])),
         "{shown}"
     );
-    assert!(!shown.contains("install root: ~"), "{shown}");
+    assert!(!shown.lines().any(|line| line.trim_start().starts_with("install root") && line.contains('~')), "{shown}");
 }
 
 /// Another account's home and a relative directory are both refused, in a
