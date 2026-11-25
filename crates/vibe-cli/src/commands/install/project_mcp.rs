@@ -26,7 +26,11 @@ pub(super) struct ProjectMcpWorld<'a, T> {
 
 impl<'a, T> ProjectMcpWorld<'a, T> {
     pub(super) fn new(ordinary: T, ctx: &'a output::Context, packages: &'a [String]) -> Self {
-        Self { ordinary, ctx, packages }
+        Self {
+            ordinary,
+            ctx,
+            packages,
+        }
     }
 }
 
@@ -41,13 +45,18 @@ impl<T: AfterDurableWorld> AfterDurableWorld for ProjectMcpWorld<'_, T> {
         if self.packages.is_empty() {
             return Ok(outcome);
         }
-        let operation = self.ctx.progress().task("Registering requested project MCP packages");
+        let operation = self
+            .ctx
+            .progress()
+            .task("Registering requested project MCP packages");
         match crate::commands::mcp::register_project_packages(self.ctx, root, self.packages) {
             Ok(()) => {
                 operation.finish();
                 let mut seen = std::collections::BTreeSet::new();
                 for package in self.packages {
-                    if !seen.insert(package) { continue; }
+                    if !seen.insert(package) {
+                        continue;
+                    }
                     outcome.contributions.push(vibe_wire::generated::lifecycle_report::LifecycleContributionReport {
                         key: format!("project-mcp-registration:{package}"),
                         phase: "install".into(),
