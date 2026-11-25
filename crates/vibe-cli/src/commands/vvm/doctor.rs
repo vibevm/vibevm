@@ -47,6 +47,7 @@ pub(super) fn run_doctor_cmd(
     env: &VvmEnv,
     args: VvmDoctorArgs,
 ) -> anyhow::Result<()> {
+    let started = std::time::Instant::now();
     let progress = ctx.progress();
     let checks = progress.task("Checking self installation");
     let store = match env.store() {
@@ -440,8 +441,14 @@ pub(super) fn run_doctor_cmd(
         }
     }
 
+    view::close_diagnosis(
+        ctx,
+        rows.len(),
+        args.fix,
+        remaining_problems,
+        started.elapsed(),
+    );
     if remaining_problems == 0 {
-        ctx.summary("all good.");
         Ok(())
     } else {
         Err(VvmError::DoctorProblems {
