@@ -168,7 +168,7 @@ fn share(path: &str) -> Option<Result<(String, String), GitError>> {
     {
         rest
     } else if path.starts_with(r"\\?\") || path.starts_with(r"\\.\") || path.starts_with("//./") {
-        return (!path.starts_with(r"\\?\") || !path.as_bytes().get(5).is_some_and(|b| *b == b':'))
+        return (!path.starts_with(r"\\?\") || path.as_bytes().get(5).is_none_or(|b| *b != b':'))
             .then(|| Err(unsupported("a device path is not a repository directory")));
     } else {
         path.strip_prefix(r"\\")
