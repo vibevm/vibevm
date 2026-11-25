@@ -303,6 +303,11 @@ mod tests {
             .iter()
             .map(|id| lines.iter().position(|line| line.trim() == *id).unwrap())
             .collect();
+        let has_not_portable = |text: &str| {
+            let tokens: Vec<_> = text.split_whitespace().collect();
+            tokens.windows(2).any(|pair| pair == ["not", "portable"])
+        };
+        assert!(!has_not_portable("result external `/opt/node` · notportable"));
         for (index, start) in starts.iter().copied().enumerate() {
             let end = starts.get(index + 1).copied().unwrap_or(lines.len());
             let block = &lines[start..end];
@@ -310,6 +315,10 @@ mod tests {
                 .iter()
                 .position(|line| line.contains("feature docs:"))
                 .expect("each parent must retain its first feature child");
+            assert!(
+                has_not_portable(&block[..first_child].join(" ")),
+                "parent {index} must retain separate not and portable tokens"
+            );
             let parent: String = block[..first_child]
                 .iter()
                 .flat_map(|line| line.chars().filter(|ch| !ch.is_whitespace()))
