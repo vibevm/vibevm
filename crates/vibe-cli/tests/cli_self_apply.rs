@@ -1328,7 +1328,7 @@ fn a_profile_selecting_px_reports_the_missing_companion_until_it_is_there() {
     human.args(["--unattended", "self", "apply"]).arg(&profile);
     let output = human.output().unwrap();
     let text = ok(&output);
-    assert!(text.contains("px: NOT INSTALLED"), "{text}");
+    assert!(text.lines().any(|line| line.split_whitespace().take(4).eq(["✗", "px", "not", "installed"])), "{text}");
     assert!(text.lines().any(|line| line.split_whitespace().take(3).eq(["proxy", "mode", "px"])), "{text}");
     let stderr = String::from_utf8_lossy(&output.stderr);
     assert!(stderr.contains("vibe self px install --from"), "{stderr}");
@@ -1358,8 +1358,8 @@ fn a_profile_selecting_px_reports_the_missing_companion_until_it_is_there() {
         .arg(&profile)
         .output()
         .unwrap());
-    assert!(text.contains("px: already installed"), "{text}");
-    assert!(!text.contains("NOT INSTALLED"), "{text}");
+    assert!(text.lines().any(|line| line.split_whitespace().take(4).eq(["✓", "px", "already", "installed"])), "{text}");
+    assert!(!text.contains("not installed"), "{text}");
 }
 
 /// The px step reads the store of the install root the profile declares,
@@ -1430,7 +1430,7 @@ fn a_profile_naming_its_own_px_asks_nothing_of_the_companion_store() {
         .arg(&profile)
         .output()
         .unwrap());
-    assert!(!text.contains("px:"), "{text}");
+    assert!(!["✓", "○", "✗"].iter().any(|glyph| text.lines().any(|line| line.split_whitespace().take(2).eq([*glyph, "px"]))), "{text}");
 }
 
 /// `vibe self px status` with a px mode and no px is not a success: it
