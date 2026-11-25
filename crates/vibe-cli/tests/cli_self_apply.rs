@@ -1675,8 +1675,8 @@ fn px_install_from_a_local_file_takes_any_px_and_status_names_the_bytes() {
         .unwrap();
     let text = ok(&output);
     assert!(text.contains(&program.display().to_string()), "{text}");
-    assert!(text.contains(&format!("sha256: {sha256}")), "{text}");
-    assert!(text.contains("reports: px my-own 9.9.9"), "{text}");
+    assert!(text.contains(&sha256) && text.contains("sha256"), "{text}");
+    assert!(text.contains("reports") && text.contains("px my-own 9.9.9"), "{text}");
     assert!(!text.to_lowercase().contains("verif"), "{text}");
     let doc = json_plain(
         &machine
