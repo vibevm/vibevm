@@ -23,6 +23,40 @@ pub enum ResolutionPurpose {
     CheckoutSource,
 }
 
+/// Evidence retained while the legacy walk runs, including tolerated refusals.
+#[derive(Default)]
+pub(super) struct VersionPresence {
+    pub present: bool,
+    pub indeterminate: bool,
+}
+
+impl VersionPresence {
+    fn finish(
+        self,
+        result: Result<Vec<semver::Version>, RegistryError>,
+    ) -> Result<Option<Vec<semver::Version>>, RegistryError> {
+        match result {
+            Ok(versions) => Ok(Some(versions)),
+            // A failed selection still confirms a package exists. Do not hide
+            // operational errors merely because an earlier source was empty.
+            Err(RegistryError::NoMatchingVersion { .. }) => Ok(Some(Vec::new())),
+            Err(RegistryError::UnknownPackage { .. }) if self.present && !self.indeterminate => {
+                Ok(Some(Vec::new()))
+            }
+            Err(RegistryError::UnknownPackage { .. }) if !self.indeterminate => Ok(None),
+            Err(RegistryError::PackageNotFoundEverywhere { attempts, .. })
+                if !self.indeterminate
+                    && attempts.iter().all(|attempt| {
+                        matches!(attempt.status, WalkAttemptStatus::NotFound)
+                    }) =>
+            {
+                Ok(self.present.then(Vec::new))
+            }
+            Err(error) => Err(error),
+        }
+    }
+}
+
 pub(super) fn versions(
     progress: &vibe_core::progress::Progress,
     group: &Group,
@@ -106,6 +140,45 @@ fn observed<T>(
 }
 
 impl MultiRegistryResolver {
+    /// Enumerate versions while retaining package presence from the same walk.
+    ///
+    /// `Some`, including an empty vector, confirms presence; `None` means every
+    /// consulted source and the existing resolution fallback confirmed absence.
+    /// Tolerated public-auth refusals and offline/cache-only failures are not
+    /// confirmed absence. Operational errors remain errors. Source priority,
+    /// held pins and redirect selection are unchanged; no extra probe is made.
+    ///
+    /// ```no_run
+    /// use vibe_core::Group;
+    /// use vibe_registry::{MultiRegistryResolver, RegistryError};
+    /// fn inspect(resolver: &MultiRegistryResolver) -> Result<(), RegistryError> {
+    ///     let group = Group::parse("org.example").unwrap();
+    ///     let found = resolver.list_versions_with_presence(&group, "demo")?;
+    ///     let package_exists = found.is_some();
+    ///     let versions = found.unwrap_or_default();
+    ///     Ok(())
+    /// }
+    /// ```
+    #[specmark::spec(
+        implements = "spec://org.vibevm.core/vibevm/common/PROP-075#VERSIONS-LIST"
+    )]
+    pub fn list_versions_with_presence(
+        &self,
+        group: &Group,
+        name: &str,
+    ) -> Result<Option<Vec<semver::Version>>, RegistryError> {
+        let mut present = false;
+        let versions = versions(&self.progress, group, name, |task| {
+            let mut evidence = VersionPresence::default();
+            let result = self.list_versions_observed(group, name, task, None, &mut evidence);
+            evidence.finish(result).map(|found| {
+                present = found.is_some();
+                found.unwrap_or_default()
+            })
+        })?;
+        Ok(present.then_some(versions))
+    }
+
     /// Run the same resolution walk, identifying its caller's purpose.
     ///
     /// ```no_run
