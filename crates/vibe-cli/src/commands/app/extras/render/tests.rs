@@ -124,3 +124,13 @@ fn extras_empty_observation_and_skips_keep_their_meanings() {
     document.notices.push("the `list` was empty".into());
     assert_eq!(run_text(&document, 80), "  the list was empty");
 }
+
+#[test]
+fn extras_empty_work_uses_the_invocation_trailer_route() {
+    // This is the selector report_run matches to dispatch trailer_on rather
+    // than trailer_verdict_at: None preserves the Context-owned path metadata.
+    let mut document = run();
+    assert_eq!(super::super::run_trailer_work(&document.work), Some("/h/w"));
+    document.work.clear();
+    assert_eq!(super::super::run_trailer_work(&document.work), None);
+}

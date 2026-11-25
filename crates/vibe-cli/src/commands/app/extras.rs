@@ -29,7 +29,7 @@ use super::display::StepDisplay;
 use super::global::{self, Observation, Packages};
 use crate::cli::{AppExtrasArgs, ExtrasCommand, ExtrasTargetArgs};
 use crate::output;
-use crate::output::language::{Role, paint, rule_width, viewport};
+use crate::output::language::{Role, Stream, paint, rule_width, viewport};
 
 #[path = "extras/render.rs"]
 mod render;
@@ -382,7 +382,15 @@ fn report_run(
     }
     if trailer {
         let (ok, what) = render::run_trailer(document);
-        ctx.trailer_verdict_at(ok, &what, &document.work);
+        match run_trailer_work(&document.work) {
+            Some(work) => ctx.trailer_verdict_at(ok, &what, work),
+            None => ctx.trailer_on(Stream::Out, ok, &what),
+        }
     }
     Ok(())
+}
+
+/// No retained directory means the invocation owns the trailer's path metadata.
+fn run_trailer_work(work: &str) -> Option<&str> {
+    (!work.is_empty()).then_some(work)
 }
