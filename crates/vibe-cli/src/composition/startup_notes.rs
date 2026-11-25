@@ -216,7 +216,17 @@ pub(crate) fn classified(metadata: &tracing::Metadata<'_>) -> bool {
 /// The only default chatter excluded from the ordinary fmt layer: registry
 /// candidate fallback records, identified by structured metadata, not prose.
 pub(crate) fn registry_fallback(metadata: &tracing::Metadata<'_>) -> bool {
-    metadata.target() == "vibe_registry" && *metadata.level() == tracing::Level::WARN
+    let owner = metadata.module_path().zip(metadata.file()).zip(metadata.line());
+    let fallback = owner.is_some_and(|((module, file), line)| {
+        (module == "vibe_registry::git_registry::acquire"
+            && file.replace('\\', "/").ends_with("vibe-registry/src/git_registry/acquire.rs")
+            && line == 38)
+            || (module == "vibe_registry::git_registry::native"
+                && file.replace('\\', "/").ends_with("vibe-registry/src/git_registry/native.rs")
+                && line == 370)
+    });
+    fallback && metadata.target() == "vibe_registry"
+        && *metadata.level() == tracing::Level::WARN
         && metadata.fields().field("url").is_some()
         && metadata.fields().field("error").is_some()
 }

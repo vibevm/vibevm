@@ -90,8 +90,9 @@ impl Fixture {
         std::fs::write(root.path().join("settings/config.toml"), "[proxy]\nurl = \"x\"\n").unwrap();
         Self { root }
     }
-    fn run(&self, args: &[&str]) -> Output {
-        Command::new(env!("CARGO_BIN_EXE_vibe"))
+    fn command(&self) -> Command {
+        let mut command = Command::new(env!("CARGO_BIN_EXE_vibe"));
+        command
             .env_clear()
             .env("HOME", self.root.path().join("home"))
             .env("USERPROFILE", self.root.path().join("home"))
@@ -99,8 +100,11 @@ impl Fixture {
             .env("VIBE_REGISTRY_CACHE", self.root.path().join("cache"))
             .env("VIBE_NO_DEFAULT_REGISTRY", "1")
             .env("TERM", "dumb")
-            .current_dir(self.root.path())
-            .args(args).output().unwrap()
+            .current_dir(self.root.path());
+        command
+    }
+    fn run(&self, args: &[&str]) -> Output {
+        self.command().args(args).output().unwrap()
     }
 }
 
@@ -127,6 +131,38 @@ fn malformed_config_refuses_before_network_once() {
     assert!(stderr.matches("config_malformed").count() == 1, "coded refusal missing or duplicated");
     assert!(!stderr.contains("ignores it"), "fatal config also emitted tolerant notice");
     assert!(!stderr.contains("remap layer skipped"), "fatal config emitted remap duplicate");
+}
+
+#[test]
+fn registry_fallback_is_hidden_only_by_default() {
+    let fixture = Fixture::new();
+    std::fs::write(fixture.root.path().join("settings/config.toml"), "").unwrap();
+    let project = fixture.root.path().join("project");
+    let initialized = fixture.command().args(["init", "--path"])
+        .arg(&project).output().unwrap();
+    assert!(initialized.status.success(), "local project initialization failed");
+    let missing = fixture.root.path().join("empty-non-git-repository");
+    std::fs::create_dir(&missing).unwrap();
+    let url = reqwest::Url::from_file_path(&missing).expect("local file URL");
+    let added = fixture.command().current_dir(&project)
+        .args(["registry", "add", "fixture", url.as_str(), "--scope", "user", "--type", "monorepo"])
+        .output().unwrap();
+    assert!(added.status.success(), "local registry fixture registration failed");
+    let ordinary = fixture.command().current_dir(&project)
+        .args(["registry", "test"]).output().unwrap();
+    let debug = fixture.command().current_dir(&project).env("VIBE_LOG", "warn")
+        .args(["registry", "test"]).output().unwrap();
+    for bytes in [&ordinary.stdout, &ordinary.stderr] {
+        let text = String::from_utf8_lossy(bytes);
+        assert!(!text.contains("WARN"), "default output included a raw warning");
+        assert!(!text.contains("registry clone candidate failed")
+            && !text.contains("registry snapshot candidate failed"),
+            "default output included registry fallback chatter");
+    }
+    let debug_text = String::from_utf8_lossy(&debug.stderr);
+    assert!(debug_text.contains("registry clone candidate failed")
+        || debug_text.contains("registry snapshot candidate failed"),
+        "explicit warning logging did not retain registry fallback diagnostics");
 }
 
 #[test]
