@@ -388,6 +388,12 @@ impl Index {
             reason,
         };
         let (mut index, protocol) = Self::parse_with_protocol(&bytes).map_err(invalid)?;
+        if protocol == 1 {
+            let home = fs::canonicalize(settings.path())
+                .map_err(|source| io("resolving", settings.path(), source))?;
+            retired::validate(&bytes, Some(&home)).map_err(invalid)?;
+            return Ok((index, protocol));
+        }
         index.read_declared_version_files(settings);
         Ok((index, protocol))
     }
@@ -521,6 +527,7 @@ mod migration;
 #[path = "index/protocol.rs"]
 mod protocol;
 mod publication;
+mod retired;
 #[path = "index/upgrade.rs"]
 mod upgrade;
 mod upgrade_five;

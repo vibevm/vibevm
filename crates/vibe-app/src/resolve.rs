@@ -347,6 +347,10 @@ mod roots;
 
 pub use roots::{DirectoryRoots, directory_roots_from_global_with_operation};
 
+#[path = "resolve/presence.rs"]
+mod presence;
+pub use presence::versions_from_global_with_presence_with_operation;
+
 /// One local-directory registry's versions; a package it does not carry
 /// contributes nothing rather than failing the enumeration.
 fn local_versions(

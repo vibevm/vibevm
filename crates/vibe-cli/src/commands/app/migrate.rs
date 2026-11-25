@@ -19,7 +19,9 @@ use super::global::{self, Observation, Packages};
 use super::wizard::feature_chooser;
 use crate::cli::AppMigrateArgs;
 use crate::output;
-use crate::output::language::{Role, paint};
+use crate::output::language::{
+    Block, Glyph, LabelValue, Line, Meta, Role, hint, paint, short_path, viewport,
+};
 
 pub(super) fn run(
     ctx: &output::Context,
@@ -35,8 +37,8 @@ pub(super) fn run(
     }
     let Some(only) = selection(ctx, &plan, &args)? else {
         // Escape at the offer: no entry was chosen, so nothing ran.
-        ctx.summary(&format!(
-            "vibe app migrate: nothing chosen; slot `{}` is unchanged",
+        ctx.hint(&format!(
+            "nothing chosen; slot {} is unchanged",
             plan.slot
         ));
         return Ok(None);
@@ -149,8 +151,8 @@ fn nothing_declared(ctx: &output::Context, plan: &MigrationPlan) -> Result<Optio
         })?;
         return Ok(None);
     }
-    ctx.summary(&format!(
-        "vibe app migrate: `{}` declares no migration entry, so there is nothing to carry",
+    ctx.hint(&format!(
+        "{} declares no migration entry, so there is nothing to carry",
         plan.to
     ));
     Ok(None)
@@ -162,44 +164,12 @@ fn report(ctx: &output::Context, document: &wire::ApplicationMigration) -> Resul
     if ctx.is_json() {
         return ctx.emit_json(document);
     }
-    for entry in &document.entries {
-        let mark = match entry.outcome {
-            wire::Outcome::Done => "carried",
-            wire::Outcome::ExportFailed => "not carried (export failed)",
-            wire::Outcome::ImportFailed => "not carried (import failed)",
-            wire::Outcome::Pending => "exported, not yet imported",
-            wire::Outcome::Skipped => "skipped",
-        };
-        ctx.summary(&format!("  {} — {mark}", entry.name));
-        if let Some(reason) = &entry.reason
-            && !matches!(entry.outcome, wire::Outcome::Skipped)
-        {
-            ctx.summary(&format!("    {}", super::report::prose(reason)));
-        }
-        if let Some(log) = &entry.log {
-            ctx.summary(&format!("    log {}", paint(Role::Accent, log)));
-        }
-        if let Some(retry) = &entry.retry {
-            ctx.summary(&format!("    retry {}", paint(Role::Accent, retry)));
-        }
+    let text = migration_text(document, viewport());
+    if !text.is_empty() {
+        ctx.block(&text);
     }
-    if !document.work.is_empty() {
-        ctx.summary(&format!(
-            "  work directory kept {}",
-            paint(Role::Accent, &document.work)
-        ));
-    }
-    ctx.trailer(&format!(
-        "vibe app migrate: slot `{}` {} → {}, {}",
-        document.slot,
-        document.from,
-        document.to,
-        if document.ok {
-            "every selected entry carried"
-        } else {
-            "some state was not carried"
-        }
-    ));
+    let (ok, what) = migration_trailer(document);
+    ctx.trailer_verdict_at(ok, &what, &document.work);
     Ok(())
 }
 
@@ -218,10 +188,137 @@ pub(crate) fn offer(ctx: &output::Context, settings: &SettingsRoot, slot: &str, 
         .iter()
         .map(|entry| entry.name.as_str())
         .collect();
-    ctx.summary(&format!(
-        "  state from {} can be carried over ({}); nothing was migrated — run {}",
-        plan.from_version,
-        entries.join(", "),
-        paint(Role::Accent, &plan.offer_command(false))
+    ctx.block(&offer_text(
+        &plan.from_version,
+        &entries,
+        &plan.offer_command(false),
     ));
 }
+
+/// The version after the last at sign, or an unqualified key as given.
+fn version_of(key: &str) -> &str {
+    key.rsplit_once('@').map_or(key, |(_, version)| version)
+}
+
+/// One glyph block per entry, with measured time only for valid ordered endpoints.
+#[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-067#trailer")]
+fn migration_text(document: &wire::ApplicationMigration, width: usize) -> String {
+    let w = document
+        .entries
+        .iter()
+        .map(|entry| entry.id.chars().count())
+        .max()
+        .unwrap_or(0);
+    let blocks = document
+        .entries
+        .iter()
+        .map(|entry| {
+            let (glyph, mut meta) = match entry.outcome {
+                wire::Outcome::Done => (Glyph::Done, Vec::new()),
+                wire::Outcome::ExportFailed => {
+                    (Glyph::Failed, vec![Meta::Alert("export failed".into())])
+                }
+                wire::Outcome::ImportFailed => {
+                    (Glyph::Failed, vec![Meta::Alert("import failed".into())])
+                }
+                wire::Outcome::Pending => {
+                    (Glyph::Skipped, vec![Meta::note("exported, not yet imported")])
+                }
+                wire::Outcome::Skipped => (Glyph::Skipped, vec![Meta::note("skipped")]),
+            };
+            if let (Some(started), Some(finished)) = (&entry.started, &entry.finished)
+                && let (Ok(started), Ok(finished)) = (
+                    chrono::DateTime::parse_from_rfc3339(started),
+                    chrono::DateTime::parse_from_rfc3339(finished),
+                )
+                && let Ok(duration) = finished.signed_duration_since(started).to_std()
+            {
+                meta.insert(0, Meta::Time(duration));
+            }
+            if let Some(log) = &entry.log {
+                meta.push(Meta::note(format!("log {}", short_path(log))));
+            }
+            let mut body = Vec::new();
+            if matches!(
+                entry.outcome,
+                wire::Outcome::ExportFailed | wire::Outcome::ImportFailed | wire::Outcome::Pending
+            ) {
+                if let Some(reason) = &entry.reason {
+                    body.push(Line::Label(
+                        "why".into(),
+                        vec![LabelValue::Text(super::report::prose(reason))],
+                    ));
+                }
+                if let Some(retry) = &entry.retry {
+                    body.push(Line::Label(
+                        "retry".into(),
+                        vec![LabelValue::Command(retry.clone())],
+                    ));
+                }
+            }
+            Block::new(glyph, format!("{:<w$}  {}", entry.id, entry.name))
+                .with_meta(meta)
+                .with_body(body)
+                .render_at(width)
+        })
+        .collect::<Vec<_>>()
+        .join("\n");
+    let hints = document
+        .notices
+        .iter()
+        .map(|notice| format!("  {}", hint(&super::report::prose(notice))))
+        .collect::<Vec<_>>()
+        .join("\n");
+    [blocks, hints]
+        .into_iter()
+        .filter(|part| !part.is_empty())
+        .collect::<Vec<_>>()
+        .join("\n\n")
+}
+
+/// The document verdict and the selected versions, naming every entry not carried.
+#[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-067#trailer")]
+fn migration_trailer(document: &wire::ApplicationMigration) -> (bool, String) {
+    let from = version_of(&document.from);
+    let to = version_of(&document.to);
+    let missing = document
+        .entries
+        .iter()
+        .filter(|entry| {
+            matches!(
+                entry.outcome,
+                wire::Outcome::ExportFailed | wire::Outcome::ImportFailed | wire::Outcome::Pending
+            )
+        })
+        .count();
+    let carried = document
+        .entries
+        .iter()
+        .filter(|entry| matches!(entry.outcome, wire::Outcome::Done))
+        .count();
+    let slot = &document.slot;
+    let text = if document.ok {
+        format!("migrated {slot} {from} → {to}")
+    } else if carried > 0 {
+        format!("migrated {slot} {from} → {to} partly · {missing} not carried")
+    } else {
+        format!("migrated nothing of {slot} {from} → {to} · {missing} not carried")
+    };
+    (document.ok, text)
+}
+
+/// The offer is a dim explanation followed by its exact command on an accent line.
+fn offer_text(from_version: &str, names: &[&str], command: &str) -> String {
+    format!(
+        "  {}\n  {}",
+        hint(&format!(
+            "state from {from_version} can be carried over ({}); nothing was migrated",
+            names.join(", ")
+        )),
+        paint(Role::Accent, command)
+    )
+}
+
+#[cfg(test)]
+#[path = "migrate/tests.rs"]
+mod tests;

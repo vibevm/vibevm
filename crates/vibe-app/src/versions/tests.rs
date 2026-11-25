@@ -485,5 +485,97 @@ fn a_pattern_narrows_the_listing_by_prefix_and_a_bad_one_is_refused_by_name() {
     assert_eq!(listing.packages[0].versions[0].version, "24.22.2");
 }
 
+#[test]
+#[specmark::spec(verifies = "spec://org.vibevm.core/vibevm/common/PROP-075#VERSIONS-LIST-OUTPUT")]
+fn app_versions_unknown_package_is_refused() {
+    use std::cell::Cell;
+
+    use super::presence::fixtures::{FakeDomains, Legacy};
+
+    let mut source = FakeDomains {
+        answer: Ok(DomainObservation {
+            domain: Domain::default(),
+            presence: PackagePresence::Absent,
+        }),
+        observations: Cell::new(0),
+        legacy_calls: Cell::new(0),
+    };
+    let index = Index::default();
+    let qualified = request("org.example/none@99");
+    let error = versions_listing(&index, &qualified, &source).unwrap_err();
+    assert!(matches!(&error, AppError::Versions(VersionsError::UnknownPackage {
+        package, name
+    }) if package == "org.example/none" && name == "none"));
+    assert_eq!(error.code(), "unknown_package");
+    assert_eq!(error.class(), crate::ErrorClass::Refusal);
+    assert_eq!(error.to_string(), "org.example/none is in no registry this run reads (violates spec://org.vibevm.core/vibevm/common/PROP-075#VERSIONS-LIST-OUTPUT; fix: vibe search none)");
+    assert_eq!(source.observations.get(), 1);
+    let channel = VersionsRequest {
+        channel: Some("missing"),
+        ..qualified.clone()
+    };
+    let error = versions_listing(&index, &channel, &source).unwrap_err();
+    assert_eq!(error.code(), "unknown_package");
+    let installed_only = VersionsRequest {
+        installed: true,
+        ..qualified.clone()
+    };
+    let before = source.observations.get();
+    let listing = versions_listing(&index, &installed_only, &source).unwrap();
+    assert_eq!(listing.packages[0].total, 0);
+    assert_eq!(source.observations.get(), before);
+    let mut installed = Index::default();
+    let (key, record) = installation("none", "org.example", "none", "1.0.0");
+    installed.installations.insert(key, record);
+    let listing = versions_listing(&installed, &qualified, &source).unwrap();
+    assert_eq!(listing.packages[0].total, 0);
+    let unfiltered = request("org.example/none");
+    let listing = versions_listing(&installed, &unfiltered, &source).unwrap();
+    assert_eq!(listing.packages[0].total, 1);
+    source.answer = Ok(DomainObservation {
+        domain: Domain::default(),
+        presence: PackagePresence::Present,
+    });
+    let listing = versions_listing(&index, &qualified, &source).unwrap();
+    assert_eq!(listing.packages[0].total, 0);
+    source.answer.as_mut().unwrap().domain = Domain::of_published(["1.0.0".parse().unwrap()]);
+    let listing = versions_listing(&index, &qualified, &source).unwrap();
+    assert_eq!(listing.packages[0].total, 0);
+    source.answer = Ok(DomainObservation::default());
+    let listing = versions_listing(&index, &qualified, &source).unwrap();
+    assert_eq!(listing.packages[0].total, 0);
+    source.answer = Err("synthetic registry read failed".into());
+    let error = versions_listing(&index, &qualified, &source).unwrap_err();
+    assert_eq!(error.code(), "version_domain_unreadable");
+    assert!(matches!(error, AppError::Versions(VersionsError::Domain { package, reason })
+        if package == "org.example/none" && reason == "synthetic registry read failed"));
+    source.answer = Ok(DomainObservation {
+        domain: Domain {
+            template: Some(TemplateFacts {
+                coordinate: "org.example/none".into(),
+                ..Default::default()
+            }),
+            ..Default::default()
+        },
+        presence: PackagePresence::Absent,
+    });
+    let listing = versions_listing(&index, &qualified, &source).unwrap();
+    assert_eq!(listing.packages[0].total, 0);
+    assert!(listing.packages[0].template.is_some());
+    assert_eq!(source.legacy_calls.get(), 0);
+    let legacy = Legacy(Cell::new(0));
+    let observation = legacy.observe_domain("org.example", "none").unwrap();
+    assert_eq!(observation.presence, PackagePresence::Indeterminate);
+    assert_eq!(legacy.0.get(), 1);
+    let listing = versions_listing(&index, &qualified, &legacy).unwrap();
+    assert_eq!(listing.packages[0].total, 0);
+    assert_eq!(legacy.0.get(), 2);
+    let error = versions_listing(&index, &request("none"), &source).unwrap_err();
+    assert!(matches!(
+        error,
+        AppError::Versions(VersionsError::UnknownTarget { .. })
+    ));
+}
+
 #[path = "tests_drop.rs"]
 mod drop;

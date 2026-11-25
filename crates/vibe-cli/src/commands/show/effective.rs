@@ -261,10 +261,19 @@ pub(super) fn run_effective(ctx: &output::Context, args: ShowEffectiveArgs) -> R
         }
         println!();
     }
-    ctx.summary(&format!(
-        "vibe show effective: {} sections, project `{}`",
+    use crate::output::language::{hint, short_path};
+    let count = format!(
+        "{} {}",
         sections.len(),
-        project_root.display()
+        if sections.len() == 1 { "section" } else { "sections" },
+    );
+    ctx.block_err(&format!(
+        "  {}",
+        hint(&format!(
+            "{} · {}",
+            count,
+            short_path(&project_root.display().to_string()),
+        ))
     ));
     Ok(())
 }

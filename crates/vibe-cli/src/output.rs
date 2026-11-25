@@ -281,7 +281,6 @@ pub struct Context {
         std::sync::Arc<std::sync::Mutex<Option<std::sync::Weak<dyn panel::TerminalPanel>>>>,
     pub(crate) agent_user_dirs: vibe_agent_projection::agents::AgentUserDirectories,
     /// Detailed rendering policy belongs only to the CLI composition root.
-    #[cfg(test)]
     verbose: bool,
 }
 
@@ -335,7 +334,6 @@ impl Context {
                 }
                 directories
             },
-            #[cfg(test)]
             verbose: false,
         }
     }
@@ -357,10 +355,7 @@ impl Context {
     /// Selects the invocation's CLI progress renderer after all global flags
     /// have been resolved. Quiet and JSON modes remain completely silent.
     pub fn with_progress(mut self, verbose: bool, mode: ProgressMode) -> Self {
-        #[cfg(test)]
-        {
-            self.verbose = verbose;
-        }
+        self.verbose = verbose;
         if matches!(self.mode, Mode::Human)
             && !self.suppress_output
             && !matches!(mode, ProgressMode::Disabled)
@@ -423,8 +418,12 @@ impl Context {
         scoped
     }
 
+    /// The invocation's verbose flag, independent of progress animation.
+    pub(crate) fn verbose_requested(&self) -> bool {
+        self.verbose
+    }
+
     /// Whether detailed human progress is active for this context.
-    #[cfg(test)]
     pub fn is_verbose(&self) -> bool {
         self.verbose && self.progress_renderer.is_some()
     }
