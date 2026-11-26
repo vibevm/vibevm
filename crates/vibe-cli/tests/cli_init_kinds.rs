@@ -319,7 +319,7 @@ master, slave = pty.openpty()
 child = subprocess.Popen([sys.argv[1], 'init', '--path', str(root / 'project')],
                          stdin=slave, stdout=slave, stderr=slave, cwd=root, env=env)
 os.close(slave)
-capture, cancelled = bytearray(), False
+capture, cancelled, stage = bytearray(), False, 0
 deadline = time.monotonic() + 10
 try:
     while time.monotonic() < deadline:
@@ -333,12 +333,21 @@ try:
             if not chunk:
                 break
             capture.extend(chunk)
-            if not cancelled and b'Group (reverse-DNS)' in capture:
+            if stage == 0 and b'Group (reverse-DNS) \xe2\x80\xba ' in capture:
+                os.write(master, b'org.example\r')
+                stage = 1
+            elif stage == 1 and b'Name within the group' in capture:
+                os.write(master, b'demo\r')
+                stage = 2
+            elif stage == 2 and b'Root declaration' in capture and b'\xe2\x9d\xaf project\r\n  package' in capture:
+                # Text inputs ignore Escape; cancel the supported role selector
+                # while identity collection still precedes every scaffold write.
                 os.write(master, b'\x1b')
                 cancelled = True
+                stage = 3
         elif child.poll() is not None:
             break
-    assert cancelled, 'identity prompt was not reached'
+    assert cancelled and stage == 3, 'identity role selector was not reached'
     child.wait(timeout=5)
 finally:
     if child.poll() is None:
@@ -362,7 +371,7 @@ assert not (root / 'project').exists()
     assert!(!normalized.contains('`'), "{normalized}");
 }
 
-const HINT: &str = "vibe install <group>/<name> (e.g. org.vibevm.world/wal)";
+const HINT: &str = "vibe install org.vibevm.world/wal";
 
 #[test]
 fn both_forms_close_with_the_install_hint_in_todays_syntax() {
@@ -377,7 +386,11 @@ fn both_forms_close_with_the_install_hint_in_todays_syntax() {
         .unwrap();
     assert!(output.status.success());
     let text = screen(&output);
-    assert!(text.contains(HINT), "{text}");
+    assert_eq!(
+        text.lines().filter(|line| line.trim() == HINT).count(),
+        1,
+        "the exact next-step command is printed once: {text}"
+    );
     assert!(text.contains("initialized project demo"), "{text}");
     assert!(!text.contains("<kind>:<name>"), "{text}");
 
@@ -389,7 +402,11 @@ fn both_forms_close_with_the_install_hint_in_todays_syntax() {
         .unwrap();
     assert!(output.status.success());
     let text = screen(&output);
-    assert!(text.contains(HINT), "{text}");
+    assert_eq!(
+        text.lines().filter(|line| line.trim() == HINT).count(),
+        1,
+        "the exact next-step command is printed once: {text}"
+    );
     assert!(
         text.contains("initialized package org.example/my-skills"),
         "{text}"

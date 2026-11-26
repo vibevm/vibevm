@@ -198,9 +198,11 @@ fn next_steps(role: &str, outcomes: &[Outcome]) -> String {
         && let Some(manifest) = outcomes.iter().find(|o| o.reason == "package manifest")
     {
         return format!(
-            "  {}\n  {}",
+            "  {}\n  {}\n  {}\n  {}",
             hint("edit the package manifest next"),
-            manifest.path
+            manifest.path,
+            hint("install a package, for example"),
+            paint(Role::Accent, "vibe install org.vibevm.world/wal"),
         );
     }
     format!(
