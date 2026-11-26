@@ -195,7 +195,7 @@ fn heading(label: &str, right: Option<&str>, width: usize, rule: usize) -> Strin
         return cut(&rule_at(label, right, width), width);
     }
     let right = right.filter(|right| {
-        console::measure_text_width(label) + console::measure_text_width(right) + 1 <= width - 8
+        console::measure_text_width(label) + console::measure_text_width(right) < width - 8
     });
     let budget = width - 8 - right.map_or(0, |text| console::measure_text_width(text) + 1);
     rule_at(&cut(label, budget), right, width)

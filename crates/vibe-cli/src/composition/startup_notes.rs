@@ -204,14 +204,14 @@ impl Diagnostics {
             .lock()
             .unwrap_or_else(std::sync::PoisonError::into_inner);
         let pending = std::mem::take(&mut state.pending);
-        pending.into_iter().filter_map(|(code, occurrence, cause)| {
-            state.seen.insert((code, occurrence)).then(|| match code {
+        pending.into_iter().filter(|(code, occurrence, _)| {
+            state.seen.insert((*code, *occurrence))
+        }).map(|(code, _, cause)| match code {
                 "install_integrity" => "install_integrity: a dependency slot failed integrity verification and was re-materialised; review local dependency changes".into(),
                 "install_rollback" => "install_rollback: checked metadata restoration failed; inspect installation metadata before retrying `vibe install`".into(),
                 "network_route" => format!("network_route: {cause}; run `vibe self doctor`"),
                 _ => "network_cleanup: the vibe-managed px could not be reaped; inspect the managed process before retrying".into(),
-            })
-        }).collect()
+            }).collect()
     }
 
     pub(crate) fn route_seen(&self, occurrence: u64) -> bool {

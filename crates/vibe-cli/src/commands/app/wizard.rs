@@ -85,8 +85,8 @@ pub(super) fn parameter_prompt(
                     .interact_text()
                     .map(|text| {
                         Some(text).filter(|text| {
-                            !text.is_empty()
-                                && !(parameter.kind == ParameterType::Path
+                            !(text.is_empty()
+                                || parameter.kind == ParameterType::Path
                                     && preset == Some(text.as_str()))
                         })
                     })

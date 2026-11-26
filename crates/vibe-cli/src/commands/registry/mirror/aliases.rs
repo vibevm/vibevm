@@ -58,14 +58,13 @@ pub(super) fn alias_merge(
     for fault in vibe_index::aliases::check(target_index, &merge.table) {
         // This gate sees the pre-copy index. Only an absent target that
         // this plan actually supplies may pass; all other faults still drop.
-        if let vibe_index::aliases::AliasFault::TargetAbsent { alias, target } = &fault {
-            if merge
+        if let vibe_index::aliases::AliasFault::TargetAbsent { alias, target } = &fault
+            && merge
                 .table
                 .get(alias)
                 .is_some_and(|row| vibe_index::aliases::spell(row) == *target && holds(row))
-            {
-                continue;
-            }
+        {
+            continue;
         }
         merge.drop_row(fault.alias());
     }

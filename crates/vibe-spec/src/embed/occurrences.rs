@@ -194,9 +194,8 @@ impl EmbedTape {
                     .iter()
                     .find(|old| old.path == parent_path);
                 if !parent.is_some_and(|p| {
-                    (occurrence.suppressed
-                        || (p.start <= occurrence.start && occurrence.end <= p.end))
-                        && (!p.suppressed || occurrence.suppressed)
+                    occurrence.suppressed
+                        || (p.start <= occurrence.start && occurrence.end <= p.end && !p.suppressed)
                 }) {
                     return Err(EmbedTapeError::Parent { index });
                 }

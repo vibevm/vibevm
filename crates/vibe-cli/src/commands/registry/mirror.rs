@@ -456,7 +456,7 @@ fn announce(ctx: &output::Context, selection: &Selection, config: Option<&Path>)
             if let Some(config) = config {
                 ctx.step(&format!(
                     "selection from {}",
-                    redact_credentials(&config.display().to_string())
+                    redact_credentials(config.display().to_string())
                 ));
             }
         }

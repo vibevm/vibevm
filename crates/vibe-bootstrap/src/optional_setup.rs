@@ -129,7 +129,7 @@ fn invoke(
     if value["ok"] != true
         || value["command"] != "self:which"
         || value["component"] != "vibe"
-        || !value["selector"].as_str().is_some_and(|s| !s.is_empty())
+        || value["selector"].as_str().is_none_or(|s| s.is_empty())
     {
         bail!("installed CLI identity incomplete");
     }

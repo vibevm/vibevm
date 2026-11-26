@@ -322,7 +322,7 @@ fn relative_components(path: &str) -> Result<Vec<&str>> {
 }
 
 fn recipe_scope(file: &Path) -> Result<(Project, String)> {
-    if !(!file.components().any(|c| matches!(c, Component::ParentDir))) {
+    if file.components().any(|c| matches!(c, Component::ParentDir)) {
         return Err(refuse(
             "kit_path_unsafe",
             format!("kit path {} must not contain a .. part", file.display()),
