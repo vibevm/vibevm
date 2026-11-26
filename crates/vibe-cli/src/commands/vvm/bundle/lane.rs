@@ -85,8 +85,14 @@ pub(super) fn read_release(
             ReleaseDir::Base(ByteLocation::Local(parent).to_url()),
         ));
     }
-    let url = dir.asset(DISTRIBUTION_AGGREGATE_MANIFEST_FILENAME)?;
-    let aggregate = fetch_aggregate(remote, &url, token)?;
+    // This helper considers the companion only when the direct asset was
+    // never declared. Errors reading a declared direct asset cannot reach it.
+    let aggregate = if let Some(aggregate) = releases::fetch_manifest(remote, dir, token)? {
+        aggregate
+    } else {
+        let url = dir.asset(DISTRIBUTION_AGGREGATE_MANIFEST_FILENAME)?;
+        fetch_aggregate(remote, &url, token)?
+    };
     Ok((ReleaseManifest::Aggregate(aggregate), dir.clone()))
 }
 

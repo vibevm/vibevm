@@ -30,6 +30,10 @@ use vibe_publish::token::Token;
 use super::api::{ApiClient, Fetched};
 use super::release_source::{EffectiveReleaseSource, ReleaseSource};
 
+#[path = "releases/companion.rs"]
+mod companion;
+pub(super) use companion::fetch_manifest;
+
 /// The GitHub release download root every declared release URL starts with.
 pub(super) const GITHUB_RELEASE_ROOT: &str = vibe_core::remap::drop::RELEASE_DOWNLOAD_ROOT;
 /// The optional listing a raw repository or a drop may carry at its root.
