@@ -317,3 +317,39 @@ fn the_flag_is_refused_without_the_global_plane() {
     );
     let _: &Path = project.path();
 }
+
+/// Header refusals lead with a code, name the file in why, and keep every legal
+/// header-name character, the backtick included (PROP-067 `#refusal`).
+#[test]
+fn download_header_refusal_keeps_backtick_char() {
+    let payload = b"from-the-gateway\n";
+    let (url, _) = serve(move |_| ok(payload));
+    let fixture = Fixture::new(&url, &format!("{:x}", Sha256::digest(payload)));
+
+    let headers = fixture.header_file(&format!("X Mirror: {SECRET}\n"));
+    let output = fixture.install(&["--download-header-file", headers.to_str().unwrap()]);
+    assert!(!output.status.success(), "{}", text(&output));
+    let stderr = String::from_utf8_lossy(&output.stderr);
+    let expected = format!(
+        "✗ download_header_invalid  line 1 of the download header file has no valid HTTP header name\n  \
+         why   {}\n  \
+         fix   name the header with letters, digits and !#$%&'*+-.^_`|~ only\n  \
+         see   spec://org.vibevm.core/vibevm/common/PROP-075#DOWNLOAD-HEADERS",
+        headers.display()
+    );
+    assert!(stderr.contains(&expected), "{stderr}");
+    assert!(!stderr.contains(SECRET), "{stderr}");
+
+    let absent = fixture.root.path().join("absent.txt");
+    let output = fixture.install(&["--download-header-file", absent.to_str().unwrap()]);
+    assert!(!output.status.success(), "{}", text(&output));
+    let stderr = String::from_utf8_lossy(&output.stderr);
+    let expected = format!(
+        "✗ download_headers_unreadable  the download header file cannot be read\n  \
+         why   {}: No such file or directory (os error 2)\n  \
+         fix   point --download-header-file at a readable UTF-8 file of Name: value lines\n  \
+         see   spec://org.vibevm.core/vibevm/common/PROP-075#DOWNLOAD-HEADERS",
+        absent.display()
+    );
+    assert!(stderr.contains(&expected), "{stderr}");
+}

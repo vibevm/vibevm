@@ -528,7 +528,18 @@ fn fix_lines(fix: &str) -> Vec<String> {
         }
     }
     if commands.is_empty() {
-        let sentence = fix.replace('`', "").trim().to_owned();
+        let mut rest = fix;
+        let mut plain = String::new();
+        while let Some((before, quoted)) = rest.split_once('`') {
+            let Some((content, after)) = quoted.split_once('`') else {
+                break;
+            };
+            plain.push_str(before);
+            plain.push_str(content);
+            rest = after;
+        }
+        plain.push_str(rest);
+        let sentence = plain.trim().to_owned();
         if !sentence.is_empty() {
             commands.push(sentence);
         }
