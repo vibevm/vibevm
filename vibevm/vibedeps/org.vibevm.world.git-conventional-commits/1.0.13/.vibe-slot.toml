@@ -1,0 +1,35 @@
+schema = 1
+source_hash = "sha256:5aeb11831f77b74f671257c1453a785fe8339706036b5a9cd6dd97a1a23717a7"
+spec_format = "xml"
+converter_recipe = "specdoc/4"
+derived_hash = "sha256:9b63f1d03091906060352c0f384bc3bece0a499e16461da56ba84794cb695df4"
+
+[[file]]
+path = "LICENSE"
+sha256 = "7b05e254512285b6a4c33fa97a9b8a4751ff8bf674da7189420f066ef7b9672b"
+disposition = "copied"
+source = "LICENSE"
+
+[[file]]
+path = "README.xml"
+sha256 = "4e9e7f879c3def436b0ebe8e8bd70b8d073fb27b2a2e33df7c06f56fa81d8e3d"
+disposition = "converted"
+source = "README.md"
+
+[[file]]
+path = "vibe.toml"
+sha256 = "55582da3138c73d2bf5f9e8e73c58fc90838376927f158192ec12b367b989a91"
+disposition = "copied"
+source = "vibe.toml"
+
+[[file]]
+path = "vibevm/vibespecs/boot/31-flow-conventional-commits.xml"
+sha256 = "2e16de3b2ad9f268324faf2bb14c56a2b87b41d25020f6ea92d15548475a55c1"
+disposition = "copied"
+source = "vibevm/vibespecs/boot/31-flow-conventional-commits.xml"
+
+[[file]]
+path = "vibevm/vibespecs/flows/conventional-commits/conventional-commits.xml"
+sha256 = "59b11500c8c12ad76bbb31ff96fe1f65dc8394bc3c7e88d1b3d2de541b7daee1"
+disposition = "copied"
+source = "vibevm/vibespecs/flows/conventional-commits/conventional-commits.xml"

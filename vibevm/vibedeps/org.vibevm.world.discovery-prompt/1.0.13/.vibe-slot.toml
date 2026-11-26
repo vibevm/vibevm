@@ -1,0 +1,41 @@
+schema = 1
+source_hash = "sha256:c48bc56789a56a6b1897c318a30562c4e4d05cf19bcb988db5ab6f710ccc5a11"
+spec_format = "xml"
+converter_recipe = "specdoc/4"
+derived_hash = "sha256:b08ec70fb546c4799e24c747265984ca5d738c1f1b8265b436b4c446d4e4c9fe"
+
+[[file]]
+path = "LICENSE.md"
+sha256 = "c0e2a0382616f6ad368f3d15845916310a4a3113802df74a759d41b9d914e1be"
+disposition = "copied"
+source = "LICENSE.md"
+
+[[file]]
+path = "README.xml"
+sha256 = "3ca5e7ffa3c25fbb6588b0a7cb2db13cb4e47399a745044ce34fd3f99551a376"
+disposition = "converted"
+source = "README.md"
+
+[[file]]
+path = "vibe.toml"
+sha256 = "59fafe6e56f8156a6f9899c7d8d2302828340aedfed114d268884ce8c55d65a2"
+disposition = "copied"
+source = "vibe.toml"
+
+[[file]]
+path = "vibevm/vibespecs/boot/50-flow-discovery-prompt.xml"
+sha256 = "0e8704d08904ef5d6ae097cdda8205984f75a1797a94e6181dbf007112ee50c4"
+disposition = "copied"
+source = "vibevm/vibespecs/boot/50-flow-discovery-prompt.xml"
+
+[[file]]
+path = "vibevm/vibespecs/flows/discovery-prompt/DISCOVERY-PROMPT.xml"
+sha256 = "47e44bb84e3c994ac56091b3e8ec3f15d188187ba26905061a4182956b1d8b77"
+disposition = "copied"
+source = "vibevm/vibespecs/flows/discovery-prompt/DISCOVERY-PROMPT.xml"
+
+[[file]]
+path = "vibevm/vibespecs/flows/discovery-prompt/usage.xml"
+sha256 = "2269b060d5e795d2f9ce5395cd80402fd9dd62d399f77ea1caf93ae1cc75bd57"
+disposition = "copied"
+source = "vibevm/vibespecs/flows/discovery-prompt/usage.xml"

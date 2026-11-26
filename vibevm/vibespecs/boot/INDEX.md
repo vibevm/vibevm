@@ -21,33 +21,25 @@ path = "vibevm/vibespecs/boot/90-user.xml"
 kind = "static"
 
 [[entry]]
-path = "vibevm/vibedeps/org.vibevm.ai-native.core-ai-native/1.0.12/vibevm/vibespecs/boot/10-flow-core-ai-native.xml"
+path = "vibevm/vibedeps/org.vibevm.ai-native.core-ai-native/1.0.13/vibevm/vibespecs/boot/10-flow-core-ai-native.xml"
 kind = "static"
 
 [[entry]]
-path = "vibevm/vibedeps/org.vibevm.ai-native.rust-ai-native-lang/1.0.12/vibevm/vibespecs/boot/20-stack-rust-ai-native-lang.xml"
+path = "vibevm/vibedeps/org.vibevm.ai-native.rust-ai-native-lang/1.0.13/vibevm/vibespecs/boot/20-stack-rust-ai-native-lang.xml"
 kind = "static"
 
 [[entry]]
-path = "vibevm/vibedeps/org.vibevm.ai-native.typescript-ai-native-lang/1.0.12/vibevm/vibespecs/boot/20-stack-typescript-ai-native-lang.xml"
+path = "vibevm/vibedeps/org.vibevm.ai-native.typescript-ai-native-lang/1.0.13/vibevm/vibespecs/boot/20-stack-typescript-ai-native-lang.xml"
 kind = "static"
 
 [[entry]]
-path = "vibevm/vibedeps/org.vibevm.fractality.delegation-rules/1.0.12/vibevm/vibespecs/boot/77-flow-delegation-rules.xml"
+path = "vibevm/vibedeps/org.vibevm.world.omnichannel/1.0.13/vibevm/vibespecs/boot/68-flow-omnichannel.xml"
 kind = "static"
 
 [[entry]]
-path = "vibevm/vibedeps/org.vibevm.fractality.delegation-first/1.0.12/vibevm/vibespecs/boot/76-flow-delegation-first.xml"
+path = "vibevm/vibedeps/org.vibevm.world.working-rules/1.0.13/vibevm/vibespecs/boot/13-flow-working-rules.xml"
 kind = "static"
 
 [[entry]]
-path = "vibevm/vibedeps/org.vibevm.world.omnichannel/1.0.12/vibevm/vibespecs/boot/68-flow-omnichannel.xml"
-kind = "static"
-
-[[entry]]
-path = "vibevm/vibedeps/org.vibevm.world.working-rules/1.0.12/vibevm/vibespecs/boot/13-flow-working-rules.xml"
-kind = "static"
-
-[[entry]]
-path = "vibevm/vibedeps/org.vibevm.world.working-rules/1.0.12/vibevm/vibespecs/boot/13a-planning-extension.xml"
+path = "vibevm/vibedeps/org.vibevm.world.working-rules/1.0.13/vibevm/vibespecs/boot/13a-planning-extension.xml"
 kind = "static"

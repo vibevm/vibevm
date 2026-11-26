@@ -1,0 +1,2333 @@
+schema = 1
+source_hash = "sha256:bf8c7f9a3e7fa9cb3b772c6ba159f502677a3285b1baaa97fd07aa88240b5e8d"
+spec_format = "xml"
+converter_recipe = "specdoc/4"
+derived_hash = "sha256:30f4897ff5bd54e4e377159d835e9484e87791c84472210bc74f8051d65bc024"
+
+[[file]]
+path = ".gitignore"
+sha256 = "ee0dc1117e4fe898df0f5292cbcea1669884482249e2c1eaf0149104f40bfa64"
+disposition = "copied"
+source = ".gitignore"
+
+[[file]]
+path = ".prettierignore"
+sha256 = "2bc73eac554a0984550945b2a31c896a48c1fd25bb8f3d6b14f841c5d532355b"
+disposition = "copied"
+source = ".prettierignore"
+
+[[file]]
+path = ".prettierrc.json"
+sha256 = "ca3d163bab055381827226140568f3bef7eaac187cebd76878e0b63e9e442356"
+disposition = "copied"
+source = ".prettierrc.json"
+
+[[file]]
+path = "LICENSE.md"
+sha256 = "ff62ce25b7887cc01f138039b0ea3217248ece5f92c08fc7f9a5c6758b2d6a29"
+disposition = "copied"
+source = "LICENSE.md"
+
+[[file]]
+path = "README.xml"
+sha256 = "025b4d8c5013c06b2b76c4c600162ce97330bc4188e9515193d6fa20e5e7f75e"
+disposition = "converted"
+source = "README.md"
+
+[[file]]
+path = "conform.toml"
+sha256 = "708c65e609a9f44a415aa67dfd4d601d87775eb95f22c75cd692786ec20e68c4"
+disposition = "copied"
+source = "conform.toml"
+
+[[file]]
+path = "design/audit/contrast.mjs"
+sha256 = "41d428848fca8f9d00c84622a017c5053bcf764ad582fecf2c43fbb8763feb3b"
+disposition = "copied"
+source = "design/audit/contrast.mjs"
+
+[[file]]
+path = "design/base.css"
+sha256 = "1d8fb55cd5f5a6df68834d46106afa98279aff9ef32a0e122071a9047025eecf"
+disposition = "copied"
+source = "design/base.css"
+
+[[file]]
+path = "design/fonts.css"
+sha256 = "64a6dc21785fec59eae6cec6583366936fd44db743a06bde6a8d72ee7709dda6"
+disposition = "copied"
+source = "design/fonts.css"
+
+[[file]]
+path = "design/fonts/Inter-cyrillic.woff2"
+sha256 = "e1bbe7649cea0e0d56b35658241b02314c58dcc8ad9cad996cd56761c8a1c71e"
+disposition = "copied"
+source = "design/fonts/Inter-cyrillic.woff2"
+
+[[file]]
+path = "design/fonts/Inter-latin.woff2"
+sha256 = "95e4761a21da9c4dd50da7c786c2853532dabf90046fb00caf5b708c017ddaf6"
+disposition = "copied"
+source = "design/fonts/Inter-latin.woff2"
+
+[[file]]
+path = "design/fonts/JetBrainsMono-cyrillic.woff2"
+sha256 = "d274604c40757f98f07df623a8b8fb5194508a6fa4f5413a7a107f09e3b7452a"
+disposition = "copied"
+source = "design/fonts/JetBrainsMono-cyrillic.woff2"
+
+[[file]]
+path = "design/fonts/JetBrainsMono-latin.woff2"
+sha256 = "18be452724bfdc236c074ca94a249a7f41a86752c7d04ab258ce9ed5651f6a7e"
+disposition = "copied"
+source = "design/fonts/JetBrainsMono-latin.woff2"
+
+[[file]]
+path = "design/fonts/README.md"
+sha256 = "fdc6f13f955c6af2e98d98a86997d728a21dfcc368d37edb8f6fe4af21a64af0"
+disposition = "copied"
+source = "design/fonts/README.md"
+
+[[file]]
+path = "design/fonts/Spectral-cyrillic-400.woff2"
+sha256 = "26ed02d522d35ca1630be575f96df8fb290882061571a87ef3ab7fc323d28f87"
+disposition = "copied"
+source = "design/fonts/Spectral-cyrillic-400.woff2"
+
+[[file]]
+path = "design/fonts/Spectral-cyrillic-600.woff2"
+sha256 = "a8297883e0f04031243b893bee1b629eb43dd90b3957e89d61b67109d655b04f"
+disposition = "copied"
+source = "design/fonts/Spectral-cyrillic-600.woff2"
+
+[[file]]
+path = "design/fonts/Spectral-latin-400.woff2"
+sha256 = "cf8daee3b83c1e662196c6e34e444bc41344d54bfeb4fb5351e197de6ce94539"
+disposition = "copied"
+source = "design/fonts/Spectral-latin-400.woff2"
+
+[[file]]
+path = "design/fonts/Spectral-latin-600.woff2"
+sha256 = "33faca8b5795a0de1af77cbc43a050a3655c4b1e03e04847fdef4d19d2e361d2"
+disposition = "copied"
+source = "design/fonts/Spectral-latin-600.woff2"
+
+[[file]]
+path = "design/package.json"
+sha256 = "788b53a09508b53f5c1d86a80f8a377332ebd7bb896c742a9765c0a94b6f718f"
+disposition = "copied"
+source = "design/package.json"
+
+[[file]]
+path = "design/palette.css"
+sha256 = "da1d785bc72cf350bbbf54327cf869589656ad4169231a18e24a34647abd0f2a"
+disposition = "copied"
+source = "design/palette.css"
+
+[[file]]
+path = "design/print.css"
+sha256 = "b1029f1d6c80aef25a6434fecc59c41a8e6917451e5624b546155a72df9b2088"
+disposition = "copied"
+source = "design/print.css"
+
+[[file]]
+path = "design/src/components/authorship-filter/index.tsx"
+sha256 = "8bf5182cc97c719fab639d80002e9866cd900596306373a662c9120968db365f"
+disposition = "copied"
+source = "design/src/components/authorship-filter/index.tsx"
+
+[[file]]
+path = "design/src/components/authorship-filter/styles.css"
+sha256 = "4e6ffb687b07ab63ebf9433d2cd4a276e6710fd8870b2c9e4b5a474750977b54"
+disposition = "copied"
+source = "design/src/components/authorship-filter/styles.css"
+
+[[file]]
+path = "design/src/components/badge/index.tsx"
+sha256 = "287bc86fddd59cf48cc8ccf227ef91b77d81a246ecb5307941377be7252e8a85"
+disposition = "copied"
+source = "design/src/components/badge/index.tsx"
+
+[[file]]
+path = "design/src/components/badge/styles.css"
+sha256 = "310b76aa3512204f11b07377c8f65d2bd58cac1b32dc04ada2cb05d5e29c578c"
+disposition = "copied"
+source = "design/src/components/badge/styles.css"
+
+[[file]]
+path = "design/src/components/bridge-signatures/index.tsx"
+sha256 = "206f71ee44898e3d9d046f7f0db0b5f143e3f11e09a29a035867c1db87a5dc16"
+disposition = "copied"
+source = "design/src/components/bridge-signatures/index.tsx"
+
+[[file]]
+path = "design/src/components/bridge-signatures/styles.css"
+sha256 = "66ae0ae9da433c3d357e730a39b0d54ba54b4d22af4058c335a1ebfe4fa9b71f"
+disposition = "copied"
+source = "design/src/components/bridge-signatures/styles.css"
+
+[[file]]
+path = "design/src/components/capability-card/index.tsx"
+sha256 = "441242ec47308bb38422471d82a2cec626dfb7f6bf9df7ce02462d8ec39f7461"
+disposition = "copied"
+source = "design/src/components/capability-card/index.tsx"
+
+[[file]]
+path = "design/src/components/capability-card/styles.css"
+sha256 = "77b601095d17cd2315b72af2f542a5e5216c86eb0e00dd1f84d6a43650aa597d"
+disposition = "copied"
+source = "design/src/components/capability-card/styles.css"
+
+[[file]]
+path = "design/src/components/card/index.tsx"
+sha256 = "03c3b040c5547787182a64bd8894bd5e6036b26ecd2f9c3eda2ca0008ec54974"
+disposition = "copied"
+source = "design/src/components/card/index.tsx"
+
+[[file]]
+path = "design/src/components/card/styles.css"
+sha256 = "4c62840b314870f315dd0aef3392b0c146672006cd63c047856950116cf76e34"
+disposition = "copied"
+source = "design/src/components/card/styles.css"
+
+[[file]]
+path = "design/src/components/cited-rules/index.tsx"
+sha256 = "c48702d370315f46a15d76fe80f9d967d0539075cbb135cd96b6f8638833bc85"
+disposition = "copied"
+source = "design/src/components/cited-rules/index.tsx"
+
+[[file]]
+path = "design/src/components/cited-rules/styles.css"
+sha256 = "623ae396ad1840dd69d9ef235ed26e403b4e6e9c43d7e6a485de44ee063183f8"
+disposition = "copied"
+source = "design/src/components/cited-rules/styles.css"
+
+[[file]]
+path = "design/src/components/code-block/index.tsx"
+sha256 = "dc1f2151dc58f9e1f183a8221148f2068754db5e1a8f242255e1cfba04d6cb29"
+disposition = "copied"
+source = "design/src/components/code-block/index.tsx"
+
+[[file]]
+path = "design/src/components/code-block/styles.css"
+sha256 = "1f0d8d941644ed0b8448c60068062924ff22ee5aad908c15f1b1fad7549553e0"
+disposition = "copied"
+source = "design/src/components/code-block/styles.css"
+
+[[file]]
+path = "design/src/components/contents/index.tsx"
+sha256 = "1ec181f25747ed2908578aea729843a50b31fa4a5d38b76e3087da4a9d73e56a"
+disposition = "copied"
+source = "design/src/components/contents/index.tsx"
+
+[[file]]
+path = "design/src/components/contents/styles.css"
+sha256 = "2acd44f09f5163512e2d5577511abfe90bbf6e9deee26918f2484093e67f1f84"
+disposition = "copied"
+source = "design/src/components/contents/styles.css"
+
+[[file]]
+path = "design/src/components/dep-graph/index.tsx"
+sha256 = "e6030318b82f9bb7692b623778a616c7222b80dbbe7bcc68c8f960ffb93408ad"
+disposition = "copied"
+source = "design/src/components/dep-graph/index.tsx"
+
+[[file]]
+path = "design/src/components/dep-graph/styles.css"
+sha256 = "fbeda652c7b0b8e6a0cd892dc0b7c5b4d1abf9f28a3c8f5f1729d49af34b7877"
+disposition = "copied"
+source = "design/src/components/dep-graph/styles.css"
+
+[[file]]
+path = "design/src/components/doc-card/index.tsx"
+sha256 = "0e56c54d60c2242d46014a51218b99d52b91769e1942272258919257491fc0ad"
+disposition = "copied"
+source = "design/src/components/doc-card/index.tsx"
+
+[[file]]
+path = "design/src/components/doc-card/styles.css"
+sha256 = "506e26ecaba20da1dd2d922b1d9029386070f8d9f6bbb80cb0cdd1e9196be232"
+disposition = "copied"
+source = "design/src/components/doc-card/styles.css"
+
+[[file]]
+path = "design/src/components/docs-header/index.tsx"
+sha256 = "89fbdb5856466dc05a1fcaacb5692b2c07289accb3272d3877b46f903e1778f2"
+disposition = "copied"
+source = "design/src/components/docs-header/index.tsx"
+
+[[file]]
+path = "design/src/components/docs-header/styles.css"
+sha256 = "58436b193c931af5461404f7881131101f3ffbd01f05bd201b371ffd5acdf2b0"
+disposition = "copied"
+source = "design/src/components/docs-header/styles.css"
+
+[[file]]
+path = "design/src/components/fab/index.tsx"
+sha256 = "4be38a58f809a4697bb776a65aa8d65429eb3bc3da5b3ef4871e4880fc51084a"
+disposition = "copied"
+source = "design/src/components/fab/index.tsx"
+
+[[file]]
+path = "design/src/components/fab/styles.css"
+sha256 = "d86e8aa49d1c02f857d7d53c18fadab8b7ccb3cd0abf64b8a4ab77bb779f874a"
+disposition = "copied"
+source = "design/src/components/fab/styles.css"
+
+[[file]]
+path = "design/src/components/fallback-notice/index.tsx"
+sha256 = "71d89358603d8c51f5c7fbd0f0ca7dbbd2398930985e0ae5c2b2496e6ea1dca1"
+disposition = "copied"
+source = "design/src/components/fallback-notice/index.tsx"
+
+[[file]]
+path = "design/src/components/fallback-notice/styles.css"
+sha256 = "2dea6617975dd088194a87d32e8006b91c00650057534fffd162c1b49a6ddf47"
+disposition = "copied"
+source = "design/src/components/fallback-notice/styles.css"
+
+[[file]]
+path = "design/src/components/footer/index.tsx"
+sha256 = "3049933d7e8fd51c481500eaf91985cdd3e699020f2947a44dcc2b106adb9ac5"
+disposition = "copied"
+source = "design/src/components/footer/index.tsx"
+
+[[file]]
+path = "design/src/components/footer/styles.css"
+sha256 = "2726210e7d48a1d2ea365a64a831b55a11bfd05603e516e843e870f590fae72f"
+disposition = "copied"
+source = "design/src/components/footer/styles.css"
+
+[[file]]
+path = "design/src/components/footnotes/index.tsx"
+sha256 = "94a40ee446e25111c24c647888959fd924f2b12e3472868f8dfabbec1b69a3d2"
+disposition = "copied"
+source = "design/src/components/footnotes/index.tsx"
+
+[[file]]
+path = "design/src/components/footnotes/styles.css"
+sha256 = "59411b73d727d2dcdd8a1a7fc34e4bcbe07e94a3a2775c7f4c0b713498af4250"
+disposition = "copied"
+source = "design/src/components/footnotes/styles.css"
+
+[[file]]
+path = "design/src/components/for-agent/index.tsx"
+sha256 = "051a7cd13a6e73eb8b6e67e76e85e891210dd1988e5c012d2718a974f29335e4"
+disposition = "copied"
+source = "design/src/components/for-agent/index.tsx"
+
+[[file]]
+path = "design/src/components/for-agent/styles.css"
+sha256 = "50383a25a425f5eb42ebb91dddfa45f802a2bb3e9f43c1c09b9e36ca94a9d4dd"
+disposition = "copied"
+source = "design/src/components/for-agent/styles.css"
+
+[[file]]
+path = "design/src/components/glossary-card/index.tsx"
+sha256 = "9cc7c65f0fcf97f91e85f7eaf6962d46092a91f9ef2b2d340de41a119d37563a"
+disposition = "copied"
+source = "design/src/components/glossary-card/index.tsx"
+
+[[file]]
+path = "design/src/components/glossary-card/styles.css"
+sha256 = "aa459dcd3a4806dd07fc81fd5bce126f4e7558f9f8dc10109b12cea8170dabfc"
+disposition = "copied"
+source = "design/src/components/glossary-card/styles.css"
+
+[[file]]
+path = "design/src/components/hero/index.tsx"
+sha256 = "6359f34f695ef5b6f48fcd8c72c09fba58b5c4fa9fd58f18fc24597875ca1f7b"
+disposition = "copied"
+source = "design/src/components/hero/index.tsx"
+
+[[file]]
+path = "design/src/components/hero/install-block.tsx"
+sha256 = "d5b58c8b8d139e42345c847fd2e1a06c8ee4e8b81a245f558dd8ce6c4009edf7"
+disposition = "copied"
+source = "design/src/components/hero/install-block.tsx"
+
+[[file]]
+path = "design/src/components/hero/styles.css"
+sha256 = "99f5d09eb910b3afde8b7dcf8c474d5b9a2962a57d2975ed68188bd80f926147"
+disposition = "copied"
+source = "design/src/components/hero/styles.css"
+
+[[file]]
+path = "design/src/components/kind-glyph/index.tsx"
+sha256 = "62232ce14b1baed0e5301eeb05c86a882cb8edc699ba38b622d0096ba101d3c9"
+disposition = "copied"
+source = "design/src/components/kind-glyph/index.tsx"
+
+[[file]]
+path = "design/src/components/kind-glyph/styles.css"
+sha256 = "81871e75dab3998897b3b536d7b0782d93c35b005e65faa3687e3a17aa3f52fa"
+disposition = "copied"
+source = "design/src/components/kind-glyph/styles.css"
+
+[[file]]
+path = "design/src/components/language-selector/index.tsx"
+sha256 = "f32055d71e865d756c19d1271d4847bcd937d6158000ce275007e69d2a23f91c"
+disposition = "copied"
+source = "design/src/components/language-selector/index.tsx"
+
+[[file]]
+path = "design/src/components/language-selector/styles.css"
+sha256 = "5d5fb585f6e5f4d7b4559f758a4381fb526d732bef2f8bf589e76b153eef4184"
+disposition = "copied"
+source = "design/src/components/language-selector/styles.css"
+
+[[file]]
+path = "design/src/components/lightbox/index.tsx"
+sha256 = "8657a4c3dbf4f30c37e89e68faccd0aef6014a2058204a58f7ca3ce7b7c15f3c"
+disposition = "copied"
+source = "design/src/components/lightbox/index.tsx"
+
+[[file]]
+path = "design/src/components/lightbox/styles.css"
+sha256 = "dccc344791d070f0873546d261016fa71af05d870daa9d025aa51f148ac892ed"
+disposition = "copied"
+source = "design/src/components/lightbox/styles.css"
+
+[[file]]
+path = "design/src/components/package-header/index.tsx"
+sha256 = "40c83bff3e228cec7a2b1cbe6870351a23e57383e257f558c79b1e9d6ea5cb5d"
+disposition = "copied"
+source = "design/src/components/package-header/index.tsx"
+
+[[file]]
+path = "design/src/components/package-header/styles.css"
+sha256 = "29392890934c4c83ff749efaf95070937165d90afb1c685a62650b59a2f804cf"
+disposition = "copied"
+source = "design/src/components/package-header/styles.css"
+
+[[file]]
+path = "design/src/components/page-meta/index.tsx"
+sha256 = "216d51c01fa48a1cd67ca77e05a33aa4c19b3bcd07b729bdb360b809579ca887"
+disposition = "copied"
+source = "design/src/components/page-meta/index.tsx"
+
+[[file]]
+path = "design/src/components/page-meta/styles.css"
+sha256 = "82b6c1a0bc8de5feb2145e3a6b50905ed1ca89fcf28ef19de0bf6e0755089798"
+disposition = "copied"
+source = "design/src/components/page-meta/styles.css"
+
+[[file]]
+path = "design/src/components/pager/index.tsx"
+sha256 = "0c201d68cd92daa5721f5aa2eafabec586cf1e841ea111891b6df6c1ae304238"
+disposition = "copied"
+source = "design/src/components/pager/index.tsx"
+
+[[file]]
+path = "design/src/components/pager/styles.css"
+sha256 = "9b3e41d736337ff42b1310ffb2f7135cb8dd3ff47528ff245cf10acabc0d2cb6"
+disposition = "copied"
+source = "design/src/components/pager/styles.css"
+
+[[file]]
+path = "design/src/components/prose/index.tsx"
+sha256 = "b5051d2a1a80bc9094cab55cc65881120e17155200bad40d60e622673798f2ff"
+disposition = "copied"
+source = "design/src/components/prose/index.tsx"
+
+[[file]]
+path = "design/src/components/prose/styles.css"
+sha256 = "5041fb22a64063d7993be0f2510a5bd8b6996b3cbc5de82d5d03821f49ba8284"
+disposition = "copied"
+source = "design/src/components/prose/styles.css"
+
+[[file]]
+path = "design/src/components/return-to-place/index.tsx"
+sha256 = "36868d028ef00af0ebe8b61aeb5e50f28adb6186765f498610f25d226a2b80bf"
+disposition = "copied"
+source = "design/src/components/return-to-place/index.tsx"
+
+[[file]]
+path = "design/src/components/return-to-place/styles.css"
+sha256 = "2375b616684ea5d79e48ab834a8f6af59b6fbfb5f154b62ea4b13b6d88f16af0"
+disposition = "copied"
+source = "design/src/components/return-to-place/styles.css"
+
+[[file]]
+path = "design/src/components/rule-panel/index.tsx"
+sha256 = "36533a99282cab8a8d9e52a9461346de67054900222200af577682c152dd7d09"
+disposition = "copied"
+source = "design/src/components/rule-panel/index.tsx"
+
+[[file]]
+path = "design/src/components/rule-panel/styles.css"
+sha256 = "f5e1e28d9d65ea5f91d60cbc400cf63c24036e97d296c808a89d5d49e007aa43"
+disposition = "copied"
+source = "design/src/components/rule-panel/styles.css"
+
+[[file]]
+path = "design/src/components/search-box/index.tsx"
+sha256 = "128563238e6b56887c5215a92c6918fd70ac69d887f002d1662510aa2d5c943f"
+disposition = "copied"
+source = "design/src/components/search-box/index.tsx"
+
+[[file]]
+path = "design/src/components/search-box/styles.css"
+sha256 = "481286bcac16cdcb5a624008b29c1f4b1920e8981e822570fd960d1b5a702cae"
+disposition = "copied"
+source = "design/src/components/search-box/styles.css"
+
+[[file]]
+path = "design/src/components/section-head/index.tsx"
+sha256 = "6acaefa8f96c89b5b652a3acf9aa673bb3c62c99884c683196d674d5bca27337"
+disposition = "copied"
+source = "design/src/components/section-head/index.tsx"
+
+[[file]]
+path = "design/src/components/section-head/styles.css"
+sha256 = "406d56d695d59cf18019d4fe278eace25511aea286c256f3888058fbc3f8c3cd"
+disposition = "copied"
+source = "design/src/components/section-head/styles.css"
+
+[[file]]
+path = "design/src/components/settings-panel/index.tsx"
+sha256 = "2fd02e0e7464c18710ff99569986e787e343d4635850af119e035eb1a9d8b44c"
+disposition = "copied"
+source = "design/src/components/settings-panel/index.tsx"
+
+[[file]]
+path = "design/src/components/settings-panel/styles.css"
+sha256 = "833e95c85f5df010cb9fb66d3412492f1d564b05282e76ed7e948b1ab2203b7d"
+disposition = "copied"
+source = "design/src/components/settings-panel/styles.css"
+
+[[file]]
+path = "design/src/components/shelf/index.tsx"
+sha256 = "1a177a860e6309a9d89a2cf4a7c8f8628ce601c6f83339faae13b47f0a176e6c"
+disposition = "copied"
+source = "design/src/components/shelf/index.tsx"
+
+[[file]]
+path = "design/src/components/shelf/styles.css"
+sha256 = "f963c0cf69e20889db2697f873c196eff7dc9ee117630954f7fd90c98f0c6b07"
+disposition = "copied"
+source = "design/src/components/shelf/styles.css"
+
+[[file]]
+path = "design/src/components/site-language/index.tsx"
+sha256 = "1b143768602af5f676f086264b89afce64176a7ea3474e38532c285b23b7fb05"
+disposition = "copied"
+source = "design/src/components/site-language/index.tsx"
+
+[[file]]
+path = "design/src/components/site-language/styles.css"
+sha256 = "a42cb7f4bbe6fe8ad951c05b42fd75cc2c64c51aa1da380be70fd2f851675b88"
+disposition = "copied"
+source = "design/src/components/site-language/styles.css"
+
+[[file]]
+path = "design/src/components/tab-pills/index.tsx"
+sha256 = "208845fc8ee51cc626394f418911fa2d6d933bc3507ae9016c80d59aa95d5dce"
+disposition = "copied"
+source = "design/src/components/tab-pills/index.tsx"
+
+[[file]]
+path = "design/src/components/tab-pills/styles.css"
+sha256 = "86039cc368a70aa4631d345b910faeb8ce438827a631850eb55c49b98ef2288e"
+disposition = "copied"
+source = "design/src/components/tab-pills/styles.css"
+
+[[file]]
+path = "design/src/components/table-scroll/index.tsx"
+sha256 = "590e706befed632c38fc06b1f458ce3d683cd1c786bbe5f3e7fdc51cd267f777"
+disposition = "copied"
+source = "design/src/components/table-scroll/index.tsx"
+
+[[file]]
+path = "design/src/components/table-scroll/styles.css"
+sha256 = "d2999081f461e447e29bbf01aa1543c64948fea2594049331050d61c197a60a1"
+disposition = "copied"
+source = "design/src/components/table-scroll/styles.css"
+
+[[file]]
+path = "design/src/components/tag/index.tsx"
+sha256 = "d1f1c1f2fe276fcd6b6bb0fc092e5c18633a9cecaa7f6ff8bdf7ecb7e9d3c0a4"
+disposition = "copied"
+source = "design/src/components/tag/index.tsx"
+
+[[file]]
+path = "design/src/components/tag/styles.css"
+sha256 = "1dc16bf5161f786dc1e7de88fef4aae0fb8c3e3456fe6381927fbd02bdae1572"
+disposition = "copied"
+source = "design/src/components/tag/styles.css"
+
+[[file]]
+path = "design/src/components/theme-switch/index.tsx"
+sha256 = "b695c121da313720f2c794e1edbc6d858ada11429c51894fc9414bcf35fa1f77"
+disposition = "copied"
+source = "design/src/components/theme-switch/index.tsx"
+
+[[file]]
+path = "design/src/components/theme-switch/styles.css"
+sha256 = "204e7a19b318bc8b44c1b3c22698cc3e7d63d8ec4a6905fc131ad6ddf4a58ad9"
+disposition = "copied"
+source = "design/src/components/theme-switch/styles.css"
+
+[[file]]
+path = "design/src/components/toc/index.tsx"
+sha256 = "b521c904ab90370981d20a9a7db5a1f7f207fc847d2240405b508559b1cd6b6d"
+disposition = "copied"
+source = "design/src/components/toc/index.tsx"
+
+[[file]]
+path = "design/src/components/toc/styles.css"
+sha256 = "4fd1e302425ed24732fd8a2fa6954be25b57a98d4963b1cbe24c0b609845a61c"
+disposition = "copied"
+source = "design/src/components/toc/styles.css"
+
+[[file]]
+path = "design/src/components/version-switch/index.tsx"
+sha256 = "3d601b5f0d92e9ab7184a18bd6b397987865f9ff89bcfd2cc8f6377a8d107b57"
+disposition = "copied"
+source = "design/src/components/version-switch/index.tsx"
+
+[[file]]
+path = "design/src/components/version-switch/styles.css"
+sha256 = "1e2243c008ee5c951d6dff8cef83b23e7b14a7424d35619c673493a5da2bcc35"
+disposition = "copied"
+source = "design/src/components/version-switch/styles.css"
+
+[[file]]
+path = "design/src/index.ts"
+sha256 = "4f8f0227d2f0d1469a99e6b3ded430ff885495e7cb7ff2a5d166b98f9708a009"
+disposition = "copied"
+source = "design/src/index.ts"
+
+[[file]]
+path = "design/theme-init.js"
+sha256 = "308fdcb44a8b062c71ee209728fb550f9003e7e391fcfc500698e59f7fa5f58a"
+disposition = "copied"
+source = "design/theme-init.js"
+
+[[file]]
+path = "design/tokens.css"
+sha256 = "09f96e444de2dc48729381c12b59da4cc87d6368a6da777dea1cdf038d2fc97d"
+disposition = "copied"
+source = "design/tokens.css"
+
+[[file]]
+path = "discipline/registry/debt.json"
+sha256 = "5ee542d5c4e09ed524b3d0a3698fa2acdb24efaea135538e162456dc84c16017"
+disposition = "copied"
+source = "discipline/registry/debt.json"
+
+[[file]]
+path = "discipline/registry/intent.json"
+sha256 = "5ee542d5c4e09ed524b3d0a3698fa2acdb24efaea135538e162456dc84c16017"
+disposition = "copied"
+source = "discipline/registry/intent.json"
+
+[[file]]
+path = "discipline/registry/tests-baseline.json"
+sha256 = "5ee542d5c4e09ed524b3d0a3698fa2acdb24efaea135538e162456dc84c16017"
+disposition = "copied"
+source = "discipline/registry/tests-baseline.json"
+
+[[file]]
+path = "docker/Dockerfile"
+sha256 = "c3bfb6469e8b048978a4defe3e2ce47689ba6d43e60b91d75ca205653155c686"
+disposition = "copied"
+source = "docker/Dockerfile"
+
+[[file]]
+path = "docker/Dockerfile.dockerignore"
+sha256 = "2b2b66df0abde8efa811ec40fdbf370eadd3a23bec319b36073626b3d5e1c4ea"
+disposition = "copied"
+source = "docker/Dockerfile.dockerignore"
+
+[[file]]
+path = "docker/compose.yaml"
+sha256 = "06fe73de3f4bedb03642093e50ab9050c66b4c666eb06e919d931de6c3ed1086"
+disposition = "copied"
+source = "docker/compose.yaml"
+
+[[file]]
+path = "docker/csp-from-render.sh"
+sha256 = "87af34bc94b8a85faa0e25001c32492a3470edf752e45af84edc59d7933eb1ad"
+disposition = "copied"
+source = "docker/csp-from-render.sh"
+
+[[file]]
+path = "docker/csp.default.conf"
+sha256 = "0b576594eccb4ab85ae83507bc3649a74dea6a7fc7f4ba6f4064e62c055ffc9e"
+disposition = "copied"
+source = "docker/csp.default.conf"
+
+[[file]]
+path = "docker/nginx.conf"
+sha256 = "88d5807acb817d10d2177fecaefe73462e58dc7235d0dbfd9b64fb7f08400832"
+disposition = "copied"
+source = "docker/nginx.conf"
+
+[[file]]
+path = "docker/site.toml"
+sha256 = "d4a2d8ec3ca99a0d42bc8be68efba366186e215a80ea71156cf3e87334b43ed1"
+disposition = "copied"
+source = "docker/site.toml"
+
+[[file]]
+path = "eslint.config.js"
+sha256 = "2bc2a470960644b277bfdffd186c99d5d26bfbe851d51daf41f019f4288ff806"
+disposition = "copied"
+source = "eslint.config.js"
+
+[[file]]
+path = "package.json"
+sha256 = "40caf5d9b2e8119465429a2ca2092ef950788b311d9efc399ddb5e36fe388fb7"
+disposition = "copied"
+source = "package.json"
+
+[[file]]
+path = "pnpm-lock.yaml"
+sha256 = "5696da3034c43c4866805b0febabb2a4d815465246fedc7984a293a29921e600"
+disposition = "copied"
+source = "pnpm-lock.yaml"
+
+[[file]]
+path = "pnpm-workspace.yaml"
+sha256 = "aad1622fb979bddf1cd8a63f88a5c7046c17dc466306b605279ff5f9aece7958"
+disposition = "copied"
+source = "pnpm-workspace.yaml"
+
+[[file]]
+path = "site.example.toml"
+sha256 = "f84645d93d17ca2e15ead6d86a69a93c1d3e0061a76cb5c027b40edab5b77efb"
+disposition = "copied"
+source = "site.example.toml"
+
+[[file]]
+path = "site/README.md"
+sha256 = "66c246e554f002c43e545ad3a02841f8015c7f23613a924f0f45fd52576dd169"
+disposition = "copied"
+source = "site/README.md"
+
+[[file]]
+path = "site/adapters/embedded/vite.config.ts"
+sha256 = "93564dd5061760f8dba35d962f3fb94f579a5d9c5dff0f56c4f066641b00ec3b"
+disposition = "copied"
+source = "site/adapters/embedded/vite.config.ts"
+
+[[file]]
+path = "site/adapters/static/vite.config.ts"
+sha256 = "e446365597429d348929b2a1724e1f8fb97cd53eade1a90924289526815ac6b2"
+disposition = "copied"
+source = "site/adapters/static/vite.config.ts"
+
+[[file]]
+path = "site/package.json"
+sha256 = "bfde51460ea553fed8c18c186425fe64b461b636e3769dfacc1cf6e46f8c0e42"
+disposition = "copied"
+source = "site/package.json"
+
+[[file]]
+path = "site/public/favicon.svg"
+sha256 = "1b9923b2a2caccce3edc48708fc19e20e44b61a5eba3c9921760eb39714f81d3"
+disposition = "copied"
+source = "site/public/favicon.svg"
+
+[[file]]
+path = "site/public/manifest.json"
+sha256 = "5958ea325c3ecedaddae074fa0f16c0b4b7b292fb958390894e46b4b1bb3c455"
+disposition = "copied"
+source = "site/public/manifest.json"
+
+[[file]]
+path = "site/src/components/catalogue/index.tsx"
+sha256 = "3ad2df02c636c75446eb33aa23338a574ad9eb609f65efcc22349dfa15f3c46d"
+disposition = "copied"
+source = "site/src/components/catalogue/index.tsx"
+
+[[file]]
+path = "site/src/components/doc-bar/index.tsx"
+sha256 = "4ad3eec0d3a5fd8baa8bd1946e2bdeb0ec0fdc1fe2b3a58a12c08fa56039da45"
+disposition = "copied"
+source = "site/src/components/doc-bar/index.tsx"
+
+[[file]]
+path = "site/src/components/doc-bar/styles.css"
+sha256 = "e1b6f883083c5af66357d8fce53bb8874939428913decae891b54497750a3980"
+disposition = "copied"
+source = "site/src/components/doc-bar/styles.css"
+
+[[file]]
+path = "site/src/components/island/index.tsx"
+sha256 = "3c2e3d032879559f5c8058a77bc227c499421156581bcf133fce481ebdf6f640"
+disposition = "copied"
+source = "site/src/components/island/index.tsx"
+
+[[file]]
+path = "site/src/components/island/styles.css"
+sha256 = "7eca530d48c5eeab26d58b44bef8118435ced13cf7f2047ceeb80552027612e6"
+disposition = "copied"
+source = "site/src/components/island/styles.css"
+
+[[file]]
+path = "site/src/components/served/index.tsx"
+sha256 = "80ca9656931f02891cbf2503f5d6e11af6f7653052b9dcf24d553c266b2f7bff"
+disposition = "copied"
+source = "site/src/components/served/index.tsx"
+
+[[file]]
+path = "site/src/config.test.ts"
+sha256 = "e762295596c17ca2c344582ec7ecfb4ddd011443252b7bf18379af13f565c812"
+disposition = "copied"
+source = "site/src/config.test.ts"
+
+[[file]]
+path = "site/src/config.ts"
+sha256 = "71f8bbf673fa134efd0151448d3fb9b017283bd539764311f1a48875b43ce2c0"
+disposition = "copied"
+source = "site/src/config.ts"
+
+[[file]]
+path = "site/src/entry.ssr.tsx"
+sha256 = "4d73e7b3869baaaffc28b25c8cec3c338ee2c6606c0cb6c82c93ab83bdd0e6eb"
+disposition = "copied"
+source = "site/src/entry.ssr.tsx"
+
+[[file]]
+path = "site/src/fixtures/README.md"
+sha256 = "be5583232c9d9a3f25d20c6c861bd50c05cb857cfa2c50ff72830c4c09bf538d"
+disposition = "copied"
+source = "site/src/fixtures/README.md"
+
+[[file]]
+path = "site/src/fixtures/doc-build-pair-ru/com.example.docs/pair-ru/0.1.0/guide/one.md"
+sha256 = "2bbf7bd825d2b570c50a4d8c4c4f1d013616b58a253997b3b5baeadbb2837e73"
+disposition = "copied"
+source = "site/src/fixtures/doc-build-pair-ru/com.example.docs/pair-ru/0.1.0/guide/one.md"
+
+[[file]]
+path = "site/src/fixtures/doc-build-pair-ru/com.example.docs/pair-ru/0.1.0/guide/one.xml"
+sha256 = "4773140d4f51b4001854bb073622c575b0c2cc5490c1bbbc15ac480475632ee2"
+disposition = "copied"
+source = "site/src/fixtures/doc-build-pair-ru/com.example.docs/pair-ru/0.1.0/guide/one.xml"
+
+[[file]]
+path = "site/src/fixtures/doc-build-pair-ru/com.example.docs/pair-ru/0.1.0/guide/one/index.html"
+sha256 = "6acf4705a4509ce063efc571e651a8dd036055a65e35029ef32395aa76b31487"
+disposition = "copied"
+source = "site/src/fixtures/doc-build-pair-ru/com.example.docs/pair-ru/0.1.0/guide/one/index.html"
+
+[[file]]
+path = "site/src/fixtures/doc-build-pair-ru/com.example.docs/pair-ru/0.1.0/guide/two.md"
+sha256 = "3cdafbebdcbe16cc75be378b4061d240e5f028a4436f8263fe0b5dc4a0389a31"
+disposition = "copied"
+source = "site/src/fixtures/doc-build-pair-ru/com.example.docs/pair-ru/0.1.0/guide/two.md"
+
+[[file]]
+path = "site/src/fixtures/doc-build-pair-ru/com.example.docs/pair-ru/0.1.0/guide/two.xml"
+sha256 = "cc6b476cb20a7a5c9ecc1ff0d1f52a621b1de2219659555bcdf843997861016f"
+disposition = "copied"
+source = "site/src/fixtures/doc-build-pair-ru/com.example.docs/pair-ru/0.1.0/guide/two.xml"
+
+[[file]]
+path = "site/src/fixtures/doc-build-pair-ru/com.example.docs/pair-ru/0.1.0/guide/two/index.html"
+sha256 = "50657ef9d98a99e714c47dfd855d6966172e94ecb866065295260b1249655f6e"
+disposition = "copied"
+source = "site/src/fixtures/doc-build-pair-ru/com.example.docs/pair-ru/0.1.0/guide/two/index.html"
+
+[[file]]
+path = "site/src/fixtures/doc-build-pair-ru/llms-full.txt"
+sha256 = "8c93e12cb5fabf20f6cfab50278cb6ec4cd6d942a35199d2274a6f3de9a225ff"
+disposition = "copied"
+source = "site/src/fixtures/doc-build-pair-ru/llms-full.txt"
+
+[[file]]
+path = "site/src/fixtures/doc-build-pair-ru/llms-medium.txt"
+sha256 = "8c93e12cb5fabf20f6cfab50278cb6ec4cd6d942a35199d2274a6f3de9a225ff"
+disposition = "copied"
+source = "site/src/fixtures/doc-build-pair-ru/llms-medium.txt"
+
+[[file]]
+path = "site/src/fixtures/doc-build-pair-ru/llms-small.txt"
+sha256 = "8c93e12cb5fabf20f6cfab50278cb6ec4cd6d942a35199d2274a6f3de9a225ff"
+disposition = "copied"
+source = "site/src/fixtures/doc-build-pair-ru/llms-small.txt"
+
+[[file]]
+path = "site/src/fixtures/doc-build-pair-ru/llms.txt"
+sha256 = "fe633f94725276ce353c4e4d6d20e87f38dab06afddf21206bab25bd04320f26"
+disposition = "copied"
+source = "site/src/fixtures/doc-build-pair-ru/llms.txt"
+
+[[file]]
+path = "site/src/fixtures/doc-build-pair-ru/manifest.json"
+sha256 = "1284092a414c091092ee427087482313eded14a9623ecd8f543eef28df05afde"
+disposition = "copied"
+source = "site/src/fixtures/doc-build-pair-ru/manifest.json"
+
+[[file]]
+path = "site/src/fixtures/doc-build-pair-ru/media/0b49378201a06859.svg"
+sha256 = "5e21696ff00868e76c208a7f7a6103f787b4e0c1bbd6f49c59c305987f07bbd3"
+disposition = "copied"
+source = "site/src/fixtures/doc-build-pair-ru/media/0b49378201a06859.svg"
+
+[[file]]
+path = "site/src/fixtures/doc-build-pair-ru/media/5c2ffd1deb2018c2.png"
+sha256 = "00674a8ff9d0d8c2a5e81b2cf4bf64627d87493a051f4d54e9c5eeeca05a2d4e"
+disposition = "copied"
+source = "site/src/fixtures/doc-build-pair-ru/media/5c2ffd1deb2018c2.png"
+
+[[file]]
+path = "site/src/fixtures/doc-build-pair-ru/media/b42a86813100e785.svg"
+sha256 = "1817c0782e05e4041c8010988fb5b1c03c97395e40a72f6c157a6303cc055e6a"
+disposition = "copied"
+source = "site/src/fixtures/doc-build-pair-ru/media/b42a86813100e785.svg"
+
+[[file]]
+path = "site/src/fixtures/doc-build-pair/com.example.docs/pair/0.1.0/guide/one.md"
+sha256 = "c31ad1ca03496f9e208cfccb236c6e7fd01072a975f68ce167319f052497df34"
+disposition = "copied"
+source = "site/src/fixtures/doc-build-pair/com.example.docs/pair/0.1.0/guide/one.md"
+
+[[file]]
+path = "site/src/fixtures/doc-build-pair/com.example.docs/pair/0.1.0/guide/one.xml"
+sha256 = "0a05502094ac712753dbdcebaa4ea0a5e6f6870cd2210f63a4237f9e91c24e4e"
+disposition = "copied"
+source = "site/src/fixtures/doc-build-pair/com.example.docs/pair/0.1.0/guide/one.xml"
+
+[[file]]
+path = "site/src/fixtures/doc-build-pair/com.example.docs/pair/0.1.0/guide/one/index.html"
+sha256 = "df83929a7aa5729bb56087e636d43b670a4f0fb04ab97099acb1008c140c49ca"
+disposition = "copied"
+source = "site/src/fixtures/doc-build-pair/com.example.docs/pair/0.1.0/guide/one/index.html"
+
+[[file]]
+path = "site/src/fixtures/doc-build-pair/com.example.docs/pair/0.1.0/guide/two.md"
+sha256 = "5576989e06b077d6a5bd57eadad4599c1c807280bfc159bb4d64c6d70005fb81"
+disposition = "copied"
+source = "site/src/fixtures/doc-build-pair/com.example.docs/pair/0.1.0/guide/two.md"
+
+[[file]]
+path = "site/src/fixtures/doc-build-pair/com.example.docs/pair/0.1.0/guide/two.xml"
+sha256 = "98ea4443ce79df702f9a88da8c308bfafb75196333891aee8f7f3a35315961f5"
+disposition = "copied"
+source = "site/src/fixtures/doc-build-pair/com.example.docs/pair/0.1.0/guide/two.xml"
+
+[[file]]
+path = "site/src/fixtures/doc-build-pair/com.example.docs/pair/0.1.0/guide/two/index.html"
+sha256 = "f9f23c8e3a68e03e6331bcf21d73499b000435189648e8cec031f8c2f49a3040"
+disposition = "copied"
+source = "site/src/fixtures/doc-build-pair/com.example.docs/pair/0.1.0/guide/two/index.html"
+
+[[file]]
+path = "site/src/fixtures/doc-build-pair/llms-full.txt"
+sha256 = "d84bc90fc00cde0704f62aa51278669f569d44276ddd28c127d9742c5916fb15"
+disposition = "copied"
+source = "site/src/fixtures/doc-build-pair/llms-full.txt"
+
+[[file]]
+path = "site/src/fixtures/doc-build-pair/llms-medium.txt"
+sha256 = "d84bc90fc00cde0704f62aa51278669f569d44276ddd28c127d9742c5916fb15"
+disposition = "copied"
+source = "site/src/fixtures/doc-build-pair/llms-medium.txt"
+
+[[file]]
+path = "site/src/fixtures/doc-build-pair/llms-small.txt"
+sha256 = "d84bc90fc00cde0704f62aa51278669f569d44276ddd28c127d9742c5916fb15"
+disposition = "copied"
+source = "site/src/fixtures/doc-build-pair/llms-small.txt"
+
+[[file]]
+path = "site/src/fixtures/doc-build-pair/llms.txt"
+sha256 = "811c8fd6b9e1ce89b38d72b4fb7c67337a9fc2160acdfcbc69066541d5d71019"
+disposition = "copied"
+source = "site/src/fixtures/doc-build-pair/llms.txt"
+
+[[file]]
+path = "site/src/fixtures/doc-build-pair/manifest.json"
+sha256 = "5c470f920cb7c3d3d3ee0cfe0b78a7e38e7e48d29c7af063726dda7e12470a48"
+disposition = "copied"
+source = "site/src/fixtures/doc-build-pair/manifest.json"
+
+[[file]]
+path = "site/src/fixtures/doc-build-pair/media/0cdb95e4dac1acee.svg"
+sha256 = "f7d62185e236afd92a18fe06d1f1909a8daee9b08ce9fa0d725901babfa2b5da"
+disposition = "copied"
+source = "site/src/fixtures/doc-build-pair/media/0cdb95e4dac1acee.svg"
+
+[[file]]
+path = "site/src/fixtures/doc-build-pair/media/0ec2a469411f8371.svg"
+sha256 = "6e79ffcd6f13dfab8295133197d3f67d90963870081e67608500869b5ef6c266"
+disposition = "copied"
+source = "site/src/fixtures/doc-build-pair/media/0ec2a469411f8371.svg"
+
+[[file]]
+path = "site/src/fixtures/doc-build-pair/media/689144792e19badd.png"
+sha256 = "526a30d118da2cf9d61f7663014dde166e99a5e9c83c0d23d839a39ed3013efc"
+disposition = "copied"
+source = "site/src/fixtures/doc-build-pair/media/689144792e19badd.png"
+
+[[file]]
+path = "site/src/fixtures/doc-build/com.example.docs/fixture-manual/0.1.0/guide/every-block.md"
+sha256 = "306ac7e9cddfc590190c085cacd5809b0ac46ac4e0f9da7b2e5feb9ba7af09ae"
+disposition = "copied"
+source = "site/src/fixtures/doc-build/com.example.docs/fixture-manual/0.1.0/guide/every-block.md"
+
+[[file]]
+path = "site/src/fixtures/doc-build/com.example.docs/fixture-manual/0.1.0/guide/every-block.xml"
+sha256 = "d1cd7db454b534b2d2e1abfa039606954cf5a2d71fb3081b06f0c174ce37ca13"
+disposition = "copied"
+source = "site/src/fixtures/doc-build/com.example.docs/fixture-manual/0.1.0/guide/every-block.xml"
+
+[[file]]
+path = "site/src/fixtures/doc-build/com.example.docs/fixture-manual/0.1.0/guide/every-block/index.html"
+sha256 = "8910871c516b61691c84d1521f8aef7d5b678e3d81e60c76e8a30791c8884f38"
+disposition = "copied"
+source = "site/src/fixtures/doc-build/com.example.docs/fixture-manual/0.1.0/guide/every-block/index.html"
+
+[[file]]
+path = "site/src/fixtures/doc-build/com.example.docs/fixture-manual/0.1.0/reference/addresses.md"
+sha256 = "aae2168eb69115f2b34656d5e32c25fb80410c24aa7c504d1fb67716b94760d7"
+disposition = "copied"
+source = "site/src/fixtures/doc-build/com.example.docs/fixture-manual/0.1.0/reference/addresses.md"
+
+[[file]]
+path = "site/src/fixtures/doc-build/com.example.docs/fixture-manual/0.1.0/reference/addresses.xml"
+sha256 = "e73dd634ed74bffc6285f235ec466be3b9a926c875e50ca4347f55b280041381"
+disposition = "copied"
+source = "site/src/fixtures/doc-build/com.example.docs/fixture-manual/0.1.0/reference/addresses.xml"
+
+[[file]]
+path = "site/src/fixtures/doc-build/com.example.docs/fixture-manual/0.1.0/reference/addresses/index.html"
+sha256 = "8176836d6c57901b2ef62a092a3ddb535a07e9d675163f8400baa4bd2f8bfeec"
+disposition = "copied"
+source = "site/src/fixtures/doc-build/com.example.docs/fixture-manual/0.1.0/reference/addresses/index.html"
+
+[[file]]
+path = "site/src/fixtures/doc-build/llms-full.txt"
+sha256 = "7a535bdf14daf6461b93cc9363e5ea5ce12c544edb4a19912835269c6094e42f"
+disposition = "copied"
+source = "site/src/fixtures/doc-build/llms-full.txt"
+
+[[file]]
+path = "site/src/fixtures/doc-build/llms.txt"
+sha256 = "5a06a86b1c9d0cbec3f8144003188701fdee3b5f21a98ad79c9d7f0e9329eda8"
+disposition = "copied"
+source = "site/src/fixtures/doc-build/llms.txt"
+
+[[file]]
+path = "site/src/fixtures/doc-build/manifest.json"
+sha256 = "d9469a4fc91b2cd1b07d8b58692939c4b0c95fd2263d875f22ffca546e209165"
+disposition = "copied"
+source = "site/src/fixtures/doc-build/manifest.json"
+
+[[file]]
+path = "site/src/fixtures/island.html"
+sha256 = "8910871c516b61691c84d1521f8aef7d5b678e3d81e60c76e8a30791c8884f38"
+disposition = "copied"
+source = "site/src/fixtures/island.html"
+
+[[file]]
+path = "site/src/fixtures/manifest-ru.json"
+sha256 = "9ff394733fdaa77e0efe47363c60f32e8ab8cafe3dbfedfe72ff34ce4934e06b"
+disposition = "copied"
+source = "site/src/fixtures/manifest-ru.json"
+
+[[file]]
+path = "site/src/fixtures/manifest.json"
+sha256 = "d9469a4fc91b2cd1b07d8b58692939c4b0c95fd2263d875f22ffca546e209165"
+disposition = "copied"
+source = "site/src/fixtures/manifest.json"
+
+[[file]]
+path = "site/src/generated/doc-manifest.ts"
+sha256 = "92ad757a260d338343dce9e573374beb4bc9c1afecb592e3ee8c17088dc43230"
+disposition = "copied"
+source = "site/src/generated/doc-manifest.ts"
+
+[[file]]
+path = "site/src/global.css"
+sha256 = "d41ce45c77b14a0d3c9bd3bb9e022e0fa5571ea7c547346e360e6ffabef6b597"
+disposition = "copied"
+source = "site/src/global.css"
+
+[[file]]
+path = "site/src/landing/art-roadmap.tsx"
+sha256 = "afe01d7ac34fed96a456d6b091cb903bdf1f416f0259346417f20baa17784ada"
+disposition = "copied"
+source = "site/src/landing/art-roadmap.tsx"
+
+[[file]]
+path = "site/src/landing/art-story.tsx"
+sha256 = "ac800a6e9f8de9eded9dac0e7f7405f1e8a10ed5801c8c1f7ea232948b481331"
+disposition = "copied"
+source = "site/src/landing/art-story.tsx"
+
+[[file]]
+path = "site/src/landing/art-tools.tsx"
+sha256 = "c84ce5268e292d31f475438824150c2d8bb1aeb6871dbbfb3085f9672d928eff"
+disposition = "copied"
+source = "site/src/landing/art-tools.tsx"
+
+[[file]]
+path = "site/src/landing/art.tsx"
+sha256 = "b67f2d582349f66c2189a6de927bedcf926ddd58c6d9d3ade0816461631506d4"
+disposition = "copied"
+source = "site/src/landing/art.tsx"
+
+[[file]]
+path = "site/src/landing/chrome.css"
+sha256 = "0e0c0ef837d6bb8cb82b4e9739ae6ba83691c287aa516c45149f42e1fb3e69cc"
+disposition = "copied"
+source = "site/src/landing/chrome.css"
+
+[[file]]
+path = "site/src/landing/chrome.tsx"
+sha256 = "a334bbc3172c3ecda39935f889fa7a23abeb562d8aa1feddb8fb7e0799d5808e"
+disposition = "copied"
+source = "site/src/landing/chrome.tsx"
+
+[[file]]
+path = "site/src/landing/field.css"
+sha256 = "00fcf7187580a50540436f7bae40c5297cbb3e451339c982bc66a768050c6ff6"
+disposition = "copied"
+source = "site/src/landing/field.css"
+
+[[file]]
+path = "site/src/landing/field.tsx"
+sha256 = "01980b7820db4e34c86d12ae1195f075759bdca33bfab8cb4c4999fafc509b63"
+disposition = "copied"
+source = "site/src/landing/field.tsx"
+
+[[file]]
+path = "site/src/landing/head.ts"
+sha256 = "b5d322a4cd1ad81557e9111ebf1948f688768368f1d40a23eec312019161b447"
+disposition = "copied"
+source = "site/src/landing/head.ts"
+
+[[file]]
+path = "site/src/landing/i18n.ts"
+sha256 = "9ba769ec1326d71d609f40c3fd950a4886f11a89f2b6755f6fa4bbebf8d15eed"
+disposition = "copied"
+source = "site/src/landing/i18n.ts"
+
+[[file]]
+path = "site/src/landing/identity.ts"
+sha256 = "5a27a69d94102e6a9e15409906599fa2257449365de30dbf189af5d74b6b8a40"
+disposition = "copied"
+source = "site/src/landing/identity.ts"
+
+[[file]]
+path = "site/src/landing/landing.tsx"
+sha256 = "2459ad6bbdf65ab55a0147da3de0efeb9ca9a5295be279f73a716d4df2ebda0d"
+disposition = "copied"
+source = "site/src/landing/landing.tsx"
+
+[[file]]
+path = "site/src/landing/map.css"
+sha256 = "308d033c5968124248fbeb4937cd9ffc62d327ed7d39243b70c6c8db27758b29"
+disposition = "copied"
+source = "site/src/landing/map.css"
+
+[[file]]
+path = "site/src/landing/map.tsx"
+sha256 = "5d89ed8bdfefc32c935ebd36dc8af992cfd8041a4a877e29195bd8a6e218baea"
+disposition = "copied"
+source = "site/src/landing/map.tsx"
+
+[[file]]
+path = "site/src/landing/menu.ts"
+sha256 = "dfb97d5028268fb52ac047c17505e047e1faa756bce24706ff6a5bea02a99be5"
+disposition = "copied"
+source = "site/src/landing/menu.ts"
+
+[[file]]
+path = "site/src/landing/theme-color.ts"
+sha256 = "a40571ab739bec26a1ce9be6700222d6180fbe9e9ee2a3f931bbcbce43e11177"
+disposition = "copied"
+source = "site/src/landing/theme-color.ts"
+
+[[file]]
+path = "site/src/lib/authorship.test.ts"
+sha256 = "056fdb6726bd5b141ba5502a3d9ae9a41ba8a6df32819b7ce24d4814174dfca7"
+disposition = "copied"
+source = "site/src/lib/authorship.test.ts"
+
+[[file]]
+path = "site/src/lib/authorship.ts"
+sha256 = "d2426b4cce51d07407520ffbe99ae51f9a4adc0ad702cfb9a9e98063bcfd696b"
+disposition = "copied"
+source = "site/src/lib/authorship.ts"
+
+[[file]]
+path = "site/src/lib/bridge.test.ts"
+sha256 = "5f4236aeddd1d5f710ae22463fa5769a3a3308f7c07ca9792739f18abda89cf1"
+disposition = "copied"
+source = "site/src/lib/bridge.test.ts"
+
+[[file]]
+path = "site/src/lib/bridge.ts"
+sha256 = "fef04694ca688863e80bc9b6c8c8e8f02f1f2ea0638a3d78896deb9d63646b85"
+disposition = "copied"
+source = "site/src/lib/bridge.ts"
+
+[[file]]
+path = "site/src/lib/cards.ts"
+sha256 = "45f9f59f99315c34f452224f500efe2a842b45450986503f789efb988d7f5dec"
+disposition = "copied"
+source = "site/src/lib/cards.ts"
+
+[[file]]
+path = "site/src/lib/catalogue.ts"
+sha256 = "802adeabd56d0909566ee5f99a9e1d1880bc40a3fe00e5a04214f91f90d8aaff"
+disposition = "copied"
+source = "site/src/lib/catalogue.ts"
+
+[[file]]
+path = "site/src/lib/contents.test.ts"
+sha256 = "9fc295c5bb9071c4e166ab5b69c8ccbfcfdd75b2abaed66007479ab67fbe13fb"
+disposition = "copied"
+source = "site/src/lib/contents.test.ts"
+
+[[file]]
+path = "site/src/lib/contents.ts"
+sha256 = "a5a7fbb413544e4ffbc537ac2b6ef3b632202aaebb1ec60e09426407cbaff7c9"
+disposition = "copied"
+source = "site/src/lib/contents.ts"
+
+[[file]]
+path = "site/src/lib/gloss-place.test.ts"
+sha256 = "3c031c6bc96d6b167f39c44d06d596f4c6271fe1499342c90a28d2431b42c2ff"
+disposition = "copied"
+source = "site/src/lib/gloss-place.test.ts"
+
+[[file]]
+path = "site/src/lib/gloss-place.ts"
+sha256 = "420c468861fb11d5cd9bee835f7f356b7d1e2b5f8aaa7056d7f21d78339f3d73"
+disposition = "copied"
+source = "site/src/lib/gloss-place.ts"
+
+[[file]]
+path = "site/src/lib/href.test.ts"
+sha256 = "813da185bf0c48a268b1ccbe5b330d27c15e34defc9b725abf0a11fe8a7c51e8"
+disposition = "copied"
+source = "site/src/lib/href.test.ts"
+
+[[file]]
+path = "site/src/lib/href.ts"
+sha256 = "de340ffa97ead91da7d21db2c5e5feac754402c29aa84c556b9f4e20bd8b230d"
+disposition = "copied"
+source = "site/src/lib/href.ts"
+
+[[file]]
+path = "site/src/lib/island-placeholder.ts"
+sha256 = "5e5efd1c2bd8a7e84ffb6adeff79228fd6bee3203b4773110fbfafd655a293a6"
+disposition = "copied"
+source = "site/src/lib/island-placeholder.ts"
+
+[[file]]
+path = "site/src/lib/island-target.test.ts"
+sha256 = "f39880d10896b53eb663c41b6833abc18e51afe11cfcca21c3de76c8911e82ff"
+disposition = "copied"
+source = "site/src/lib/island-target.test.ts"
+
+[[file]]
+path = "site/src/lib/island-target.ts"
+sha256 = "0dc7f5651bd6296131515a83ba6d8b46fc7569eb9daef3e4dd520286ec27a305"
+disposition = "copied"
+source = "site/src/lib/island-target.ts"
+
+[[file]]
+path = "site/src/lib/library-source.ts"
+sha256 = "2ab06f09a02c4afaecaebab0c5da6bfc90e6a7cfefef4cc07c13b1c61ad59063"
+disposition = "copied"
+source = "site/src/lib/library-source.ts"
+
+[[file]]
+path = "site/src/lib/library.test.ts"
+sha256 = "47deaf5e877b1a0398f4932a74753476ef07664bd9683a9f31d823964c4977ca"
+disposition = "copied"
+source = "site/src/lib/library.test.ts"
+
+[[file]]
+path = "site/src/lib/library.ts"
+sha256 = "a0745a9b856ee9522e411186a15c68d0b085f5986c9a987a5820cb9141903f3b"
+disposition = "copied"
+source = "site/src/lib/library.ts"
+
+[[file]]
+path = "site/src/lib/manifest.test.ts"
+sha256 = "ed503324e2f5948109440e3ca1b697719738fa9c69193ca2e432678feb3d7d6f"
+disposition = "copied"
+source = "site/src/lib/manifest.test.ts"
+
+[[file]]
+path = "site/src/lib/manifest.ts"
+sha256 = "ab4407ec1f809b7556d00bdb9e2b0cddf5ceed73090a45cee755044b98e813e8"
+disposition = "copied"
+source = "site/src/lib/manifest.ts"
+
+[[file]]
+path = "site/src/lib/pages.ts"
+sha256 = "f4e89e9c38231c427f70f8ce1fc274a051636ff57669846f4dd5f57f60afe809"
+disposition = "copied"
+source = "site/src/lib/pages.ts"
+
+[[file]]
+path = "site/src/lib/people.ts"
+sha256 = "a5cfb11a238e925ff8eba94ee2201094b3fb8e916a76961f94bfabde497c80f4"
+disposition = "copied"
+source = "site/src/lib/people.ts"
+
+[[file]]
+path = "site/src/lib/reading.ts"
+sha256 = "3ca4fb173dba11bc7ea78241e834548ee4d134859db2c7ae48011cfae8f41072"
+disposition = "copied"
+source = "site/src/lib/reading.ts"
+
+[[file]]
+path = "site/src/lib/search.test.ts"
+sha256 = "2321a3c8701305a20262fddce0435a489ce339b652dd24f72cfc1fa9f590c252"
+disposition = "copied"
+source = "site/src/lib/search.test.ts"
+
+[[file]]
+path = "site/src/lib/search.ts"
+sha256 = "bb806492a48ec346a75f74be2717cb17154bcbeae57c54acd197072961fbfde6"
+disposition = "copied"
+source = "site/src/lib/search.ts"
+
+[[file]]
+path = "site/src/lib/site-language.test.ts"
+sha256 = "283483dc020d8303eff6cd06081975670fccb376c8c1437a41072ff04a8428df"
+disposition = "copied"
+source = "site/src/lib/site-language.test.ts"
+
+[[file]]
+path = "site/src/lib/site-language.ts"
+sha256 = "1e0ef69a370ecb902cf7b626c31f4fa489cd257c18ff83d86d696824ff41a30d"
+disposition = "copied"
+source = "site/src/lib/site-language.ts"
+
+[[file]]
+path = "site/src/lib/theme-init.test.ts"
+sha256 = "24a48dd0678d9687bcb58a202a5d6f2aaa5903a0df73a045ab807596f21f512a"
+disposition = "copied"
+source = "site/src/lib/theme-init.test.ts"
+
+[[file]]
+path = "site/src/lib/theme-init.ts"
+sha256 = "1ce9ad6e6feaaf9833354b0bfef30bd2f31798056ffbfe656ca4eb6c0803bdab"
+disposition = "copied"
+source = "site/src/lib/theme-init.ts"
+
+[[file]]
+path = "site/src/lib/view.test.ts"
+sha256 = "6e2da8da1a9a757b6b0198c671dc40e18b3b1ec6e6834fcb449c633a49ba2fba"
+disposition = "copied"
+source = "site/src/lib/view.test.ts"
+
+[[file]]
+path = "site/src/lib/view.ts"
+sha256 = "9bc3a6734278e61b0c57c1977a188b0e96c2360b0231b6e96815900d1152ba35"
+disposition = "copied"
+source = "site/src/lib/view.ts"
+
+[[file]]
+path = "site/src/news/i18n.ts"
+sha256 = "fa4d20e4e73733e49467b24ba01914422119c16b4d9d0ba81afea6692c86d79c"
+disposition = "copied"
+source = "site/src/news/i18n.ts"
+
+[[file]]
+path = "site/src/news/index.tsx"
+sha256 = "27aa38a49f2a95b5a3844fd2a1b39940400c84c514e07a88ceff756549ab4848"
+disposition = "copied"
+source = "site/src/news/index.tsx"
+
+[[file]]
+path = "site/src/news/meta.ts"
+sha256 = "fa248f9f2c506b992ff889945a10aca98c998a93e854a02789be79aff326dcfa"
+disposition = "copied"
+source = "site/src/news/meta.ts"
+
+[[file]]
+path = "site/src/news/paths.ts"
+sha256 = "c6f362baf13b9958b0bc92b19aee47ff7e064d0e7b57249164cb17092affc659"
+disposition = "copied"
+source = "site/src/news/paths.ts"
+
+[[file]]
+path = "site/src/news/styles.css"
+sha256 = "302788b83e84c3e2be0235e551d3cd673c6d09157d1ae4bb678184ae05a2b4d9"
+disposition = "copied"
+source = "site/src/news/styles.css"
+
+[[file]]
+path = "site/src/reader/agent.ts"
+sha256 = "7968b4e7ad40aed57387b04b7035fe86871c3c7917ee86cf33a591aa1285d655"
+disposition = "copied"
+source = "site/src/reader/agent.ts"
+
+[[file]]
+path = "site/src/reader/anchors.ts"
+sha256 = "5305960811f41b1b08b83b4277f60c716976d8233ed37cdbfffae40f1f31f632"
+disposition = "copied"
+source = "site/src/reader/anchors.ts"
+
+[[file]]
+path = "site/src/reader/authorship.ts"
+sha256 = "cc136f4c22360b43d9834b7cbd72b7fdea157d73b24d9d66d1fa27012d8a56a8"
+disposition = "copied"
+source = "site/src/reader/authorship.ts"
+
+[[file]]
+path = "site/src/reader/catalogue-tabs.ts"
+sha256 = "02c5695e2843ef78bf40b4b261c3a21297a9d1af262468cfe1e734f23c3c41c9"
+disposition = "copied"
+source = "site/src/reader/catalogue-tabs.ts"
+
+[[file]]
+path = "site/src/reader/catalogue.ts"
+sha256 = "80b5b837b1097873d30f1fc917fb09a580b639a5f73126b91098dc2c0f07ba12"
+disposition = "copied"
+source = "site/src/reader/catalogue.ts"
+
+[[file]]
+path = "site/src/reader/cited-rules.ts"
+sha256 = "30a573f48039fc892a32e35b1e376832765c294ca35f872af5c1b099242ce2e6"
+disposition = "copied"
+source = "site/src/reader/cited-rules.ts"
+
+[[file]]
+path = "site/src/reader/code.ts"
+sha256 = "184d3a72cacde5fdabf1eff84cfe672e8bb95a39aeaffbbc844cd4f1bd935468"
+disposition = "copied"
+source = "site/src/reader/code.ts"
+
+[[file]]
+path = "site/src/reader/contents-view.ts"
+sha256 = "8ae4e27b59f25b58d0e2b57d6b55ee76c150f3625f51c078c7272f5465987c06"
+disposition = "copied"
+source = "site/src/reader/contents-view.ts"
+
+[[file]]
+path = "site/src/reader/doc-language.ts"
+sha256 = "45e7aa2325d923428285a17ff2775dee5d3b263a95a862789a7bd70470989697"
+disposition = "copied"
+source = "site/src/reader/doc-language.ts"
+
+[[file]]
+path = "site/src/reader/dom.ts"
+sha256 = "fb8ac3d28bed1ccfb8f94fd7ce530dd418b3a4a09e9456ee8ca9f2a1b48463da"
+disposition = "copied"
+source = "site/src/reader/dom.ts"
+
+[[file]]
+path = "site/src/reader/embedding.ts"
+sha256 = "f2147dc4981d92246dfc988ff8be73809b08cff947eb27b508d69710cf6c4d89"
+disposition = "copied"
+source = "site/src/reader/embedding.ts"
+
+[[file]]
+path = "site/src/reader/fallback.ts"
+sha256 = "94ec549b8bfbaebe7fd7ac7eb920fc56b323a07d71a8da9e3b189d07a37f6ffc"
+disposition = "copied"
+source = "site/src/reader/fallback.ts"
+
+[[file]]
+path = "site/src/reader/glossary-card.ts"
+sha256 = "5648887cddd010ed43e580ea59b51e7fd56459d6916680873b06d6f437b0d865"
+disposition = "copied"
+source = "site/src/reader/glossary-card.ts"
+
+[[file]]
+path = "site/src/reader/language.ts"
+sha256 = "956f610473d0c962a0a78ec543167ec5119bf48123f201651c3d0e92e6073229"
+disposition = "copied"
+source = "site/src/reader/language.ts"
+
+[[file]]
+path = "site/src/reader/mount.ts"
+sha256 = "2ad82b401292f4b37dadf51be8e76339a335615f7c5e3ae3463af233f26ccbdd"
+disposition = "copied"
+source = "site/src/reader/mount.ts"
+
+[[file]]
+path = "site/src/reader/overlay.ts"
+sha256 = "1bce6f6797237e65c11aa853ce5cd24a0f606a9920da4e9ac482b2dd2b2dee02"
+disposition = "copied"
+source = "site/src/reader/overlay.ts"
+
+[[file]]
+path = "site/src/reader/platform.ts"
+sha256 = "b11bcb65d01f4bd90f0c2957147cf40d4ded0fe71f18e3160271f311deb286ae"
+disposition = "copied"
+source = "site/src/reader/platform.ts"
+
+[[file]]
+path = "site/src/reader/position.ts"
+sha256 = "e3902d8012e0651bb66237efd88d0baf34adf09716532e85893ca91047435e18"
+disposition = "copied"
+source = "site/src/reader/position.ts"
+
+[[file]]
+path = "site/src/reader/print-rules.ts"
+sha256 = "638c1ef3f1f777222a0645189a78edbe40b71f421081100de7e8d0f58bcdceab"
+disposition = "copied"
+source = "site/src/reader/print-rules.ts"
+
+[[file]]
+path = "site/src/reader/reading-mode.ts"
+sha256 = "bb1c0956abc37b0822ddfe274443bb6bc5dfe4d48e31c65b339d350312074ea0"
+disposition = "copied"
+source = "site/src/reader/reading-mode.ts"
+
+[[file]]
+path = "site/src/reader/rules.ts"
+sha256 = "b0efbb62e4785a8cb70dc7bb21bf52b9f1f5f268dc4190b374b1149e45bca4ff"
+disposition = "copied"
+source = "site/src/reader/rules.ts"
+
+[[file]]
+path = "site/src/reader/search.ts"
+sha256 = "d9710c3c1f2c30f69e1ea9e035799b82dcb82074283051bac519104d69df48c4"
+disposition = "copied"
+source = "site/src/reader/search.ts"
+
+[[file]]
+path = "site/src/reader/served.ts"
+sha256 = "5c3d8e970b6976a433be11e945f3f8589a521ffd9699059b9c2ce6706c81e7db"
+disposition = "copied"
+source = "site/src/reader/served.ts"
+
+[[file]]
+path = "site/src/reader/settings.ts"
+sha256 = "57c5a151d8feab2688e08044c66730af82abf2e1a89211e8be368e5b20f55c74"
+disposition = "copied"
+source = "site/src/reader/settings.ts"
+
+[[file]]
+path = "site/src/reader/shelf.ts"
+sha256 = "e464f5cf1f72472b6058a7d4d13c4f9653c2082ee3ff3c9ab0eecca52b5449e2"
+disposition = "copied"
+source = "site/src/reader/shelf.ts"
+
+[[file]]
+path = "site/src/reader/site-language.ts"
+sha256 = "f11c525821161820882b99ab65db63feb8f06213361c445e868a661455706c7f"
+disposition = "copied"
+source = "site/src/reader/site-language.ts"
+
+[[file]]
+path = "site/src/reader/storage.ts"
+sha256 = "17c8a426451229d1175eb0061442418dcdceba55848e5aae0d85ffb68ab82df4"
+disposition = "copied"
+source = "site/src/reader/storage.ts"
+
+[[file]]
+path = "site/src/reader/theme.ts"
+sha256 = "b215fb930e3d815ec6f98130d49753de9ba2458b7f4d410f3b388cbe5d7bba58"
+disposition = "copied"
+source = "site/src/reader/theme.ts"
+
+[[file]]
+path = "site/src/reader/toc.ts"
+sha256 = "d1a426871be8d8dbbc6f85fcafbdf57f23c840b56e6b028560d8f803da0904c1"
+disposition = "copied"
+source = "site/src/reader/toc.ts"
+
+[[file]]
+path = "site/src/roadmap/art.tsx"
+sha256 = "95e7ff05c54a6ff354f291fad6d17c71b56a9a828149730711494201f4573de5"
+disposition = "copied"
+source = "site/src/roadmap/art.tsx"
+
+[[file]]
+path = "site/src/roadmap/copy-en.ts"
+sha256 = "cbb02ed31b7a31b33dcc6232a981008a01b3e287e1397d84aa498dd3844bb163"
+disposition = "copied"
+source = "site/src/roadmap/copy-en.ts"
+
+[[file]]
+path = "site/src/roadmap/copy-ru.ts"
+sha256 = "0fe43c71131fabdff3a8402839c1f4fa62efae4e9acac817d8224e59cb809281"
+disposition = "copied"
+source = "site/src/roadmap/copy-ru.ts"
+
+[[file]]
+path = "site/src/roadmap/emblems.tsx"
+sha256 = "ecbc2deb205e940327104e5f048d8d67eb0a619487b6dfdc6a00d01d155b8087"
+disposition = "copied"
+source = "site/src/roadmap/emblems.tsx"
+
+[[file]]
+path = "site/src/roadmap/i18n.ts"
+sha256 = "d5e2796411c8a041d8c0d5543d8697196ba4c9978696b838801ad98b234b863d"
+disposition = "copied"
+source = "site/src/roadmap/i18n.ts"
+
+[[file]]
+path = "site/src/roadmap/index.tsx"
+sha256 = "c71ee9f4fa1e2e0044bf4858c509dd693a77a12514412c96f0c1be7e95a87755"
+disposition = "copied"
+source = "site/src/roadmap/index.tsx"
+
+[[file]]
+path = "site/src/roadmap/meta.ts"
+sha256 = "dd6071c5f9e855ac8d5a0c0b9a50b06aaadbdee7d75def09fb1cb42af8d0a81c"
+disposition = "copied"
+source = "site/src/roadmap/meta.ts"
+
+[[file]]
+path = "site/src/roadmap/paths.ts"
+sha256 = "56c84efa18c6cca137aeb44ec24b161f39148a41ca41e89425869fbb302279e3"
+disposition = "copied"
+source = "site/src/roadmap/paths.ts"
+
+[[file]]
+path = "site/src/roadmap/strings.ts"
+sha256 = "199244b1867a56780b10c651b035817d5da990605473081569ede1c34cecdee7"
+disposition = "copied"
+source = "site/src/roadmap/strings.ts"
+
+[[file]]
+path = "site/src/roadmap/styles.css"
+sha256 = "baa91b964bf04e001b212fa882799822431cd64311f02a178c083b33ec9c933a"
+disposition = "copied"
+source = "site/src/roadmap/styles.css"
+
+[[file]]
+path = "site/src/root.tsx"
+sha256 = "69ed82d83fea9ab03b83b82c40787af7c7526626d89f589264ce8aaae294df26"
+disposition = "copied"
+source = "site/src/root.tsx"
+
+[[file]]
+path = "site/src/routes/404@landing.tsx"
+sha256 = "71a418d31446df8d9d2fe6869abed912a343dae0fe977c676ec2369d88853428"
+disposition = "copied"
+source = "site/src/routes/404@landing.tsx"
+
+[[file]]
+path = "site/src/routes/doc/[...path]/index.tsx"
+sha256 = "5877a373e48ea83be23bc3191c5ac5b674c484b662d24b28e75b8269019836cd"
+disposition = "copied"
+source = "site/src/routes/doc/[...path]/index.tsx"
+
+[[file]]
+path = "site/src/routes/doc/[...path]/styles.css"
+sha256 = "c2b5ea18bd260b33f8d75fa162b46cf6766ec5ba160c16de44d58aefb9b3e7a2"
+disposition = "copied"
+source = "site/src/routes/doc/[...path]/styles.css"
+
+[[file]]
+path = "site/src/routes/doc/index.tsx"
+sha256 = "ea10c94b1f8eb389d32913208332f8e2e2b91fe90424f35cbb6540aa67ff4d02"
+disposition = "copied"
+source = "site/src/routes/doc/index.tsx"
+
+[[file]]
+path = "site/src/routes/doc/layout.tsx"
+sha256 = "43fd9433fadf2dbff1449e8ec1761a616e1f38550820d4dc7dfc8df295a7921a"
+disposition = "copied"
+source = "site/src/routes/doc/layout.tsx"
+
+[[file]]
+path = "site/src/routes/en/index@landing.tsx"
+sha256 = "891b691a2e41b8cf346c85fdd62f6d8c0e0afcd198a616daaff410dbbdfada31"
+disposition = "copied"
+source = "site/src/routes/en/index@landing.tsx"
+
+[[file]]
+path = "site/src/routes/index@landing.tsx"
+sha256 = "bd3ddf3f0eb5f00804b262b9dfab89a2525d178763a267f51b8e54c0719ed166"
+disposition = "copied"
+source = "site/src/routes/index@landing.tsx"
+
+[[file]]
+path = "site/src/routes/layout-landing!.tsx"
+sha256 = "903168f8893362611fc85851c4336243efc3cbbf3b971e439d8571279b86ef50"
+disposition = "copied"
+source = "site/src/routes/layout-landing!.tsx"
+
+[[file]]
+path = "site/src/routes/layout.tsx"
+sha256 = "dd5fe8887952d62b6d7a6e800e694d9b0ee4f3b6b7134b92f7f7ff4e8af57338"
+disposition = "copied"
+source = "site/src/routes/layout.tsx"
+
+[[file]]
+path = "site/src/routes/news-and-support/index@landing.tsx"
+sha256 = "383b695bd410cff4ee0238718cd549cebba3da1fa22ea98d93eb187d1d087b11"
+disposition = "copied"
+source = "site/src/routes/news-and-support/index@landing.tsx"
+
+[[file]]
+path = "site/src/routes/roadmap/index@landing.tsx"
+sha256 = "bf6db5d61e2e1a240df093163f869f9f0afe8682a0a21d9d0d75d5b2d5e4d0e8"
+disposition = "copied"
+source = "site/src/routes/roadmap/index@landing.tsx"
+
+[[file]]
+path = "site/src/routes/ru/index@landing.tsx"
+sha256 = "7551378bd2aac9b6e039df2fc382f9371bc76a07f2c448132676fb616c5a71aa"
+disposition = "copied"
+source = "site/src/routes/ru/index@landing.tsx"
+
+[[file]]
+path = "site/src/routes/ru/news-and-support/index@landing.tsx"
+sha256 = "00c01c9f056adeecc56019e4545d4bb0c51953aea222195230995f7faa99316f"
+disposition = "copied"
+source = "site/src/routes/ru/news-and-support/index@landing.tsx"
+
+[[file]]
+path = "site/src/routes/ru/roadmap/index@landing.tsx"
+sha256 = "78cfe4f12760d976573a022b8c72f71b16d2feec16e0046368a9ad22fbc4fdb8"
+disposition = "copied"
+source = "site/src/routes/ru/roadmap/index@landing.tsx"
+
+[[file]]
+path = "site/src/routes/ru/vision/index@landing.tsx"
+sha256 = "f0f9bfb97eee42a61130e3e3066a18f1eba2f6d6b8e5c9a4a90ab7cb11c28f4c"
+disposition = "copied"
+source = "site/src/routes/ru/vision/index@landing.tsx"
+
+[[file]]
+path = "site/src/routes/ru/why/ai-native/index@landing.tsx"
+sha256 = "8e78223fe6156681f96c5a3bf791fcb22fc38d3dd1db959b778e0dbe8dd277a4"
+disposition = "copied"
+source = "site/src/routes/ru/why/ai-native/index@landing.tsx"
+
+[[file]]
+path = "site/src/routes/ru/why/vibevm/index@landing.tsx"
+sha256 = "952132064399c49bc3c82bf4b2550e85603dd634f412d457abed3ba2c15f1399"
+disposition = "copied"
+source = "site/src/routes/ru/why/vibevm/index@landing.tsx"
+
+[[file]]
+path = "site/src/routes/ru/why/zap/index@landing.tsx"
+sha256 = "eeb957c9f4ab4e213e80d75719400791abf0bd4d0769cd3dc72f0dc69631c16e"
+disposition = "copied"
+source = "site/src/routes/ru/why/zap/index@landing.tsx"
+
+[[file]]
+path = "site/src/routes/vision/index@landing.tsx"
+sha256 = "1ea98e1db1c8253448307a9ba4b800cb6d66c07cbc664be166dfd90b58f8d17c"
+disposition = "copied"
+source = "site/src/routes/vision/index@landing.tsx"
+
+[[file]]
+path = "site/src/routes/why/ai-native/index@landing.tsx"
+sha256 = "cb258f4ba276710480b089ec63a49b80d60f311a5ae67f39d4e1a2f2e85b437f"
+disposition = "copied"
+source = "site/src/routes/why/ai-native/index@landing.tsx"
+
+[[file]]
+path = "site/src/routes/why/vibevm/index@landing.tsx"
+sha256 = "ed890f0ed465c4b1ebadf775dafe0a86a359b7095d1c12c149f2c44b85186b4f"
+disposition = "copied"
+source = "site/src/routes/why/vibevm/index@landing.tsx"
+
+[[file]]
+path = "site/src/routes/why/zap/index@landing.tsx"
+sha256 = "e9c38dfe1890ead22eea7e7a3565fba1250e041f7358de3ff956a4aa1837167b"
+disposition = "copied"
+source = "site/src/routes/why/zap/index@landing.tsx"
+
+[[file]]
+path = "site/src/seo/addresses.ts"
+sha256 = "dfefd309557486290dd447a2557172ad669a22dcf628b4967ccfaa784289f0ba"
+disposition = "copied"
+source = "site/src/seo/addresses.ts"
+
+[[file]]
+path = "site/src/seo/analytics.ts"
+sha256 = "6fba379f58d084b91471682c5ca6b72848f54bfca1077a50e5eca96ce5b4d5b3"
+disposition = "copied"
+source = "site/src/seo/analytics.ts"
+
+[[file]]
+path = "site/src/seo/catalogue.ts"
+sha256 = "719fb71caf9e923adcb93462f673b75ad181cf7d0d6c0eb8ebbf70b60ec3f28e"
+disposition = "copied"
+source = "site/src/seo/catalogue.ts"
+
+[[file]]
+path = "site/src/seo/csp.test.ts"
+sha256 = "ca26ac8a2208836abf8361c95d646fe3c2a456634e34308bbcf0c1c57e3ae46e"
+disposition = "copied"
+source = "site/src/seo/csp.test.ts"
+
+[[file]]
+path = "site/src/seo/csp.ts"
+sha256 = "2f81a2efa718f755fcd830ca62ca3e6a663f0e92fac28927b948ef929a476e43"
+disposition = "copied"
+source = "site/src/seo/csp.ts"
+
+[[file]]
+path = "site/src/seo/deployment.test.ts"
+sha256 = "a1739c9367a1b6408cbf39b525e96fe178e2dc494296db7db1f4c5afc2e5d96e"
+disposition = "copied"
+source = "site/src/seo/deployment.test.ts"
+
+[[file]]
+path = "site/src/seo/editions.ts"
+sha256 = "f3be76a4a6fee8f6652ff166a90bf19f9e90497406caf5042e5784fff56c6709"
+disposition = "copied"
+source = "site/src/seo/editions.ts"
+
+[[file]]
+path = "site/src/seo/head.ts"
+sha256 = "05861ac40e5c49c5b5ad505c67a2f4b0cbadf4218ebe0f2ea6edf0140ae61417"
+disposition = "copied"
+source = "site/src/seo/head.ts"
+
+[[file]]
+path = "site/src/seo/local.test.ts"
+sha256 = "193d136fff5c42eec10c5b623b8ec1d0259499c21c7e4e851c1f53cbed4326dc"
+disposition = "copied"
+source = "site/src/seo/local.test.ts"
+
+[[file]]
+path = "site/src/seo/local.ts"
+sha256 = "c3adbb6de203ce0da95865d54253abaab2c52ee894e9638eb98f07fabd386713"
+disposition = "copied"
+source = "site/src/seo/local.ts"
+
+[[file]]
+path = "site/src/seo/media.test.ts"
+sha256 = "bf4f7ec4a3a6604f02edd5d26218fbf1330a32a48922915acdcf901473dfec94"
+disposition = "copied"
+source = "site/src/seo/media.test.ts"
+
+[[file]]
+path = "site/src/seo/media.ts"
+sha256 = "377b4b9c5a5c8b901ed24201ac3d350c2836603c1d64628a8cf4073e57b1299f"
+disposition = "copied"
+source = "site/src/seo/media.ts"
+
+[[file]]
+path = "site/src/seo/mode.ts"
+sha256 = "8c90f2bf6d1d93d87b87635721a4c09dd6c69ffdabfe11564b28f8d8d6c2adbe"
+disposition = "copied"
+source = "site/src/seo/mode.ts"
+
+[[file]]
+path = "site/src/seo/resolve.ts"
+sha256 = "f1d5b32f2f31f4e13af463e1b3eb14cbbb2d0be746b5d4d584f4e7ece4139e4e"
+disposition = "copied"
+source = "site/src/seo/resolve.ts"
+
+[[file]]
+path = "site/src/seo/search.ts"
+sha256 = "8b21cf5c0d1bca0a462f32ba3c39ed103cc28005879427d627c65209fcd09508"
+disposition = "copied"
+source = "site/src/seo/search.ts"
+
+[[file]]
+path = "site/src/seo/serving.test.ts"
+sha256 = "70bc00c9d4ae98d7a7694857c33f7caa692f877f1aef8e8ae3dafcd4359bf8db"
+disposition = "copied"
+source = "site/src/seo/serving.test.ts"
+
+[[file]]
+path = "site/src/seo/sitemap.ts"
+sha256 = "ae7d4a74ce5874c51795871541d7eab76a2e27ad40790dc5cb72437f6b491dc6"
+disposition = "copied"
+source = "site/src/seo/sitemap.ts"
+
+[[file]]
+path = "site/src/seo/structured-data.ts"
+sha256 = "439583351181147c81975fd1ebfcbb61228a4f5c64e11fdb9ace4774fbd8a19f"
+disposition = "copied"
+source = "site/src/seo/structured-data.ts"
+
+[[file]]
+path = "site/src/vision/art.tsx"
+sha256 = "0d59de5428bd395a7e2e332cb1cfd60d1c6d40d509514949dec387886ab25daa"
+disposition = "copied"
+source = "site/src/vision/art.tsx"
+
+[[file]]
+path = "site/src/vision/copy-en.ts"
+sha256 = "a02b9fca13d6e83f7361307441046e2af0552748749cac751502220bba01ae7b"
+disposition = "copied"
+source = "site/src/vision/copy-en.ts"
+
+[[file]]
+path = "site/src/vision/copy-ru.ts"
+sha256 = "a51424d2bacb90b15c5f5a9854d3d7d464859f79a8d332a835e5ae0f81d6b183"
+disposition = "copied"
+source = "site/src/vision/copy-ru.ts"
+
+[[file]]
+path = "site/src/vision/i18n.ts"
+sha256 = "0abf5aaefd973c47204532730e9fa86ff1b0bf588656d1cabf50074fae041fee"
+disposition = "copied"
+source = "site/src/vision/i18n.ts"
+
+[[file]]
+path = "site/src/vision/index.tsx"
+sha256 = "8acc81c67b2e387da1b6dfee25668a1b7d69d97469c771d29267f28d66bde552"
+disposition = "copied"
+source = "site/src/vision/index.tsx"
+
+[[file]]
+path = "site/src/vision/meta.ts"
+sha256 = "31dfc064c8e963b9f1066297f76df764f608e92bd5635ec2f1a3239fd6592257"
+disposition = "copied"
+source = "site/src/vision/meta.ts"
+
+[[file]]
+path = "site/src/vision/paths.ts"
+sha256 = "df2c986196e3c4e4b6ba20b1e83ba44266cea8bf1034c9b791487095f764a632"
+disposition = "copied"
+source = "site/src/vision/paths.ts"
+
+[[file]]
+path = "site/src/vision/strings.ts"
+sha256 = "e9f2f4e1b614d0b3de015fb1278eafe4b0dc3d070efb98bfe123d5b837d71119"
+disposition = "copied"
+source = "site/src/vision/strings.ts"
+
+[[file]]
+path = "site/src/vision/styles.css"
+sha256 = "6be2e2e54db1cc700bc37288bb71af142ae577ab875a5e42d3f59e2864ebe1a7"
+disposition = "copied"
+source = "site/src/vision/styles.css"
+
+[[file]]
+path = "site/src/why/ai-native/art.tsx"
+sha256 = "512e40ade85ec563751815cd45d60c32466d6346c7ec793b954db551368dab88"
+disposition = "copied"
+source = "site/src/why/ai-native/art.tsx"
+
+[[file]]
+path = "site/src/why/ai-native/artifacts.ts"
+sha256 = "f93893dde711f46da39f8008586d4f0bc568b95b52aacc9658135afb3866b788"
+disposition = "copied"
+source = "site/src/why/ai-native/artifacts.ts"
+
+[[file]]
+path = "site/src/why/ai-native/copy-en.ts"
+sha256 = "a357f2c83dc04584e41bcb0ac45b4aba5e37b0ff0f7d01c5460a93b1ba944f9e"
+disposition = "copied"
+source = "site/src/why/ai-native/copy-en.ts"
+
+[[file]]
+path = "site/src/why/ai-native/copy-ru.ts"
+sha256 = "2179c7a8a45e01116496e3140525216dc3a9dc2e4ba77ae83eca8f015151ce28"
+disposition = "copied"
+source = "site/src/why/ai-native/copy-ru.ts"
+
+[[file]]
+path = "site/src/why/ai-native/i18n.ts"
+sha256 = "b3fd473cac8b0b78004d5c472520329557b87cce305e49346a7f4ad8a20f364d"
+disposition = "copied"
+source = "site/src/why/ai-native/i18n.ts"
+
+[[file]]
+path = "site/src/why/ai-native/index.tsx"
+sha256 = "84101089dcfbc98ae2079f653a94c47f22c8ba52d16a9cd59097ec131c7c4d48"
+disposition = "copied"
+source = "site/src/why/ai-native/index.tsx"
+
+[[file]]
+path = "site/src/why/ai-native/strings.ts"
+sha256 = "f5b452f192a202c77b0fb002421ad44d4cf1bf221e07d5dd12c4597f0924a496"
+disposition = "copied"
+source = "site/src/why/ai-native/strings.ts"
+
+[[file]]
+path = "site/src/why/ai-native/styles.css"
+sha256 = "452aa3766b77e919b8e6e410f7901c020b8536353e3f585d82d97ea057342e94"
+disposition = "copied"
+source = "site/src/why/ai-native/styles.css"
+
+[[file]]
+path = "site/src/why/meta.ts"
+sha256 = "38397bccf7b834204db81f79a6c3de6234e2d3ed61a2486a232de5f978f7cb8f"
+disposition = "copied"
+source = "site/src/why/meta.ts"
+
+[[file]]
+path = "site/src/why/paths.ts"
+sha256 = "5a0655578edbaaf159c7e31db8b779f24fdb41a6aceae932a9dd7ea3fa06d5d8"
+disposition = "copied"
+source = "site/src/why/paths.ts"
+
+[[file]]
+path = "site/src/why/shared.css"
+sha256 = "225417c2c0a8417bd43b02f028153d4f3e7760e06157fc05f0f64462289dc2f6"
+disposition = "copied"
+source = "site/src/why/shared.css"
+
+[[file]]
+path = "site/src/why/vibevm/frieze.tsx"
+sha256 = "a839aa92f42f300accaa173c57057588951b8c4ec94f37a5a6e611d023ed3423"
+disposition = "copied"
+source = "site/src/why/vibevm/frieze.tsx"
+
+[[file]]
+path = "site/src/why/vibevm/i18n.ts"
+sha256 = "f9c3b12a02d097025b85dbf94ff815c8dad578725b2150ccd29ea2df489bf1a7"
+disposition = "copied"
+source = "site/src/why/vibevm/i18n.ts"
+
+[[file]]
+path = "site/src/why/vibevm/index.tsx"
+sha256 = "1eb90c283ac1253a68d7cfb012d87d6731dee99ec2a68628a0a9ecbd5c1bccc3"
+disposition = "copied"
+source = "site/src/why/vibevm/index.tsx"
+
+[[file]]
+path = "site/src/why/vibevm/styles.css"
+sha256 = "5ea52e3e546164353c422835807bd71649fb46f34761ae4491fb412984719a5b"
+disposition = "copied"
+source = "site/src/why/vibevm/styles.css"
+
+[[file]]
+path = "site/src/why/zap/art.tsx"
+sha256 = "21cf27847a789804f676ceeda0a267007a0777f74c0759d388290a40ff68eb43"
+disposition = "copied"
+source = "site/src/why/zap/art.tsx"
+
+[[file]]
+path = "site/src/why/zap/i18n.ts"
+sha256 = "12d1ffba45f790cd073defac1fd54e524d97d497ead3760e108a7323c7ccd381"
+disposition = "copied"
+source = "site/src/why/zap/i18n.ts"
+
+[[file]]
+path = "site/src/why/zap/index.tsx"
+sha256 = "92c8465ee7fede1bcf8c7a5c173c796f0cdf5399dbd379edba63d5f5798d54d1"
+disposition = "copied"
+source = "site/src/why/zap/index.tsx"
+
+[[file]]
+path = "site/src/why/zap/styles.css"
+sha256 = "47de4877fc3d0699c459caf3cec17f38caf45aa4c40ce845dfb6f56a41ee140d"
+disposition = "copied"
+source = "site/src/why/zap/styles.css"
+
+[[file]]
+path = "site/tests/catalogue.spec.ts"
+sha256 = "f405d9d0c7251dcaef2f0ad81f186dda89130173884568746fa39406578c69bd"
+disposition = "copied"
+source = "site/tests/catalogue.spec.ts"
+
+[[file]]
+path = "site/tests/chrome.spec.ts"
+sha256 = "1071612bc4f37bfb0681a667458ffb195373a50dc927de514326994269a39e8f"
+disposition = "copied"
+source = "site/tests/chrome.spec.ts"
+
+[[file]]
+path = "site/tests/disambiguation.spec.ts"
+sha256 = "3330acbb980ce1567196d03b0a87d7694a3c6ea4e8b6a42b5665e4b71ed0b10a"
+disposition = "copied"
+source = "site/tests/disambiguation.spec.ts"
+
+[[file]]
+path = "site/tests/folded-rules.spec.ts"
+sha256 = "37135620f03eb5d053e207d8130bab63e03188c32ca4499252e2facd487065d6"
+disposition = "copied"
+source = "site/tests/folded-rules.spec.ts"
+
+[[file]]
+path = "site/tests/furniture.spec.ts"
+sha256 = "1c1c55d63c6a543a7fa96165cbf40123cb67a40462bea8253ff6af22226cf965"
+disposition = "copied"
+source = "site/tests/furniture.spec.ts"
+
+[[file]]
+path = "site/tests/glossary-card.spec.ts"
+sha256 = "10167fa2f3db1bc5afebb9d8ee2a42e09eca5ed7f31243f1702f295630948db4"
+disposition = "copied"
+source = "site/tests/glossary-card.spec.ts"
+
+[[file]]
+path = "site/tests/hero.spec.ts"
+sha256 = "cf59f37dd11ae5a281021da18063aff41ae74cf8942cfb62142fce39f8728138"
+disposition = "copied"
+source = "site/tests/hero.spec.ts"
+
+[[file]]
+path = "site/tests/landing-map.spec.ts"
+sha256 = "90792689d4e3bab2cbc50655c5dcffda0517319eed78e623c89112d94dec1636"
+disposition = "copied"
+source = "site/tests/landing-map.spec.ts"
+
+[[file]]
+path = "site/tests/language.spec.ts"
+sha256 = "821f40bbe6772f40180350f3bc44d865866ac94bdea5eac320ffdc780101f1d0"
+disposition = "copied"
+source = "site/tests/language.spec.ts"
+
+[[file]]
+path = "site/tests/learning-path.spec.ts"
+sha256 = "0d94ac65cf142a76b4064ca20776296ea3905c77c7603e8dba47f2ce7b57c2da"
+disposition = "copied"
+source = "site/tests/learning-path.spec.ts"
+
+[[file]]
+path = "site/tests/libraries.spec.ts"
+sha256 = "8969531376a9484b78409950ce17b03c9cfd68b575281e71e975462910b2e515"
+disposition = "copied"
+source = "site/tests/libraries.spec.ts"
+
+[[file]]
+path = "site/tests/local-reader.spec.ts"
+sha256 = "69731243db0ea29e5243e3e7b657c57a0525e6bb2910c6d9d7b23f25b3fc4d36"
+disposition = "copied"
+source = "site/tests/local-reader.spec.ts"
+
+[[file]]
+path = "site/tests/news.spec.ts"
+sha256 = "c0e331f4292968da9ca05ac84d17ecd07438077b809f0409e9ebc63f8b0da4da"
+disposition = "copied"
+source = "site/tests/news.spec.ts"
+
+[[file]]
+path = "site/tests/people.spec.ts"
+sha256 = "e39b212f44fd96973e187b34ed37ae9453ec79bad5babcbbbc9ae4862b687803"
+disposition = "copied"
+source = "site/tests/people.spec.ts"
+
+[[file]]
+path = "site/tests/playwright.config.ts"
+sha256 = "cce172aa0a39e92f2f51e76fe186f110b583ad3b64c50f920b1df3199f359555"
+disposition = "copied"
+source = "site/tests/playwright.config.ts"
+
+[[file]]
+path = "site/tests/reader.spec.ts"
+sha256 = "7979bd1353ce903ef8986cefc4fd6c61be422c5878fd606c0121cf187da384bc"
+disposition = "copied"
+source = "site/tests/reader.spec.ts"
+
+[[file]]
+path = "site/tests/roadmap.spec.ts"
+sha256 = "d1ba2c17011d7010548831fdbde9489f6b2d13bf7669543d139e072341dc3183"
+disposition = "copied"
+source = "site/tests/roadmap.spec.ts"
+
+[[file]]
+path = "site/tests/serve.mjs"
+sha256 = "ff836da954f67d51c8675862cf8924fc5b8b3548a62361e7cca2752dd75ff018"
+disposition = "copied"
+source = "site/tests/serve.mjs"
+
+[[file]]
+path = "site/tests/vision.spec.ts"
+sha256 = "3613146b837fa512491a6043d907881e48bccc96fd7012b18b2512ae6323f854"
+disposition = "copied"
+source = "site/tests/vision.spec.ts"
+
+[[file]]
+path = "site/tests/why.spec.ts"
+sha256 = "69fca3032b7e71d8ad5194961c77c3651a080cddb15bef35cdc2e93b1b17faee"
+disposition = "copied"
+source = "site/tests/why.spec.ts"
+
+[[file]]
+path = "site/vite.config.embedded.ts"
+sha256 = "e76a0fdbac661c840d0491bb583c5dd36d00c06395af4350bad95453a315378c"
+disposition = "copied"
+source = "site/vite.config.embedded.ts"
+
+[[file]]
+path = "site/vite.config.ts"
+sha256 = "465f091b522364ec76df3d59d2c25fabd4248d325d71ef0bfe9b98210d2e3d5e"
+disposition = "copied"
+source = "site/vite.config.ts"
+
+[[file]]
+path = "specmap.json"
+sha256 = "aa8d20a739484a89f8731c1086be444250758b38fa673d990d74c5da360b92b9"
+disposition = "copied"
+source = "specmap.json"
+
+[[file]]
+path = "specmap.toml"
+sha256 = "0b265f6f43c2d6b65758f253f95235b81766b6d2c5f52d515126a5223c83e682"
+disposition = "copied"
+source = "specmap.toml"
+
+[[file]]
+path = "tooling/local-site/install.ps1"
+sha256 = "704347f30c461c0f5bb07e5b1005d69e533dd2558cfb73d4c5a5b78fba5a9d05"
+disposition = "copied"
+source = "tooling/local-site/install.ps1"
+
+[[file]]
+path = "tooling/local-site/install.sh"
+sha256 = "bda58b895c1ebcd7d74fcac9c536ba35af642e10468410f91d71229da1f138c7"
+disposition = "copied"
+source = "tooling/local-site/install.sh"
+
+[[file]]
+path = "tooling/local-site/run.mjs"
+sha256 = "225723820cace6fd577c6e095bab8d4dfd06acd492b9bdfef8b9157688a233b3"
+disposition = "copied"
+source = "tooling/local-site/run.mjs"
+
+[[file]]
+path = "tooling/local-site/run.test.mjs"
+sha256 = "b89c4cf98a37d8b04799a81716858051f082a962732f1b852a1e0d6cd6b1251c"
+disposition = "copied"
+source = "tooling/local-site/run.test.mjs"
+
+[[file]]
+path = "tooling/site-build/build.mjs"
+sha256 = "78ea240b9afe81b7965840ddfa387e8b4f935070b4925eff11ede749a7f29620"
+disposition = "copied"
+source = "tooling/site-build/build.mjs"
+
+[[file]]
+path = "tooling/site-build/build.ps1"
+sha256 = "2da9b28512bfb0e70d9ff4da201d2294342a8d6251d27e7dde085dfc20aa7d16"
+disposition = "copied"
+source = "tooling/site-build/build.ps1"
+
+[[file]]
+path = "tooling/site-build/build.sh"
+sha256 = "b7757710d20950ee9c0da3d395f56e311b5e2e01cf99a46a2d85c776d9d564da"
+disposition = "copied"
+source = "tooling/site-build/build.sh"
+
+[[file]]
+path = "tooling/site-build/build.test.mjs"
+sha256 = "3afd741ac5d0007bb7b144cd34e62642fa0efb392f54524949cf7684e97852ec"
+disposition = "copied"
+source = "tooling/site-build/build.test.mjs"
+
+[[file]]
+path = "tooling/site-build/serve.ps1"
+sha256 = "e7174e790daa59fd5ff7457181dc08bbb9c47565b80d279457b4b7f50908e4dc"
+disposition = "copied"
+source = "tooling/site-build/serve.ps1"
+
+[[file]]
+path = "tooling/site-build/serve.sh"
+sha256 = "e3df784bdef81c2fe38e1d9c943714ae9631782da264ff8d4b5da699623a3338"
+disposition = "copied"
+source = "tooling/site-build/serve.sh"
+
+[[file]]
+path = "tools/build.mjs"
+sha256 = "bbe172bbd38b8a572c67131a58a828b1650e576550a9790241639f9f62ce6e2b"
+disposition = "copied"
+source = "tools/build.mjs"
+
+[[file]]
+path = "tools/doc-library.mjs"
+sha256 = "dab1e45a1e14298ea7d185dd03201c321bd96fc8850027ecb7c86b8a42ff62b2"
+disposition = "copied"
+source = "tools/doc-library.mjs"
+
+[[file]]
+path = "tools/doc-surfaces.mjs"
+sha256 = "76ed8ba3058eb5f083be77d33ae189ea1f914577aae4a22071bcedb858f270fb"
+disposition = "copied"
+source = "tools/doc-surfaces.mjs"
+
+[[file]]
+path = "tools/floor.mjs"
+sha256 = "3a22396d578e31356c44d2f107a11879b876f8a5b378a6e001a21ef2ed15a951"
+disposition = "copied"
+source = "tools/floor.mjs"
+
+[[file]]
+path = "tools/layout-parity.mjs"
+sha256 = "3e60360706665b8d5ab3d2325d0537e97693e06f2291f9ac575e59072c596fba"
+disposition = "copied"
+source = "tools/layout-parity.mjs"
+
+[[file]]
+path = "tools/library-source.mjs"
+sha256 = "7d6932e1655f93dc1a7c57dff1f5248b129e23903bd1729041370facc50adf63"
+disposition = "copied"
+source = "tools/library-source.mjs"
+
+[[file]]
+path = "tools/lint-links.mjs"
+sha256 = "81f19b78d8dd1738074330360ffb1ef95b3a73d39230115e3131e46261e3cd12"
+disposition = "copied"
+source = "tools/lint-links.mjs"
+
+[[file]]
+path = "tools/og-card.mjs"
+sha256 = "c8c0d67dbe3ec4a0c04db8e624705319e437828c4007404bc81ba3f03d4b979d"
+disposition = "copied"
+source = "tools/og-card.mjs"
+
+[[file]]
+path = "tools/out-dir.mjs"
+sha256 = "eb0065c451918f804a1116f783e002debe9e3a354c46f3aa4c273bc711c82c97"
+disposition = "copied"
+source = "tools/out-dir.mjs"
+
+[[file]]
+path = "tools/parity.mjs"
+sha256 = "30b65951c2e09b7bd4950e9ea7f7aa78b2ff930916659af21cab67ab4645674d"
+disposition = "copied"
+source = "tools/parity.mjs"
+
+[[file]]
+path = "tools/root-files.mjs"
+sha256 = "7cd1a0ef01d9534e8aee2330263b927403bc0697d8c113c0e0d0955f764ee0d0"
+disposition = "copied"
+source = "tools/root-files.mjs"
+
+[[file]]
+path = "tools/visual-classify.mjs"
+sha256 = "26f8593771aaf504ba5d2142dd90014b8138ec7d377b646bdcdc6004d0553b05"
+disposition = "copied"
+source = "tools/visual-classify.mjs"
+
+[[file]]
+path = "tools/visual-parity.mjs"
+sha256 = "a9c51f04f3fa168d5666bdaa2b60e77b0a35cbe414a89ed41b61d2eeffbb8760"
+disposition = "copied"
+source = "tools/visual-parity.mjs"
+
+[[file]]
+path = "tsconfig.json"
+sha256 = "c0fb5d05e56cc41f7d3be0a5d34b5140100b78f18258e29aec7b6b10d6246288"
+disposition = "copied"
+source = "tsconfig.json"
+
+[[file]]
+path = "typescript-ai-native-conform-baseline.json"
+sha256 = "3b72f8a0c61a3350b8b7c51601342263a36071b327f3395671f497834c34ca7f"
+disposition = "copied"
+source = "typescript-ai-native-conform-baseline.json"
+
+[[file]]
+path = "vibe.toml"
+sha256 = "fad3a3781d22e14d71d81b60343154bad07098796bc66930b97737b5b7dfe5b9"
+disposition = "copied"
+source = "vibe.toml"
+
+[[file]]
+path = "vibevm-doc.ps1"
+sha256 = "c76ec9a65df643caa34378ed7a7a568fd36198f91dfb2322d8a15042ddfd829f"
+disposition = "copied"
+source = "vibevm-doc.ps1"
+
+[[file]]
+path = "vibevm-doc.sh"
+sha256 = "78f295c935a4c428ee52f10285663c2e7bfbfa400aa76aa616a6d73c8029ba23"
+disposition = "copied"
+source = "vibevm-doc.sh"
+
+[[file]]
+path = "vibevm/vibespecs/boot/00-core.xml"
+sha256 = "dc2ce29c8d9c50e966cbd10552a85fe3215498a855f5b9eab19cc2704e27ec63"
+disposition = "converted"
+source = "vibevm/vibespecs/boot/00-core.md"
+
+[[file]]
+path = "vibevm/vibespecs/boot/90-user.xml"
+sha256 = "e9d5184342f395803060f03146c1f1fc7f40011f3dc6a0304ded1ae3a254c301"
+disposition = "converted"
+source = "vibevm/vibespecs/boot/90-user.md"
