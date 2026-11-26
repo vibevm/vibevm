@@ -21,8 +21,8 @@ use std::path::{Path, PathBuf};
 
 use anyhow::Result;
 use vibe_app::{
-    DirectoryRoots, Domain, DomainVersion, Domains, Origin, SettingsRoot, TemplateFacts,
-    VersionsError,
+    DirectoryRoots, Domain, DomainObservation, DomainVersion, Domains, Origin, PackagePresence,
+    SettingsRoot, TemplateFacts, VersionsError,
 };
 use vibe_core::Group;
 use vibe_registry::templates::{ActiveTemplate, DirectoryTemplate, TemplateLayer};
@@ -181,6 +181,11 @@ struct Found {
 
 impl Domains for RegistryDomains {
     fn domain(&self, group: &str, name: &str) -> Result<Domain, String> {
+        self.observe_domain(group, name)
+            .map(|observation| observation.domain)
+    }
+
+    fn observe_domain(&self, group: &str, name: &str) -> Result<DomainObservation, String> {
         let parsed = Group::parse(group).map_err(|error| error.to_string())?;
         let Some(layer) = vibe_registry::templates::active() else {
             // No layer means no template cache and no template
@@ -189,7 +194,10 @@ impl Domains for RegistryDomains {
             return self.published(&parsed, name);
         };
         if self.cache_only {
-            return Ok(cached_domain(&layer, &parsed, name));
+            return Ok(DomainObservation {
+                domain: cached_domain(&layer, &parsed, name),
+                presence: PackagePresence::Indeterminate,
+            });
         }
         // The whole value is held for the loop: a `monorepo` root is a
         // capture its source owns, and dropping the lease would delete the
@@ -218,7 +226,10 @@ impl Domains for RegistryDomains {
                     roots: found_roots,
                 },
             );
-            return Ok(domain);
+            return Ok(DomainObservation {
+                domain,
+                presence: PackagePresence::Present,
+            });
         }
         // The one registry shape with no directory root: an indexed
         // per-package registry, which reads its template through the
@@ -239,7 +250,10 @@ impl Domains for RegistryDomains {
                     roots: found_roots,
                 },
             );
-            return Ok(domain);
+            return Ok(DomainObservation {
+                domain,
+                presence: PackagePresence::Present,
+            });
         }
         // No template under any root; the roots are still kept, because a
         // version the registry publishes concretely has its own manifest
@@ -308,26 +322,35 @@ impl RegistryDomains {
     }
 
     /// The concretely published versions of a package with no template.
-    fn published(&self, group: &Group, name: &str) -> Result<Domain, String> {
-        if let Some(root) = &self.registry {
+    fn published(&self, group: &Group, name: &str) -> Result<DomainObservation, String> {
+        let versions = if let Some(root) = &self.registry {
             let local = crate::registry::application_local_registry(root.clone())
                 .map_err(|error| format!("{error:#}"))?;
-            let versions = match local.list_versions(group, name) {
-                Ok(versions) => versions,
-                Err(vibe_registry::RegistryError::UnknownPackage { .. }) => Vec::new(),
+            match local.list_versions(group, name) {
+                Ok(versions) => Some(versions),
+                Err(vibe_registry::RegistryError::UnknownPackage { .. }) => None,
                 Err(error) => return Err(error.to_string()),
-            };
-            return Ok(Domain::of_published(versions));
-        }
-        vibe_app::versions_from_global_with_operation(
-            self.settings.path(),
-            group,
-            name,
-            self.offline,
-            &self.operation,
-        )
-        .map(Domain::of_published)
-        .map_err(|error| error.to_string())
+            }
+        } else {
+            vibe_app::versions_from_global_with_presence_with_operation(
+                self.settings.path(),
+                group,
+                name,
+                self.offline,
+                &self.operation,
+            )
+            .map_err(|error| error.to_string())?
+        };
+        Ok(match versions {
+            Some(versions) => DomainObservation {
+                domain: Domain::of_published(versions),
+                presence: PackagePresence::Present,
+            },
+            None => DomainObservation {
+                domain: Domain::default(),
+                presence: PackagePresence::Absent,
+            },
+        })
     }
 }
 
