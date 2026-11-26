@@ -85,11 +85,20 @@ impl Default for Limits {
     }
 }
 
-fn word(bytes: &[u8], at: usize) -> u16 {
-    u16::from_le_bytes(bytes[at..at + 2].try_into().unwrap())
+fn field<const N: usize>(bytes: &[u8], at: usize) -> Option<[u8; N]> {
+    bytes.get(at..)?.first_chunk::<N>().copied()
 }
-fn dword(bytes: &[u8], at: usize) -> u32 {
-    u32::from_le_bytes(bytes[at..at + 4].try_into().unwrap())
+
+fn word(bytes: &[u8], at: usize) -> Result<u16> {
+    field(bytes, at)
+        .map(u16::from_le_bytes)
+        .context("truncated ZIP directory field")
+}
+
+fn dword(bytes: &[u8], at: usize) -> Result<u32> {
+    field(bytes, at)
+        .map(u32::from_le_bytes)
+        .context("truncated ZIP directory field")
 }
 
 /// Preflight the complete central directory, before zip's name-keyed map can
@@ -108,20 +117,21 @@ fn directory<R: Read + Seek>(reader: &mut R, limits: Limits) -> Result<usize> {
         .rev()
         .find(|&at| {
             tail[at..at + 4] == *b"PK\x05\x06"
-                && at + 22 + word(&tail, at + 20) as usize == tail.len()
+                && field(&tail, at + 20)
+                    .is_some_and(|n| at + 22 + usize::from(u16::from_le_bytes(n)) == tail.len())
         })
         .context("companion has no valid ZIP end directory")?;
     ensure!(
-        word(&tail, end + 4) == 0 && word(&tail, end + 6) == 0,
+        word(&tail, end + 4)? == 0 && word(&tail, end + 6)? == 0,
         "multi-disk companion ZIP is unsupported"
     );
-    let count = word(&tail, end + 10) as usize;
+    let count = word(&tail, end + 10)? as usize;
     ensure!(
-        count <= limits.entries && word(&tail, end + 8) as usize == count,
+        count <= limits.entries && word(&tail, end + 8)? as usize == count,
         "companion has too many entries or an inconsistent directory"
     );
-    let size = dword(&tail, end + 12) as u64;
-    let start = dword(&tail, end + 16) as u64;
+    let size = dword(&tail, end + 12)? as u64;
+    let start = dword(&tail, end + 16)? as u64;
     let end_position = length - tail_length as u64 + end as u64;
     ensure!(
         start.checked_add(size) == Some(end_position),
@@ -136,7 +146,7 @@ fn directory<R: Read + Seek>(reader: &mut R, limits: Limits) -> Result<usize> {
             &header[..4] == b"PK\x01\x02",
             "invalid companion central directory entry"
         );
-        let mut name = vec![0; word(&header, 28) as usize];
+        let mut name = vec![0; word(&header, 28)? as usize];
         reader.read_exact(&mut name)?;
         ensure!(
             !name.is_empty()
@@ -155,7 +165,7 @@ fn directory<R: Read + Seek>(reader: &mut R, limits: Limits) -> Result<usize> {
             "duplicate or colliding companion entry `{name}`"
         );
         reader.seek(SeekFrom::Current(
-            i64::from(word(&header, 30)) + i64::from(word(&header, 32)),
+            i64::from(word(&header, 30)?) + i64::from(word(&header, 32)?),
         ))?;
         ensure!(
             reader.stream_position()? <= end_position,
