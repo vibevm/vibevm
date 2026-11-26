@@ -87,7 +87,7 @@ pub(crate) fn usage_refusal(rendered: &str, args: &[OsString]) -> Refusal {
 }
 
 /// Preserve clap's help/version paths and exit status; render other errors once.
-pub(crate) fn exit(error: clap::Error, args: &[OsString]) -> ! {
+pub(crate) fn exit(error: clap::Error, args: &[OsString], vocabulary: bool) -> ! {
     use clap::error::ErrorKind;
     if matches!(
         error.kind(),
@@ -100,7 +100,6 @@ pub(crate) fn exit(error: clap::Error, args: &[OsString]) -> ! {
     let plain = args
         .iter()
         .any(|arg| arg == "--plain" || arg == "--json" || arg == "--quiet");
-    let vocabulary = std::env::var("TERM").map_or(true, |term| !term.eq_ignore_ascii_case("dumb"));
     crate::output::configure_language(
         std::io::stdout().is_terminal() && std::io::stderr().is_terminal(),
         vocabulary && !plain,

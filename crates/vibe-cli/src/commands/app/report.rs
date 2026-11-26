@@ -243,6 +243,22 @@ fn outdated_text(report: &ApplicationOutdated) -> String {
     format!("{heading}\n{}", List::new(rows.collect()).render())
 }
 
+/// One recommendation as the report carries it (`PROP-077#APP-RECOMMENDS`).
+fn recommendation(line: &vibe_app::Recommendation) -> Recommendation {
+    Recommendation {
+        package: line.package.clone(),
+        by: line.by.clone(),
+        key: line.key.clone(),
+        outcome: match line.outcome {
+            RecommendationOutcome::Installed => WireOutcome::Installed,
+            RecommendationOutcome::Satisfied => WireOutcome::Satisfied,
+            RecommendationOutcome::Skipped => WireOutcome::Skipped,
+            RecommendationOutcome::Planned => WireOutcome::Planned,
+        },
+        reason: line.reason.clone(),
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -309,21 +325,5 @@ mod tests {
         assert_eq!(text.matches("[held]").count(), 1);
         assert_eq!(text.matches("[hidden]").count(), 1);
         assert!(lines.next().is_none(), "unexpected action trailer: {text}");
-    }
-}
-
-/// One recommendation as the report carries it (`PROP-077#APP-RECOMMENDS`).
-fn recommendation(line: &vibe_app::Recommendation) -> Recommendation {
-    Recommendation {
-        package: line.package.clone(),
-        by: line.by.clone(),
-        key: line.key.clone(),
-        outcome: match line.outcome {
-            RecommendationOutcome::Installed => WireOutcome::Installed,
-            RecommendationOutcome::Satisfied => WireOutcome::Satisfied,
-            RecommendationOutcome::Skipped => WireOutcome::Skipped,
-            RecommendationOutcome::Planned => WireOutcome::Planned,
-        },
-        reason: line.reason.clone(),
     }
 }

@@ -51,10 +51,10 @@ fn main() -> ExitCode {
 }
 
 fn run() -> ExitCode {
-    let (mut cli, explicit_path) = Cli::parse_invocation();
     let terminal_vocabulary = read_env_opt("TERM")
         .map(|term| !term.eq_ignore_ascii_case("dumb"))
         .unwrap_or(true);
+    let (mut cli, explicit_path) = Cli::parse_invocation(terminal_vocabulary);
     output::language::draw_ascii(!terminal_vocabulary);
     // Kit production is an explicit local-file operation. Do not discover an
     // installed destination, promote user configuration, or enter network/remap
