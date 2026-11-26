@@ -199,3 +199,93 @@ fn project_install_mcp_registration_preflights_all_selectors() {
         unchanged(&site, &before);
     }
 }
+
+/// The historical optional script fails inside registration, not at the outer
+/// install boundary. The addressed replacement succeeds on the same non-TTY
+/// fixture without building the real Rust toolchain packages.
+#[cfg(unix)]
+#[test]
+fn closed_stdin_distinguishes_the_1_0_12_registration_script_from_addressed_intent() {
+    let site = Site::new();
+    let slot = site.path("registry/org.test/server/v1.0.0");
+    fs::create_dir_all(slot.join("hooks")).unwrap();
+    fs::write(
+        slot.join("hooks/register.sh"),
+        include_str!("../../../vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-mcp/v1.0.12/tooling/post-install/register-mcp.sh"),
+    ).unwrap();
+    let manifest_path = slot.join("vibe.toml");
+    let original = fs::read_to_string(&manifest_path).unwrap();
+    fs::write(&manifest_path, format!("{original}\n[[extension]]\nid='register-mcp'\npoint='slot:post-install'\nhandler={{kind='script',base='hooks/register'}}\noptional=true\napplies_to={{packages=['org.test/server']}}\n")).unwrap();
+    let before = fs::read(site.path("project/.mcp.json")).unwrap();
+    let result = site.install_with(&["mcp:org.test/server"], &["--json"]);
+    assert!(
+        result.status.success(),
+        "optional hook does not fail the install: {}",
+        String::from_utf8_lossy(&result.stderr)
+    );
+    unchanged(&site, &before);
+    assert!(site.config()["mcpServers"].get("expected").is_none());
+    let docs = serde_json::Deserializer::from_slice(&result.stdout)
+        .into_iter::<serde_json::Value>()
+        .collect::<Result<Vec<_>, _>>()
+        .unwrap();
+    let report = docs.last().unwrap();
+    assert_eq!(report["command"], "install");
+    let rows = report["contributions"].as_array().unwrap();
+    let registration = rows
+        .iter()
+        .filter(|row| {
+            row["key"]
+                .as_str()
+                .is_some_and(|key| key.contains("#register-mcp@"))
+        })
+        .collect::<Vec<_>>();
+    assert_eq!(registration.len(), 1);
+    assert_eq!(registration[0]["status"], "fail");
+    assert_eq!(registration[0]["flagged"], true);
+    let reason = registration[0]["stderr"].as_str().unwrap();
+    assert!(
+        reason.contains("no --scope and stdin is not a TTY"),
+        "{reason}"
+    );
+    assert!(
+        reason.contains("--scope project|user|both") && reason.contains("--auto"),
+        "{reason}"
+    );
+
+    let addressed = Site::new();
+    let result = addressed.install_with(
+        &["mcp:org.test/server"],
+        &["--register-mcp", "org.test/server", "--json"],
+    );
+    assert!(
+        result.status.success(),
+        "{}",
+        String::from_utf8_lossy(&result.stderr)
+    );
+    let docs = serde_json::Deserializer::from_slice(&result.stdout)
+        .into_iter::<serde_json::Value>()
+        .collect::<Result<Vec<_>, _>>()
+        .unwrap();
+    let report = docs.last().unwrap();
+    assert_eq!(report["command"], "install");
+    let rows = report["contributions"].as_array().unwrap();
+    assert_eq!(
+        rows.iter()
+            .filter(
+                |row| row["key"] == "project-mcp-registration:org.test/server"
+                    && row["status"] == "ok"
+            )
+            .count(),
+        1
+    );
+    assert!(addressed.config()["mcpServers"]["expected"].is_object());
+    assert_eq!(
+        addressed.config()["mcpServers"]["foreign"]["command"],
+        "untouched"
+    );
+    assert_eq!(
+        fs::read(addressed.path("home/.claude.json")).unwrap(),
+        b"{\"sentinel\":true}\n"
+    );
+}
