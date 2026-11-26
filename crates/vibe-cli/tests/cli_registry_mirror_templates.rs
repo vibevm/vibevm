@@ -140,19 +140,113 @@ fn a_selected_template_writes_exactly_the_expected_snapshot_tree() {
     );
 
     // `_index/templates/` does not belong to the listing, which is
-    // rendered over the version directories alone — so the snapshot
-    // cannot make the index read stale. The plan carried the opposite as
-    // a risk; `#P4-AS-BUILT` amendment 6 withdraws it, and the identical
-    // re-run below is the end-to-end half of that closure (the focused
-    // half is `vibe_core::layout_registry`'s own test).
+    // rendered over the version directories alone. Check freshness
+    // directly: a repeat can legitimately refresh the index when it
+    // records a new `[sync] last`, even with no new version facts.
     let listing = fs::read_to_string(fixture.target().join("_index/listing.txt")).unwrap();
     assert!(!listing.contains("templates"), "{listing}");
+    assert_eq!(
+        vibe_core::layout_registry::index_state(&fixture.target()).unwrap(),
+        vibe_core::layout_registry::IndexState::Current
+    );
+
+    // Force the next sync into a different second without sleeping. The
+    // old assertion passed by accident only when both runs shared a second.
+    let record_path = fixture.snapshot().join("snapshot.toml");
+    let mut before_record = record;
+    before_record["sync"]["last"] = toml::Value::String("2000-01-01T00:00:00Z".into());
+    fs::write(&record_path, toml::to_string(&before_record).unwrap()).unwrap();
+    assert_eq!(
+        vibe_core::layout_registry::index_state(&fixture.target()).unwrap(),
+        vibe_core::layout_registry::IndexState::Current,
+        "changing snapshot metadata must not stale the listing"
+    );
+    let snapshot_bytes = || {
+        walk(&fixture.snapshot())
+            .into_iter()
+            .map(|path| {
+                (
+                    path.strip_prefix(fixture.snapshot()).unwrap().to_path_buf(),
+                    fs::read(path).unwrap(),
+                )
+            })
+            .collect::<std::collections::BTreeMap<_, _>>()
+    };
+    let mut before_bytes = snapshot_bytes();
+    before_bytes
+        .remove(std::path::Path::new("snapshot.toml"))
+        .unwrap();
 
     let again = UserScratch::new();
     let repeat: serde_json::Value =
         serde_json::from_str(&ok(&mirror(&again, &fixture, &config, &[]))).unwrap();
+    // Compare the complete path/byte inventory. The two metadata clocks
+    // are checked separately; every other field and payload stays exact.
+    let mut after_bytes = snapshot_bytes();
+    let after_record_bytes = after_bytes
+        .remove(std::path::Path::new("snapshot.toml"))
+        .unwrap();
+    let before_envelope_bytes = before_bytes
+        .remove(std::path::Path::new("versions.json"))
+        .unwrap();
+    let after_envelope_bytes = after_bytes
+        .remove(std::path::Path::new("versions.json"))
+        .unwrap();
+    let mut before_envelope: serde_json::Value =
+        serde_json::from_slice(&before_envelope_bytes).unwrap();
+    let mut after_envelope: serde_json::Value =
+        serde_json::from_slice(&after_envelope_bytes).unwrap();
+    // TEMPLATE-CACHE: fetched_at is fetch/TTL metadata, not part of the
+    // document hashed by sha256. A fresh home legitimately fetches again.
+    let before_fetched = before_envelope
+        .as_object_mut()
+        .unwrap()
+        .remove("fetched_at")
+        .unwrap();
+    let after_fetched = after_envelope
+        .as_object_mut()
+        .unwrap()
+        .remove("fetched_at")
+        .unwrap();
+    assert!(
+        chrono::DateTime::parse_from_rfc3339(after_fetched.as_str().unwrap()).unwrap()
+            >= chrono::DateTime::parse_from_rfc3339(before_fetched.as_str().unwrap()).unwrap()
+    );
+    assert_eq!(
+        after_envelope["document"].as_str().unwrap().as_bytes(),
+        before_envelope["document"].as_str().unwrap().as_bytes()
+    );
+    assert_eq!(after_envelope["source_url"], before_envelope["source_url"]);
+    assert_eq!(after_envelope["sha256"], before_envelope["sha256"]);
+    assert_eq!(
+        after_envelope, before_envelope,
+        "only top-level fetched_at may change"
+    );
+    assert_eq!(
+        after_bytes, before_bytes,
+        "snapshot payload tree changed on repeat"
+    );
+    let mut after_record: toml::Value =
+        toml::from_str(std::str::from_utf8(&after_record_bytes).unwrap()).unwrap();
+    let last = after_record["sync"]["last"].as_str().unwrap();
+    assert!(
+        chrono::DateTime::parse_from_rfc3339(last).unwrap()
+            > chrono::DateTime::parse_from_rfc3339("2000-01-01T00:00:00Z").unwrap()
+    );
+    after_record["sync"]["last"] = before_record["sync"]["last"].clone();
+    assert_eq!(after_record, before_record, "only sync.last may change");
+    assert_eq!(
+        fs::read_to_string(fixture.target().join("_index/listing.txt")).unwrap(),
+        listing
+    );
+    assert_eq!(
+        vibe_core::layout_registry::index_state(&fixture.target()).unwrap(),
+        vibe_core::layout_registry::IndexState::Current
+    );
     assert_eq!(repeat["facts_recorded"], 0, "{repeat}");
-    assert_eq!(repeat["index_refreshed"], false, "{repeat}");
+    assert_eq!(repeat["templates"][0]["unchanged"], 3, "{repeat}");
+    assert_eq!(repeat["templates"][0]["snapshotted"], 0, "{repeat}");
+    assert_eq!(repeat["index_refreshed"], true, "{repeat}");
     assert_eq!(
         snapshot_versions(&fixture),
         ["22.23.4", "24.22.2", "26.13.0"]
