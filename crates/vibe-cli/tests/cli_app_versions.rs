@@ -86,6 +86,73 @@ fn rows(listed: &Value) -> Vec<(String, String, String)> {
 
 #[test]
 #[specmark::spec(verifies = "spec://org.vibevm.core/vibevm/common/PROP-075#VERSIONS-LIST-OUTPUT")]
+fn versions_measured_and_quiet() {
+    let fixture = node_fixture();
+    let run = |extra: &[&str]| {
+        let mut command = fixture.user.vibe();
+        command
+            .current_dir(fixture.root.path())
+            .env("HOME", fixture.home())
+            .env("USERPROFILE", fixture.home())
+            .env("VIBE_SETTINGS", fixture.settings())
+            .env_remove("VIBE_INVOKED_BY")
+            .env_remove("VIBE_APP_USE")
+            .env_remove("VIBE_VERSIONS_SELECT")
+            .args(["app", "versions", "org.vibevm.node/node", "--registry"])
+            .arg(fixture.registry())
+            .arg("--remap")
+            .arg(fixture.root.path().join("remap.toml"))
+            .args(extra);
+        command.output().unwrap()
+    };
+    let output = run(&["--quiet"]);
+    assert_eq!(
+        ok(&output),
+        "org.vibevm.node/node: 406 versions · default none · versions select newest\n"
+    );
+    assert!(output.stderr.is_empty(), "{:?}", output.stderr);
+    let output = run(&["--all"]);
+    let human = ok(&output);
+    let lines: Vec<_> = human.lines().collect();
+    assert!(
+        lines[0].starts_with("── versions of org.vibevm.node/node "),
+        "{human}"
+    );
+    assert!(lines[0].ends_with("406 · newest first"), "{human}");
+    let row = |version: &str| {
+        *lines
+            .iter()
+            .find(|line| line.split_whitespace().next() == Some(version))
+            .unwrap()
+    };
+    let template = row("26.13.0");
+    let concrete = row("24.22.2");
+    assert_eq!(
+        template.split_whitespace().collect::<Vec<_>>(),
+        ["26.13.0", "template", "lts,", "lts/lithium"]
+    );
+    assert_eq!(
+        concrete.split_whitespace().collect::<Vec<_>>(),
+        ["24.22.2", "overrides", "lts,", "lts/krypton"]
+    );
+    assert_eq!(template.find("template"), concrete.find("overrides"));
+    assert_eq!(template.find("lts,"), concrete.find("lts,"));
+    assert_eq!(
+        human
+            .matches("package org.vibevm.node/node · default none · versions select newest")
+            .count(),
+        1
+    );
+    assert!(!human.contains('*'), "{human}");
+    let limited = ok(&run(&["--limit", "3"]));
+    assert!(
+        limited.contains("  (403 more; --all shows every one)"),
+        "{limited}"
+    );
+}
+
+#[test]
+#[specmark::spec(verifies = "spec://org.vibevm.core/vibevm/common/PROP-075#VERSIONS-LIST-OUTPUT")]
 fn a_template_package_lists_source_and_published_versions_with_their_origins() {
     let fixture = node_fixture();
     let listed = listing(&fixture, "org.vibevm.node/node", &["--all"]);
@@ -198,9 +265,15 @@ fn without_all_the_newest_twenty_are_shown_and_the_rest_counted() {
         "org.vibevm.node/node",
         &["--remap", remap.to_str().unwrap(), "--limit", "3"],
     ));
-    assert!(human.contains("… and 403 more"), "{human}");
     assert!(
-        human.contains("26.13.0 (template) [lts, lts/lithium]"),
+        human.contains("(403 more; --all shows every one)"),
+        "{human}"
+    );
+    assert!(
+        human
+            .lines()
+            .any(|l| l.split_whitespace().collect::<Vec<_>>()
+                == ["26.13.0", "template", "lts,", "lts/lithium"]),
         "{human}"
     );
     // The published row's human spelling is the long one, and it is shown
@@ -211,7 +284,10 @@ fn without_all_the_newest_twenty_are_shown_and_the_rest_counted() {
         &["--remap", remap.to_str().unwrap(), "--all"],
     ));
     assert!(
-        whole.contains("24.22.2 (published (overrides template))"),
+        whole
+            .lines()
+            .any(|l| l.split_whitespace().collect::<Vec<_>>()
+                == ["24.22.2", "overrides", "lts,", "lts/krypton"]),
         "the published tag's human origin is the long spelling"
     );
 }
@@ -264,8 +340,16 @@ fn a_pattern_narrows_the_listing_by_the_prefix_rule_a_version_file_uses() {
         "org.vibevm.node/node",
         &["--remap", remap.to_str().unwrap(), "22.9"],
     ));
-    assert!(human.contains("1 version(s)"), "{human}");
-    assert!(human.contains("22.9.0 (template)"), "{human}");
+    assert!(
+        human.lines().any(|l| l.ends_with("1 · newest first")),
+        "{human}"
+    );
+    assert!(
+        human
+            .lines()
+            .any(|l| l.split_whitespace().collect::<Vec<_>>() == ["22.9.0", "template"]),
+        "{human}"
+    );
     assert!(!human.contains("more"), "{human}");
     // A pattern that is neither a version pattern nor a channel refuses by
     // name, before any version is listed.
@@ -366,13 +450,16 @@ fn the_local_state_and_the_trailer_are_this_home_s_own() {
     );
     // The human trailer names the slot and its default.
     let human = ok(&fixture.vibe(&["app", "versions", "runtime", "-g"]));
-    assert!(human.contains("slot `runtime`"), "{human}");
+    assert!(human.contains("slot runtime"), "{human}");
     assert!(
         human.contains("default org.example/runtime@1.2.0"),
         "{human}"
     );
     assert!(
-        human.contains("1.1.0 (published) — installed (held)"),
+        human
+            .lines()
+            .any(|l| l.split_whitespace().collect::<Vec<_>>()
+                == ["1.1.0", "published", "[installed", "(held)]"]),
         "{human}"
     );
 

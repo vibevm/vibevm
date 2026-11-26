@@ -212,20 +212,35 @@ fn each_rung_of_the_name_convention_marks_a_row_and_names_where_it_found_it() {
     // local state uses, and only on the marked rows.
     let human = fixture.human("org.vibevm.node/node", &["--all"]);
     assert!(
-        human.contains("26.13.0 (template) [lts, lts/lithium] — in drop"),
+        human
+            .lines()
+            .any(|l| l.split_whitespace().collect::<Vec<_>>()
+                == ["26.13.0", "template", "lts,", "lts/lithium", "[in", "drop]"]),
         "{human}"
     );
     assert!(
-        human.contains("24.22.2 (published (overrides template)) [lts, lts/krypton] — in drop"),
+        human
+            .lines()
+            .any(|l| l.split_whitespace().collect::<Vec<_>>()
+                == [
+                    "24.22.2",
+                    "overrides",
+                    "lts,",
+                    "lts/krypton",
+                    "[in",
+                    "drop]"
+                ]),
         "{human}"
     );
     assert_eq!(
-        human.matches("— in drop").count(),
+        human.matches("[in drop]").count(),
         4,
         "an unmarked row carries no segment at all: {human}"
     );
     assert!(
-        human.contains("12.12.0 (template)\n"),
+        human
+            .lines()
+            .any(|l| l.split_whitespace().collect::<Vec<_>>() == ["12.12.0", "template"]),
         "an unmarked row with no channels is bare: {human}"
     );
 }
@@ -457,4 +472,29 @@ fn in_drop_and_installed_are_refused_together() {
     let refusal = fixture.refusal("org.vibevm.node/node", &["--in-drop", "--installed"]);
     assert!(refusal.contains("--installed"), "{refusal}");
     assert!(refusal.contains("in-drop"), "{refusal}");
+}
+
+#[test]
+fn empty_drop_reports_its_location_and_one_quiet_line() {
+    let fixture = Fixture::new();
+    fixture.configure_drop();
+    let name = "org.vibevm.node/node";
+    let human = fixture.human(name, &["--in-drop"]);
+    assert!(
+        human
+            .lines()
+            .next()
+            .unwrap()
+            .starts_with("── versions of org.vibevm.node/node in the drop ")
+    );
+    assert!(human.contains(&format!(
+        "(the drop {} holds no payload of this package for {}/{})",
+        fixture.drop_dir().display(),
+        std::env::consts::OS,
+        std::env::consts::ARCH
+    )));
+    assert_eq!(
+        fixture.human(name, &["--in-drop", "--quiet"]),
+        "org.vibevm.node/node: 0 versions · default none · versions select newest\n"
+    );
 }
