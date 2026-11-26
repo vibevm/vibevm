@@ -115,7 +115,11 @@ fn warn_missing(ctx: &output::Context, homes: &[SettingsRoot], uses: &[String]) 
     let choices = session::choices(None, uses)?.render();
     let mut selections: Vec<SlotSelection> = Vec::new();
     for entry in choices.split(';').filter(|entry| !entry.is_empty()) {
-        let (slot, value) = entry.split_once('=').expect("validated session choice");
+        let (slot, value) = entry
+            .split_once('=')
+            .ok_or_else(|| vibe_app::AppError::SessionChoice {
+                entry: entry.to_owned(),
+            })?;
         let one = [entry.to_owned()];
         let request = ActivationRequest {
             uses: &one,
