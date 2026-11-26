@@ -144,12 +144,22 @@ fn stop_during_a_blocking_native_call_kills_and_reaps_the_helper_quickly() {
     let token = controlled();
     host.invoke(&token, 0).expect("warm helper");
     let (pid, scratch) = running_helper(&token).expect("one running helper");
+    let entered = host.root.path().join("compiler-sleep-entered");
     let requested = Arc::new(Mutex::new(None));
     let stopper = {
         let token = token.clone();
         let requested = Arc::clone(&requested);
+        let entered = entered.clone();
         std::thread::spawn(move || {
-            std::thread::sleep(Duration::from_millis(400));
+            let deadline = Instant::now() + Duration::from_secs(10);
+            let expected = pid.to_string();
+            while std::fs::read_to_string(&entered).ok().as_deref() != Some(expected.as_str()) {
+                if Instant::now() >= deadline {
+                    token.cancel();
+                    panic!("the helper did not enter the blocking fixture call");
+                }
+                std::thread::yield_now();
+            }
             *requested.lock().unwrap() = Some(Instant::now());
             token.cancel();
         })

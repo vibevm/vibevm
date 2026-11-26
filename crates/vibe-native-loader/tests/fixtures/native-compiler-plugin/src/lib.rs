@@ -6,6 +6,9 @@ use quick_xml::events::Event;
 use sha2::{Digest, Sha256};
 use std::sync::atomic::{AtomicUsize, Ordering};
 
+/// The SDK instance used by this fixture's public request, reply and payload types.
+pub use vibe_ext as sdk;
+
 static RAW_INVOCATIONS: AtomicUsize = AtomicUsize::new(0);
 use vibe_ext::{
     CompileReply, CompileReplyFail, CompileReplyOk, CompileReplySkip, CompileRequest, Ir, Manifest,
@@ -62,12 +65,12 @@ pub fn fixture_manifest() -> Manifest {
 /// Dispatch one generated compiler request through the fixture handler.
 ///
 /// ```
-/// use vibe_ext::{CompileReply, CompileRequest};
-/// use vibe_native_loader_compiler_fixture::handle;
+/// use vibe_native_loader_compiler_fixture::{handle, sdk};
+/// use sdk::{CompileReply, CompileRequest};
 ///
 /// # fn main() -> Result<(), Box<dyn std::error::Error>> {
-/// let request: CompileRequest = vibe_ext::__serde_json::from_value(
-///     vibe_ext::__serde_json::json!({
+/// let request: CompileRequest = sdk::__serde_json::from_value(
+///     sdk::__serde_json::json!({
 ///         "envelope": 2,
 ///         "execution": {"id": "compiler-skip", "package": "org.example/compiler", "config": {}},
 ///         "io": {"scratch": ".vibe/compile/run"},
@@ -114,6 +117,12 @@ pub fn handle(request: CompileRequest) -> CompileReply {
         "compiler-panic" => panic!("deterministic compiler fixture panic"),
         // A synchronous call that only a process-level stop can interrupt.
         "compiler-sleep" => {
+            if let Err(error) = std::fs::write(
+                std::path::Path::new(&request.project.root).join("compiler-sleep-entered"),
+                std::process::id().to_string(),
+            ) {
+                return failed(&format!("cannot record entry into blocking call: {error}"));
+            }
             std::thread::sleep(std::time::Duration::from_secs(30));
             CompileReply::Ok(Box::new(CompileReplyOk {
                 envelope: 2,
@@ -274,12 +283,12 @@ pub fn minify_for_test(backend: &str, tape: &str) -> Result<Option<String>, Stri
 /// It deliberately does not attest a compiler-produced lane or body origin.
 ///
 /// ```
-/// use vibe_ext::Ir;
+/// use vibe_native_loader_compiler_fixture::sdk::{self, Ir};
 /// let Ir::EmittedArtifact(value) =
 ///     vibe_native_loader_compiler_fixture::emitted_payload_for_test("<spec/>")?
 /// else { panic!("fixture carrier"); };
 /// assert_eq!(value.ir_schema, 2);
-/// # Ok::<(), vibe_ext::__serde_json::Error>(())
+/// # Ok::<(), sdk::__serde_json::Error>(())
 /// ```
 #[doc(hidden)]
 pub fn emitted_payload_for_test(text: &str) -> Result<Ir, vibe_ext::__serde_json::Error> {
