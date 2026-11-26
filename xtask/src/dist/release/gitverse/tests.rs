@@ -216,19 +216,22 @@ fn presence_is_decided_by_name_then_size() {
 // ------------------------------------------------------------------ source
 
 #[test]
-fn source_set_is_complete_with_the_manifest_last() {
+fn source_set_is_complete_with_the_companion_last() {
     let source = fixture();
     assert_eq!(
         source.assets.len(),
-        SUPPORTED_DISTRIBUTION_TARGETS.len() * 3 + 4
+        SUPPORTED_DISTRIBUTION_TARGETS.len() + 1
     );
     assert_eq!(
         source.assets.last().unwrap().name,
-        DISTRIBUTION_AGGREGATE_MANIFEST_FILENAME
+        super::source::COMPANION_NAME
     );
     assert_eq!(source.tag, "v1.0.0");
     assert_eq!(source.source_commit, COMMIT);
-    assert_eq!(expected_assets(&version()).len(), source.assets.len());
+    assert_eq!(
+        expected_assets(&version()).len(),
+        SUPPORTED_DISTRIBUTION_TARGETS.len() * 3 + 4
+    );
     for asset in &source.assets {
         assert_eq!(asset.digest, sha256_digest(&asset.bytes));
     }

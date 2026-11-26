@@ -206,11 +206,18 @@ pub(super) fn platform(target: &str) -> (PlatformDistributionFragment, Vec<u8>, 
     let vibe = format!("vibe:{target}").into_bytes();
     let index = format!("vibe-index:{target}").into_bytes();
     let proxy = format!("vibe-app-proxy:{target}").into_bytes();
-    let source_zip = write_zip(&[ArchiveEntry {
-        name: "Cargo.toml".to_string(),
-        bytes: b"[workspace]\n".to_vec(),
-        mode: 0o644,
-    }])
+    let source_zip = write_zip(&[
+        ArchiveEntry {
+            name: "Cargo.toml".to_string(),
+            bytes: b"[workspace]\n".to_vec(),
+            mode: 0o644,
+        },
+        ArchiveEntry {
+            name: "crates/vibe-cli/Cargo.toml".to_string(),
+            bytes: b"[package]\nname='vibe-cli'\nversion='1.0.0'\n".to_vec(),
+            mode: 0o644,
+        },
+    ])
     .unwrap();
     let windows = target == "x86_64-pc-windows-msvc";
     let vibe_path = if windows { "vibe.exe" } else { "vibe" };

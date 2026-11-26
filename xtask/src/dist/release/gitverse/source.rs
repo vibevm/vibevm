@@ -29,6 +29,8 @@ use crate::dist::build::{bootstrap_asset_name, bundle_asset_name, fragment_asset
 /// Installer scripts are small text files; this only bounds the read.
 const INSTALLER_MAX_BYTES: u64 = 4 * 1024 * 1024;
 
+pub(super) const COMPANION_NAME: &str = "vibevm-release-companion.zip";
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub(crate) struct SourceAsset {
     pub(crate) name: String,
@@ -42,7 +44,7 @@ pub(crate) struct SourceRelease {
     pub(crate) version: Version,
     pub(crate) tag: String,
     pub(crate) source_commit: String,
-    /// Upload order; `DISTRIBUTIONS.json` is always last, so a reader that
+    /// Upload order; the companion containing the manifest is last, so a reader that
     /// sees the manifest sees every asset it names.
     pub(crate) assets: Vec<SourceAsset>,
 }
@@ -180,12 +182,21 @@ pub(crate) fn verify(
         verify_platform_bytes(&fragment, bundle, bootstrap)?;
     }
     let mut assets = Vec::new();
+    let mut members = Vec::new();
     for (name, content_type, _) in expected_assets(version) {
         let bytes = files
             .remove(&name)
             .with_context(|| format!("release asset set lacks `{name}`"))?;
         if bytes.is_empty() {
             bail!("release asset `{name}` is empty");
+        }
+        if !name.ends_with(".zip") {
+            members.push(crate::dist::archive::ArchiveEntry {
+                name,
+                bytes,
+                mode: 0o644,
+            });
+            continue;
         }
         assets.push(SourceAsset {
             digest: sha256_digest(&bytes),
@@ -194,6 +205,13 @@ pub(crate) fn verify(
             bytes,
         });
     }
+    let bytes = crate::dist::archive::write_zip(&members)?;
+    assets.push(SourceAsset {
+        name: COMPANION_NAME.to_owned(),
+        content_type: "application/zip",
+        digest: sha256_digest(&bytes),
+        bytes,
+    });
     Ok(SourceRelease {
         version: version.clone(),
         tag,

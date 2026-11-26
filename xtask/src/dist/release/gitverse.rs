@@ -175,7 +175,7 @@ pub(crate) fn mirror_with(
     let companion_only = source
         .assets
         .iter()
-        .any(|asset| asset.name == "vibevm-release-companion.zip")
+        .any(|asset| asset.name == source::COMPANION_NAME)
         && !source
             .assets
             .iter()
@@ -235,7 +235,9 @@ pub(crate) fn mirror_with(
             _ => None,
         })
         .collect::<Vec<_>>();
-    deletions.sort_by_key(|(name, _)| *name != DISTRIBUTION_AGGREGATE_MANIFEST_FILENAME);
+    deletions.sort_by_key(|(name, _)| {
+        *name != source::COMPANION_NAME && *name != DISTRIBUTION_AGGREGATE_MANIFEST_FILENAME
+    });
     for (name, asset_id) in deletions {
         writeln!(out, "  delete  {name} (differs)")?;
         client.delete_asset(release.id, asset_id)?;
@@ -400,7 +402,7 @@ pub(crate) fn write_dry_run(
     if replace {
         writeln!(
             out,
-            "  {}  [--replace: per differing asset, DISTRIBUTIONS.json first]",
+            "  {}  [--replace: per differing asset, manifest container first]",
             placeholders(endpoint.delete_asset(0, 0).describe())
         )?;
     } else {
