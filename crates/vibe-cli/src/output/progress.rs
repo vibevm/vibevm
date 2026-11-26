@@ -215,12 +215,12 @@ impl ProgressRenderer {
     }
 
     pub(super) fn release_input(&self) {
-        if self.deferred.swap(false, Ordering::SeqCst) {
-            if let Renderer::Interactive(renderer) = &self.renderer {
-                renderer
-                    .multi
-                    .set_draw_target(ProgressDrawTarget::stderr_with_hz(12));
-            }
+        if self.deferred.swap(false, Ordering::SeqCst)
+            && let Renderer::Interactive(renderer) = &self.renderer
+        {
+            renderer
+                .multi
+                .set_draw_target(ProgressDrawTarget::stderr_with_hz(12));
         }
     }
 

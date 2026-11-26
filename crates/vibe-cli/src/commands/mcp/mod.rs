@@ -147,10 +147,7 @@ pub(crate) fn register_project_packages(
         let matches: Vec<_> = lock
             .packages
             .iter()
-            .filter(|row| {
-                row.group.to_string() == group.to_string()
-                    && row.name.to_string() == reference.name.to_string()
-            })
+            .filter(|row| row.group.to_string() == group.to_string() && row.name == reference.name)
             .collect();
         if matches.len() != 1 || matches[0].kind.to_string() != "mcp" {
             bail!("requested project MCP package is absent, ambiguous, or not MCP: `{package}`");

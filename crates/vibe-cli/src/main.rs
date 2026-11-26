@@ -462,7 +462,7 @@ fn run() -> ExitCode {
     composition::network::finish(&ctx, network, result.is_err());
     command_activity.complete(result.is_ok());
     if config_notice.fatal(&result) {
-        return as_exit_code(result.as_ref().err().expect("fatal configuration error"));
+        return as_exit_code(result.as_ref().expect_err("fatal configuration error"));
     }
     drop(config_notice);
     composition::finish(&ctx, &cancellation, result, preview_only)

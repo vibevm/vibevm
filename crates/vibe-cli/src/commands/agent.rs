@@ -248,12 +248,11 @@ fn launcher_list(listing: &AgentList) -> List {
         .iter()
         .map(|launcher| {
             let mut meta = Vec::new();
-            if launcher.source == "built-in" {
-                if let Some(preset) = vibe_core::agent_ids::AgentId::from_harness(&launcher.kind)
+            if launcher.source == "built-in"
+                && let Some(preset) = vibe_core::agent_ids::AgentId::from_harness(&launcher.kind)
                     .and_then(|agent| agent.row().preset)
-                {
-                    meta.push(Meta::note(format!("preset {preset}")));
-                }
+            {
+                meta.push(Meta::note(format!("preset {preset}")));
             }
             if let Some(dir) = &launcher.config_dir {
                 meta.push(Meta::note(format!("config {}", short_path(dir))));

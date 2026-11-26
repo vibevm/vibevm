@@ -56,7 +56,7 @@ pub(super) fn run(ctx: &output::Context, file: &Path, out: &Path) -> Result<()> 
         ));
     }
     let parent = destination.root_dir()?;
-    if !(parent
+    if parent
         .open_child_checked(&output_name)
         .map_err(|_| {
             refuse(
@@ -69,7 +69,7 @@ pub(super) fn run(ctx: &output::Context, file: &Path, out: &Path) -> Result<()> 
                 None,
             )
         })?
-        .is_none())
+        .is_some()
     {
         return Err(refuse(
             "kit_output_exists",

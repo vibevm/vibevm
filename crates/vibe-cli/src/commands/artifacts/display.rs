@@ -90,7 +90,7 @@ fn report_text(
         for input in &report.inputs {
             let file = input.file.as_deref().unwrap_or("<unnamed>");
             let digest: String = input.sha256.chars().take(8).collect();
-            let end = if language::rule_glyph().to_string() == "-" {
+            let end = if language::rule_glyph() == "-" {
                 "..."
             } else {
                 "…"

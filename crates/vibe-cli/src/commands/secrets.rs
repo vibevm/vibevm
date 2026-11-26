@@ -380,9 +380,9 @@ pub(crate) fn admitted_settings() -> Result<std::path::PathBuf> {
                 bail!("ambiguous settings root is unavailable")
             }
             std::path::Component::Normal(name)
-                if !name
+                if name
                     .to_str()
-                    .is_some_and(|s| vibe_safefs::ensure_safe_component(s).is_ok()) =>
+                    .is_none_or(|s| vibe_safefs::ensure_safe_component(s).is_err()) =>
             {
                 bail!("unsupported settings root")
             }
