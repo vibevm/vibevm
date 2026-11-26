@@ -1,6 +1,0 @@
-{
-  "schema": 1,
-  "findings": [
-    "file-length|crates/rust-ai-native-conform-frontend/src/lib.rs"
-  ]
-}
