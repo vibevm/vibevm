@@ -58,6 +58,119 @@ fn fresh_mirror_creates_the_release_uploads_everything_and_reruns_as_a_no_op() {
     );
 }
 
+/// Opaque, already-final attachments: this exercises mirror planning only,
+/// not the production packer or ZIP validity.
+fn six_asset_mirror_fixture() -> SourceRelease {
+    let mut source = fixture();
+    source.assets.retain(|asset| asset.name.ends_with(".zip"));
+    assert_eq!(source.assets.len(), 5);
+    for (index, asset) in source.assets.iter_mut().enumerate() {
+        asset.bytes = vec![b'P', index as u8, 0, 255];
+        asset.digest = sha256_digest(&asset.bytes);
+    }
+    let bytes = b"opaque ready companion\0\xff".to_vec();
+    source.assets.push(SourceAsset {
+        name: "vibevm-release-companion.zip".to_owned(),
+        content_type: "application/zip",
+        digest: sha256_digest(&bytes),
+        bytes,
+    });
+    source
+}
+
+#[test]
+fn six_asset_mirror_repeat_is_read_only_and_companion_hash_refusal_is_atomic() {
+    let (server, state) = gitverse_fake();
+    let source = six_asset_mirror_fixture();
+    let (first, _) = mirror(&server, &source, false).unwrap();
+    assert_eq!(first.uploaded.len(), 6);
+    let before = {
+        let state = state.lock().unwrap();
+        (state.next_id, state.releases[0].assets.clone())
+    };
+
+    server.clear();
+    let (repeat, _) = mirror(&server, &source, false).unwrap();
+    assert!(!repeat.created);
+    assert_eq!(repeat.release_id, first.release_id);
+    assert_eq!(repeat.skipped.len(), 6);
+    assert!(repeat.uploaded.is_empty() && repeat.replaced.is_empty());
+    let requests = server.requests();
+    assert!(!requests.is_empty());
+    assert!(requests.iter().all(|request| request.method == "GET"));
+    {
+        let state = state.lock().unwrap();
+        assert_eq!((state.next_id, state.releases[0].assets.clone()), before);
+    }
+
+    let mut changed = source.clone();
+    let companion = changed.assets.last_mut().unwrap();
+    companion.bytes[0] ^= 1; // Same size: refusal must compare hashes.
+    companion.digest = sha256_digest(&companion.bytes);
+    assert_eq!(
+        companion.bytes.len(),
+        source.assets.last().unwrap().bytes.len()
+    );
+    assert_ne!(companion.digest, source.assets.last().unwrap().digest);
+    server.clear();
+    let error = mirror(&server, &changed, false).unwrap_err().to_string();
+    assert!(error.contains("vibevm-release-companion.zip"), "{error}");
+    assert!(error.contains("nothing was uploaded"), "{error}");
+    assert!(error.contains("--replace"), "{error}");
+    let requests = server.requests();
+    assert!(!requests.is_empty());
+    assert!(requests.iter().all(|request| request.method == "GET"));
+    let state = state.lock().unwrap();
+    assert_eq!(state.releases.len(), 1);
+    assert_eq!((state.next_id, state.releases[0].assets.clone()), before);
+}
+
+#[test]
+fn six_asset_mirror_refuses_a_legacy_standalone_manifest_before_mutation() {
+    let (server, state) = gitverse_fake();
+    let source = six_asset_mirror_fixture();
+    let legacy = b"INVALID OLD MANIFEST".to_vec();
+    {
+        let mut state = state.lock().unwrap();
+        state.releases.push(GvRelease {
+            id: 1,
+            tag: source.tag.clone(),
+            draft: false,
+            assets: vec![(
+                2,
+                DISTRIBUTION_AGGREGATE_MANIFEST_FILENAME.to_owned(),
+                legacy.clone(),
+            )],
+        });
+    }
+    let before = {
+        let state = state.lock().unwrap();
+        (state.next_id, state.releases[0].assets.clone())
+    };
+    for replace in [false, true] {
+        server.clear();
+        let error = mirror(&server, &source, replace).unwrap_err().to_string();
+        assert!(error.contains(&source.tag), "{error}");
+        assert!(
+            error.contains(DISTRIBUTION_AGGREGATE_MANIFEST_FILENAME),
+            "{error}"
+        );
+        assert!(error.contains("vibevm-release-companion.zip"), "{error}");
+        assert!(error.contains("conflicts with this tag"), "{error}");
+        assert!(error.contains("Nothing was uploaded or deleted"), "{error}");
+        assert!(error.contains("`--replace` does not remove"), "{error}");
+        let requests = server.requests();
+        assert!(!requests.is_empty());
+        assert!(requests.iter().all(|request| request.method == "GET"));
+        let state = state.lock().unwrap();
+        assert_eq!(state.releases.len(), 1);
+        assert_eq!(state.releases[0].id, 1);
+        assert_eq!(state.releases[0].tag, source.tag);
+        assert!(!state.releases[0].draft);
+        assert_eq!((state.next_id, state.releases[0].assets.clone()), before);
+    }
+}
+
 #[test]
 fn a_draft_hidden_from_the_tag_route_is_found_in_the_list_and_reused() {
     let (server, state) = gitverse_fake();

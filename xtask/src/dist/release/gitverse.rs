@@ -172,6 +172,23 @@ pub(crate) fn mirror_with(
     };
     warn_about_release(&release, out)?;
     let remote = unique_by_name(client.list_assets(release.id)?)?;
+    let companion_only = source
+        .assets
+        .iter()
+        .any(|asset| asset.name == "vibevm-release-companion.zip")
+        && !source
+            .assets
+            .iter()
+            .any(|asset| asset.name == DISTRIBUTION_AGGREGATE_MANIFEST_FILENAME);
+    if companion_only && remote.contains_key(DISTRIBUTION_AGGREGATE_MANIFEST_FILENAME) {
+        bail!(
+            "GitVerse release `{}` already declares `{DISTRIBUTION_AGGREGATE_MANIFEST_FILENAME}`, \
+             which readers prefer over `vibevm-release-companion.zip`; the companion-only target \
+             conflicts with this tag. Nothing was uploaded or deleted. `--replace` does not \
+             remove this conflicting attachment; use a compatible release tag.",
+            source.tag
+        );
+    }
     let mut actions = Vec::new();
     for asset in &source.assets {
         let action = match presence(asset, remote.get(&asset.name)) {
