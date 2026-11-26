@@ -739,6 +739,7 @@ held by reference, §2.16), never the shared `build/` cache (that is `self gc`,
   upload unless `--replace`. The token is the per-host publish token
   (`VIBEVM_PUBLISH_TOKEN_GITVERSE` / `~/.vibe/gitverse.publish.token`) and is
   never printed; `--dry-run` prints the requests without loading it.</RELEASE-GITVERSE-MIRROR>
+        <GITVERSE-ARCHIVE-ONLY fact="true" status="spec/plan">For the planned 1.0.13 GitVerse mirror, publish verified archive assets unchanged and collect the verified non-archive assets, including `DISTRIBUTIONS.json`, in `vibevm-release-companion.zip`, preserving their names and bytes. For GitVerse release assets only, the reader may read the manifest from this ZIP when no standalone manifest is advertised. An advertised standalone manifest that cannot be read or parsed remains an error; the companion must not mask that failure. Before publication, `gitverse_archive_only_roundtrip` must exercise the producer and the current CLI against a local release host, including corrupt input and repeat installation. The live GitVerse check follows publication.</GITVERSE-ARCHIVE-ONLY>
       </facts>
     </release-production>
     <release-sources title="2.19 Release sources — closed networks">
