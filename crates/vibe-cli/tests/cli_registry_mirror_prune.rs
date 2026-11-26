@@ -257,6 +257,12 @@ fn a_flag_override_is_never_a_prune_and_says_so() {
     source(root);
     let target = root.join("target");
     fs::create_dir_all(&target).unwrap();
+    publish(&target, "org.other", "kept", "2.0.0");
+    let manifest = target.join("org.other/kept/v2.0.0/vibe.toml");
+    let manifest_before = fs::read(&manifest).unwrap();
+    let canary = target.join("keep.bin");
+    let canary_before = b"KEEP\0\xff\n";
+    fs::write(&canary, canary_before).unwrap();
     let project = project(
         root,
         &format!(
@@ -279,9 +285,19 @@ fn a_flag_override_is_never_a_prune_and_says_so() {
             "--yes",
         ],
     ));
-    assert!(message.contains("no declared selection"), "{message}");
-    assert!(message.contains("per-run override"), "{message}");
+    assert_eq!(fs::read(&manifest).unwrap(), manifest_before);
+    assert_eq!(fs::read(&canary).unwrap(), canary_before);
     assert!(!target.join("_index").exists());
+    assert!(message.contains("prune_needs_selection"), "{message}");
+    assert!(
+        message.contains("--package and --group are a per-run override and are never recorded"),
+        "{message}"
+    );
+    assert!(
+        message.lines().any(|line| line.trim()
+            == "fix   vibe registry mirror src --into dst --config mirror.toml --prune"),
+        "{message}"
+    );
 }
 
 #[test]

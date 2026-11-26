@@ -360,7 +360,16 @@ fn a_configured_proxy_carries_the_request_and_no_proxy_bypasses_it() {
         before,
         "loopback went through the proxy"
     );
-    assert!(stderr(&direct).contains("direct (no_proxy)"));
+    let direct_stderr = stderr(&direct);
+    assert!(
+        direct_stderr
+            .lines()
+            .any(|line| line.starts_with("✓ route ")
+                && line.contains("https://127.0.0.1:")
+                && line.contains("[no_proxy]")
+                && !line.contains(" via ")),
+        "{direct_stderr}"
+    );
 }
 
 #[test]
@@ -577,7 +586,10 @@ fn test_proxy_reports_every_step_and_separates_proxy_from_target_problems() {
     let err = stderr(&denied);
     assert_eq!(code(&denied), 21, "{err}");
     assert!(
-        err.contains("proxy auth") && err.contains("dl_proxy_auth"),
+        err.contains("✗ proxy auth  the proxy wants authentication")
+            && err.contains("dl_proxy_problem")
+            && err.contains("HTTP/1.1 407 Proxy Authentication Required")
+            && err.contains("[proxy] mode = \"px\""),
         "{err}"
     );
     // An untrusted target certificate is a target problem.

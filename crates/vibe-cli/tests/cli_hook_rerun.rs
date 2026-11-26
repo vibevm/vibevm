@@ -533,7 +533,8 @@ fn scoped_update_surfaces_a_flagged_post_hook_in_every_output_mode() {
         .stdout(predicates::str::contains("1 lifecycle hook flagged"));
 
     fs::write(slot.join("payload.txt"), "corrupted once more\n").unwrap();
-    user.vibe()
+    let output = user
+        .vibe()
         .arg("update")
         .arg("org.vibevm/hooked")
         .arg("--path")
@@ -541,5 +542,28 @@ fn scoped_update_surfaces_a_flagged_post_hook_in_every_output_mode() {
         .arg("--assume-yes")
         .assert()
         .success()
-        .stdout(predicates::str::contains("fail `org.vibevm/hooked#"));
+        .get_output()
+        .stdout
+        .clone();
+    let text = String::from_utf8(output).unwrap();
+    let failure = text
+        .lines()
+        .find(|line| line.starts_with("✗ └ post-install · "))
+        .expect("the flagged post-install hook has a failure row");
+    assert!(
+        failure.contains(
+            "extension org.vibevm/hooked#post-install@slot(org.vibevm/hooked@0.2.0) handler failed:"
+        ),
+        "{failure}"
+    );
+    assert!(failure.contains("exited nonzero (Some(17))"), "{failure}");
+    assert!(failure.contains("the retry is a rerun and not a resume — vibe reinstall org.vibevm/hooked (this plane has no --resume and no --from-step)"), "{failure}");
+    assert!(
+        !failure.contains("vibe reinstall org.vibevm/hooked --resume"),
+        "{failure}"
+    );
+    assert!(
+        !failure.contains("vibe reinstall org.vibevm/hooked --from-step"),
+        "{failure}"
+    );
 }

@@ -329,7 +329,7 @@ fn a_user_launcher_overrides_the_builtin_of_the_same_name() {
     // the same kind is ordinary configuration.
     assert_eq!(
         launcher_row(&machine, "codex"),
-        ["codex", "codex", "codex", "[built-in]"],
+        ["codex", "codex", "codex", "preset", "codex", "[built-in]"],
     );
     assert_eq!(
         launcher_row(&machine, "work-codex")[..3],
@@ -845,7 +845,14 @@ fn opencode_is_a_builtin_launcher() {
     let machine = Machine::new(WRAPPER);
     assert_eq!(
         launcher_row(&machine, "opencode"),
-        ["opencode", "opencode", "opencode", "[built-in]"],
+        [
+            "opencode",
+            "opencode",
+            "opencode",
+            "preset",
+            "opencode",
+            "[built-in]"
+        ],
     );
 }
 
@@ -1134,7 +1141,7 @@ fn qwen_is_a_builtin_launcher() {
     let machine = Machine::new(WRAPPER);
     assert_eq!(
         launcher_row(&machine, "qwen"),
-        ["qwen", "qwen", "qwen", "[built-in]"],
+        ["qwen", "qwen", "qwen", "preset", "qwen-code", "[built-in]"],
     );
 }
 

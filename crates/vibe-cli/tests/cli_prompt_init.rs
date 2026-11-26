@@ -110,8 +110,16 @@ fn prompt_build_on_an_unopted_project_names_prompt_init() {
         .stdout
         .clone();
     let said = String::from_utf8(output).unwrap();
-    assert!(said.contains("has not opted in"), "{said}");
-    assert!(said.contains("vibe prompt init"), "{said}");
+    assert!(
+        said.lines().any(|line| line
+            == "○ system prompt  not opted in · no vibevm/vibespecs/boot/SYSTEM-TEMPLATE.md"),
+        "{said}"
+    );
+    assert!(
+        said.lines()
+            .any(|line| line == "  vibe prompt init opts this project in"),
+        "{said}"
+    );
 }
 
 #[test]
@@ -125,8 +133,16 @@ fn prompt_check_on_an_unopted_project_names_prompt_init() {
         .output()
         .unwrap();
     let said = String::from_utf8(output.stdout).unwrap();
-    assert!(said.contains("has not opted in"), "{said}");
-    assert!(said.contains("run `vibe prompt init` to opt in"), "{said}");
+    assert!(
+        said.lines().any(|line| line
+            == "○ system prompt  not opted in · no vibevm/vibespecs/boot/SYSTEM-TEMPLATE.md"),
+        "{said}"
+    );
+    assert!(
+        said.lines()
+            .any(|line| line == "  vibe prompt init opts this project in"),
+        "{said}"
+    );
 }
 
 #[test]
