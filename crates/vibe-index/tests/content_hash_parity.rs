@@ -274,10 +274,14 @@ fn non_utf8_path_is_a_hard_error_under_recipe_1() {
             );
         }
         Err(error) => {
-            assert!(
-                cfg!(target_os = "macos") && error.raw_os_error() == Some(92),
-                "unexpected filename creation refusal (APFS requires EILSEQ): {error}",
-            );
+            if cfg!(target_os = "macos") {
+                assert!(
+                    error.raw_os_error() == Some(92),
+                    "unexpected filename creation refusal (APFS requires EILSEQ): {error}"
+                );
+            } else {
+                panic!("unexpected filename creation refusal (APFS requires EILSEQ): {error}");
+            }
             let entries = std::fs::read_dir(dir.path())
                 .unwrap()
                 .collect::<Result<Vec<_>, _>>()

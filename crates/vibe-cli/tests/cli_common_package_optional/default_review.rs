@@ -3878,20 +3878,37 @@ fn ordinary_interactive_preview_actual_pty_answers_cancel_interrupt_and_source_d
         if mode == "false" || mode == "true" {
             assert_eq!(report["status"], 0, "{report}");
             assert_eq!(report["terminal_restored"], true, "{report}");
-            let start = transcript
-                .find("{\n")
-                .or_else(|| transcript.find("{\r\n"))
-                .expect("actual result object");
-            let result: serde_json::Value = serde_json::from_str(&transcript[start..]).unwrap();
             let answers = serde_json::json!({"selections":{"extra":"disabled"},"parameters":{"verbose":mode=="true"}});
-            assert_eq!(result["original"], answers);
             let input = f.root.join("answers.json");
             write(&input, serde_json::to_vec(&answers).unwrap());
             let cli = preview_cli(&f, Some(&input));
             assert!(cli.status.success());
-            assert_eq!(
-                serde_json::from_slice::<serde_json::Value>(&cli.stdout).unwrap(),
-                result
+            let result: serde_json::Value = serde_json::from_slice(&cli.stdout).unwrap();
+            assert_eq!(result["original"], answers);
+            assert_eq!(result["resolved"]["parameters"]["verbose"], mode == "true");
+            let plain =
+                String::from_utf8(console::strip_ansi_codes(transcript).as_bytes().to_vec())
+                    .unwrap();
+            let preview = plain
+                .split("configuration preview of ")
+                .nth(1)
+                .expect("human preview");
+            assert!(preview.starts_with(&format!("{}@1.0.0", coordinate(DRIVER))));
+            let resolved = preview
+                .split("resolved")
+                .nth(1)
+                .expect("human resolved section");
+            let rows: Vec<Vec<&str>> = resolved
+                .lines()
+                .map(|line| line.split_whitespace().collect())
+                .collect();
+            assert!(
+                rows.iter()
+                    .any(|row| row.as_slice() == ["feature", "disabled"])
+            );
+            assert!(
+                rows.iter()
+                    .any(|row| row.as_slice() == ["parameter", "verbose", mode])
             );
             assert_eq!(
                 preview_mcp(
@@ -8249,7 +8266,9 @@ fn ordinary_interactive_install_explicit_apply_cancel_and_post_plan_drift() {
                 f.project.to_str().unwrap(),
                 mode,
                 source.to_str().unwrap(),
+                "2",
             ])
+            .arg(f.project.join(vibe_core::layout::current_vibedeps_root()))
             .env_clear()
             .env("PATH", "/usr/bin:/bin")
             .env("HOME", f.root.join("home"))

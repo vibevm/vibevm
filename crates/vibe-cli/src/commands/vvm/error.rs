@@ -129,9 +129,7 @@ mod tests {
     #[test]
     fn source_tree_unresolved_keeps_fix_and_see() {
         let error = anyhow::Error::new(VvmError::NoSource);
-        let rendered = crate::output::refusal_of(&error)
-            .block()
-            .render_at(200);
+        let rendered = crate::output::refusal_of(&error).block().render_at(200);
         assert_eq!(
             rendered,
             concat!(

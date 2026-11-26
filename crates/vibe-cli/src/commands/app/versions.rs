@@ -8,10 +8,8 @@
 //! installation. Inside the version-list TTL, under `--offline`, and
 //! under `--installed` it costs no request at all.
 //!
-//! The `in drop` mark of PROP-066 `#drops` is the second thing this
-//! adapter supplies, in `versions/drop.rs`, and it is held to the same
-//! budget: the file names come out of the skeleton render the domain read
-//! already produced, and the drop is asked by name alone.
+//! `versions/drop.rs` marks `in drop` (PROP-066 `#drops`) by checking the
+//! file names from the same skeleton render, without reading the payload.
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-075#VERSIONS-LIST-OUTPUT");
 
@@ -21,8 +19,8 @@ use std::path::{Path, PathBuf};
 
 use anyhow::Result;
 use vibe_app::{
-    DirectoryRoots, Domain, DomainVersion, Domains, Origin, SettingsRoot, TemplateFacts,
-    VersionsError,
+    DirectoryRoots, Domain, DomainObservation, DomainVersion, Domains, Origin, PackagePresence,
+    SettingsRoot, TemplateFacts, VersionsError,
 };
 use vibe_core::Group;
 use vibe_registry::templates::{ActiveTemplate, DirectoryTemplate, TemplateLayer};
@@ -105,7 +103,9 @@ pub(super) fn run(
     // actually land on (PROP-075 `#VERSIONS-SELECT`).
     print(
         &listing,
-        ctx.is_quiet(),
+        ctx,
+        args.in_drop,
+        &domains.drops,
         super::version_select::effective()?.0,
     );
     Ok(())
@@ -181,6 +181,11 @@ struct Found {
 
 impl Domains for RegistryDomains {
     fn domain(&self, group: &str, name: &str) -> Result<Domain, String> {
+        self.observe_domain(group, name)
+            .map(|observation| observation.domain)
+    }
+
+    fn observe_domain(&self, group: &str, name: &str) -> Result<DomainObservation, String> {
         let parsed = Group::parse(group).map_err(|error| error.to_string())?;
         let Some(layer) = vibe_registry::templates::active() else {
             // No layer means no template cache and no template
@@ -189,7 +194,10 @@ impl Domains for RegistryDomains {
             return self.published(&parsed, name);
         };
         if self.cache_only {
-            return Ok(cached_domain(&layer, &parsed, name));
+            return Ok(DomainObservation {
+                domain: cached_domain(&layer, &parsed, name),
+                presence: PackagePresence::Indeterminate,
+            });
         }
         // The whole value is held for the loop: a `monorepo` root is a
         // capture its source owns, and dropping the lease would delete the
@@ -218,7 +226,10 @@ impl Domains for RegistryDomains {
                     roots: found_roots,
                 },
             );
-            return Ok(domain);
+            return Ok(DomainObservation {
+                domain,
+                presence: PackagePresence::Present,
+            });
         }
         // The one registry shape with no directory root: an indexed
         // per-package registry, which reads its template through the
@@ -239,7 +250,10 @@ impl Domains for RegistryDomains {
                     roots: found_roots,
                 },
             );
-            return Ok(domain);
+            return Ok(DomainObservation {
+                domain,
+                presence: PackagePresence::Present,
+            });
         }
         // No template under any root; the roots are still kept, because a
         // version the registry publishes concretely has its own manifest
@@ -308,26 +322,35 @@ impl RegistryDomains {
     }
 
     /// The concretely published versions of a package with no template.
-    fn published(&self, group: &Group, name: &str) -> Result<Domain, String> {
-        if let Some(root) = &self.registry {
+    fn published(&self, group: &Group, name: &str) -> Result<DomainObservation, String> {
+        let versions = if let Some(root) = &self.registry {
             let local = crate::registry::application_local_registry(root.clone())
                 .map_err(|error| format!("{error:#}"))?;
-            let versions = match local.list_versions(group, name) {
-                Ok(versions) => versions,
-                Err(vibe_registry::RegistryError::UnknownPackage { .. }) => Vec::new(),
+            match local.list_versions(group, name) {
+                Ok(versions) => Some(versions),
+                Err(vibe_registry::RegistryError::UnknownPackage { .. }) => None,
                 Err(error) => return Err(error.to_string()),
-            };
-            return Ok(Domain::of_published(versions));
-        }
-        vibe_app::versions_from_global_with_operation(
-            self.settings.path(),
-            group,
-            name,
-            self.offline,
-            &self.operation,
-        )
-        .map(Domain::of_published)
-        .map_err(|error| error.to_string())
+            }
+        } else {
+            vibe_app::versions_from_global_with_presence_with_operation(
+                self.settings.path(),
+                group,
+                name,
+                self.offline,
+                &self.operation,
+            )
+            .map_err(|error| error.to_string())?
+        };
+        Ok(match versions {
+            Some(versions) => DomainObservation {
+                domain: Domain::of_published(versions),
+                presence: PackagePresence::Present,
+            },
+            None => DomainObservation {
+                domain: Domain::default(),
+                presence: PackagePresence::Absent,
+            },
+        })
     }
 }
 
@@ -430,55 +453,93 @@ fn template_facts(
 /// the slot's trailer.
 fn print(
     listing: &wire::ApplicationVersions,
-    quiet: bool,
+    ctx: &output::Context,
+    in_drop: bool,
+    drops: &[PathBuf],
     policy: vibe_core::version_select::VersionSelect,
 ) {
+    if ctx.is_quiet() {
+        let total: u64 = listing
+            .packages
+            .iter()
+            .map(|pkg| u64::from(pkg.total))
+            .sum();
+        let unit = if total == 1 { "version" } else { "versions" };
+        println!(
+            "{}: {total} {unit} · default {} · versions select {}",
+            listing.target,
+            listing.default.as_deref().unwrap_or("none"),
+            policy.as_str(),
+        );
+        return;
+    }
+    use output::language::{Cell, List, Meta, Role, Row, paint, rule};
+    let mut blocks = Vec::new();
     for package in &listing.packages {
-        println!("{}: {} version(s)", package.package, package.total);
-        if !quiet {
-            for row in &package.versions {
-                println!("  {}", row_line(row));
-            }
-            if package.more > 0 {
-                println!("  … and {} more (`--all` shows every one)", package.more);
-            }
-            for notice in &package.notices {
-                eprintln!("vibe app versions: {notice}");
-            }
+        let suffix = if in_drop { " in the drop" } else { "" };
+        let count = if package.total == 0 {
+            "0".to_owned()
+        } else {
+            format!("{} · newest first", package.total)
+        };
+        let mut block = rule(
+            &format!("versions of {}{suffix}", package.package),
+            Some(&count),
+        );
+        let rows = package
+            .versions
+            .iter()
+            .map(|row| {
+                let origin = match row.origin {
+                    wire::Origin::Template => "template",
+                    wire::Origin::Published => "published",
+                    wire::Origin::Overrides => "overrides",
+                };
+                let states = state_label(&row.state)
+                    .into_iter()
+                    .chain((!row.drop.is_empty()).then_some("in drop"))
+                    .map(|s| Meta::State(s.to_owned()))
+                    .collect();
+                Row::new(vec![
+                    Cell::text(&row.version),
+                    Cell::text(origin),
+                    Cell::text(row.channels.join(", ")),
+                ])
+                .meta(states)
+            })
+            .collect::<Vec<_>>();
+        if !rows.is_empty() {
+            block.push_str("\n\n");
+            block.push_str(&List::new(rows).render());
         }
+        if in_drop && package.total == 0 {
+            let locations = drops
+                .iter()
+                .map(|p| p.display().to_string())
+                .collect::<Vec<_>>()
+                .join(", ");
+            block.push_str(&format!(
+                "\n\n  (the drop {locations} holds no payload of this package for {}/{})",
+                std::env::consts::OS,
+                std::env::consts::ARCH
+            ));
+        }
+        if package.more > 0 {
+            block.push_str(&format!(
+                "\n  {}",
+                paint(
+                    Role::Dim,
+                    &format!("({} more; --all shows every one)", package.more)
+                )
+            ));
+        }
+        for notice in &package.notices {
+            ctx.diagnostic(notice);
+        }
+        blocks.push(block);
     }
-    println!("{}", trailer(listing, policy));
-}
-
-/// One row: the version, its origin, the channels it belongs to, what
-/// this home holds of it and whether a drop already holds its payload.
-///
-/// The two notes share **one** trailing `— …` segment, comma-separated,
-/// so every row has the same shape whichever notes it carries. The drop
-/// mark is shown on an installed row too: it is a fact about the drop,
-/// not about installability, and `--in-drop` means the same thing on
-/// every row because of it.
-fn row_line(row: &wire::Row) -> String {
-    let mut line = format!("{} ({})", row.version, origin_label(&row.origin));
-    if !row.channels.is_empty() {
-        line.push_str(&format!(" [{}]", row.channels.join(", ")));
-    }
-    let notes: Vec<&str> = state_label(&row.state)
-        .into_iter()
-        .chain((!row.drop.is_empty()).then_some("in drop"))
-        .collect();
-    if !notes.is_empty() {
-        line.push_str(&format!(" — {}", notes.join(", ")));
-    }
-    line
-}
-
-fn origin_label(origin: &wire::Origin) -> &'static str {
-    match origin {
-        wire::Origin::Template => Origin::Template.label(),
-        wire::Origin::Published => Origin::Published.label(),
-        wire::Origin::Overrides => Origin::Overrides.label(),
-    }
+    blocks.push(paint(Role::Dim, &trailer(listing, policy)));
+    ctx.block(&blocks.join("\n\n"));
 }
 
 fn state_label(state: &wire::State) -> Option<&'static str> {
@@ -507,12 +568,12 @@ fn trailer(
 ) -> String {
     let mut parts = Vec::new();
     match &listing.slot {
-        Some(slot) => parts.push(format!("slot `{slot}`")),
-        None => parts.push(format!("package `{}`", listing.target)),
+        Some(slot) => parts.push(format!("slot {slot}")),
+        None => parts.push(format!("package {}", listing.target)),
     }
     parts.push(format!(
         "default {}",
-        listing.default.as_deref().unwrap_or("(none)")
+        listing.default.as_deref().unwrap_or("none")
     ));
     if listing.off {
         parts.push(

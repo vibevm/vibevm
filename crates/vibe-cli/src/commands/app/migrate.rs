@@ -37,10 +37,7 @@ pub(super) fn run(
     }
     let Some(only) = selection(ctx, &plan, &args)? else {
         // Escape at the offer: no entry was chosen, so nothing ran.
-        ctx.hint(&format!(
-            "nothing chosen; slot {} is unchanged",
-            plan.slot
-        ));
+        ctx.hint(&format!("nothing chosen; slot {} is unchanged", plan.slot));
         return Ok(None);
     };
     let source_operation = global::source_operation(Default::default())?;
@@ -221,9 +218,10 @@ fn migration_text(document: &wire::ApplicationMigration, width: usize) -> String
                 wire::Outcome::ImportFailed => {
                     (Glyph::Failed, vec![Meta::Alert("import failed".into())])
                 }
-                wire::Outcome::Pending => {
-                    (Glyph::Skipped, vec![Meta::note("exported, not yet imported")])
-                }
+                wire::Outcome::Pending => (
+                    Glyph::Skipped,
+                    vec![Meta::note("exported, not yet imported")],
+                ),
                 wire::Outcome::Skipped => (Glyph::Skipped, vec![Meta::note("skipped")]),
             };
             if let (Some(started), Some(finished)) = (&entry.started, &entry.finished)

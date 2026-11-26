@@ -1,7 +1,7 @@
 //! Pure human projection fixtures; no filesystem or network operations.
 
-use super::*;
 use super::super::{Input, VersionInputs};
+use super::*;
 use vibe_core::progress::transfer::Purpose;
 
 #[test]
@@ -10,7 +10,9 @@ fn template_projection_has_measured_children() {
     let outcome = SnapshotOutcome {
         package: "org.x/tpl".into(),
         revision: "r3".into(),
-        versions: (0..12).map(|minor| semver::Version::new(1, minor, 0)).collect(),
+        versions: (0..12)
+            .map(|minor| semver::Version::new(1, minor, 0))
+            .collect(),
         channels: vec![("stable".into(), Some(semver::Version::new(1, 11, 0)))],
         unchanged: 10,
         dropped: Vec::new(),
@@ -50,24 +52,36 @@ fn template_projection_has_measured_children() {
     let row = &list.rows[0];
     assert_eq!(row.cells[0].text, "template org.x/tpl@r3");
     assert_eq!(row.glyph, Some((Glyph::Done, Role::Ok)));
-    assert_eq!(row.meta, vec![
-        Meta::Count("12 versions selected".into()),
-        Meta::note("1.0.0 … 1.11.0"),
-        Meta::Count("2 to snapshot".into()),
-        Meta::note("10 already there"),
-    ]);
+    assert_eq!(
+        row.meta,
+        vec![
+            Meta::Count("12 versions selected".into()),
+            Meta::note("1.0.0 … 1.11.0"),
+            Meta::Count("2 to snapshot".into()),
+            Meta::note("10 already there"),
+        ]
+    );
     assert_eq!(row.children.len(), 3);
     assert_eq!(row.children[0], "channel stable  1.11.0");
     assert!(row.children[1].starts_with("1.0.0: 14 payload inputs · option-0, option-1"));
-    assert_eq!(row.children[2], "payloads  14 inputs · 3 in the drop · 16.8 MB in the drop · 41.2 MB to fetch · 58.0 MB in all");
+    assert_eq!(
+        row.children[2],
+        "payloads  14 inputs · 3 in the drop · 16.8 MB in the drop · 41.2 MB to fetch · 58.0 MB in all"
+    );
     let rendered = list.render_at(240);
-    assert!(rendered.contains("12 versions selected · 1.0.0 … 1.11.0 · 2 to snapshot · 10 already there"));
+    assert!(
+        rendered
+            .contains("12 versions selected · 1.0.0 … 1.11.0 · 2 to snapshot · 10 already there")
+    );
     assert!(rendered.contains("  └ channel stable  1.11.0\n  └ 1.0.0: 14 payload inputs"));
 
     projection.rows[0].versions[0].inputs[12].size = None;
     projection.rows[0].versions[0].inputs[13].size = None;
     let unknown = human_rows(std::slice::from_ref(&outcome), &projection);
-    assert_eq!(unknown.rows[0].children[2], "payloads  14 inputs · 3 in the drop · 16.8 MB in the drop · 36.0 MB to fetch · 52.8 MB in all · lower bound · 2 inputs without a size");
+    assert_eq!(
+        unknown.rows[0].children[2],
+        "payloads  14 inputs · 3 in the drop · 16.8 MB in the drop · 36.0 MB to fetch · 52.8 MB in all · lower bound · 2 inputs without a size"
+    );
     projection.rows[0].versions[0].inputs[13].size = Some(1_200_000);
     let singular = human_rows(std::slice::from_ref(&outcome), &projection);
     assert!(singular.rows[0].children[2].ends_with(" · lower bound · 1 input without a size"));

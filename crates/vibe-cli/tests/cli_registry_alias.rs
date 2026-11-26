@@ -225,7 +225,7 @@ fn a_package_name_no_registry_issued_is_refused_with_the_qualified_name_as_a_hin
     );
     let said = stderr(&refused);
     assert!(
-        said.contains("the short name `qwen-code` is not issued by any consulted registry"),
+        said.contains("no consulted registry issues the short name qwen-code"),
         "{said}"
     );
     assert!(said.contains("give the full name"), "{said}");
@@ -263,7 +263,7 @@ fn an_issued_name_equal_to_the_package_name_resolves() {
     ok(&resolved, "vibe app installers qwen-code");
     assert!(
         stderr(&resolved)
-            .contains("qwen-code → org.vibevm.qwen/qwen-code (alias in registry corp)"),
+            .contains("qwen-code → org.vibevm.qwen/qwen-code · alias in registry corp"),
         "the provenance line still names who issued it: {}",
         stderr(&resolved)
     );
@@ -342,7 +342,7 @@ fn an_issued_name_resolves_offline() {
     let refused = site.vibe(&["app", "installers", "--offline", "qwen-code"]);
     assert!(!refused.status.success(), "{}", stdout(&refused));
     assert!(
-        stderr(&refused).contains("not issued by any consulted registry"),
+        stderr(&refused).contains("no consulted registry issues the short name"),
         "{}",
         stderr(&refused)
     );
@@ -515,7 +515,10 @@ fn two_registries_issuing_one_spelling_for_two_packages_is_exit_seven() {
         stderr(&refused)
     );
     let said = stderr(&refused);
-    assert!(said.contains("`qwen` is ambiguous"), "{said}");
+    assert!(
+        said.contains("more than one package answers to qwen"),
+        "{said}"
+    );
     assert!(
         said.contains("org.vibevm.qwen/qwen-code (alias in registry corp)"),
         "{said}"

@@ -217,11 +217,11 @@ fn one_candidate_resolves_and_the_provenance_line_says_which() {
     ok(&listed, "vibe app installers widget");
     let said = stderr(&listed);
     assert!(
-        said.contains("widget → org.vibevm.node/widget (alias in registry corp)"),
+        said.contains("widget → org.vibevm.node/widget · alias in registry corp"),
         "the provenance line is missing: {said}"
     );
     assert_eq!(
-        said.matches("widget → org.vibevm.node/widget (alias in registry corp)")
+        said.matches("widget → org.vibevm.node/widget · alias in registry corp")
             .count(),
         1,
         "the provenance line is printed once: {said}"
@@ -242,7 +242,7 @@ fn the_provenance_line_survives_quiet_and_json() {
         let listed = site.vibe(&args);
         ok(&listed, "vibe app installers widget");
         assert!(
-            stderr(&listed).contains("widget → org.vibevm.node/widget (alias in registry corp)"),
+            stderr(&listed).contains("widget → org.vibevm.node/widget · alias in registry corp"),
             "{extra:?} dropped the provenance line: {}",
             stderr(&listed)
         );
@@ -294,7 +294,7 @@ fn two_groups_under_one_name_are_a_hint_and_not_a_collision() {
     );
     let said = stderr(&refused);
     assert!(
-        said.contains("the short name `node` is not issued by any consulted registry"),
+        said.contains("no consulted registry issues the short name node"),
         "{said}"
     );
     assert!(!said.contains("is ambiguous"), "{said}");
@@ -332,7 +332,7 @@ fn an_untrusted_group_is_listed_and_never_picked() {
     let listed = site.vibe(&["app", "installers", "gadget"]);
     ok(&listed, "vibe app installers gadget, com.acme trusted");
     assert!(
-        stderr(&listed).contains("gadget → com.acme/gadget (alias in registry corp)"),
+        stderr(&listed).contains("gadget → com.acme/gadget · alias in registry corp"),
         "{}",
         stderr(&listed)
     );
@@ -377,7 +377,7 @@ fn offline_resolves_from_the_cached_index() {
     let listed = site.vibe(&["app", "installers", "widget", "--offline"]);
     ok(&listed, "vibe app installers widget --offline");
     assert!(
-        stderr(&listed).contains("widget → org.vibevm.node/widget (alias in registry corp)"),
+        stderr(&listed).contains("widget → org.vibevm.node/widget · alias in registry corp"),
         "{}",
         stderr(&listed)
     );
@@ -409,18 +409,33 @@ fn offline_without_a_cached_candidate_asks_for_the_qualified_form() {
 #[specmark::spec(
     verifies = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#INSTALLED-STATE-RESOLVES-LOCALLY"
 )]
-fn an_installed_state_verb_refuses_locally() {
+fn short_name_refusals_keep_local_and_registry_fixes_distinct() {
     let site = Site::new();
     let refused = site.vibe(&["app", "hold", "widget"]);
     assert!(!refused.status.success(), "{}", stderr(&refused));
     let said = stderr(&refused);
-    assert!(said.contains("`widget` is not installed"), "{said}");
+    assert!(
+        said.contains("widget is not installed in this home"),
+        "{said}"
+    );
     assert!(said.contains("application index"), "{said}");
     assert!(said.contains("vibe app hold <group>/widget"), "{said}");
     assert!(
         !said.contains("consulted"),
         "installed state consults no registry: {said}"
     );
+    assert!(said.contains("not_installed"), "{said}");
+    assert!(said.contains("vibe install -g <group>/widget"), "{said}");
+    let missing = site.vibe(&["app", "installers", "absent"]);
+    let registry = stderr(&missing);
+    assert!(!missing.status.success());
+    assert!(registry.contains("short_name_not_issued"), "{registry}");
+    assert!(registry.contains("consulted: corp"), "{registry}");
+    assert!(
+        registry.contains("vibe app installers <group>/absent"),
+        "{registry}"
+    );
+    assert!(refused.stdout.is_empty() && missing.stdout.is_empty());
 }
 
 /// `vibe app versions` keeps its first two tiers inside the library — a
@@ -434,7 +449,7 @@ fn versions_reaches_the_index_only_for_a_word_that_is_neither() {
     let listed = site.vibe(&["app", "versions", "widget", "--json"]);
     ok(&listed, "vibe app versions widget --json");
     assert!(
-        stderr(&listed).contains("widget → org.vibevm.node/widget (alias in registry corp)"),
+        stderr(&listed).contains("widget → org.vibevm.node/widget · alias in registry corp"),
         "{}",
         stderr(&listed)
     );
@@ -482,14 +497,24 @@ fn versions_keeps_its_own_refusal_for_a_word_no_registry_carries() {
 
 /// Decisions precede even the first parent frame, without a second lookup.
 #[test]
-#[specmark::spec(verifies = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#short-name")]
+#[specmark::spec(
+    verifies = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#short-name"
+)]
 fn alias_decision_prints_once_outside_panel() {
     let site = Site::new();
     let fixture = site.path("decision-reg/org.vibevm.node/node/v1.0.0");
     fs::create_dir_all(&fixture).unwrap();
-    fs::write(fixture.join("vibe.toml"), "[package]\nname='node'\ngroup='org.vibevm.node'\nkind='tool'\nversion='1.0.0'\n").unwrap();
+    fs::write(
+        fixture.join("vibe.toml"),
+        "[package]\nname='node'\ngroup='org.vibevm.node'\nkind='tool'\nversion='1.0.0'\n",
+    )
+    .unwrap();
     fs::create_dir_all(site.path("decision-reg/_index")).unwrap();
-    fs::write(site.path("decision-reg/_index/aliases.toml"), "schema=1\n[aliases]\nnode='org.vibevm.node/node'\n").unwrap();
+    fs::write(
+        site.path("decision-reg/_index/aliases.toml"),
+        "schema=1\n[aliases]\nnode='org.vibevm.node/node'\n",
+    )
+    .unwrap();
     fs::write(site.path("settings/registry.toml"), format!("[[registry]]\nname='corp'\ntype='localdir'\nurl='file://{}'\n[source_policy]\nexclude_hosting=['github','gitverse']\n", site.path("decision-reg").display())).unwrap();
     let script = r#"
 import errno, fcntl, json, os, pathlib, pty, re, select, signal, struct, subprocess, sys, termios, time
@@ -542,9 +567,16 @@ visible=re.sub(r'\x1b\[[0-?]*[ -/]*[@-~]', '', text)
 assert re.search(r'[⠋⠙⠹⠸⠼⠴⠦⠧⠇⠏●] └ Resolving dependencies',visible), 'no explicitly active child frame'
 print(json.dumps({'decision_count':1,'before_first_parent':True,'active_child':True,'exit':0}))
 "#;
-    let output = Command::new("python3").args(["-I", "-c", script, env!("CARGO_BIN_EXE_vibe")])
-        .arg(site.root.path()).output().unwrap();
-    assert!(output.status.success(), "decision ordering fixture failed: {}", String::from_utf8_lossy(&output.stderr));
+    let output = Command::new("python3")
+        .args(["-I", "-c", script, env!("CARGO_BIN_EXE_vibe")])
+        .arg(site.root.path())
+        .output()
+        .unwrap();
+    assert!(
+        output.status.success(),
+        "decision ordering fixture failed: {}",
+        String::from_utf8_lossy(&output.stderr)
+    );
     let report: serde_json::Value = serde_json::from_slice(&output.stdout).unwrap();
     assert_eq!(report["decision_count"], 1);
     assert_eq!(report["before_first_parent"], true);
@@ -552,10 +584,19 @@ print(json.dumps({'decision_count':1,'before_first_parent':True,'active_child':T
     // qualify the original bare request a second time.
     let app = manifest("org.vibevm.node", "node")
         .replace("/opt/node", site.path("synthetic-app").to_str().unwrap())
-        .replacen("\ninstall = \"true\"\n", "\ninstall = 'mkdir -p \"$VIBE_APP_ROOT\"'\n", 1);
+        .replacen(
+            "\ninstall = \"true\"\n",
+            "\ninstall = 'mkdir -p \"$VIBE_APP_ROOT\"'\n",
+            1,
+        );
     fs::write(fixture.join("vibe.toml"), app).unwrap();
     let global = site.vibe(&["install", "-g", "node", "--assume-yes"]);
     assert!(global.status.success(), "selected global install failed");
-    assert_eq!(stderr(&global).matches("node → org.vibevm.node/node").count(), 1);
+    assert_eq!(
+        stderr(&global)
+            .matches("node → org.vibevm.node/node")
+            .count(),
+        1
+    );
     assert!(!String::from_utf8_lossy(&global.stdout).contains("node →"));
 }

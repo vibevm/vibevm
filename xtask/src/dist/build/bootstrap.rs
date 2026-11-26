@@ -8,8 +8,8 @@ use anyhow::{Result, bail};
 /// The authored app is in the archive; its development slot is intentionally
 /// absent from Git. This preparation applies only to the owned gate scratch.
 pub(super) fn prepare_self_check_dependencies(root: &Path) -> Result<()> {
-    let source = root.join("vibevm/vibepacks/org.vibevm.doc/web/v1.0.12");
-    let slot = root.join("vibevm/vibedeps/org.vibevm.doc.web/1.0.12");
+    let source = root.join("vibevm/vibepacks/org.vibevm.doc/web/v1.0.13");
+    let slot = root.join("vibevm/vibedeps/org.vibevm.doc.web/1.0.13");
     if source.is_dir() && !slot.exists() {
         copy_gate_dependency(&source, &slot)?;
     }

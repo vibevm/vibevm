@@ -217,33 +217,36 @@ fn is_control_byte(byte: u8) -> bool {
 #[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-075#DOWNLOAD-HEADERS")]
 pub enum DownloadHeaderError {
     #[error(
-        "the download header file `{path}` could not be read: {reason} \
+        "download_headers_unreadable: the download header file cannot be read \
          (violates spec://org.vibevm.core/vibevm/common/PROP-075#DOWNLOAD-HEADERS; \
-          fix: point `--download-header-file` at a readable UTF-8 file of `Name: value` lines)"
+         fix: point --download-header-file at a readable UTF-8 file of Name: value lines): \
+         {path}: {reason}"
     )]
     Unreadable { path: String, reason: String },
     #[error(
-        "the download header file `{path}` declares no header \
+        "download_headers_empty: the download header file declares no header \
          (violates spec://org.vibevm.core/vibevm/common/PROP-075#DOWNLOAD-HEADERS; \
-          fix: write one `Name: value` per line, or leave the flag out)"
+         fix: write one Name: value per line, or leave the flag out): {path}"
     )]
     Empty { path: String },
     #[error(
-        "`{path}` line {line} is not a header \
+        "download_header_malformed: line {line} of the download header file is not a header \
          (violates spec://org.vibevm.core/vibevm/common/PROP-075#DOWNLOAD-HEADERS; \
-          fix: write the line as `Name: value`, or start it with `#` to comment it out)"
+         fix: write the line as Name: value, or start it with # to comment it out): {path}"
     )]
     Malformed { path: String, line: usize },
     #[error(
-        "`{path}` line {line} has no valid HTTP header name \
+        "download_header_invalid: line {line} of the download header file has no valid HTTP header name \
          (violates spec://org.vibevm.core/vibevm/common/PROP-075#DOWNLOAD-HEADERS; \
-          fix: name the header with letters, digits and `!#$%&'*+-.^_`|~` only)"
+         fix: name the header with letters, digits and !#$%&'*+-.^_`|~ only): \
+         {path}"
     )]
     InvalidName { path: String, line: usize },
     #[error(
-        "`{path}` line {line}: the value of `{name}` contains a control character \
+        "download_header_control_character: the value of {name} on line {line} of the download header file \
+         contains a control character \
          (violates spec://org.vibevm.core/vibevm/common/PROP-075#DOWNLOAD-HEADERS; \
-          fix: write the value on one line, with no control character in it)"
+         fix: write the value on one line, with no control character in it): {path}"
     )]
     ControlCharacter {
         path: String,

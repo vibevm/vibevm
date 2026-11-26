@@ -1,5 +1,4 @@
 //! Real A evaluation → portable history → B preparation; no fabricated readiness.
-#![cfg(test)]
 
 use super::{TransferRequest, prepare};
 use crate::HostFacts;

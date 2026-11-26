@@ -287,7 +287,7 @@ pub struct Cli {
 impl Cli {
     /// Preserve clap's explicit-path provenance before routing changes a destination.
     #[spec(implements = "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#command-summary")]
-    pub(crate) fn parse_invocation() -> (Self, bool) {
+    pub(crate) fn parse_invocation(terminal_vocabulary: bool) -> (Self, bool) {
         let args: Vec<_> = std::env::args_os().collect();
         // Clap normally quotes rejected tokens. The secrets surface must never
         // reproduce a mistakenly supplied value, including malformed invocations.
@@ -301,13 +301,14 @@ impl Cli {
                 eprintln!("invalid secrets invocation; use `vibe secrets --help` (values must not be arguments)");
                 std::process::exit(2);
             }
-            usage::exit(error, &args)
+            usage::exit(error, &args, terminal_vocabulary)
         });
         let explicit_path = matches.subcommand().is_some_and(|(_, sub)| {
             sub.try_contains_id("path").unwrap_or(false)
                 && sub.value_source("path") == Some(clap::parser::ValueSource::CommandLine)
         });
-        let mut cli = Self::from_arg_matches(&matches).unwrap_or_else(|error| usage::exit(error, &args));
+        let mut cli = Self::from_arg_matches(&matches)
+            .unwrap_or_else(|error| usage::exit(error, &args, terminal_vocabulary));
         if let Command::Install(args) = &mut cli.command {
             args.explicit_path = explicit_path;
             args.stop_requested = cli.stop_file.is_some();

@@ -1,5 +1,4 @@
 //! Typed portable admission rejects contradictory public/secret ownership.
-#![cfg(test)]
 use super::*;
 use std::collections::BTreeMap;
 

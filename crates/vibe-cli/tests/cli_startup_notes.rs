@@ -7,20 +7,38 @@ mod output {
     #[derive(Default)]
     pub struct Context(std::sync::Mutex<Vec<String>>);
     impl Context {
-        pub fn is_json(&self) -> bool { false }
-        pub fn is_quiet(&self) -> bool { false }
-        pub fn is_machine_progress(&self) -> bool { false }
-        pub fn diagnostic(&self, text: &str) { self.0.lock().unwrap().push(text.into()); }
-        pub fn block_err(&self, text: &str) { self.diagnostic(text); }
+        pub fn is_json(&self) -> bool {
+            false
+        }
+        pub fn is_quiet(&self) -> bool {
+            false
+        }
+        pub fn is_machine_progress(&self) -> bool {
+            false
+        }
+        pub fn diagnostic(&self, text: &str) {
+            self.0.lock().unwrap().push(text.into());
+        }
+        pub fn block_err(&self, text: &str) {
+            self.diagnostic(text);
+        }
         pub fn error_with_suffix(&self, error: &anyhow::Error, _: Option<&str>) {
             self.diagnostic(&error.to_string());
         }
     }
     pub mod language {
-        pub enum Role { Accent }
-        pub fn short_path(path: &str) -> String { path.into() }
-        pub fn warning(text: &str) -> String { format!("! {text}") }
-        pub fn paint(_: Role, text: &str) -> String { text.into() }
+        pub enum Role {
+            Accent,
+        }
+        pub fn short_path(path: &str) -> String {
+            path.into()
+        }
+        pub fn warning(text: &str) -> String {
+            format!("! {text}")
+        }
+        pub fn paint(_: Role, text: &str) -> String {
+            text.into()
+        }
     }
 }
 #[path = "../src/composition/startup_notes.rs"]
@@ -48,34 +66,67 @@ fn classified_callbacks_are_bounded_once_and_debug_safe() {
         tracing::debug!(target: "vibe_net::route", diagnostic_code = "network_route",
             occurrence = 3u64, cause = secret, message = secret);
     });
-    diagnostics.px_failure(3, &vibe_net::PxError::Exited {
-        status: secret.into(), log: secret.into(),
-    });
+    diagnostics.px_failure(
+        3,
+        &vibe_net::PxError::Exited {
+            status: secret.into(),
+            log: secret.into(),
+        },
+    );
     let lines = diagnostics.take();
-    assert!(lines.len() == 4, "each classified occurrence must be reported once");
-    assert!(lines.iter().all(|line| !line.contains(secret)), "classified payload leaked");
-    for code in ["install_integrity", "install_rollback", "network_route", "network_cleanup"] {
-        assert!(lines.iter().filter(|line| line.starts_with(code)).count() == 1,
-            "classified diagnostic is missing or duplicated");
+    assert!(
+        lines.len() == 4,
+        "each classified occurrence must be reported once"
+    );
+    assert!(
+        lines.iter().all(|line| !line.contains(secret)),
+        "classified payload leaked"
+    );
+    for code in [
+        "install_integrity",
+        "install_rollback",
+        "network_route",
+        "network_cleanup",
+    ] {
+        assert!(
+            lines.iter().filter(|line| line.starts_with(code)).count() == 1,
+            "classified diagnostic is missing or duplicated"
+        );
     }
-    assert!(diagnostics.take().is_empty(), "draining repeated a diagnostic");
-    diagnostics.px_failure(5, &vibe_net::PxError::Exited {
-        status: secret.into(), log: secret.into(),
-    });
+    assert!(
+        diagnostics.take().is_empty(),
+        "draining repeated a diagnostic"
+    );
+    diagnostics.px_failure(
+        5,
+        &vibe_net::PxError::Exited {
+            status: secret.into(),
+            log: secret.into(),
+        },
+    );
     let direct = diagnostics.take();
     assert!(direct.len() == 1, "direct px failure must be reported once");
-    assert!(!direct[0].contains(secret), "direct px failure leaked a payload");
+    assert!(
+        !direct[0].contains(secret),
+        "direct px failure leaked a payload"
+    );
     assert!(direct[0].contains("px exited"), "typed px cause was lost");
 }
 
 #[test]
 fn unrelated_records_are_not_classified() {
     let diagnostics = startup_notes::Diagnostics::default();
-    tracing::subscriber::with_default(tracing_subscriber::registry().with(diagnostics.clone()), || {
-        tracing::warn!(target: "unrelated", diagnostic_code = "network_route", occurrence = 1u64);
-        tracing::warn!(target: "vibe_registry", url = "file:///synthetic", error = "fixture");
-    });
-    assert!(diagnostics.take().is_empty(), "unrelated tracing was forwarded");
+    tracing::subscriber::with_default(
+        tracing_subscriber::registry().with(diagnostics.clone()),
+        || {
+            tracing::warn!(target: "unrelated", diagnostic_code = "network_route", occurrence = 1u64);
+            tracing::warn!(target: "vibe_registry", url = "file:///synthetic", error = "fixture");
+        },
+    );
+    assert!(
+        diagnostics.take().is_empty(),
+        "unrelated tracing was forwarded"
+    );
 }
 
 struct Fixture {
@@ -87,7 +138,11 @@ impl Fixture {
         for name in ["home", "settings", "cache"] {
             std::fs::create_dir(root.path().join(name)).unwrap();
         }
-        std::fs::write(root.path().join("settings/config.toml"), "[proxy]\nurl = \"x\"\n").unwrap();
+        std::fs::write(
+            root.path().join("settings/config.toml"),
+            "[proxy]\nurl = \"x\"\n",
+        )
+        .unwrap();
         Self { root }
     }
     fn command(&self) -> Command {
@@ -114,10 +169,22 @@ fn malformed_config_reports_once() {
     let out = fixture.run(&["user", "status"]);
     assert!(out.status.success(), "tolerant user status failed");
     let stderr = String::from_utf8(out.stderr).unwrap();
-    assert!(stderr.matches("config.toml").count() == 1, "configuration notice duplicated");
-    assert!(stderr.contains("is not valid TOML for vibe"), "bounded notice missing");
-    assert!(stderr.contains("vibe show config"), "repair command missing");
-    assert!(!stderr.contains("remap layer skipped"), "remap repeated configuration notice");
+    assert!(
+        stderr.matches("config.toml").count() == 1,
+        "configuration notice duplicated"
+    );
+    assert!(
+        stderr.contains("is not valid TOML for vibe"),
+        "bounded notice missing"
+    );
+    assert!(
+        stderr.contains("vibe show config"),
+        "repair command missing"
+    );
+    assert!(
+        !stderr.contains("remap layer skipped"),
+        "remap repeated configuration notice"
+    );
 }
 
 #[test]
@@ -125,12 +192,24 @@ fn malformed_config_refuses_before_network_once() {
     let fixture = Fixture::new();
     // chosen_route reads the malformed configuration before the first probe.
     let out = fixture.run(&["--no-progress", "dl", "--show", "http://127.0.0.1:1/a"]);
-    assert!(out.status.code() == Some(1), "fatal config must retain exit one");
+    assert!(
+        out.status.code() == Some(1),
+        "fatal config must retain exit one"
+    );
     assert!(out.stdout.is_empty(), "fatal config wrote stdout");
     let stderr = String::from_utf8(out.stderr).unwrap();
-    assert!(stderr.matches("config_malformed").count() == 1, "coded refusal missing or duplicated");
-    assert!(!stderr.contains("ignores it"), "fatal config also emitted tolerant notice");
-    assert!(!stderr.contains("remap layer skipped"), "fatal config emitted remap duplicate");
+    assert!(
+        stderr.matches("config_malformed").count() == 1,
+        "coded refusal missing or duplicated"
+    );
+    assert!(
+        !stderr.contains("ignores it"),
+        "fatal config also emitted tolerant notice"
+    );
+    assert!(
+        !stderr.contains("remap layer skipped"),
+        "fatal config emitted remap duplicate"
+    );
 }
 
 #[test]
@@ -138,31 +217,69 @@ fn registry_fallback_is_hidden_only_by_default() {
     let fixture = Fixture::new();
     std::fs::write(fixture.root.path().join("settings/config.toml"), "").unwrap();
     let project = fixture.root.path().join("project");
-    let initialized = fixture.command().args(["init", "--path"])
-        .arg(&project).output().unwrap();
-    assert!(initialized.status.success(), "local project initialization failed");
+    let initialized = fixture
+        .command()
+        .args(["init", "--path"])
+        .arg(&project)
+        .output()
+        .unwrap();
+    assert!(
+        initialized.status.success(),
+        "local project initialization failed"
+    );
     let missing = fixture.root.path().join("empty-non-git-repository");
     std::fs::create_dir(&missing).unwrap();
     let url = reqwest::Url::from_file_path(&missing).expect("local file URL");
-    let added = fixture.command().current_dir(&project)
-        .args(["registry", "add", "fixture", url.as_str(), "--scope", "user", "--type", "monorepo"])
-        .output().unwrap();
-    assert!(added.status.success(), "local registry fixture registration failed");
-    let ordinary = fixture.command().current_dir(&project)
-        .args(["registry", "test"]).output().unwrap();
-    let debug = fixture.command().current_dir(&project).env("VIBE_LOG", "warn")
-        .args(["registry", "test"]).output().unwrap();
+    let added = fixture
+        .command()
+        .current_dir(&project)
+        .args([
+            "registry",
+            "add",
+            "fixture",
+            url.as_str(),
+            "--scope",
+            "user",
+            "--type",
+            "monorepo",
+        ])
+        .output()
+        .unwrap();
+    assert!(
+        added.status.success(),
+        "local registry fixture registration failed"
+    );
+    let ordinary = fixture
+        .command()
+        .current_dir(&project)
+        .args(["registry", "test"])
+        .output()
+        .unwrap();
+    let debug = fixture
+        .command()
+        .current_dir(&project)
+        .env("VIBE_LOG", "warn")
+        .args(["registry", "test"])
+        .output()
+        .unwrap();
     for bytes in [&ordinary.stdout, &ordinary.stderr] {
         let text = String::from_utf8_lossy(bytes);
-        assert!(!text.contains("WARN"), "default output included a raw warning");
-        assert!(!text.contains("registry clone candidate failed")
-            && !text.contains("registry snapshot candidate failed"),
-            "default output included registry fallback chatter");
+        assert!(
+            !text.contains("WARN"),
+            "default output included a raw warning"
+        );
+        assert!(
+            !text.contains("registry clone candidate failed")
+                && !text.contains("registry snapshot candidate failed"),
+            "default output included registry fallback chatter"
+        );
     }
     let debug_text = String::from_utf8_lossy(&debug.stderr);
-    assert!(debug_text.contains("registry clone candidate failed")
-        || debug_text.contains("registry snapshot candidate failed"),
-        "explicit warning logging did not retain registry fallback diagnostics");
+    assert!(
+        debug_text.contains("registry clone candidate failed")
+            || debug_text.contains("registry snapshot candidate failed"),
+        "explicit warning logging did not retain registry fallback diagnostics"
+    );
 }
 
 #[test]
@@ -172,5 +289,8 @@ fn tolerant_json_is_one_document() {
     assert!(out.status.success(), "tolerant JSON status failed");
     let _: serde_json::Value = serde_json::from_slice(&out.stdout).expect("one JSON document");
     let stderr = String::from_utf8(out.stderr).unwrap();
-    assert!(stderr.matches("config.toml").count() == 1, "JSON diagnostic duplicated");
+    assert!(
+        stderr.matches("config.toml").count() == 1,
+        "JSON diagnostic duplicated"
+    );
 }

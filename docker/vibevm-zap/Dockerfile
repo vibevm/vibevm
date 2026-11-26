@@ -1,4 +1,4 @@
-ARG BASE_IMAGE=vibevm/vibevm:1.0.12
+ARG BASE_IMAGE=vibevm/vibevm:1.0.13
 FROM ${BASE_IMAGE}
 
 ARG ZAP_COMMIT

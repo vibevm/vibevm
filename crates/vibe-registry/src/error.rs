@@ -339,8 +339,8 @@ pub enum RegistryError {
          (`file://`) registry and not in the machine store \
          (violates spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-010#offline; \
           fix: run the install once online to warm the store, pre-warm it with \
-          `vibe cache add {group}/{name}`, or export a `file://` mirror with \
-          `vibe registry vendor`)"
+          vibe cache add {group}/{name}, or export a `file://` mirror with \
+          vibe registry vendor)"
     )]
     OfflinePackageUnavailable {
         group: Group,

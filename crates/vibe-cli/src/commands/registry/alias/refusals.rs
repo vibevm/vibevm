@@ -42,14 +42,29 @@ pub(super) fn faults(registry: &str, faults: &[AliasFault], table: &AliasTable) 
     else {
         return anyhow::anyhow!(
             "the alias table of registry `{registry}` would not stand:\n  {}",
-            faults.iter().map(ToString::to_string).collect::<Vec<_>>().join("\n  "),
+            faults
+                .iter()
+                .map(ToString::to_string)
+                .collect::<Vec<_>>()
+                .join("\n  "),
         );
     };
     // The target is the row's actual target, never a guessed replacement package.
-    let target = table.get(alias).map(vibe_index::aliases::spell).unwrap_or_default();
-    let others = faults.iter().filter(|fault| fault.alias() != alias)
-        .map(ToString::to_string).collect::<Vec<_>>().join("; ");
-    let others = if others.is_empty() { String::new() } else { format!("; {others}") };
+    let target = table
+        .get(alias)
+        .map(vibe_index::aliases::spell)
+        .unwrap_or_default();
+    let others = faults
+        .iter()
+        .filter(|fault| fault.alias() != alias)
+        .map(ToString::to_string)
+        .collect::<Vec<_>>()
+        .join("; ");
+    let others = if others.is_empty() {
+        String::new()
+    } else {
+        format!("; {others}")
+    };
     anyhow::anyhow!(
         "invalid_alias: {alias} is not a legal package name \
          (violates spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#pkgref; \

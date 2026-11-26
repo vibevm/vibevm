@@ -211,9 +211,9 @@ pub(super) fn validate(
                 "one declared path cannot serve multiple roles",
             ));
         }
-        if (doc.role == ChangeDocumentRole::Closure && (doc.normative || doc.input))
-            || (doc.role == ChangeDocumentRole::Work && doc.normative)
+        if (doc.role == ChangeDocumentRole::Closure && doc.input)
             || (doc.normative && !doc.input)
+            || (doc.normative && doc.role == ChangeDocumentRole::Work)
         {
             return Err(invalid(
                 ChangeErrorKind::Role,

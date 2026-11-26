@@ -18,8 +18,11 @@ pub(super) struct DataRow {
 #[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-067#list")]
 pub(super) fn data_view(rows: &[DataRow], width: usize, rule: usize) -> String {
     if rows.is_empty() {
-        return Block::new(Glyph::Skipped, "no retained configuration data in this project")
-            .render_at(width);
+        return Block::new(
+            Glyph::Skipped,
+            "no retained configuration data in this project",
+        )
+        .render_at(width);
     }
     let rows = rows
         .iter()
@@ -92,7 +95,12 @@ pub(super) fn preview_view(
     }
     let mut text = format!(
         "{}\n{}\n  {}",
-        preview_head(&result.package, &result.version, &result.source.registry, rule),
+        preview_head(
+            &result.package,
+            &result.version,
+            &result.source.registry,
+            rule
+        ),
         List::new(rows).render_at(width),
         hint(&format!("content {}", result.source.content_hash)),
     );
@@ -159,16 +167,19 @@ pub(super) fn integer_view(
     ];
     let mut text = format!(
         "{}\n{}\n  {}",
-        preview_head(&result.package, &result.version, &result.source.registry, rule),
+        preview_head(
+            &result.package,
+            &result.version,
+            &result.source.registry,
+            rule
+        ),
         List::new(rows).render_at(width),
         hint(&format!("content {}", result.source.content_hash)),
     );
     if let Some(effective) = &result.effective {
         let rows = effective
             .iter()
-            .map(|(key, value)| {
-                Row::new(vec![Cell::text(key), Cell::text(value.to_string())])
-            })
+            .map(|(key, value)| Row::new(vec![Cell::text(key), Cell::text(value.to_string())]))
             .collect();
         text.push_str(&format!(
             "\n\n{}\n{}",

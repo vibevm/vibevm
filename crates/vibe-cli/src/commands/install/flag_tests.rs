@@ -30,6 +30,7 @@ use super::*;
 /// one field at a time.
 fn base_args() -> InstallArgs {
     InstallArgs {
+        register_mcp: Vec::new(),
         ordinary_answers: None,
         ordinary_interactive: false,
         parsed_ordinary_submission: None,

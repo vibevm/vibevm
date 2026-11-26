@@ -1,15 +1,15 @@
-ARG DEV_IMAGE=vibevm/vibevm-dev:1.0.12
-ARG BASE_IMAGE=vibevm/vibevm:1.0.12
+ARG DEV_IMAGE=vibevm/vibevm-dev:1.0.13
+ARG BASE_IMAGE=vibevm/vibevm:1.0.13
 
 FROM ${DEV_IMAGE} AS build
 ARG NPM_CONFIG_REGISTRY=https://registry.npmjs.org
 ENV NPM_CONFIG_REGISTRY=${NPM_CONFIG_REGISTRY}
 
-COPY vibevm/vibepacks/org.vibevm.doc/web/v1.0.12/package.json \
-     vibevm/vibepacks/org.vibevm.doc/web/v1.0.12/pnpm-lock.yaml \
-     vibevm/vibepacks/org.vibevm.doc/web/v1.0.12/pnpm-workspace.yaml /web/
-COPY vibevm/vibepacks/org.vibevm.doc/web/v1.0.12/design/package.json /web/design/
-COPY vibevm/vibepacks/org.vibevm.doc/web/v1.0.12/site/package.json /web/site/
+COPY vibevm/vibepacks/org.vibevm.doc/web/v1.0.13/package.json \
+     vibevm/vibepacks/org.vibevm.doc/web/v1.0.13/pnpm-lock.yaml \
+     vibevm/vibepacks/org.vibevm.doc/web/v1.0.13/pnpm-workspace.yaml /web/
+COPY vibevm/vibepacks/org.vibevm.doc/web/v1.0.13/design/package.json /web/design/
+COPY vibevm/vibepacks/org.vibevm.doc/web/v1.0.13/site/package.json /web/site/
 # The committed lockfile pins every tarball to the GitVerse npm mirror, which
 # CI runners outside Russia cannot always reach. npm tarballs are byte-identical
 # on every registry and the lockfile keeps their integrity hashes, so the image
@@ -19,9 +19,9 @@ RUN cd /web \
     && sed -i "s#https://npm-mirror.gitverse.ru/repository/registry_npmjs_org/#${registry}/#g" pnpm-lock.yaml \
     && pnpm install --frozen-lockfile
 
-COPY vibevm/vibepacks/org.vibevm.doc/web/v1.0.12/ /web/
+COPY vibevm/vibepacks/org.vibevm.doc/web/v1.0.13/ /web/
 COPY . /checkout
-COPY vibevm/vibepacks/org.vibevm.doc/web/v1.0.12/docker/site.toml /site.toml
+COPY vibevm/vibepacks/org.vibevm.doc/web/v1.0.13/docker/site.toml /site.toml
 # The live analytics property comes from the deployment, never the repository
 # (##SITE-ANALYTICS); empty keeps the committed default, which renders no tag.
 ARG UMAMI_WEBSITE_ID=""
@@ -40,9 +40,9 @@ USER root
 RUN apk add --no-cache nginx nodejs \
     && rm -f /etc/nginx/http.d/default.conf
 COPY --from=build /out/ /usr/share/nginx/html/
-COPY vibevm/vibepacks/org.vibevm.doc/web/v1.0.12/docker/nginx.conf /etc/nginx/http.d/vibevm-site.conf
-COPY vibevm/vibepacks/org.vibevm.doc/web/v1.0.12/docker/csp.default.conf /etc/nginx/csp.conf
-COPY vibevm/vibepacks/org.vibevm.doc/web/v1.0.12/docker/csp-from-render.sh /usr/local/bin/csp-from-render
+COPY vibevm/vibepacks/org.vibevm.doc/web/v1.0.13/docker/nginx.conf /etc/nginx/http.d/vibevm-site.conf
+COPY vibevm/vibepacks/org.vibevm.doc/web/v1.0.13/docker/csp.default.conf /etc/nginx/csp.conf
+COPY vibevm/vibepacks/org.vibevm.doc/web/v1.0.13/docker/csp-from-render.sh /usr/local/bin/csp-from-render
 COPY docker/vibevm-doc/start.sh /usr/local/bin/vibevm-doc
 RUN chmod 0755 /usr/local/bin/csp-from-render /usr/local/bin/vibevm-doc \
     && /usr/local/bin/csp-from-render \

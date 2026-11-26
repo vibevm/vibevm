@@ -36,28 +36,8 @@ pub enum Mode {
     Json,
 }
 
-/// Resolved provenance for `--invoked-by` / `VIBE_INVOKED_BY`. Drives
-/// `vibe show config` reporting and lets tests assert which layer
-/// supplied the value.
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub enum InvokedByProvenance {
-    /// `--invoked-by <agent>` was passed on the command line.
-    CliFlag,
-    /// `VIBE_INVOKED_BY` was set in the environment; CLI flag was absent.
-    EnvVar,
-    /// Neither layer set the value.
-    Default,
-}
-
-impl InvokedByProvenance {
-    pub fn as_str(self) -> &'static str {
-        match self {
-            InvokedByProvenance::CliFlag => "cli-flag",
-            InvokedByProvenance::EnvVar => "env",
-            InvokedByProvenance::Default => "default",
-        }
-    }
-}
+mod invoked_by;
+pub use invoked_by::InvokedByProvenance;
 
 /// Read the `VIBE_INVOKED_BY` env-var. Empty string is treated as
 /// unset so a `VIBE_INVOKED_BY=` literal in `~/.bashrc` does not
@@ -414,12 +394,15 @@ impl Context {
         self.verbose
     }
     /// Whether detailed human progress is active for this context.
+    #[cfg(test)]
     pub fn is_verbose(&self) -> bool {
         self.verbose && self.progress_renderer.is_some()
     }
     /// Defer interactive input display; control and accounting remain live.
     pub(crate) fn defer_input_progress(&self) -> Option<impl Drop> {
-        self.progress_renderer.as_ref().filter(|renderer| renderer.is_interactive())
+        self.progress_renderer
+            .as_ref()
+            .filter(|renderer| renderer.is_interactive())
             .map(|renderer| renderer.defer_input())
     }
     /// Release input display after the single qualification pass.

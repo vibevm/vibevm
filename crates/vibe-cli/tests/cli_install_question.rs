@@ -178,7 +178,10 @@ fn trust_question_suspends_progress() {
                 "{proof}"
             );
             assert!(
-                final_screen.contains("materialised 1 package"),
+                final_screen.lines().any(|line| {
+                    line.starts_with("✻ installed 1 package · ")
+                        && line.contains(" · 1 contribution ran · org.example/hooked@0.1.0 · ")
+                }),
                 "completion positive control: {proof}"
             );
             assert_eq!(

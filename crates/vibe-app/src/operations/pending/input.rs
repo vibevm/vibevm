@@ -81,7 +81,7 @@ pub(crate) fn restore(
         .as_ref()
         .is_some_and(|p| Some(p) != profile)
         || incoming.features.enable.iter().any(|id| {
-            !positive.contains(id) && !(common.is_none() && op.request.features.contains(id))
+            !(positive.contains(id) || common.is_none() && op.request.features.contains(id))
         })
         || incoming
             .features

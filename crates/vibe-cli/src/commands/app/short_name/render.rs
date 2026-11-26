@@ -20,7 +20,10 @@ use super::{Candidate, Lookup};
 /// the ordinary shape of this line; a bare `node → org.vibevm.node/node`
 /// without the attribution means the home's own inventory answered.
 pub(super) fn provenance(name: &str, candidate: &Candidate) -> String {
-    format!("{name} → {}", candidate.spelling(name))
+    match &candidate.alias {
+        Some(alias) => crate::commands::short_name::alias_decision(name, alias),
+        None => format!("{name} → {}", candidate.spelling(name)),
+    }
 }
 
 /// The PROP-008 §2.7 collision refusal in the application commands'
@@ -30,7 +33,7 @@ pub(super) fn render_collision(command: &str, name: &str, lookup: &Lookup) -> St
     use std::fmt::Write as _;
     let eligible = lookup.eligible();
     let mut message = format!(
-        "the short name `{name}` is ambiguous — {} packages match it:\n",
+        "short_name_ambiguous: more than one package answers to {name} — {} packages match it:\n",
         eligible.len(),
     );
     for (index, candidate) in lookup.candidates.iter().enumerate() {
@@ -60,22 +63,21 @@ pub(super) fn render_not_found(command: &str, name: &str, lookup: &Lookup) -> St
     // remedy is local (`#INSTALLED-STATE-RESOLVES-LOCALLY`).
     if lookup.local {
         return format!(
-            "the short name `{name}` is not installed — no package of that name is in this \
-             home's application index. This command acts only on installed applications; if it \
-             is installed under a group you did not name, give the qualified form \
-             `{command} <group>/{name}`, and if it is new to this home, add it with \
-             `vibe install -g <group>/{name}`.",
+            "not_installed: the short name {name} is not installed in this home \
+             (violates spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#short-name; \
+             fix: `{command} <group>/{name}` or `vibe install -g <group>/{name}`): \
+             {command} acts only on installed applications, and this home's application index has no package named {name}",
         );
     }
     let mut message = format!(
-        "the short name `{name}` is not issued by any consulted registry; give the full name.\n\
+        "short_name_not_issued: no consulted registry issues the short name {name}; give the full name.\n\
          A short name exists only when a registry's own alias table issues it — being named \
          `{name}` grants a package nothing, and this home has nothing of that name installed \
          either.\n",
     );
     let _ = match lookup.consulted.as_slice() {
         [] => writeln!(message, "consulted: (no registry answered)"),
-        consulted => writeln!(message, "consulted: {}", consulted.join(", ")),
+        consulted => writeln!(message, "consulted: {}", consulted.join(" · ")),
     };
     if !lookup.skipped.is_empty() {
         let _ = writeln!(

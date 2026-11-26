@@ -125,15 +125,18 @@ impl Fixture {
         self.bind_mode(selected, true)
     }
     fn bind_mode(&self, selected: &Path, json: bool) -> Output {
-        self.run_mode(&[
-            "remap",
-            "bind-source",
-            "org.example/policy",
-            "--source",
-            self.binding.to_str().unwrap(),
-            "--path",
-            selected.to_str().unwrap(),
-        ], json)
+        self.run_mode(
+            &[
+                "remap",
+                "bind-source",
+                "org.example/policy",
+                "--source",
+                self.binding.to_str().unwrap(),
+                "--path",
+                selected.to_str().unwrap(),
+            ],
+            json,
+        )
     }
     fn remap_home(&self) -> BTreeMap<PathBuf, Vec<u8>> {
         files(&self.user.settings.join("remap"))
@@ -195,11 +198,26 @@ fn binding_outcomes_close_human_output_but_leave_json_unadorned() {
                 assert_eq!(report["changed"], changed);
                 assert!(!stdout.contains('✻'), "{stdout}");
             } else {
-                let outcome = if changed { "recorded, not adopted or activated" } else { "unchanged" };
-                let trailer = stdout.lines().filter(|line| !line.trim().is_empty()).last().unwrap();
+                let outcome = if changed {
+                    "recorded, not adopted or activated"
+                } else {
+                    "unchanged"
+                };
+                let trailer = stdout
+                    .lines()
+                    .rfind(|line| !line.trim().is_empty())
+                    .unwrap();
                 assert_eq!(stdout.matches('✻').count(), 1, "{stdout}");
-                assert!(trailer.starts_with(&format!("✻ verified source binding for org.example/policy {outcome} · ")), "{stdout}");
-                assert!(trailer.ends_with(&format!(" · {}", f.project.join("vibe.lock").display())), "{stdout}");
+                assert!(
+                    trailer.starts_with(&format!(
+                        "✻ verified source binding for org.example/policy {outcome} · "
+                    )),
+                    "{stdout}"
+                );
+                assert!(
+                    trailer.ends_with(&format!(" · {}", f.project.join("vibe.lock").display())),
+                    "{stdout}"
+                );
             }
             assert_eq!(f.remap_home(), home);
         }

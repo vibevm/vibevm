@@ -10,6 +10,8 @@ Format roughly follows [Keep a Changelog](https://keepachangelog.com/), grouped 
 
 ## [1.0.13] — Unreleased
 
+- **Register an MCP server during project installation without a terminal.** Pass `--register-mcp GROUP/NAME` to `vibe install` for each package whose declared servers should be registered in this project. Without the flag, installation does not grant registration consent. The final JSON install report records each requested registration; existing unrelated server entries are preserved.
+
 - **Issued alias decisions stay outside installation progress.** A direct interactive install prints the alias decision on its own line before the first progress frame. Global application installation announces the accepted alias decision once; speculative remap selection does not announce a rejected route.
 - **Artifact locations are grouped without losing their source.** `vibe artifacts where` separates release locations from package inputs, preserves filenames when wrapping narrow output, and retains source details in quiet mode.
 - **Retired application inventory is handled without execution.** Valid historical `vibe-user-applications/1` inventory is treated as empty rather than importing or executing its entries. Before a write replaces it, its original bytes are backed up; an existing backup or an invalid or unsupported inventory is refused without overwriting it.

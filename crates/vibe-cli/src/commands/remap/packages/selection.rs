@@ -73,9 +73,13 @@ pub(crate) fn claims_with_progress(
             return None;
         }
         candidates.push(candidate);
-        if let Some(decision) = decision { decisions.push(decision); }
+        if let Some(decision) = decision {
+            decisions.push(decision);
+        }
     }
-    for decision in decisions { decision.publish(); }
+    for decision in decisions {
+        decision.publish();
+    }
     Some(Selection {
         resolver,
         candidates,

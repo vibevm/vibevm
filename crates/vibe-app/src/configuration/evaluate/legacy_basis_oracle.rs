@@ -1,7 +1,6 @@
 //! Frozen pre-extraction app evaluator for differential characterization only.
 //! Source SHA256: 1ec0ed30f8a6e86c8e80483ec7c4fca56ad5acd3332fe12f8c1d7337560cd6b9.
 //! Do not update this oracle to agree with a changed policy.
-#![cfg(test)]
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-069#APP-CONFIGURATION-BASIS");
 use super::*;
 

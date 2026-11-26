@@ -122,6 +122,65 @@ pub fn run(ctx: &output::Context, args: McpArgs, runtime: McpRuntime) -> Result<
     }
 }
 
+/// Apply only explicit project-install registration intents through the addressed API.
+pub(crate) fn register_project_packages(
+    ctx: &output::Context,
+    root: &Path,
+    packages: &[String],
+) -> Result<()> {
+    let lock = vibe_core::manifest::Lockfile::read(root.join("vibe.lock"))?;
+    let agents = detect_agents(Some(root));
+    if agents.is_empty() {
+        bail!("no supported project agents detected for requested MCP registration");
+    }
+    let mut selected = Vec::new();
+    let mut destinations = std::collections::BTreeSet::new();
+    for package in packages {
+        if selected.contains(package) {
+            continue;
+        }
+        let reference = vibe_core::PackageRef::parse(package)?;
+        let group = reference
+            .group
+            .as_ref()
+            .ok_or_else(|| anyhow::anyhow!("MCP selector requires GROUP/NAME"))?;
+        let matches: Vec<_> = lock
+            .packages
+            .iter()
+            .filter(|row| row.group.to_string() == group.to_string() && row.name == reference.name)
+            .collect();
+        if matches.len() != 1 || matches[0].kind.to_string() != "mcp" {
+            bail!("requested project MCP package is absent, ambiguous, or not MCP: `{package}`");
+        }
+        let servers = package_registration::selected_servers(root, package, None)?;
+        let dirs = vibe_agent_projection::agents::AgentUserDirectories::ambient();
+        for &agent in &agents {
+            if let Some(config) = agent.config_path_with_dirs(Scope::Project, Some(root), &dirs)? {
+                for server in &servers {
+                    if !destinations.insert((config.clone(), server.decl.name.clone())) {
+                        bail!(
+                            "requested MCP packages collide at project server `{}`",
+                            server.decl.name
+                        );
+                    }
+                }
+            }
+        }
+        // Dry-run every addressed package before any native configuration write.
+        package_registration::register(root, package, None, &agents, Scope::Project, true, true)?;
+        selected.push(package.clone());
+    }
+    for package in selected {
+        package_registration::register(root, &package, None, &agents, Scope::Project, true, false)?;
+        if !ctx.is_json() {
+            ctx.summary(&format!(
+                "registered MCP package {package} in project scope"
+            ));
+        }
+    }
+    Ok(())
+}
+
 /// Register one already materialised global MCP package in the selected agents.
 #[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-027#REG-PROJECT-SCOPE")]
 pub(crate) fn register_global_package(

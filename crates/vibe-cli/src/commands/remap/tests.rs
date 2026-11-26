@@ -23,25 +23,38 @@ fn remap_view_preview_draws_rows_not_json() {
     );
     assert_eq!(
         preview::view(&result, 80, 80),
-        format!("{heading}\n  content  sha256:abc\n  port     8080\n  region   eu\n  unset    none")
+        format!(
+            "{heading}\n  content  sha256:abc\n  port     8080\n  region   eu\n  unset    none"
+        )
     );
-    let refusal = |package: &str, input: &str| {
-        preview::offline_refusal(package, std::path::Path::new(input))
-    };
-    assert!(refusal("org.example/nothing", "in.toml").contains(
-        "fix: `vibe remap preview org.example/nothing --input in.toml --offline`"
-    ));
+    let refusal =
+        |package: &str, input: &str| preview::offline_refusal(package, std::path::Path::new(input));
+    assert!(
+        refusal("org.example/nothing", "in.toml")
+            .contains("fix: `vibe remap preview org.example/nothing --input in.toml --offline`")
+    );
     assert!(refusal("org.example/with space", "input dir/in.toml").contains(
         "fix: `vibe remap preview 'org.example/with space' --input 'input dir/in.toml' --offline`"
     ));
     assert!(refusal("org.example/it's", "input's.toml").contains(
         "fix: `vibe remap preview 'org.example/it'\\''s' --input 'input'\\''s.toml' --offline`"
     ));
-    for unsafe_text in ["bad\nvalue", "bad\rvalue", "bad\tvalue", "bad\u{1b}value", "bad`value"] {
-        for diagnostic in [refusal(unsafe_text, "in.toml"), refusal("org.example/nothing", unsafe_text)] {
+    for unsafe_text in [
+        "bad\nvalue",
+        "bad\rvalue",
+        "bad\tvalue",
+        "bad\u{1b}value",
+        "bad`value",
+    ] {
+        for diagnostic in [
+            refusal(unsafe_text, "in.toml"),
+            refusal("org.example/nothing", unsafe_text),
+        ] {
             assert!(!diagnostic.chars().any(char::is_control), "{diagnostic:?}");
             assert_eq!(diagnostic.matches('`').count(), 2, "{diagnostic:?}");
-            assert!(diagnostic.contains("fix: `vibe remap preview PACKAGE --input INPUT --offline`"));
+            assert!(
+                diagnostic.contains("fix: `vibe remap preview PACKAGE --input INPUT --offline`")
+            );
         }
     }
 }
@@ -54,7 +67,8 @@ fn remap_view_explain_has_one_left_edge() {
             .with_url("https://github.com/org/repo/archive/v1.tar.gz"),
         true,
     );
-    let heading = crate::output::language::rule_at("explain any fetch", Some("0 matching rows"), 80);
+    let heading =
+        crate::output::language::rule_at("explain any fetch", Some("0 matching rows"), 80);
     assert_eq!(
         render::explain(&document, 80),
         format!(

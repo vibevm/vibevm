@@ -52,17 +52,17 @@ pub(super) fn effective(own: &UserConfig) -> Vec<Row> {
             if user { "user" } else { "site" },
         ));
     }
-    let (mode, origin) = vibe_core::net::effective_mode(
-        site.map(|site| &site.proxy),
-        &own.proxy,
-        None,
-    );
+    let (mode, origin) =
+        vibe_core::net::effective_mode(site.map(|site| &site.proxy), &own.proxy, None);
     let route = vibe_core::net::route();
     let (mode, origin) = if route.mode_origin() == ModeOrigin::Env {
-        (match route.mode_name() {
-            "direct" => "none",
-            name => name,
-        }, "env")
+        (
+            match route.mode_name() {
+                "direct" => "none",
+                name => name,
+            },
+            "env",
+        )
     } else {
         let mode = mode.or_else(|| merged.proxy.effective_mode());
         let origin = match origin {

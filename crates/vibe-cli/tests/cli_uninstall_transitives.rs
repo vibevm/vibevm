@@ -80,10 +80,9 @@ fn selected_member_removal_preserves_other_member_root() {
     w.remove("org.test/a", &w.root().join("member"));
     assert_eq!(w.names(), ["other"]);
     assert!(
-        fs::read_to_string(w.root().join("member/vibe.toml"))
+        !fs::read_to_string(w.root().join("member/vibe.toml"))
             .unwrap()
-            .find("org.test/a")
-            .is_none()
+            .contains("org.test/a")
     );
 }
 #[test]

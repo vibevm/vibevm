@@ -4,13 +4,22 @@ import json
 import os
 import pathlib
 import pty
+import re
 import select
 import signal
 import subprocess
 import sys
 import termios
 import time
-cli, project, mode, source = sys.argv[1:]
+cli, project, mode, source, expected_count, expected_destination = sys.argv[1:]
+assert expected_count == '2'
+assert pathlib.Path(expected_destination).is_relative_to(pathlib.Path(project))
+question = f'? Install {expected_count} packages into {expected_destination}? ›'
+pattern = re.compile(r'(?m)^' + re.escape(question) + r'\r?\n❯ yes\r?\n  no(?:\r?\n|$)')
+control = question + '\r\n❯ yes\r\n  no\r\n'
+assert pattern.search(control) is not None
+assert pattern.search(control.replace('Install 2 packages', 'Install 3 packages')) is None
+assert pattern.search(control.replace(expected_destination, expected_destination + '-foreign')) is None
 master, slave = pty.openpty()
 original = termios.tcgetattr(slave)
 def child_terminal():
@@ -40,8 +49,10 @@ while p.poll() is None:
     if stage == 1 and b'Verbose (verbose)' in seen:
         os.write(master, b'\r' if mode == 'true' else b'\x1b[B\r')
         stage = 2
-    # The apply question is a two-row list, `yes` first and marked (the default).
-    if stage == 2 and b'packages into ' in seen and b'\xe2\x80\xba yes' in seen and b'  no' in seen:
+    # Match the actual question and its separate active row, ignoring ANSI only.
+    plain = re.sub(rb'\x1b\[[0-?]*[ -/]*[@-~]', b'', bytes(seen)).decode('utf-8', 'replace')
+    apply_question = pattern.search(plain)
+    if stage == 2 and apply_question is not None:
         if mode == 'source-drift':
             path = pathlib.Path(source)
             path.write_bytes(path.read_bytes() + b'\nSYN_SOURCE_DRIFT_AFTER_PLAN\n')

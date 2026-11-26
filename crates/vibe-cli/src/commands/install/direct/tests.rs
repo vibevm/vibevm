@@ -14,6 +14,7 @@ use crate::commands::install::{MeasuredFailure, Measurement};
 /// every flag off, exactly one field (the path) set by the caller.
 fn args(path: std::path::PathBuf) -> InstallArgs {
     InstallArgs {
+        register_mcp: Vec::new(),
         ordinary_answers: None,
         ordinary_interactive: false,
         parsed_ordinary_submission: None,

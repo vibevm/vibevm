@@ -343,7 +343,11 @@ pub(super) fn run_config(ctx: &output::Context, args: ShowConfigArgs) -> Result<
             payload.mirrors.len(),
             if payload.mirrors.len() == 1 { "" } else { "s" },
             payload.overrides.len(),
-            if payload.overrides.len() == 1 { "" } else { "s" },
+            if payload.overrides.len() == 1 {
+                ""
+            } else {
+                "s"
+            },
             payload.env.len(),
         ));
         return Ok(());

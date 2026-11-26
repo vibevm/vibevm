@@ -126,11 +126,12 @@ impl IdentityDialogue for TerminalIdentity<'_> {
     }
 
     fn role(&mut self) -> Result<InitType> {
-        let selected = crate::output::prompts::choose(
+        let selected = crate::output::prompts::choose_opt_interruptible(
             "Root declaration",
             &crate::output::prompts::named(&["project", "package"]),
             0,
-        )?;
+        )?
+        .ok_or_else(|| std::io::Error::from(std::io::ErrorKind::Interrupted))?;
         Ok(if selected == 0 {
             InitType::Project
         } else {

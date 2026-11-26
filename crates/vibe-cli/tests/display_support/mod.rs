@@ -21,7 +21,16 @@ pub fn normalise(text: &str, paths: &[(&Path, &str)]) -> String {
             let line = stamps(line);
             let line = line
                 .split(" · ")
-                .map(|part| if is_time(part) { "<time>" } else { part })
+                .map(|part| {
+                    let (value, suffix) = part.split_once("  [").unwrap_or((part, ""));
+                    if is_time(part) {
+                        "<time>".to_owned()
+                    } else if is_time(value) && suffix.ends_with(']') {
+                        format!("<time>  [{suffix}")
+                    } else {
+                        part.to_owned()
+                    }
+                })
                 .collect::<Vec<_>>()
                 .join(" · ");
             rule_end(line.trim_end())

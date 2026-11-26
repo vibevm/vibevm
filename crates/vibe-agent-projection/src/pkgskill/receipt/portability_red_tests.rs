@@ -499,12 +499,15 @@ fn non_utf8_source_filename_refuses_and_leaves_the_commit_untouched() {
             // APFS rejects invalid UTF-8 before an entry can exist. Exercise
             // the exact production directory-entry decoder with those same
             // raw OS units instead; unrelated fixture I/O failures still fail.
-            assert!(
-                cfg!(target_os = "macos")
-                    && (error.kind() == std::io::ErrorKind::InvalidInput
-                        || error.raw_os_error() == Some(92)), // Darwin EILSEQ.
-                "the host could not create the raw-name fixture: {error}",
-            );
+            if cfg!(target_os = "macos") {
+                assert!(
+                    (error.kind() == std::io::ErrorKind::InvalidInput
+                        || error.raw_os_error() == Some(92)),
+                    "the host could not create the raw-name fixture: {error}"
+                );
+            } else {
+                panic!("the host could not create the raw-name fixture: {error}");
+            }
             assert!(!raw_path.exists());
             format!(
                 "{:#}",

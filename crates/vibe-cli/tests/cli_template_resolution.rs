@@ -373,16 +373,22 @@ fn a_digest_document_that_changed_upstream_is_the_alarm_before_any_effect() {
     )
     .unwrap();
 
+    let rendered = fixture
+        .settings()
+        .join("cache/templates/org.example/tool/rendered/v2.0.0");
+    let watched = common::leftovers::Watched::default()
+        .root("project", fixture.root.path())
+        .root("applications", &fixture.settings().join("applications"))
+        .root("installed", &fixture.settings().join("opt"))
+        .root("rendered", &rendered);
+    let before = watched.snapshot();
     let refusal = failed(&app(
         &fixture,
         &["install", "-g"],
         "org.example/tool@2.0.0",
         &["--assume-yes"],
     ));
-    assert!(refusal.contains("template_render_changed"), "{refusal}");
-    assert!(refusal.contains("org.example/tool@2.0.0"), "{refusal}");
-    assert!(refusal.contains("sha256"), "{refusal}");
-    assert!(refusal.contains("--trust-template"), "{refusal}");
+    assert_eq!(watched.snapshot(), before, "the alarm precedes publication");
     // Before any effect: the rendered tree still holds the bytes the
     // first install used.
     let manifest = fs::read_to_string(
@@ -392,6 +398,21 @@ fn a_digest_document_that_changed_upstream_is_the_alarm_before_any_effect() {
     )
     .unwrap();
     assert!(!manifest.contains(&rewritten), "{manifest}");
+    assert!(refusal.contains("template_render_changed"), "{refusal}");
+    assert!(refusal.contains("org.example/tool@2.0.0"), "{refusal}");
+    assert!(refusal.contains("sha256"), "{refusal}");
+    assert!(
+        refusal.contains("recorded ") && refusal.contains("computed "),
+        "{refusal}"
+    );
+    assert!(
+        refusal.lines().any(|line| line.trim() == "vibe update"),
+        "{refusal}"
+    );
+    assert!(
+        !refusal.contains("vibe update --trust-template"),
+        "{refusal}"
+    );
 }
 
 #[test]

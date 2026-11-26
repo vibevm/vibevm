@@ -46,8 +46,11 @@ pub(super) fn collection(
         }
         CollectionCommand::Create { name, icon } => {
             let started = Instant::now();
-            let layer =
-                vibe_app::app_collection_create(settings, &name, resolved(icon.as_deref()).as_deref())?;
+            let layer = vibe_app::app_collection_create(
+                settings,
+                &name,
+                resolved(icon.as_deref()).as_deref(),
+            )?;
             if ctx.is_json() {
                 return ctx.emit_json(&layer);
             }

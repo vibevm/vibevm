@@ -69,7 +69,11 @@ pub(super) fn run(ctx: &output::Context, mut args: AppEnvArgs) -> Result<()> {
     // notice like every other.
     if let Some(written) = &written {
         use output::language::{Glyph, Role, paint};
-        let basename = written.path.file_name().unwrap_or_default().to_string_lossy();
+        let basename = written
+            .path
+            .file_name()
+            .unwrap_or_default()
+            .to_string_lossy();
         ctx.block_err(&format!(
             "{} wrote {} to {basename} · {}",
             paint(Role::Ok, Glyph::Done.text()),
@@ -119,7 +123,10 @@ pub(crate) fn emit_missing(
         paint(Role::Accent, &install)
     );
     if shell {
-        text.push_str(&format!("\n  {}", paint(Role::Dim, "Continuing without this version.")));
+        text.push_str(&format!(
+            "\n  {}",
+            paint(Role::Dim, "Continuing without this version.")
+        ));
     }
     ctx.block_err(&text);
 }
@@ -170,7 +177,10 @@ fn write_version_file(
         ),
         (ActivationState::NotInstalled, _) => {
             let install = selection.install.clone().unwrap_or_else(|| {
-                format!("vibe install -g {slot}@{}", selection.requested.as_deref().unwrap_or(""))
+                format!(
+                    "vibe install -g {slot}@{}",
+                    selection.requested.as_deref().unwrap_or("")
+                )
             });
             anyhow::bail!(
                 "not_installed: --write-version-file has no version to write: {slot} is not installed \

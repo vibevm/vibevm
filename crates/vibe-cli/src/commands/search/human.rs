@@ -31,35 +31,24 @@ pub(super) fn render(ctx: &output::Context, report: &SearchReport) -> Result<()>
 
 /// The search answer at a fixed viewport.
 ///
-/// ```text
-/// ── search node ────────────────── 2 hits · 2 registries searched
-///   app   org.vibevm.node/node-runtime  1.0.0  corp · score 1
-///         └ A test application package for node-runtime
-///   flow  wal                           -      mirror · score 1  [full-scan]
-///   searched corp · mirror
-///
-/// ── short names ────────────────────────────────────────────────
-///   node  org.vibevm.node/node-runtime · corp
-///   type these bare; every other hit needs its group/name
-///
-/// ── registries ─────────────────────────────────────────────────
-/// ✗ broken  unreachable
-///   └ probe of http://x/repomd.json failed
-/// ○ quiet   no index URL
-///   └ set VIBEVM_INDEX_URL_<R> to search it
-/// ```
+/// Results retain kind, qualified name, version and registry provenance.
+/// Separate measured sections explain issued short names and registry failures;
+/// descriptions and remedies remain child rows under the corresponding result.
 #[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-067#list")]
 fn view(report: &SearchReport, width: usize, rule: usize) -> String {
     let mut parts = Vec::new();
     if report.hits.is_empty() {
         if !report.registries_searched.is_empty() {
             parts.push(
-                Block::new(Glyph::Skipped, format!("no package matches {}", report.query))
-                    .with_meta(vec![Meta::note(format!(
-                        "searched {}",
-                        report.registries_searched.join(" · ")
-                    ))])
-                    .render_at(width),
+                Block::new(
+                    Glyph::Skipped,
+                    format!("no package matches {}", report.query),
+                )
+                .with_meta(vec![Meta::note(format!(
+                    "searched {}",
+                    report.registries_searched.join(" · ")
+                ))])
+                .render_at(width),
             );
         }
     } else {
@@ -89,32 +78,54 @@ fn view(report: &SearchReport, width: usize, rule: usize) -> String {
         );
         let mut hits = format!(
             "{}\n{}\n{}",
-            heading(&format!("search {}", report.query), Some(&right), width, rule),
-            List::new(rows.collect()).meta_column().children_under(1).render_at(width),
-            hint_line(&format!("searched {}", report.registries_searched.join(" · ")), width)
+            heading(
+                &format!("search {}", report.query),
+                Some(&right),
+                width,
+                rule
+            ),
+            List::new(rows.collect())
+                .meta_column()
+                .children_under(1)
+                .render_at(width),
+            hint_line(
+                &format!("searched {}", report.registries_searched.join(" · ")),
+                width
+            )
         );
         if !report.registries_full_scanned.is_empty() {
             hits.push('\n');
             hits.push_str(&hint_line(
-                &format!("full-scanned {}", report.registries_full_scanned.join(" · ")),
+                &format!(
+                    "full-scanned {}",
+                    report.registries_full_scanned.join(" · ")
+                ),
                 width,
             ));
         }
         parts.push(hits);
     }
-    let rows: Vec<_> = report.hits.iter().filter(|hit| !hit.short_names.is_empty()).map(|hit| {
-        Row::new(vec![
-            Cell::new(hit.short_names.join(", "), Role::Accent),
-            Cell::text(qualified(hit)),
-        ])
-        .meta(vec![Meta::note(&hit.registry)])
-    }).collect();
+    let rows: Vec<_> = report
+        .hits
+        .iter()
+        .filter(|hit| !hit.short_names.is_empty())
+        .map(|hit| {
+            Row::new(vec![
+                Cell::new(hit.short_names.join(", "), Role::Accent),
+                Cell::text(qualified(hit)),
+            ])
+            .meta(vec![Meta::note(&hit.registry)])
+        })
+        .collect();
     if !rows.is_empty() {
         parts.push(format!(
             "{}\n{}\n{}",
             heading("short names", None, width, rule),
             List::new(rows).render_at(width),
-            hint_line("type these bare; every other hit needs its group/name", width)
+            hint_line(
+                "type these bare; every other hit needs its group/name",
+                width
+            )
         ));
     }
     let registries = registries(report, width, rule);
@@ -127,29 +138,53 @@ fn view(report: &SearchReport, width: usize, rule: usize) -> String {
 fn registries(report: &SearchReport, width: usize, rule: usize) -> String {
     let mut rows = Vec::new();
     for registry in &report.registries_unreachable {
-        rows.push(Row::new(vec![Cell::text(&registry.name), Cell::text("unreachable")])
-            .glyph(Glyph::Failed, Role::Alert)
-            .child(cut(&registry.reason, width.saturating_sub(6))));
+        rows.push(
+            Row::new(vec![Cell::text(&registry.name), Cell::text("unreachable")])
+                .glyph(Glyph::Failed, Role::Alert)
+                .child(cut(&registry.reason, width.saturating_sub(6))),
+        );
     }
     for registry in &report.registries_policy_skipped {
-        rows.push(Row::new(vec![Cell::text(&registry.name), Cell::text("skipped by source policy")])
+        rows.push(
+            Row::new(vec![
+                Cell::text(&registry.name),
+                Cell::text("skipped by source policy"),
+            ])
             .glyph(Glyph::Skipped, Role::Dim)
-            .child(cut(&registry.reason, width.saturating_sub(6))));
+            .child(cut(&registry.reason, width.saturating_sub(6))),
+        );
     }
     for registry in &report.registries_full_scan_unsupported {
-        rows.push(Row::new(vec![Cell::text(&registry.name), Cell::text("full scan unsupported")])
+        rows.push(
+            Row::new(vec![
+                Cell::text(&registry.name),
+                Cell::text("full scan unsupported"),
+            ])
             .glyph(Glyph::Skipped, Role::Dim)
-            .child(cut(&registry.reason, width.saturating_sub(6))));
+            .child(cut(&registry.reason, width.saturating_sub(6))),
+        );
     }
     for name in &report.registries_unconfigured {
-        rows.push(Row::new(vec![Cell::text(name), Cell::text("no index URL")])
-            .glyph(Glyph::Skipped, Role::Dim)
-            .child(cut("set VIBEVM_INDEX_URL_<R> to search it", width.saturating_sub(6))));
+        rows.push(
+            Row::new(vec![Cell::text(name), Cell::text("no index URL")])
+                .glyph(Glyph::Skipped, Role::Dim)
+                .child(cut(
+                    "set VIBEVM_INDEX_URL_<R> to search it",
+                    width.saturating_sub(6),
+                )),
+        );
     }
     if rows.is_empty() {
         return String::new();
     }
-    bounded(&format!("{}\n{}", heading("registries", None, width, rule), List::new(rows).render_at(width)), width)
+    bounded(
+        &format!(
+            "{}\n{}",
+            heading("registries", None, width, rule),
+            List::new(rows).render_at(width)
+        ),
+        width,
+    )
 }
 
 // The shared rule reserves at least four fill cells. Budget labels before
@@ -160,7 +195,7 @@ fn heading(label: &str, right: Option<&str>, width: usize, rule: usize) -> Strin
         return cut(&rule_at(label, right, width), width);
     }
     let right = right.filter(|right| {
-        console::measure_text_width(label) + console::measure_text_width(right) + 1 <= width - 8
+        console::measure_text_width(label) + console::measure_text_width(right) < width - 8
     });
     let budget = width - 8 - right.map_or(0, |text| console::measure_text_width(text) + 1);
     rule_at(&cut(label, budget), right, width)
@@ -170,7 +205,10 @@ fn bounded(text: &str, width: usize) -> String {
     if width == 0 {
         return String::new();
     }
-    text.lines().map(|line| cut(line, width)).collect::<Vec<_>>().join("\n")
+    text.lines()
+        .map(|line| cut(line, width))
+        .collect::<Vec<_>>()
+        .join("\n")
 }
 
 fn hint_line(text: &str, width: usize) -> String {

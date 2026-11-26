@@ -16,9 +16,13 @@ pub(super) fn refuse(
 
 pub(super) fn quote(path: &std::path::Path) -> String {
     #[cfg(not(windows))]
-    { crate::shell_syntax::posix_quote(&path.to_string_lossy()) }
+    {
+        crate::shell_syntax::posix_quote(&path.to_string_lossy())
+    }
     #[cfg(windows)]
-    { crate::shell_syntax::powershell_quote(&path.to_string_lossy()) }
+    {
+        crate::shell_syntax::powershell_quote(&path.to_string_lossy())
+    }
 }
 
 pub(super) fn missing(project: &vibe_safefs::Project, path: &str, label: &str) -> anyhow::Error {
@@ -26,15 +30,26 @@ pub(super) fn missing(project: &vibe_safefs::Project, path: &str, label: &str) -
         "kit_input_missing",
         format!("the {label} input {path} does not exist"),
         Some("put the file there, or correct its path in the recipe"),
-        Some(&format!("kit recipe paths are relative to {}", project.root_path().display())),
+        Some(&format!(
+            "kit recipe paths are relative to {}",
+            project.root_path().display()
+        )),
     )
 }
 
 pub(super) fn output_parent(path: &std::path::Path, error: &anyhow::Error) -> anyhow::Error {
-    let fix = private_parent_fix(path, error.downcast_ref::<vibe_safefs::PrivateDirectoryMode>().is_some());
+    let fix = private_parent_fix(
+        path,
+        error
+            .downcast_ref::<vibe_safefs::PrivateDirectoryMode>()
+            .is_some(),
+    );
     refuse(
         "kit_output_unsafe",
-        format!("output parent {} must be owned by you with mode 0700", path.display()),
+        format!(
+            "output parent {} must be owned by you with mode 0700",
+            path.display()
+        ),
         Some(&fix),
         None,
     )
@@ -54,15 +69,28 @@ mod tests {
 
     #[test]
     fn uncertain_parent_never_suggests_chmod() {
-        let error = output_parent(std::path::Path::new("synthetic parent"), &anyhow::anyhow!("uncertain"));
-        assert!(error.to_string().contains("choose a private directory owned by you"));
+        let error = output_parent(
+            std::path::Path::new("synthetic parent"),
+            &anyhow::anyhow!("uncertain"),
+        );
+        assert!(
+            error
+                .to_string()
+                .contains("choose a private directory owned by you")
+        );
         assert!(!error.to_string().contains("chmod"));
     }
 
     #[cfg(unix)]
     #[test]
     fn confirmed_mode_advice_quotes_the_command_path() {
-        assert_eq!(private_parent_fix(std::path::Path::new("my kit"), true), "chmod 700 'my kit'");
-        assert_eq!(private_parent_fix(std::path::Path::new("it's kit"), true), "chmod 700 'it'\"'\"'s kit'");
+        assert_eq!(
+            private_parent_fix(std::path::Path::new("my kit"), true),
+            "chmod 700 'my kit'"
+        );
+        assert_eq!(
+            private_parent_fix(std::path::Path::new("it's kit"), true),
+            "chmod 700 'it'\"'\"'s kit'"
+        );
     }
 }

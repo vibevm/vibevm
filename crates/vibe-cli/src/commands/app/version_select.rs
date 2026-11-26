@@ -326,12 +326,14 @@ fn installed_versions(settings: &SettingsRoot, group: &Group, name: &str) -> Vec
 
 /// `drop-only` with no `[artifacts] packages` drop declared at all.
 fn no_drop(coordinate: &str, spelling: &str) -> anyhow::Error {
+    // Keep the probe in prose so command extraction does not hide the
+    // configuration path and key that make this refusal actionable.
     anyhow::anyhow!(
         "`[versions] select = \"drop-only\"` admits only versions an artifact drop already \
          holds, and this home declares no drop, so `{spelling}` has no candidate at all \
          (violates spec://org.vibevm.core/vibevm/common/PROP-075#VERSIONS-SELECT; \
           fix: declare the directory in `~/.vibe/config.toml` as `[artifacts]` `packages = \
-         \"<dir>\"` — `vibe artifacts where {coordinate}` prints the file names and paths it \
+         \"<dir>\"` — vibe artifacts where {coordinate} prints the file names and paths it \
          is filled with — or set `[versions] select = \"prefer-drop\"` to fall back to the \
          newest version instead)"
     )
@@ -390,8 +392,8 @@ fn nothing_in_drop_message(
          holds, and the drop holds none that satisfy `{spelling}`; the newest version it \
          matches is {newest} \
          (violates spec://org.vibevm.core/vibevm/common/PROP-075#VERSIONS-SELECT; \
-          fix: put its payload at `{where_to_put}` — `vibe artifacts where \
-         {coordinate}@={newest}` prints every file and digest — or set `[versions] select = \
+          fix: put its payload at `{where_to_put}` — vibe artifacts where \
+         {coordinate}@={newest} prints every file and digest — or set `[versions] select = \
          \"prefer-drop\"` to install the newest version the drop already holds)"
     )
 }

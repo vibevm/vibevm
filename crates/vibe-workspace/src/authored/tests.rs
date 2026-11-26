@@ -1,5 +1,4 @@
 //! Raw variable identity and map-order equivalence are independent invariants.
-#![cfg(test)]
 use super::*;
 
 fn fixture() -> tempfile::TempDir {

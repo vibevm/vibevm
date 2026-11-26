@@ -10,7 +10,10 @@ fn finding(severity: Severity) -> Finding {
         field: None,
         package: None,
         message: "git tracks the generated artifact vibevm/vibespecs/boot/SYSTEM.md".into(),
-        why: Some("it is derived from committed inputs, so a tracked copy can go stale and be believed".into()),
+        why: Some(
+            "it is derived from committed inputs, so a tracked copy can go stale and be believed"
+                .into(),
+        ),
         fix: Some("git rm --cached vibevm/vibespecs/boot/SYSTEM.md".into()),
     }
 }

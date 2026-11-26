@@ -66,9 +66,8 @@ pub enum VersionsError {
     #[error(
         "--in-drop needs an artifact drop, and this home has none configured \
          (violates spec://org.vibevm.core/vibevm/common/PROP-066#drops; \
-         fix: declare the directory in `~/.vibe/config.toml` as `[artifacts]` `packages = \
-         \"<dir>\"`, or drop --in-drop; `vibe artifacts where <package>` prints the file names \
-         and paths such a drop is filled with)"
+         fix: `vibe artifacts where <package>`): set `packages` under `[artifacts]` in the \
+         settings config.toml to the drop directory, or omit --in-drop"
     )]
     NoDrop,
     #[error(

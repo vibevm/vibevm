@@ -53,7 +53,11 @@ pub(super) fn run(ctx: &output::Context, env: &VvmEnv) -> Result<PxVerdict> {
     } else {
         Block::new(
             Glyph::Skipped,
-            format!("px  not installed · px {} · {}", pin.version, root.display()),
+            format!(
+                "px  not installed · px {} · {}",
+                pin.version,
+                root.display()
+            ),
         )
     };
     if let Some(found) = &installed {

@@ -17,6 +17,10 @@ pub(super) fn print_list(listing: &Value, quiet: bool) {
         .and_then(Value::as_array)
         .map(Vec::as_slice)
         .unwrap_or(&[]);
+    if installations.is_empty() && !quiet {
+        println!("  {}", paint(Role::Dim, "no applications installed"));
+        return;
+    }
     println!("{} installed application(s)", installations.len());
     if quiet {
         return;
@@ -52,7 +56,10 @@ pub(super) fn print_list(listing: &Value, quiet: bool) {
 /// the PATH proxy directory, the library new installations land in, and
 /// what stays at the settings root from before an install root applied.
 pub(super) fn places(settings: &vibe_app::SettingsRoot) -> Vec<String> {
-    let mut lines = vec![format!("commands: {}", settings.proxy_dir().display())];
+    let short =
+        |path: &std::path::Path| crate::output::language::short_path(&path.display().to_string());
+    let row = |name: &str, value: String| Row::new(vec![Cell::text(name), Cell::text(value)]);
+    let mut rows = vec![row("commands", short(&settings.proxy_dir()))];
     // The second PATH surface: whole payload directories, one link per slot
     // and declared directory (PROP-059 `#path-directories`).
     if let Ok(index) = vibe_app::Index::load(settings) {
@@ -61,13 +68,15 @@ pub(super) fn places(settings: &vibe_app::SettingsRoot) -> Vec<String> {
             if dirs.is_empty() {
                 continue;
             }
-            lines.push(format!(
-                "path dirs of slot `{slot}`{}: {}",
-                if index.is_off(slot) { " (off)" } else { "" },
+            rows.push(row(
+                &format!(
+                    "path dirs of slot `{slot}`{}",
+                    if index.is_off(slot) { " (off)" } else { "" }
+                ),
                 dirs.iter()
-                    .map(|dir| dir.display().to_string())
+                    .map(|dir| short(dir))
                     .collect::<Vec<_>>()
-                    .join(", ")
+                    .join(", "),
             ));
         }
     }
@@ -78,15 +87,16 @@ pub(super) fn places(settings: &vibe_app::SettingsRoot) -> Vec<String> {
     {
         Ok((Ok(id), storage)) => {
             if let Some(path) = storage.path_of(id) {
-                lines.push(format!(
-                    "new installations: {} (library `{id}`)",
-                    path.join("apps").display()
+                rows.push(row(
+                    "new installations",
+                    format!("{} · library {id}", short(&path.join("apps"))),
                 ));
             }
         }
-        Ok((Err(error), _)) => lines.push(format!("new installations: refused — {error}")),
-        Err(error) => lines.push(format!("new installations: unknown — {error}")),
+        Ok((Err(error), _)) => rows.push(row("new installations", format!("refused — {error}"))),
+        Err(error) => rows.push(row("new installations", format!("unknown — {error}"))),
     }
+    let mut lines = vec![rule("places", None), List::new(rows).render()];
     if settings.install_root().is_none() {
         return lines;
     }

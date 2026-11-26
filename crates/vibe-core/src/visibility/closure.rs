@@ -150,7 +150,7 @@ fn walk_graph(graph: &VisibilityGraph, root: &NodeId, closure: &BTreeSet<NodeId>
                 // replaces a weak one, so «weak» means «nothing but a
                 // recommendation admits this» whatever the declaration order
                 // (PROP-050 `#WEAK-EDGES-ARE-ORDINARY-EDGES`).
-                Some(known) if !(known.weak && !witness.weak) => {}
+                Some(known) if !known.weak || witness.weak => {}
                 _ => {
                     walk.effective.insert(edge.to.clone(), witness);
                 }

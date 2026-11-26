@@ -83,11 +83,7 @@ pub fn run(ctx: &Context, args: DlArgs, offline: bool, verbose: bool) -> Result<
     let destination = match (&args.dest, to_stdout) {
         (Some(dest), false) => Some(destination(dest, &url, args.force)?),
         (None, false) => {
-            return Err(DlError::usage(
-                "a destination is required",
-                SHOW_OR_DEST_FIX,
-            )
-            .into());
+            return Err(DlError::usage("a destination is required", SHOW_OR_DEST_FIX).into());
         }
         (_, true) => None,
     };

@@ -75,10 +75,12 @@ pub(crate) fn declared_origin_refused(
     let with_drop_fix = match (refusal, rung) {
         (vibe_registry::ContactRefusal::ExcludedHost { .. }, Some(rung)) => {
             shown.split_once("; fix: ").map(|(before_fix, _)| {
+                // Keep this fix as actionable prose: the human refusal reader
+                // extracts only commands when a fix contains one. The drop
+                // miss already supplies `vibe artifacts where` separately.
                 format!(
                     "{before_fix}; fix: put the file at `{rung}` in the `[artifacts] packages` \
-                     drop, or stop excluding this endpoint in `[source_policy] exclude_hosting` \
-                     — `vibe artifacts where` prints every expected location)"
+                     drop, or stop excluding this endpoint in `[source_policy] exclude_hosting`)"
                 )
             })
         }

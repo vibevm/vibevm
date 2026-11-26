@@ -355,7 +355,7 @@ pub(crate) fn install(ctx: &crate::output::Context, inputs: Inputs<'_>) -> Resul
     env.packages_drop = packages_drop;
     let (locator, warnings) = build_selected(&env, super::needs_global_registry(inputs.command))?;
     for warning in drop_warnings.into_iter().chain(warnings) {
-        if !super::config_problem().is_some_and(|problem| problem.full == warning) {
+        if super::config_problem().is_none_or(|problem| problem.full != warning) {
             ctx.diagnostic(&format!("remap layer skipped: {warning}"));
         }
     }

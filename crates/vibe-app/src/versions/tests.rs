@@ -503,12 +503,17 @@ fn app_versions_unknown_package_is_refused() {
     let index = Index::default();
     let qualified = request("org.example/none@99");
     let error = versions_listing(&index, &qualified, &source).unwrap_err();
-    assert!(matches!(&error, AppError::Versions(VersionsError::UnknownPackage {
+    assert!(
+        matches!(&error, AppError::Versions(VersionsError::UnknownPackage {
         package, name
-    }) if package == "org.example/none" && name == "none"));
+    }) if package == "org.example/none" && name == "none")
+    );
     assert_eq!(error.code(), "unknown_package");
     assert_eq!(error.class(), crate::ErrorClass::Refusal);
-    assert_eq!(error.to_string(), "org.example/none is in no registry this run reads (violates spec://org.vibevm.core/vibevm/common/PROP-075#VERSIONS-LIST-OUTPUT; fix: vibe search none)");
+    assert_eq!(
+        error.to_string(),
+        "org.example/none is in no registry this run reads (violates spec://org.vibevm.core/vibevm/common/PROP-075#VERSIONS-LIST-OUTPUT; fix: vibe search none)"
+    );
     assert_eq!(source.observations.get(), 1);
     let channel = VersionsRequest {
         channel: Some("missing"),
@@ -547,8 +552,10 @@ fn app_versions_unknown_package_is_refused() {
     source.answer = Err("synthetic registry read failed".into());
     let error = versions_listing(&index, &qualified, &source).unwrap_err();
     assert_eq!(error.code(), "version_domain_unreadable");
-    assert!(matches!(error, AppError::Versions(VersionsError::Domain { package, reason })
-        if package == "org.example/none" && reason == "synthetic registry read failed"));
+    assert!(
+        matches!(error, AppError::Versions(VersionsError::Domain { package, reason })
+        if package == "org.example/none" && reason == "synthetic registry read failed")
+    );
     source.answer = Ok(DomainObservation {
         domain: Domain {
             template: Some(TemplateFacts {

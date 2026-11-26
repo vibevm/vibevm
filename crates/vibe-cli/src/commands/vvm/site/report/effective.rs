@@ -47,7 +47,11 @@ pub(in crate::commands::vvm::site) fn sections(
     match (&effective.release, &effective.release_error) {
         (Some(release), _) => rows.push(row(
             "release source",
-            format!("{} {}", kind_label(release.source.clone()), release.location),
+            format!(
+                "{} {}",
+                kind_label(release.source.clone()),
+                release.location
+            ),
             vec![Meta::note(&release.from)],
         )),
         (None, Some(error)) => rows.push(row(

@@ -1,7 +1,6 @@
 //! The lowered-value decisions of one captured OpenSSH context, on
 //! synthetic input. Every Windows decision is a function of a `windows`
 //! parameter, so these run on every platform.
-#![cfg(test)]
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-073#SSH-CONFIG-CAPTURE");
 use super::*;
 

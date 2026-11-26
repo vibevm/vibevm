@@ -92,6 +92,7 @@ impl LifecycleArgs {
     #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#CHAIN-GENERAL")]
     pub(crate) fn install_args(&self) -> InstallArgs {
         InstallArgs {
+            register_mcp: Vec::new(),
             ordinary_answers: None,
             ordinary_interactive: false,
             parsed_ordinary_submission: None,

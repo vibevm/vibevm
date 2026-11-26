@@ -358,7 +358,13 @@ mod tests {
         assert!(text.contains("\n\n  1.0.13\n"), "{text}");
         assert!(text.contains("\n  1.0.12  [active]  [running]\n"), "{text}");
         assert!(text.contains("\n  1.0.11  [installed]\n"), "{text}");
-        assert!(text.ends_with("\n  1.0.10  [running]  [installed]"), "{text}");
-        assert!(!text.contains("(active") && !text.contains("* 1.0"), "{text}");
+        assert!(
+            text.ends_with("\n  1.0.10  [running]  [installed]"),
+            "{text}"
+        );
+        assert!(
+            !text.contains("(active") && !text.contains("* 1.0"),
+            "{text}"
+        );
     }
 }

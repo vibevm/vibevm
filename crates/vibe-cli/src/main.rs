@@ -51,10 +51,10 @@ fn main() -> ExitCode {
 }
 
 fn run() -> ExitCode {
-    let (mut cli, explicit_path) = Cli::parse_invocation();
     let terminal_vocabulary = read_env_opt("TERM")
         .map(|term| !term.eq_ignore_ascii_case("dumb"))
         .unwrap_or(true);
+    let (mut cli, explicit_path) = Cli::parse_invocation(terminal_vocabulary);
     output::language::draw_ascii(!terminal_vocabulary);
     // Kit production is an explicit local-file operation. Do not discover an
     // installed destination, promote user configuration, or enter network/remap
@@ -462,7 +462,7 @@ fn run() -> ExitCode {
     composition::network::finish(&ctx, network, result.is_err());
     command_activity.complete(result.is_ok());
     if config_notice.fatal(&result) {
-        return as_exit_code(result.as_ref().err().expect("fatal configuration error"));
+        return as_exit_code(result.as_ref().expect_err("fatal configuration error"));
     }
     drop(config_notice);
     composition::finish(&ctx, &cancellation, result, preview_only)

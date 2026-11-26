@@ -151,7 +151,7 @@ fn qualified(groups: &[Group], name: &str) -> Vec<String> {
 fn render_collision(name: &str, candidates: &[String], hint: &str) -> String {
     use std::fmt::Write as _;
     let mut msg = format!(
-        "the short name `{name}` is ambiguous — {} packages match it:\n",
+        "short_name_ambiguous: more than one package answers to {name} — {} packages match it:\n",
         candidates.len(),
     );
     for (i, spelling) in candidates.iter().enumerate() {
@@ -176,13 +176,13 @@ fn render_collision(name: &str, candidates: &[String], hint: &str) -> String {
 fn render_not_issued(name: &str, refusal: &NotIssued) -> String {
     use std::fmt::Write as _;
     let mut msg = format!(
-        "the short name `{name}` is not issued by any consulted registry; give the full name.\n\
+        "short_name_not_issued: no consulted registry issues the short name {name}; give the full name.\n\
          A short name exists only when a registry's own alias table issues it — being named \
          `{name}` grants a package nothing.\n",
     );
     let _ = match refusal.consulted.as_slice() {
         [] => writeln!(msg, "consulted: (no registry answered)"),
-        consulted => writeln!(msg, "consulted: {}", consulted.join(", ")),
+        consulted => writeln!(msg, "consulted: {}", consulted.join(" · ")),
     };
     if !refusal.skipped.is_empty() {
         let _ = writeln!(
@@ -224,22 +224,44 @@ pub fn qualify(
     lockfile: &Lockfile,
 ) -> Result<PackageRef> {
     let (qualified, decision) = qualify_for_route(resolver, pkgref, lockfile)?;
-    if let Some(decision) = decision { decision.publish(); }
+    if let Some(decision) = decision {
+        decision.publish();
+    }
     Ok(qualified)
 }
 
 /// A speculative remap route publishes its decision only if it owns the request.
 pub(super) struct RouteAliasDecision(String);
+pub(super) fn alias_decision(
+    name: &str,
+    candidate: &vibe_registry::short_name::AliasCandidate,
+) -> String {
+    let target = &candidate.target;
+    match candidate.registries.as_slice() {
+        [] => format!("  {name} → {target}"),
+        [one] => format!("  {name} → {target} · alias in registry {one}"),
+        many => format!(
+            "  {name} → {target} · alias in registries {}",
+            many.join(", ")
+        ),
+    }
+}
 impl RouteAliasDecision {
-    pub(super) fn publish(self) { eprintln!("{}", self.0); }
+    pub(super) fn publish(self) {
+        eprintln!("{}", self.0);
+    }
 }
 
 /// Compute the existing qualification without announcing a rejected route.
 #[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#short-name")]
 pub(super) fn qualify_for_route(
-    resolver: &InstallResolver, pkgref: &PackageRef, lockfile: &Lockfile,
+    resolver: &InstallResolver,
+    pkgref: &PackageRef,
+    lockfile: &Lockfile,
 ) -> Result<(PackageRef, Option<RouteAliasDecision>)> {
-    if pkgref.is_qualified() { return Ok((pkgref.clone(), None)); }
+    if pkgref.is_qualified() {
+        return Ok((pkgref.clone(), None));
+    }
     let mut decision = None;
     let qualified = match resolve(resolver, &pkgref.name, lockfile)? {
         ShortNameOutcome::Resolved(group) => Ok::<PackageRef, anyhow::Error>(PackageRef {
@@ -255,9 +277,7 @@ pub(super) fn qualify_for_route(
         // downstream ever sees the short name (PROP-029
         // `#ADDR-SHORT-NAMES`).
         ShortNameOutcome::ResolvedAlias(candidate) => {
-            let provenance = candidate.provenance();
-            let provenance = provenance.replace(" (alias in ", " · alias in ");
-            let message = format!("  {} → {}", pkgref.name, provenance.trim_end_matches(')'));
+            let message = alias_decision(&pkgref.name, &candidate);
             decision = Some(RouteAliasDecision(message));
             Ok(PackageRef {
                 kind: pkgref.kind,
@@ -363,7 +383,7 @@ mod tests {
             "com.acme/wal",
         );
         assert!(
-            msg.contains("`wal` is ambiguous — 2 packages match"),
+            msg.contains("more than one package answers to wal — 2 packages match"),
             "missing the header line:\n{msg}"
         );
         assert!(msg.contains("  1. com.acme/wal"), "missing item 1:\n{msg}");
@@ -391,7 +411,7 @@ mod tests {
             },
         );
         assert!(
-            msg.contains("the short name `opencode` is not issued by any consulted registry"),
+            msg.contains("no consulted registry issues the short name opencode"),
             "{msg}"
         );
         assert!(msg.contains("give the full name"), "{msg}");

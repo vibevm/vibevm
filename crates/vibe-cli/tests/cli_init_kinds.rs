@@ -246,17 +246,52 @@ fn init_refusals_lead_with_their_codes() {
     fs::create_dir(&home).unwrap();
     fs::create_dir(&settings).unwrap();
     for (args, name, expected) in [
-        (vec!["init", "package", "org.demo/app4", "--kind", "app", "--app-install-way", "prebuilt", "--app-source-url", "https://example.invalid/app.tgz", "--path"], "app4",
-         "✗ app_source_digest_required  a source or prebuilt installer needs the input's SHA-256\n  fix   supply --app-source-sha256 <64-hex> for the declared source URL\n  see   spec://org.vibevm.core/vibevm/common/PROP-059#declaration"),
-        (vec!["init", "--link", "static", "--path"], "root",
-         "✗ link_on_root  --link sets the boot snippet of a nested package, and a root declaration writes none\n  fix   vibe init package <group>/<name> --link static|dynamic\n  see   spec://org.vibevm.core/vibevm/common/PROP-024#INIT-ROOT-ROLE"),
-        (vec!["init", "package", "org.demo/r1", "--kind", "remap", "--link", "static", "--path"], "r1",
-         "✗ link_without_boot_snippet  --link sets a boot snippet, and a remap package carries none\n  fix   drop --link, or pick a kind with a boot lane such as --kind tool\n  see   spec://org.vibevm.core/vibevm/common/PROP-024#INIT-ROOT-ROLE"),
+        (
+            vec![
+                "init",
+                "package",
+                "org.demo/app4",
+                "--kind",
+                "app",
+                "--app-install-way",
+                "prebuilt",
+                "--app-source-url",
+                "https://example.invalid/app.tgz",
+                "--path",
+            ],
+            "app4",
+            "✗ app_source_digest_required  a source or prebuilt installer needs the input's SHA-256\n  fix   supply --app-source-sha256 <64-hex> for the declared source URL\n  see   spec://org.vibevm.core/vibevm/common/PROP-059#declaration",
+        ),
+        (
+            vec!["init", "--link", "static", "--path"],
+            "root",
+            "✗ link_on_root  --link sets the boot snippet of a nested package, and a root declaration writes none\n  fix   vibe init package <group>/<name> --link static|dynamic\n  see   spec://org.vibevm.core/vibevm/common/PROP-024#INIT-ROOT-ROLE",
+        ),
+        (
+            vec![
+                "init",
+                "package",
+                "org.demo/r1",
+                "--kind",
+                "remap",
+                "--link",
+                "static",
+                "--path",
+            ],
+            "r1",
+            "✗ link_without_boot_snippet  --link sets a boot snippet, and a remap package carries none\n  fix   drop --link, or pick a kind with a boot lane such as --kind tool\n  see   spec://org.vibevm.core/vibevm/common/PROP-024#INIT-ROOT-ROLE",
+        ),
     ] {
         let path = dir.path().join(name);
-        user.vibe().env("HOME", &home).env("USERPROFILE", &home)
-            .env("VIBE_SETTINGS", &settings).args(args).arg(&path)
-            .assert().failure().stderr(predicate::str::contains(expected));
+        user.vibe()
+            .env("HOME", &home)
+            .env("USERPROFILE", &home)
+            .env("VIBE_SETTINGS", &settings)
+            .args(args)
+            .arg(&path)
+            .assert()
+            .failure()
+            .stderr(predicate::str::contains(expected));
         assert!(!path.exists(), "refusal left {path:?}");
     }
 }
@@ -267,7 +302,10 @@ fn init_refusals_lead_with_their_codes() {
 fn init_identity_hint_is_plain_english() {
     let dir = tempfile::tempdir().unwrap();
     let output = std::process::Command::new("python3")
-        .args(["-I", "-c", r#"
+        .args([
+            "-I",
+            "-c",
+            r#"
 import errno, os, pathlib, pty, re, select, subprocess, sys, time
 root = pathlib.Path(sys.argv[2])
 home, settings = root / 'home', root / 'settings'
@@ -281,7 +319,7 @@ master, slave = pty.openpty()
 child = subprocess.Popen([sys.argv[1], 'init', '--path', str(root / 'project')],
                          stdin=slave, stdout=slave, stderr=slave, cwd=root, env=env)
 os.close(slave)
-capture, cancelled = bytearray(), False
+capture, cancelled, stage = bytearray(), False, 0
 deadline = time.monotonic() + 10
 try:
     while time.monotonic() < deadline:
@@ -295,12 +333,21 @@ try:
             if not chunk:
                 break
             capture.extend(chunk)
-            if not cancelled and b'Group (reverse-DNS)' in capture:
+            if stage == 0 and b'Group (reverse-DNS) \xe2\x80\xba ' in capture:
+                os.write(master, b'org.example\r')
+                stage = 1
+            elif stage == 1 and b'Name within the group' in capture:
+                os.write(master, b'demo\r')
+                stage = 2
+            elif stage == 2 and b'Root declaration' in capture and b'\xe2\x9d\xaf project\r\n  package' in capture:
+                # Text inputs ignore Escape; cancel the supported role selector
+                # while identity collection still precedes every scaffold write.
                 os.write(master, b'\x1b')
                 cancelled = True
+                stage = 3
         elif child.poll() is not None:
             break
-    assert cancelled, 'identity prompt was not reached'
+    assert cancelled and stage == 3, 'identity role selector was not reached'
     child.wait(timeout=5)
 finally:
     if child.poll() is None:
@@ -311,8 +358,12 @@ text = re.sub(r'\x1b\[[0-?]*[ -/]*[@-~]', '', capture.decode('utf-8', 'replace')
 print(text)
 assert 'cancelled' in text, text
 assert not (root / 'project').exists()
-"#])
-        .arg(env!("CARGO_BIN_EXE_vibe")).arg(dir.path()).output().unwrap();
+"#,
+        ])
+        .arg(env!("CARGO_BIN_EXE_vibe"))
+        .arg(dir.path())
+        .output()
+        .unwrap();
     assert!(output.status.success(), "{}", screen(&output));
     let text = String::from_utf8(output.stdout).unwrap();
     let normalized = text.split_whitespace().collect::<Vec<_>>().join(" ");
@@ -320,7 +371,7 @@ assert not (root / 'project').exists()
     assert!(!normalized.contains('`'), "{normalized}");
 }
 
-const HINT: &str = "vibe install <group>/<name> (e.g. org.vibevm.world/wal)";
+const HINT: &str = "vibe install org.vibevm.world/wal";
 
 #[test]
 fn both_forms_close_with_the_install_hint_in_todays_syntax() {
@@ -335,7 +386,11 @@ fn both_forms_close_with_the_install_hint_in_todays_syntax() {
         .unwrap();
     assert!(output.status.success());
     let text = screen(&output);
-    assert!(text.contains(HINT), "{text}");
+    assert_eq!(
+        text.lines().filter(|line| line.trim() == HINT).count(),
+        1,
+        "the exact next-step command is printed once: {text}"
+    );
     assert!(text.contains("initialized project demo"), "{text}");
     assert!(!text.contains("<kind>:<name>"), "{text}");
 
@@ -347,7 +402,11 @@ fn both_forms_close_with_the_install_hint_in_todays_syntax() {
         .unwrap();
     assert!(output.status.success());
     let text = screen(&output);
-    assert!(text.contains(HINT), "{text}");
+    assert_eq!(
+        text.lines().filter(|line| line.trim() == HINT).count(),
+        1,
+        "the exact next-step command is printed once: {text}"
+    );
     assert!(
         text.contains("initialized package org.example/my-skills"),
         "{text}"

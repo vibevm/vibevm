@@ -72,7 +72,7 @@ fn an_issued_name_equal_to_the_package_name_resolves() {
     assert_eq!(candidate.package_name("node"), "node");
     assert_eq!(
         provenance("node", &candidate),
-        "node → org.vibevm.node/node (alias in registry corp)"
+        "  node → org.vibevm.node/node · alias in registry corp"
     );
 }
 
@@ -83,7 +83,7 @@ fn the_provenance_line_names_the_registry_that_issued_the_spelling() {
             "node",
             &Candidate::aliased(issued_by_corp("org.vibevm.node", "node"), &base())
         ),
-        "node → org.vibevm.node/node (alias in registry corp)"
+        "  node → org.vibevm.node/node · alias in registry corp"
     );
 }
 
@@ -98,7 +98,7 @@ fn two_eligible_candidates_are_the_collision() {
     assert_eq!(decide(&lookup), Outcome::Ambiguous);
     let message = render_collision("vibe install -g", "node", &lookup);
     assert!(
-        message.contains("`node` is ambiguous — 2 packages match"),
+        message.contains("more than one package answers to node — 2 packages match"),
         "{message}"
     );
     assert!(
@@ -166,14 +166,21 @@ fn an_installed_state_refusal_stays_local() {
     let lookup = Lookup::of_installed(Vec::new());
     assert_eq!(decide(&lookup), Outcome::NotFound);
     let message = render_not_found("vibe app hold", "node", &lookup);
-    assert!(message.contains("`node` is not installed"), "{message}");
+    assert!(
+        message.contains("node is not installed in this home"),
+        "{message}"
+    );
     assert!(message.contains("application index"), "{message}");
     assert!(
         message.contains("`vibe app hold <group>/node`"),
         "{message}"
     );
+    let diagnostic = message.replace(
+        "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#short-name",
+        "",
+    );
     assert!(
-        !message.to_lowercase().contains("registry") && !message.contains("consulted"),
+        !diagnostic.to_lowercase().contains("registry") && !diagnostic.contains("consulted"),
         "it must not reach for a registry: {message}"
     );
 }
@@ -190,7 +197,7 @@ fn a_not_found_names_the_consulted_and_the_excluded() {
     };
     let message = render_not_found("vibe app describe", "node", &lookup);
     assert!(
-        message.contains("the short name `node` is not issued by any consulted registry"),
+        message.contains("no consulted registry issues the short name node"),
         "{message}"
     );
     assert!(message.contains("consulted: corp"), "{message}");
@@ -245,7 +252,7 @@ fn a_published_name_no_registry_issued_is_refused_with_a_hint() {
     assert_eq!(decide(&lookup), Outcome::NotFound);
     let message = render_not_found("vibe install -g", "opencode", &lookup);
     assert!(
-        message.contains("the short name `opencode` is not issued by any consulted registry"),
+        message.contains("no consulted registry issues the short name opencode"),
         "{message}"
     );
     assert!(

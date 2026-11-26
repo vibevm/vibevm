@@ -580,9 +580,12 @@ fn install_unresolvable_short_name_fails_with_hint() {
         .assert()
         .failure()
         .stderr(predicate::str::contains(
-            "is not issued by any consulted registry",
+            "short_name_not_issued  no consulted registry issues the short name no-such-package; give the full name.",
         ))
-        .stderr(predicate::str::contains("give the full name"));
+        .stderr(predicate::str::contains("give the full name"))
+        .stderr(predicate::str::contains(
+            "vibe install <group>/no-such-package",
+        ));
 }
 
 /// And the case the law changed: a registry that CARRIES a package of
@@ -606,10 +609,11 @@ fn install_refuses_a_package_name_no_registry_issued() {
         .assert()
         .failure()
         .stderr(predicate::str::contains(
-            "the short name `wal` is not issued by any consulted registry",
+            "short_name_not_issued  no consulted registry issues the short name wal; give the full name.",
         ))
         .stderr(predicate::str::contains("none of them chosen for you"))
-        .stderr(predicate::str::contains("org.vibevm.world/wal"));
+        .stderr(predicate::str::contains("org.vibevm.world/wal"))
+        .stderr(predicate::str::contains("vibe install org.vibevm.world/wal"));
 }
 
 /// PROP-008 §2.7 — the collision, after `#ISSUED-NAMES-ONLY` moved what
@@ -642,11 +646,12 @@ fn install_two_groups_under_one_name_are_a_hint_and_not_a_collision() {
         .assert()
         .failure()
         .stderr(predicate::str::contains(
-            "is not issued by any consulted registry",
+            "short_name_not_issued  no consulted registry issues the short name wal; give the full name.",
         ))
         .stderr(predicate::str::contains("none of them chosen for you"))
         .stderr(predicate::str::contains("com.example/wal"))
-        .stderr(predicate::str::contains("org.vibevm/wal"));
+        .stderr(predicate::str::contains("org.vibevm/wal"))
+        .stderr(predicate::str::contains("vibe install com.example/wal"));
 }
 
 /// And the collision that remains: one registry cannot hold two targets
@@ -676,7 +681,15 @@ fn install_two_locked_groups_under_one_name_is_exit_seven() {
     )
     .unwrap();
 
-    user.vibe()
+    let lock_before = fs::read(&lock).unwrap();
+    let manifest = project.path().join("vibe.toml");
+    let manifest_before = fs::read(&manifest).unwrap();
+    let installed = project.path().join(common::deps_root());
+    let installed_existed = installed.exists();
+    let watched = common::leftovers::Watched::default().root("installed", &installed);
+    let before = watched.snapshot();
+    let output = user
+        .vibe()
         .arg("install")
         .arg("wal")
         .arg("--path")
@@ -684,11 +697,17 @@ fn install_two_locked_groups_under_one_name_is_exit_seven() {
         .arg("--registry")
         .arg(fixture_registry())
         .arg("--assume-yes")
-        .assert()
-        .code(7)
-        .stderr(predicate::str::contains("is ambiguous"))
-        .stderr(predicate::str::contains("com.example/wal"))
-        .stderr(predicate::str::contains("org.vibevm/wal"));
+        .output()
+        .unwrap();
+    assert_eq!(output.status.code(), Some(7));
+    assert_eq!(fs::read(&lock).unwrap(), lock_before);
+    assert_eq!(fs::read(&manifest).unwrap(), manifest_before);
+    assert_eq!(installed.exists(), installed_existed);
+    assert_eq!(watched.snapshot(), before);
+    let stderr = String::from_utf8(output.stderr).unwrap();
+    assert!(stderr.contains("short_name_ambiguous"), "{stderr}");
+    assert!(stderr.contains("com.example/wal"), "{stderr}");
+    assert!(stderr.contains("org.vibevm/wal"), "{stderr}");
 }
 
 /// `vibe install <pkgref>@^1.0` (explicit constraint) records the

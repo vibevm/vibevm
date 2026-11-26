@@ -113,14 +113,20 @@ pub(super) fn offline_refusal(package: &str, input: &std::path::Path) -> String 
     } else {
         let token = |text: &str| {
             if !text.is_empty()
-                && text.bytes().all(|b| b.is_ascii_alphanumeric() || b"_-./:".contains(&b))
+                && text
+                    .bytes()
+                    .all(|b| b.is_ascii_alphanumeric() || b"_-./:".contains(&b))
             {
                 text.to_owned()
             } else {
                 format!("'{}'", text.replace('\'', "'\\''"))
             }
         };
-        format!("vibe remap preview {} --input {} --offline", token(package), token(&input))
+        format!(
+            "vibe remap preview {} --input {} --offline",
+            token(package),
+            token(&input)
+        )
     };
     format!(
         "offline_required: remap preview reads only a verified local offer (violates \

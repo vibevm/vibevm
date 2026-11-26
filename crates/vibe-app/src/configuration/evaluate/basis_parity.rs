@@ -1,5 +1,4 @@
 //! Differential characterization against the immutable pre-extraction evaluator.
-#![cfg(test)]
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-069#APP-CONFIGURATION-BASIS");
 use super::legacy_basis_oracle::legacy_evaluate;
 use super::*;

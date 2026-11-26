@@ -1,5 +1,4 @@
 //! Transported history reaches the ordinary planner without becoming fresh input.
-#![cfg(test)]
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-TARGET-INPUT");
 
 use super::*;

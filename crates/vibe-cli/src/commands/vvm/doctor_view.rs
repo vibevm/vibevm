@@ -124,10 +124,16 @@ pub(super) fn environment_row(observation: &EnvironmentObservation) -> DoctorRow
             Mark::Note
         },
         name: "durable environment".into(),
-        value: observation.target.as_deref().unwrap_or("unavailable").into(),
+        value: observation
+            .target
+            .as_deref()
+            .unwrap_or("unavailable")
+            .into(),
         notes: shell.into_iter().map(str::to_owned).collect(),
         states: vec![format!("PATH entry {path_entry}")],
-        children: vec![format!("file {file} · managed block {block} · login {login}")],
+        children: vec![format!(
+            "file {file} · managed block {block} · login {login}"
+        )],
     }
 }
 
@@ -149,7 +155,10 @@ pub(super) fn tool_row(tool: &ToolStatus, required: bool) -> DoctorRow {
         (Some(version), true) => (
             Mark::Miss,
             version.clone(),
-            vec![format!("need >= {}", tool.min_version), tool.help_url.into()],
+            vec![
+                format!("need >= {}", tool.min_version),
+                tool.help_url.into(),
+            ],
         ),
         (None, true) => (Mark::Miss, "not found".into(), vec![tool.help_url.into()]),
     };
@@ -184,7 +193,11 @@ pub(super) fn shim_row(name: &str, ok: bool) -> DoctorRow {
         name: "shim".into(),
         value: name.into(),
         notes: Vec::new(),
-        states: if ok { Vec::new() } else { vec!["missing".into()] },
+        states: if ok {
+            Vec::new()
+        } else {
+            vec!["missing".into()]
+        },
         children: Vec::new(),
     }
 }
@@ -255,7 +268,10 @@ mod tests {
         };
         let stdout = read_bounded(&stdout_path);
         let stderr = read_bounded(&stderr_path);
-        assert!(status.success(), "child failed: {status}\n{stdout}\n{stderr}");
+        assert!(
+            status.success(),
+            "child failed: {status}\n{stdout}\n{stderr}"
+        );
         assert!(stdout.contains("running 1 test"), "{stdout}");
         assert!(stdout.contains("1 passed; 0 failed"), "{stdout}");
         assert!(stderr.contains("Checking completed diagnosis"), "{stderr}");
@@ -264,7 +280,13 @@ mod tests {
             let end = format!("F22B-END-{case}\n");
             assert_eq!(stdout.matches(&begin).count(), 1, "{stdout}");
             assert_eq!(stdout.matches(&end).count(), 1, "{stdout}");
-            let actual = stdout.split_once(&begin).unwrap().1.split_once(&end).unwrap().0;
+            let actual = stdout
+                .split_once(&begin)
+                .unwrap()
+                .1
+                .split_once(&end)
+                .unwrap()
+                .0;
             let unit = if count == 1 { "check" } else { "checks" };
             let expected = format!("✻ doctor found no problems · {count} {unit} · 1s");
             assert_eq!(actual.lines().last(), Some(expected.as_str()), "{actual}");
@@ -282,7 +304,13 @@ mod tests {
             let end = format!("F22B-END-{case}\n");
             assert_eq!(stdout.matches(&begin).count(), 1, "{stdout}");
             assert_eq!(stdout.matches(&end).count(), 1, "{stdout}");
-            let actual = stdout.split_once(&begin).unwrap().1.split_once(&end).unwrap().0;
+            let actual = stdout
+                .split_once(&begin)
+                .unwrap()
+                .1
+                .split_once(&end)
+                .unwrap()
+                .0;
             assert!(!actual.contains("doctor found no problems"), "{actual}");
             assert!(!actual.contains('✻'), "{actual}");
         }
@@ -400,7 +428,10 @@ mod tests {
         assert_eq!(rendered_clean, clean);
         for text in [&rendered, &rendered_clean] {
             for forbidden in ["Some(", "Missing", "Absent", "MISS", "ok  "] {
-                assert!(!text.contains(forbidden), "unexpected debug token {forbidden}");
+                assert!(
+                    !text.contains(forbidden),
+                    "unexpected debug token {forbidden}"
+                );
             }
         }
     }

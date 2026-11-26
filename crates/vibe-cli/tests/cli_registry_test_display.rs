@@ -62,8 +62,11 @@ fn a_missing_localdir_fails_the_registry_test() {
         "\n[[registry]]\nname='broken'\ntype='localdir'\nurl={}\n",
         toml::Value::String(format!("file://{}", missing.display()))
     );
-    fs::write(user.settings.join("registry.toml"), format!("{valid}{broken}"))
-        .expect("two local registries");
+    fs::write(
+        user.settings.join("registry.toml"),
+        format!("{valid}{broken}"),
+    )
+    .expect("two local registries");
 
     for json in [false, true] {
         let output = probe(&user, &home, &project, json);

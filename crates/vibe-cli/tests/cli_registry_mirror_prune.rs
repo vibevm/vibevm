@@ -257,6 +257,12 @@ fn a_flag_override_is_never_a_prune_and_says_so() {
     source(root);
     let target = root.join("target");
     fs::create_dir_all(&target).unwrap();
+    publish(&target, "org.other", "kept", "2.0.0");
+    let manifest = target.join("org.other/kept/v2.0.0/vibe.toml");
+    let manifest_before = fs::read(&manifest).unwrap();
+    let canary = target.join("keep.bin");
+    let canary_before = b"KEEP\0\xff\n";
+    fs::write(&canary, canary_before).unwrap();
     let project = project(
         root,
         &format!(
@@ -279,9 +285,19 @@ fn a_flag_override_is_never_a_prune_and_says_so() {
             "--yes",
         ],
     ));
-    assert!(message.contains("no declared selection"), "{message}");
-    assert!(message.contains("per-run override"), "{message}");
+    assert_eq!(fs::read(&manifest).unwrap(), manifest_before);
+    assert_eq!(fs::read(&canary).unwrap(), canary_before);
     assert!(!target.join("_index").exists());
+    assert!(message.contains("prune_needs_selection"), "{message}");
+    assert!(
+        message.contains("--package and --group are a per-run override and are never recorded"),
+        "{message}"
+    );
+    assert!(
+        message.lines().any(|line| line.trim()
+            == "fix   vibe registry mirror src --into dst --config mirror.toml --prune"),
+        "{message}"
+    );
 }
 
 #[test]
@@ -468,29 +484,56 @@ fn human_prune_plan_and_consent() {
     source(root);
     let target = root.join("target");
     fs::create_dir_all(&target).unwrap();
-    let project = project(root, &format!(
-        "[[registry]]\nname='dst'\ntype='localdir'\nurl='file://{}'\n",
-        target.display()
-    ));
+    let project = project(
+        root,
+        &format!(
+            "[[registry]]\nname='dst'\ntype='localdir'\nurl='file://{}'\n",
+            target.display()
+        ),
+    );
     let wide = config(root, "schema = 1\n[select]\nall = true\n");
-    let seeded = vibe(&user, &project, &[
-        "--json", "registry", "mirror", "src", "--into", "dst", "--config",
-        wide.to_str().unwrap(),
-    ]);
+    let seeded = vibe(
+        &user,
+        &project,
+        &[
+            "--json",
+            "registry",
+            "mirror",
+            "src",
+            "--into",
+            "dst",
+            "--config",
+            wide.to_str().unwrap(),
+        ],
+    );
     assert!(seeded.status.success(), "synthetic mirror setup failed");
     let narrow = root.join("selection ' ; $(not-executed).toml");
     fs::write(&narrow, "schema = 1\n[select]\ngroups = ['org.other']\n").unwrap();
     let before = snapshot(&target);
     let args = [
-        "--plain", "--unattended", "registry", "mirror", "src", "--into", "dst",
-        "--config", narrow.to_str().unwrap(), "--prune",
+        "--plain",
+        "--unattended",
+        "registry",
+        "mirror",
+        "src",
+        "--into",
+        "dst",
+        "--config",
+        narrow.to_str().unwrap(),
+        "--prune",
     ];
     let output = vibe(&user, &project, &args);
     assert!(!output.status.success(), "prune must require consent");
     let out = String::from_utf8_lossy(&output.stdout);
     let err = String::from_utf8_lossy(&output.stderr);
-    assert!(out.contains("── prune plan · 2 to remove ─"), "missing human plan rule/count");
-    let rows: Vec<_> = out.lines().filter(|line| line.starts_with("○ version")).collect();
+    assert!(
+        out.contains("── prune plan · 2 to remove ─"),
+        "missing human plan rule/count"
+    );
+    let rows: Vec<_> = out
+        .lines()
+        .filter(|line| line.starts_with("○ version"))
+        .collect();
     assert_eq!(rows.len(), 2, "human plan must enumerate both removals");
     for (row, version) in rows.iter().zip(["1.0.0", "1.1.0"]) {
         let expected = format!(
@@ -498,25 +541,45 @@ fn human_prune_plan_and_consent() {
         );
         assert_eq!(*row, expected, "human semantic row differs");
     }
-    assert!(out.contains("selection from"), "missing selection provenance");
-    assert!(!out.contains("Selecting from"), "duplicate selection heading");
+    assert!(
+        out.contains("selection from"),
+        "missing selection provenance"
+    );
+    assert!(
+        !out.contains("Selecting from"),
+        "duplicate selection heading"
+    );
     assert!(err.contains("prune_consent_required"), "wrong refusal");
-    assert!(err.contains("nothing was written"), "missing no-write explanation");
+    assert!(
+        err.contains("nothing was written"),
+        "missing no-write explanation"
+    );
     let quoted = format!("'{}'", narrow.to_str().unwrap().replace('\'', "'\"'\"'"));
     for flag in ["--yes", "--dry-run"] {
-        let expected = format!(
-            "vibe registry mirror src --into dst --config {quoted} --prune {flag}"
+        let expected =
+            format!("vibe registry mirror src --into dst --config {quoted} --prune {flag}");
+        assert!(
+            err.contains(&expected),
+            "missing safely quoted truthful retry command"
         );
-        assert!(err.contains(&expected), "missing safely quoted truthful retry command");
     }
-    assert!(!out.contains("SYNTHETIC_PRIVATE_CANARY"), "private canary exposed");
-    assert!(!err.contains("SYNTHETIC_PRIVATE_CANARY"), "private canary exposed");
+    assert!(
+        !out.contains("SYNTHETIC_PRIVATE_CANARY"),
+        "private canary exposed"
+    );
+    assert!(
+        !err.contains("SYNTHETIC_PRIVATE_CANARY"),
+        "private canary exposed"
+    );
     assert_eq!(snapshot(&target), before, "refused prune changed target");
 
     let home = user.settings.with_file_name("home");
     fs::create_dir_all(home.join(".vibe")).unwrap();
-    fs::write(home.join(".vibe/registry.toml"),
-        "# SYNTHETIC_PRIVATE_CANARY — ignored because settings is separate\n").unwrap();
+    fs::write(
+        home.join(".vibe/registry.toml"),
+        "# SYNTHETIC_PRIVATE_CANARY — ignored because settings is separate\n",
+    )
+    .unwrap();
     let mut capture = tempfile::tempfile().unwrap();
     let status = Command::new(env!("CARGO_BIN_EXE_vibe"))
         .current_dir(&project)
@@ -534,15 +597,32 @@ fn human_prune_plan_and_consent() {
         .args(args)
         .stdout(capture.try_clone().unwrap())
         .stderr(capture.try_clone().unwrap())
-        .status().unwrap();
+        .status()
+        .unwrap();
     assert!(!status.success(), "shared-destination prune must refuse");
     capture.seek(SeekFrom::Start(0)).unwrap();
     let mut ordered = String::new();
     capture.read_to_string(&mut ordered).unwrap();
-    let plan = ordered.find("── prune plan · 2 to remove ─").expect("missing plan");
-    let refusal = ordered.find("prune_consent_required").expect("missing refusal");
-    let last = ordered.find("org.corp/demo/v1.1.0").expect("missing last plan row");
-    assert!(plan < last && last < refusal, "plan must be written before refusal");
-    assert!(!ordered.contains("SYNTHETIC_PRIVATE_CANARY"), "private canary exposed");
-    assert_eq!(snapshot(&target), before, "ordered capture run changed target");
+    let plan = ordered
+        .find("── prune plan · 2 to remove ─")
+        .expect("missing plan");
+    let refusal = ordered
+        .find("prune_consent_required")
+        .expect("missing refusal");
+    let last = ordered
+        .find("org.corp/demo/v1.1.0")
+        .expect("missing last plan row");
+    assert!(
+        plan < last && last < refusal,
+        "plan must be written before refusal"
+    );
+    assert!(
+        !ordered.contains("SYNTHETIC_PRIVATE_CANARY"),
+        "private canary exposed"
+    );
+    assert_eq!(
+        snapshot(&target),
+        before,
+        "ordered capture run changed target"
+    );
 }

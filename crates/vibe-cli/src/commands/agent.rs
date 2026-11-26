@@ -148,15 +148,8 @@ fn listing(settings: &SettingsRoot, config: &AgentsConfig) -> Result<AgentList> 
 /// rows and hints (unbounded on a redirected stream); `rule` is the width a
 /// rule runs to.
 ///
-/// ```text
-/// ── launchers ─────────────────────────────────────────────────
-///   claude  claude  claude                     [built-in]
-///   cc2     claude  cc2     config ~/.claude2  [~/.vibe/agents.toml]
-///   starts a launcher with this project's boot lane
-///   vibe agent <name>
-///
-/// ✻ 7 launchers · 0 agent definitions · default none · /home/u/.vibe/agents.toml
-/// ```
+/// Launcher rows name the harness, command, optional configuration and source;
+/// the final trailer counts launchers and definitions and names the default.
 #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-067#list")]
 fn render_list(listing: &AgentList, width: usize, rule: usize) -> String {
     let mut sections = render_sections(listing, width, rule);
@@ -255,12 +248,11 @@ fn launcher_list(listing: &AgentList) -> List {
         .iter()
         .map(|launcher| {
             let mut meta = Vec::new();
-            if launcher.source == "built-in" {
-                if let Some(preset) = vibe_core::agent_ids::AgentId::from_harness(&launcher.kind)
+            if launcher.source == "built-in"
+                && let Some(preset) = vibe_core::agent_ids::AgentId::from_harness(&launcher.kind)
                     .and_then(|agent| agent.row().preset)
-                {
-                    meta.push(Meta::note(format!("preset {preset}")));
-                }
+            {
+                meta.push(Meta::note(format!("preset {preset}")));
             }
             if let Some(dir) = &launcher.config_dir {
                 meta.push(Meta::note(format!("config {}", short_path(dir))));
@@ -281,7 +273,7 @@ fn launcher_list(listing: &AgentList) -> List {
 }
 
 /// The agent definitions: name, preset and `[default]`, the two argvs as
-/// children; a definition that does not resolve is a `✗` row with two
+/// children; a definition that does not resolve is an alert-marked row with two
 /// children, wrapped rather than cut: what is wrong, in the alert role,
 /// and the fix, dim (`#refusal` read short — the row already names the
 /// agent, `vibe agent presets` lists the presets, and the spec address is
@@ -371,7 +363,7 @@ fn mode_line(label: &str, command: &str, args: &[String], width: usize) -> Strin
     cut(&line, width.saturating_sub(CHILD))
 }
 
-/// Where a child's text starts: `  └ `.
+/// Four display cells precede a child's text, including its tree marker.
 const CHILD: usize = 4;
 
 /// The effective trust, entry by entry with the layer that wrote it, and
@@ -422,7 +414,7 @@ fn trust_list(listing: &AgentList) -> Option<List> {
     Some(List::new(rows).meta_column())
 }
 
-/// `✻ 7 launchers · 0 agent definitions · default none · <path in full>`.
+/// Count launchers and definitions, then name the default and full source path.
 fn list_trailer(listing: &AgentList) -> String {
     let default = listing.default.as_deref().unwrap_or("none");
     trailer(
@@ -457,13 +449,8 @@ fn presets(ctx: &output::Context) -> Result<()> {
 /// The human table of `vibe agent presets`: one measured list (name,
 /// harness, the two argvs as children), then the trailer.
 ///
-/// ```text
-///   claude-code  claude
-///     └ interactive claude
-///     └ unattended  claude -p {prompt}
-///
-/// ✻ 5 agent presets · placeholders {prompt} {cwd}
-/// ```
+/// Each preset names its harness and two child command modes; the final
+/// trailer counts presets and lists the supported placeholders.
 #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-067#list")]
 fn render_presets(table: &AgentPresets, width: usize) -> String {
     let rows = table
@@ -496,7 +483,7 @@ fn render_presets(table: &AgentPresets, width: usize) -> String {
     format!("{}\n\n{}", list.render_at(width), presets_trailer(table))
 }
 
-/// `✻ 5 agent presets · placeholders {prompt} {cwd}`.
+/// Count agent presets and list the prompt and working-directory placeholders.
 fn presets_trailer(table: &AgentPresets) -> String {
     trailer(
         true,
