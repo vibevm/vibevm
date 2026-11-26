@@ -199,6 +199,7 @@ fn watch(ctx: &output::Context, journal: &TransferJournal) -> Result<()> {
     });
     let json = ctx.is_json();
     let mut stdout = std::io::stdout();
+    let mut view = view::Watch::default();
     watch_journal(
         journal,
         &alive,
@@ -208,7 +209,7 @@ fn watch(ctx: &output::Context, journal: &TransferJournal) -> Result<()> {
             let line = if json {
                 event_line(event).and_then(|line| Ok(serde_json::to_string(&line)?))
             } else {
-                Ok(view::event(event))
+                Ok(view.line(event, crate::output::language::viewport()))
             };
             match line {
                 Ok(line) => writeln!(stdout, "{line}")
