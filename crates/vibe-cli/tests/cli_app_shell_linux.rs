@@ -210,11 +210,7 @@ fn json_and_non_terminal_use_are_refused() {
     let user = UserScratch::new();
     let json = user.vibe().args(["shell", "--json"]).output().unwrap();
     assert!(!json.status.success());
-    assert!(
-        text(&json).contains("not_a_terminal"),
-        "{}",
-        text(&json)
-    );
+    assert!(text(&json).contains("not_a_terminal"), "{}", text(&json));
     let piped = user
         .vibe()
         .args(["shell", "--use", "tool=org.example/beta@1.0.0"])
@@ -237,24 +233,56 @@ fn shell_missing_selection_starts_anyway() {
     let runner = pty_runner(root.path());
     let home = tempfile::tempdir().unwrap();
     let missing = in_pty(
-        &runner, &user, home.path(),
-        &[vibe(), "shell", "-g", "--use", "node=22", "--use", "node=22"],
+        &runner,
+        &user,
+        home.path(),
+        &[
+            vibe(),
+            "shell",
+            "-g",
+            "--use",
+            "node=22",
+            "--use",
+            "node=22",
+        ],
         "printf '%s%s\\n' F30_ MISSING_CHILD\nexit 0\n",
-    ).current_dir(root.path()).env_remove("VIBE_APP_USE").output().unwrap();
+    )
+    .current_dir(root.path())
+    .env_remove("VIBE_APP_USE")
+    .output()
+    .unwrap();
     assert!(missing.status.success(), "{}", text(&missing));
     let stdout = String::from_utf8_lossy(&missing.stdout).replace('\r', "");
-    assert_eq!(stdout.matches("node wants 22, which is not installed").count(), 1, "{stdout}");
-    let warning = stdout.find("node wants 22, which is not installed").unwrap();
+    assert_eq!(
+        stdout
+            .matches("node wants 22, which is not installed")
+            .count(),
+        1,
+        "{stdout}"
+    );
+    let warning = stdout
+        .find("node wants 22, which is not installed")
+        .unwrap();
     let remedy = stdout.find("  vibe install -g node@22").unwrap();
     let continuation = stdout.find("  Continuing without this version.").unwrap();
     let marker = stdout.find("F30_MISSING_CHILD").unwrap();
-    assert!(warning < remedy && remedy < continuation && continuation < marker, "{stdout}");
+    assert!(
+        warning < remedy && remedy < continuation && continuation < marker,
+        "{stdout}"
+    );
 
     for flags in [vec![], vec!["--unattended"], vec!["--json"]] {
-        let refused = user.vibe().args(["shell", "--use", "node=22"])
-            .args(&flags).env("HOME", home.path()).env("USERPROFILE", home.path())
-            .env("VIBE_SETTINGS", &user.settings).env_remove("VIBE_UNATTENDED")
-            .current_dir(root.path()).output().unwrap();
+        let refused = user
+            .vibe()
+            .args(["shell", "--use", "node=22"])
+            .args(&flags)
+            .env("HOME", home.path())
+            .env("USERPROFILE", home.path())
+            .env("VIBE_SETTINGS", &user.settings)
+            .env_remove("VIBE_UNATTENDED")
+            .current_dir(root.path())
+            .output()
+            .unwrap();
         assert!(!refused.status.success(), "{}", text(&refused));
         assert!(refused.stdout.is_empty(), "{}", text(&refused));
         let stderr = String::from_utf8_lossy(&refused.stderr);
@@ -263,10 +291,21 @@ fn shell_missing_selection_starts_anyway() {
         if flags == ["--json"] {
             let document: serde_json::Value = serde_json::from_slice(&refused.stderr).unwrap();
             assert_eq!(document["ok"], false);
-            assert!(document["error"].as_str().unwrap().contains("not_a_terminal"));
+            assert!(
+                document["error"]
+                    .as_str()
+                    .unwrap()
+                    .contains("not_a_terminal")
+            );
         } else {
-            assert!(stderr.contains("fix   eval \"$(vibe app env --use node=22)\""), "{stderr}");
-            assert!(stderr.contains("spec://org.vibevm.core/vibevm/common/PROP-059#shell-command"), "{stderr}");
+            assert!(
+                stderr.contains("fix   eval \"$(vibe app env --use node=22)\""),
+                "{stderr}"
+            );
+            assert!(
+                stderr.contains("spec://org.vibevm.core/vibevm/common/PROP-059#shell-command"),
+                "{stderr}"
+            );
         }
     }
 
@@ -274,17 +313,39 @@ fn shell_missing_selection_starts_anyway() {
     let index = Index::load(&settings).unwrap();
     let uses = vec!["tool=org.example/beta@1.0.0".to_owned()];
     let request = ActivationRequest {
-        uses: &uses, directory: root.path(), project: None, requirements: &[],
-        consult_project: false, channels: None,
+        uses: &uses,
+        directory: root.path(),
+        project: None,
+        requirements: &[],
+        consult_project: false,
+        channels: None,
     };
-    assert_eq!(vibe_app::resolve_activation(&settings, &index, &request).unwrap()
-        .of_slot("tool").unwrap().state, ActivationState::Selected);
-    assert!(vibe_app::slot_session_dirs(&settings, &index,
-        &vibe_app::Storage::load(&settings).unwrap(), "org.example/beta@1.0.0")
-        .unwrap().is_empty(), "the selected-provider control must have zero bins");
+    assert_eq!(
+        vibe_app::resolve_activation(&settings, &index, &request)
+            .unwrap()
+            .of_slot("tool")
+            .unwrap()
+            .state,
+        ActivationState::Selected
+    );
+    assert!(
+        vibe_app::slot_session_dirs(
+            &settings,
+            &index,
+            &vibe_app::Storage::load(&settings).unwrap(),
+            "org.example/beta@1.0.0"
+        )
+        .unwrap()
+        .is_empty(),
+        "the selected-provider control must have zero bins"
+    );
     let project = root.path().join("project");
     fs::create_dir_all(&project).unwrap();
-    fs::write(project.join("vibe.toml"), "[project]\nname = \"shell-control\"\nversion = \"0.0.1\"\n").unwrap();
+    fs::write(
+        project.join("vibe.toml"),
+        "[project]\nname = \"shell-control\"\nversion = \"0.0.1\"\n",
+    )
+    .unwrap();
     let project_home = SettingsRoot::project(&project, &settings);
     fs::create_dir_all(project_home.path()).unwrap();
     assert!(Index::load(&project_home).unwrap().installations.is_empty());
@@ -293,10 +354,18 @@ fn shell_missing_selection_starts_anyway() {
         (project.as_path(), false, "F30_SECOND_HOME_CHILD"),
     ] {
         let mut args = vec![vibe(), "shell", "--use", uses[0].as_str()];
-        if global { args.push("-g"); }
-        let input = format!("printf '%s%s\\n' F30_ {}\nexit 0\n", marker.strip_prefix("F30_").unwrap());
+        if global {
+            args.push("-g");
+        }
+        let input = format!(
+            "printf '%s%s\\n' F30_ {}\nexit 0\n",
+            marker.strip_prefix("F30_").unwrap()
+        );
         let output = in_pty(&runner, &user, home.path(), &args, &input)
-            .current_dir(directory).env_remove("VIBE_APP_USE").output().unwrap();
+            .current_dir(directory)
+            .env_remove("VIBE_APP_USE")
+            .output()
+            .unwrap();
         assert!(output.status.success(), "{}", text(&output));
         let stdout = String::from_utf8_lossy(&output.stdout);
         assert!(stdout.contains(marker), "{stdout}");
