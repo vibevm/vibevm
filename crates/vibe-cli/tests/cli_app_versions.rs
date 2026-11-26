@@ -518,6 +518,74 @@ fn a_slot_with_two_packages_lists_each_under_its_own_heading() {
 
 #[test]
 #[specmark::spec(verifies = "spec://org.vibevm.core/vibevm/common/PROP-075#VERSIONS-LIST-OUTPUT")]
+fn app_versions_presence() {
+    let fixture = node_fixture();
+    let registry = fixture.registry();
+    fs::create_dir_all(registry.join("org.example/empty")).unwrap();
+    app(&fixture, "runtime", "1.0.0", "runtime");
+    fs::write(fixture.settings().join("registry.toml"), format!("[[registry]]\nname='fixture'\ntype='localdir'\nurl='file://{}'\n[source_policy]\nexclude_hosting=['github','gitverse']\n", registry.display())).unwrap();
+    let remap = fixture.root.path().join("remap.toml");
+    let warmed = listing(&fixture, "org.vibevm.node/node", &["--limit", "1"]);
+    assert_eq!(warmed["packages"][0]["template"]["revision"], REVISION);
+    let query = |explicit: bool, target: &str, extra: &[&str]| {
+        let mut args = vec![
+            "app",
+            "versions",
+            target,
+            "-g",
+            "--json",
+            "--remap",
+            remap.to_str().unwrap(),
+        ];
+        if explicit {
+            args.extend(["--registry", registry.to_str().unwrap()]);
+        }
+        args.extend_from_slice(extra);
+        fixture.vibe(&args)
+    };
+    let refusal = |result: std::process::Output, expected: &str| {
+        assert_eq!(result.status.code(), Some(2), "{result:?}");
+        let error: Value = serde_json::from_slice(&result.stderr).unwrap();
+        assert_eq!(error["code"], expected, "{error}");
+    };
+    for explicit in [true, false] {
+        refusal(
+            query(explicit, "org.example/missing", &[]),
+            "unknown_package",
+        );
+        for (name, filter) in [
+            ("org.example/empty", vec![]),
+            ("org.example/runtime", vec!["99"]),
+        ] {
+            let reply = json(&query(explicit, name, &filter));
+            assert_eq!(reply["packages"][0]["package"], name);
+            assert_eq!(reply["packages"][0]["total"], 0);
+            assert_eq!(reply["packages"][0]["versions"], serde_json::json!([]));
+        }
+        let listed = json(&query(explicit, "org.vibevm.node/node", &["--limit", "1"]));
+        assert_eq!(listed["packages"][0]["template"]["revision"], REVISION);
+        assert_eq!(rows(&listed)[0].1, "template");
+    }
+    install(&fixture, "org.example/runtime@=1.0.0");
+    fs::rename(&registry, fixture.root.path().join("unavailable")).unwrap();
+    fs::write(&registry, b"not a registry directory").unwrap();
+    let installed = json(&query(false, "runtime", &["--installed"]));
+    assert_eq!(
+        rows(&installed),
+        [(
+            "1.0.0".into(),
+            "published".into(),
+            "installed_default".into()
+        )]
+    );
+    refusal(
+        query(true, "org.example/empty", &[]),
+        "version_domain_unreadable",
+    );
+}
+
+#[test]
+#[specmark::spec(verifies = "spec://org.vibevm.core/vibevm/common/PROP-075#VERSIONS-LIST-OUTPUT")]
 fn a_word_that_names_nothing_is_refused_and_names_the_slots_that_exist() {
     let fixture = AppRegistry::new();
     app(&fixture, "runtime", "1.0.0", "runtime");
