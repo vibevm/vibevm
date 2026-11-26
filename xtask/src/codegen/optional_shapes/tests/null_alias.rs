@@ -1,5 +1,4 @@
 //! Explicit null aliases use the pinned optional shape, preserving old policies.
-#![cfg(test)]
 use super::*;
 
 fn alias(mut value: Value) -> Value {

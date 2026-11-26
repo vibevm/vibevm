@@ -1,5 +1,4 @@
 //! Captured variant and partial coverage controls, using the existing tree parser.
-#![cfg(test)]
 use super::*;
 
 fn emit(coverage: &mut NormalCoverage, address: &str, text: &str) -> String {

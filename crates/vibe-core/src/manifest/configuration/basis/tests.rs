@@ -1,5 +1,4 @@
 //! Shared policy uses real normalization; no domain wire or persistence owner.
-#![cfg(test)]
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-069#APP-CONFIGURATION-BASIS");
 use super::*;
 fn input(text: &str) -> ConfigurationIntentDecl {

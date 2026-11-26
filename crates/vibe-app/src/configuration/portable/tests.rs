@@ -1,5 +1,4 @@
 //! Real evaluated source history passes both portable codecs without source-host I/O.
-#![cfg(test)]
 use super::*;
 use std::collections::BTreeSet;
 use vibe_core::manifest::{ConfigurationDecl, ConfigurationIntentDecl};

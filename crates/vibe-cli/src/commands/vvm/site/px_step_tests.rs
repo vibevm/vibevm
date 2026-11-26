@@ -9,8 +9,6 @@
 //! carries. Everything else — the two places the archive is read from, the
 //! store layout, the verification — is the production lane.
 
-#![cfg(test)]
-
 use std::io::Write;
 use std::path::Path;
 

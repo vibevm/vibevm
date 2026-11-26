@@ -1,5 +1,4 @@
 //! Actual closed file admission for both cohort epochs; reads never migrate.
-#![cfg(test)]
 
 use super::*;
 use std::collections::BTreeMap;

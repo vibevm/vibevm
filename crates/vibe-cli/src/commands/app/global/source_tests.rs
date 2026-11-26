@@ -1,5 +1,4 @@
 //! The existing caller, not a path heuristic, knows embedded-source selection.
-#![cfg(test)]
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-073#SOURCE-EVIDENCE");
 use super::*;
 use vibe_wire::generated::shared::{SourceAcquisition, SourceSelectionKind};

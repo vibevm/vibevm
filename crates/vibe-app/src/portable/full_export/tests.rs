@@ -1,5 +1,4 @@
 //! Independent selection/closure oracles over real index and operation readers.
-#![cfg(test)]
 
 use super::*;
 use crate::index::{Lifecycle, Location, Method, PackageCoordinate, Requirement};

@@ -1,5 +1,4 @@
 //! Loaded-source precedence is distinct from the row's original source index.
-#![cfg(test)]
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-066#precedence");
 use super::*;
 

@@ -1,7 +1,6 @@
 //! An owned loopback sshd serving one writable monorepo (PROP-002
 //! `#registry-type`) for the monorepo resolution and publish tests.
 //! Numeric-loopback SSH with fixture keys, never the operator's.
-#![cfg(unix)]
 use std::os::unix::fs::PermissionsExt;
 use std::{
     fs,

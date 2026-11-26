@@ -1,5 +1,4 @@
 //! Semantic positions are observed by the incumbent parser, not XML spelling.
-#![cfg(test)]
 use super::*;
 
 fn comment(payload: &str) -> String {

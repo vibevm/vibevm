@@ -67,7 +67,7 @@ pub(super) mod fixtures {
     use super::*;
     use std::cell::Cell;
 
-    pub struct FakeDomains {
+    pub(in crate::versions) struct FakeDomains {
         pub answer: Result<DomainObservation, String>,
         pub observations: Cell<usize>,
         pub legacy_calls: Cell<usize>,
@@ -85,7 +85,7 @@ pub(super) mod fixtures {
         }
     }
 
-    pub struct Legacy(pub Cell<usize>);
+    pub(in crate::versions) struct Legacy(pub Cell<usize>);
 
     impl Domains for Legacy {
         fn domain(&self, _: &str, _: &str) -> Result<Domain, String> {

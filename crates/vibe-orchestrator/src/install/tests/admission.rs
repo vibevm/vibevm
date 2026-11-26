@@ -1,5 +1,4 @@
 //! The real Fresh branch must admit providers before publishing a source delta.
-#![cfg(test)]
 use super::*;
 use std::collections::BTreeSet;
 use vibe_core::{

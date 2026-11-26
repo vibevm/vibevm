@@ -205,8 +205,7 @@ fn binding_outcomes_close_human_output_but_leave_json_unadorned() {
                 };
                 let trailer = stdout
                     .lines()
-                    .filter(|line| !line.trim().is_empty())
-                    .last()
+                    .rfind(|line| !line.trim().is_empty())
                     .unwrap();
                 assert_eq!(stdout.matches('✻').count(), 1, "{stdout}");
                 assert!(

@@ -1,7 +1,5 @@
 //! Ordinary package init preserves the host target and existing installed bytes.
 
-#![cfg(test)]
-
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#artifacts");
 
 use std::collections::{BTreeMap, BTreeSet};

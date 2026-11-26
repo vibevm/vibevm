@@ -1,4 +1,3 @@
-#![cfg(test)]
 use super::*;
 use std::fs;
 use vibe_core::RoutePublication;

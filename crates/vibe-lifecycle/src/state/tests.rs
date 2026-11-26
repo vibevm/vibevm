@@ -415,12 +415,15 @@ fn non_utf8_input_names_stay_outside_the_utf8_glob_namespace() {
         assert_eq!(admission(std::path::Path::new(&name)), None);
         let path = dir.path().join(name);
         if let Err(error) = fs::write(&path, payload) {
-            assert!(
-                cfg!(target_os = "macos")
-                    && (error.kind() == std::io::ErrorKind::InvalidInput
-                        || error.raw_os_error() == Some(92)), // Darwin EILSEQ.
-                "raw-name fixture creation failed unexpectedly: {error}",
-            );
+            if cfg!(target_os = "macos") {
+                assert!(
+                    (error.kind() == std::io::ErrorKind::InvalidInput
+                        || error.raw_os_error() == Some(92)),
+                    "raw-name fixture creation failed unexpectedly: {error}"
+                );
+            } else {
+                panic!("raw-name fixture creation failed unexpectedly: {error}");
+            }
             assert!(!path.exists());
         }
     }

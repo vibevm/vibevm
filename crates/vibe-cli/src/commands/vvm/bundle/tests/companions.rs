@@ -5,8 +5,6 @@
 //! not a px at all still stop the command before activation; the error of
 //! a missing px names the store and the asset.
 
-#![cfg(test)]
-
 use super::super::ReleaseDir;
 use super::super::RemoteContext;
 use super::super::companions::{self, PxOutcome};

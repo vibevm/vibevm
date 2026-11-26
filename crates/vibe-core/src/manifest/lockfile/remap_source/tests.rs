@@ -1,4 +1,3 @@
-#![cfg(test)]
 use super::*;
 #[test]
 #[specmark::spec(verifies = "spec://org.vibevm.core/vibevm/common/PROP-073#LOCKED-SOURCE-LAW")]
