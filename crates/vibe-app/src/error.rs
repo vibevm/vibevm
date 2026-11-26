@@ -541,7 +541,7 @@ impl AppError {
             package: package.into(),
             home: home.home_name(),
             fix: if home.is_project() {
-                "use -g for the user home, or check `vibe app list` for the installed keys".into()
+                "use -g for the user home, or check vibe app list for the installed keys".into()
             } else {
                 "check `vibe app list` for the installed keys".into()
             },
