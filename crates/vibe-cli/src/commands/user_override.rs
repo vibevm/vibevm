@@ -1,5 +1,7 @@
 //! Explicit local override bindings; ordinary project initialization and SafeFS own writes.
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-074#OVERRIDE-CONTROLS");
+mod render;
+
 use crate::{cli::UserOverrideCommand, output};
 use anyhow::{Context, Result, bail};
 use serde::{Deserialize, Serialize};
@@ -49,6 +51,7 @@ struct UserControl {
     user_enabled: bool,
 }
 struct Selected {
+    dir: PathBuf,
     identity: Identity,
     project: Project,
 }
@@ -80,7 +83,11 @@ fn select(path: &Path) -> Result<Selected> {
             node: ".".into(),
         },
     };
-    Ok(Selected { identity, project })
+    Ok(Selected {
+        dir: selected.node_dir,
+        identity,
+        project,
+    })
 }
 fn portable(path: &Path) -> Result<String> {
     path.to_str()
@@ -148,7 +155,9 @@ fn validate_alias(alias: &str) -> Result<()> {
             .bytes()
             .all(|c| c.is_ascii_alphanumeric() || matches!(c, b'-' | b'_'))
     {
-        bail!("override alias must contain 1-80 ASCII letters, digits, '-' or '_'");
+        bail!(
+            "override_alias_invalid: override alias {alias} must be 1-80 ASCII letters, digits, '-' or '_' (violates spec://org.vibevm.core/vibevm/common/PROP-074#OVERRIDE-CONTROLS; fix: choose an alias such as work or client-a)"
+        );
     }
     Ok(())
 }
@@ -161,7 +170,8 @@ fn initialized(root: &Path) -> Result<()> {
         vibe_workspace::user_project::Observation::Initialized { .. }
     ) {
         bail!(
-            "bound override project is unavailable; restore it explicitly before enabling or binding"
+            "override_unavailable: the bound override project at {} is unavailable (violates spec://org.vibevm.core/vibevm/common/PROP-074#OVERRIDE-CONTROLS; fix: restore it explicitly before enabling or binding)",
+            root.display()
         );
     }
     Ok(())
@@ -250,20 +260,24 @@ pub(crate) fn run(
         .iter()
         .position(|row| row.identities.contains(&selected.identity));
     let mut changed = false;
+    let mut acted = false;
     let index = match action {
         "init" => {
             let alias = alias.context("override alias required")?;
             if let Some(index) = mapping.bindings.iter().position(|row| row.alias == alias) {
                 if owner != Some(index) {
                     bail!(
-                        "override alias already belongs to another project; use explicit override bind"
+                        "override_alias_taken: override alias {alias} already belongs to another project (violates spec://org.vibevm.core/vibevm/common/PROP-074#OVERRIDE-CONTROLS; fix: `vibe user override bind --alias {alias}`)"
                     );
                 }
                 initialized(&override_root(&settings, &mapping.bindings[index]))?;
                 Some(index)
             } else {
-                if owner.is_some() {
-                    bail!("project already has an override alias; refusing implicit reassignment");
+                if let Some(owner) = owner {
+                    let existing = &mapping.bindings[owner].alias;
+                    bail!(
+                        "override_already_bound: this project is already bound to override {existing} (violates spec://org.vibevm.core/vibevm/common/PROP-074#OVERRIDE-CONTROLS; fix: `vibe user override status`)"
+                    );
                 }
                 // tempfile supplies only a random spelling; the held SafeFS parent
                 // exclusively reserves the final directory. No path-owned cleanup.
@@ -324,6 +338,7 @@ pub(crate) fn run(
                     identities: vec![selected.identity.clone()],
                 });
                 changed = true;
+                acted = true;
                 Some(mapping.bindings.len() - 1)
             }
         }
@@ -332,25 +347,30 @@ pub(crate) fn run(
                 .bindings
                 .iter()
                 .position(|row| Some(row.alias.as_str()) == alias)
-                .context("override alias does not exist; initialize it explicitly")?;
-            if owner.is_some_and(|owner| owner != index) {
-                bail!("project is already bound to another override alias");
+                .with_context(|| format!("override_alias_unknown: override alias {} does not exist (violates spec://org.vibevm.core/vibevm/common/PROP-074#OVERRIDE-CONTROLS; fix: `vibe user override init --alias {}`)", alias.unwrap_or_default(), alias.unwrap_or_default()))?;
+            if let Some(owner) = owner.filter(|owner| *owner != index) {
+                let other = &mapping.bindings[owner].alias;
+                bail!(
+                    "override_already_bound: this project is already bound to override {other} (violates spec://org.vibevm.core/vibevm/common/PROP-074#OVERRIDE-CONTROLS; fix: `vibe user override status`)"
+                );
             }
             initialized(&override_root(&settings, &mapping.bindings[index]))?;
             if owner.is_none() {
                 mapping.bindings[index].identities.push(selected.identity);
                 changed = true;
+                acted = true;
             }
             Some(index)
         }
         "enable" | "disable" => {
             let index =
-                owner.context("project has no override binding; initialize or bind explicitly")?;
+                owner.with_context(|| "override_unbound: this project has no override binding (violates spec://org.vibevm.core/vibevm/common/PROP-074#OVERRIDE-CONTROLS; fix: `vibe user override init --alias <alias>` or `vibe user override bind --alias <alias>`)")?;
             if action == "enable" {
                 initialized(&override_root(&settings, &mapping.bindings[index]))?;
             }
             let enabled = action == "enable";
-            changed = mapping.bindings[index].enabled != enabled;
+            acted = mapping.bindings[index].enabled != enabled;
+            changed = acted;
             mapping.bindings[index].enabled = enabled;
             Some(index)
         }
@@ -389,19 +409,18 @@ pub(crate) fn run(
     };
     if ctx.is_json() {
         ctx.emit_json(&report)?;
-    } else {
-        ctx.summary(&format!(
-            "override {state}: {}{}",
-            report.alias.as_deref().unwrap_or("unbound"),
-            report
-                .root
-                .as_ref()
-                .map(|root| format!(" — {root}"))
-                .unwrap_or_default()
-        ));
+    } else if let Some(human) = render::human(&report, action, acted) {
+        match human {
+            render::Human::Status(row) if ctx.is_quiet() => ctx.summary(&row),
+            render::Human::Status(row) => ctx.block(&row),
+            render::Human::Trailer { what, root } => ctx.trailer_at(&what, root),
+        }
     }
     if !report.ok {
-        bail!("bound override project is unavailable");
+        let alias = report.alias.as_deref().unwrap_or_default();
+        bail!(
+            "override_unavailable: bound override project {alias} is unavailable (violates spec://org.vibevm.core/vibevm/common/PROP-074#OVERRIDE-CONTROLS; fix: restore it explicitly before enabling or binding)"
+        );
     }
     Ok(())
 }
@@ -428,6 +447,7 @@ pub(crate) fn set_user_enabled(
     cancellation: &CancellationToken,
 ) -> Result<()> {
     let selected = select(path)?;
+    let selected_dir = selected.dir.clone();
     let settings = settings()?;
     cancellation.checkpoint()?;
     cancellation.publishing();
@@ -458,11 +478,14 @@ pub(crate) fn set_user_enabled(
     if ctx.is_json() {
         ctx.emit_json(&serde_json::json!({"ok":true,"command":if enabled {"user:enable"} else {"user:disable"},"enabled":enabled}))
     } else {
-        ctx.summary(if enabled {
-            "personal layer enabled for this project"
-        } else {
-            "personal layer disabled for this project"
-        });
+        ctx.trailer_at(
+            if enabled {
+                "personal layer enabled"
+            } else {
+                "personal layer disabled"
+            },
+            &selected_dir.display().to_string(),
+        );
         Ok(())
     }
 }

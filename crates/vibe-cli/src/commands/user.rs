@@ -23,6 +23,7 @@ use vibe_workspace::user_project::{self as project, Initialized, Observation};
 
 use crate::cli::UserCommand;
 use crate::output;
+use crate::output::language::{Block, Glyph, Meta, Role, paint, short_path};
 
 /// The generated wire report, which owns every spelling below. From
 /// `metadata.rustOptions.package` + `x-rust-type` in
@@ -190,21 +191,32 @@ fn succeed(ctx: &output::Context, report: Report) -> Result<()> {
     // spelling of a root.
     let root = user_project::display(report.root.as_deref())
         .unwrap_or_else(|| "(unknown root)".to_owned());
-    let sentence = match report.outcome {
-        Outcome::Created => format!("initialized the user project at {root}"),
-        Outcome::AlreadyInitialized => format!("the user project at {root} is already initialized"),
-        Outcome::Observed if report.state == State::Absent => {
-            format!("the user project at {root} is absent; run `vibe user init` to create it")
+    match report.outcome {
+        Outcome::Created => ctx.trailer_at("initialized the user project", &root),
+        Outcome::AlreadyInitialized => ctx.trailer_at("user project already initialized", &root),
+        Outcome::Observed => {
+            let (glyph, word) = if report.state == State::Absent {
+                (Glyph::Skipped, "absent")
+            } else {
+                (Glyph::Done, "initialized")
+            };
+            let row = Block::new(glyph, format!("user project  {word}"))
+                .with_meta(vec![Meta::note(short_path(&root))])
+                .render();
+            if ctx.is_quiet() {
+                ctx.summary(&row);
+            } else if report.state == State::Absent {
+                ctx.block(&format!(
+                    "{row}\n  {}",
+                    paint(Role::Accent, "vibe user init")
+                ));
+            } else {
+                ctx.block(&row);
+            }
         }
-        Outcome::Observed => format!("the user project at {root} is initialized"),
-        // A success never reaches here with these; the arm keeps the match
-        // exhaustive over the closed vocabulary.
-        Outcome::Refused | Outcome::Incomplete => format!("{root}: {}", state_word(report.state)),
-    };
-    if ctx.is_quiet() {
-        ctx.summary(&sentence);
-    } else {
-        ctx.block(&sentence);
+        Outcome::Refused | Outcome::Incomplete => {
+            ctx.block(&format!("{root}: {}", state_word(report.state)))
+        }
     }
     Ok(())
 }
