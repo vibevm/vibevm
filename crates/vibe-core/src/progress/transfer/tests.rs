@@ -158,22 +158,68 @@ fn an_orphaned_active_file_becomes_interrupted_and_a_watch_sees_everything() {
     assert_eq!(interrupted.series.iter().map(|b| b.bytes).sum::<u64>(), 30);
     assert!(interrupted.record.resume.is_some());
 
+    let running_id = running.id().to_owned();
+    let opening_samples = journal
+        .active()
+        .into_iter()
+        .find(|entry| entry.record.id == running_id)
+        .unwrap()
+        .samples
+        .len();
     let mut reader = running.reader(&[7u8; 2 << 20][..]);
-    std::io::copy(&mut reader, &mut std::io::sink()).unwrap();
+    assert_eq!(
+        std::io::copy(&mut reader, &mut std::io::sink()).unwrap(),
+        2 << 20
+    );
+    let active = journal
+        .active()
+        .into_iter()
+        .find(|entry| entry.record.id == running_id)
+        .unwrap();
+    let expected: Vec<u64> = active.samples[opening_samples..]
+        .iter()
+        .map(|sample| sample.bytes)
+        .collect();
     let samples = watch.poll(&|_| false);
     assert!(
         samples
             .iter()
             .all(|event| event.event == TransferEventKind::Sample)
     );
-    assert!(
-        samples.iter().any(|event| event.bytes == Some(1 << 20)),
-        "{samples:?}"
-    );
+    // A 250 ms sample can precede a MiB; the byte threshold is measured
+    // from that sample, not an absolute MiB boundary. The watch must replay
+    // every persisted observation, with monotonic and bounded byte counts.
+    let observed: Vec<u64> = samples.iter().map(|event| event.bytes.unwrap()).collect();
+    assert!(!observed.is_empty(), "{samples:?}");
+    assert_eq!(observed, expected);
+    assert!(observed.windows(2).all(|pair| pair[0] <= pair[1]));
+    assert!(observed.iter().all(|bytes| *bytes <= 2 << 20));
     reader.finish();
     let quick = Transfer::begin(record("https://example.test/quick"), None, Some(&journal));
     quick.finish();
-    let kinds: Vec<TransferEventKind> = watch.poll(&|_| false).iter().map(|e| e.event).collect();
+    let terminal = watch.poll(&|_| false);
+    let finished = terminal
+        .iter()
+        .find(|event| event.id == running_id && event.event == TransferEventKind::Finished)
+        .unwrap();
+    assert_eq!(finished.bytes, Some(2 << 20));
+    assert!(journal.active().is_empty());
+    let history = journal.history();
+    let completed = history
+        .iter()
+        .find(|entry| entry.record.id == running_id)
+        .unwrap();
+    assert_eq!(completed.outcome, Some(Outcome::Finished));
+    assert_eq!(completed.bytes, 2 << 20);
+    assert_eq!(
+        completed
+            .series
+            .iter()
+            .map(|bucket| bucket.bytes)
+            .sum::<u64>(),
+        2 << 20
+    );
+    let kinds: Vec<TransferEventKind> = terminal.iter().map(|e| e.event).collect();
     assert_eq!(
         kinds,
         [

@@ -45,9 +45,17 @@ fn corp() -> SiteProfile {
 }
 
 fn refused(text: &str) -> String {
-    SiteProfile::parse(text, "corp.toml")
-        .unwrap_err()
-        .to_string()
+    let error = SiteProfile::parse(text, "corp.toml").unwrap_err();
+    // Parse details live in the sanitized source, just as on the CLI's
+    // error-chain surface; Display deliberately carries only the envelope.
+    let mut message = error.to_string();
+    let mut source = std::error::Error::source(&error);
+    while let Some(cause) = source {
+        message.push_str(": ");
+        message.push_str(&cause.to_string());
+        source = cause.source();
+    }
+    message
 }
 
 #[test]
