@@ -264,3 +264,6 @@ fn source_reads_a_local_release_directory() {
 
 mod fake;
 mod integration;
+
+#[cfg(target_os = "linux")]
+mod archive_roundtrip;
