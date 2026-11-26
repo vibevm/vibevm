@@ -23,11 +23,16 @@ use crate::output;
 
 #[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-059#shell-command")]
 pub fn run(ctx: &output::Context, args: ShellArgs) -> Result<()> {
-    if ctx.is_json() || ctx.is_unattended() {
-        bail!("vibe shell requires an interactive terminal; --json and --unattended are refused");
-    }
-    if !std::io::stdin().is_terminal() || !std::io::stdout().is_terminal() {
-        bail!("vibe shell requires stdin and stdout attached to a terminal");
+    if ctx.is_json()
+        || ctx.is_unattended()
+        || !std::io::stdin().is_terminal()
+        || !std::io::stdout().is_terminal()
+    {
+        bail!(
+            "not_a_terminal: vibe shell needs stdin and stdout attached to a terminal \
+             (violates spec://org.vibevm.core/vibevm/common/PROP-059#shell-command; \
+             fix: eval \"$(vibe app env --use node=22)\")"
+        );
     }
     // `Auto` scope puts an existing project home ahead of the user home;
     // `-g` selects the user home alone.
@@ -72,6 +77,7 @@ pub fn run(ctx: &output::Context, args: ShellArgs) -> Result<()> {
     };
     let entries: Vec<String> = with_choices.iter().chain(&args.uses).cloned().collect();
     let choices = session::choices(inherited_use, &entries)?;
+    warn_missing(ctx, &homes, &args.uses)?;
     let path = session::compose_path(&bins, inherited_path.as_deref(), &withdrawn)?;
     let shell = parent::shell().context("selecting the interactive shell")?;
     let mut command = Command::new(&shell);
@@ -97,6 +103,72 @@ pub fn run(ctx: &output::Context, args: ShellArgs) -> Result<()> {
         command.env(SESSION_VARIABLE, choices.render());
     }
     launch(command, &shell)
+}
+
+/// Diagnose explicit choices without changing the environment being launched.
+fn warn_missing(ctx: &output::Context, homes: &[SettingsRoot], uses: &[String]) -> Result<()> {
+    use vibe_app::{ActivationRequest, ActivationSource, ActivationState, Index, SlotSelection};
+    if uses.is_empty() {
+        return Ok(());
+    }
+    let directory = std::env::current_dir()?;
+    let choices = session::choices(None, uses)?.render();
+    let mut selections: Vec<SlotSelection> = Vec::new();
+    for entry in choices.split(';').filter(|entry| !entry.is_empty()) {
+        let (slot, value) = entry.split_once('=').expect("validated session choice");
+        let one = [entry.to_owned()];
+        let request = ActivationRequest {
+            uses: &one,
+            directory: &directory,
+            project: None,
+            requirements: &[],
+            consult_project: false,
+            channels: None,
+        };
+        let mut seen: Option<SlotSelection> = None;
+        for settings in homes {
+            let index = Index::load(settings)?;
+            let resolved = match vibe_app::resolve_activation(settings, &index, &request) {
+                Ok(resolved) => resolved,
+                // An exact key missing here can still exist in another home.
+                Err(vibe_app::AppError::NotInstalled { .. }) => continue,
+                Err(error) => return Err(error.into()),
+            };
+            for selection in resolved.selections {
+                if seen.as_ref().is_none_or(|prior| {
+                    prior.state != ActivationState::Selected
+                        && (selection.state == ActivationState::Selected
+                            || prior.state == ActivationState::NotInstalled)
+                }) {
+                    seen = Some(selection);
+                }
+            }
+        }
+        selections.push(seen.unwrap_or_else(|| SlotSelection {
+            slot: slot.to_owned(),
+            source: ActivationSource::Flag,
+            state: ActivationState::NotInstalled,
+            requested: Some(value.to_owned()),
+            key: None,
+            version: None,
+            file: None,
+            unused: Vec::new(),
+            candidates: Vec::new(),
+            install: Some(format!("vibe install -g {value}")),
+        }));
+    }
+    for selection in selections {
+        if selection.state == ActivationState::NotInstalled {
+            crate::commands::app::env::emit_missing(
+                ctx,
+                &selection.slot,
+                selection.requested.as_deref().unwrap_or(""),
+                selection.install.as_deref(),
+                true,
+            );
+        }
+    }
+    Ok(())
 }
 
 /// The application homes of the session in priority order: the project
